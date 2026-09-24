@@ -173,6 +173,26 @@ import java.util.List;
  * same treatment. Everything needs the fundamental to be right: check the
  * panel readout, R pins it.
  *
+ * BENCH (H): the regulator palette view, for the Harmonic Regulator's
+ * sound (docs/HARMONIC-REGULATOR.md). The timeline gives way to a list of
+ * LAYERS: clips with no position that all sound at once while the bench
+ * plays, looping for ever; a layer marked one-shot instead fires on the
+ * lock or unlock event (right-click its row). SIGNALS from the machine
+ * (arm ratios / reach, radiance, consonance, tension, drive, coherence,
+ * score) drive layer params through BINDS: `bind tension synth1 drive` moves
+ * synth1's drive over its marked range as tension goes 0..1; `rel` binds add
+ * to the layer's own value (pitch). Right-click a slider to mark the RANGE
+ * that sounded good (with a note), or to bind a signal to it. A SIGNATURE is
+ * a bench file in spells/ holding the same layer ids at their lock values
+ * (plus one-shots): as score rises past 0.55 every shared param blends from
+ * its searching value to the signature's, and layers only the signature has
+ * fade in. Bound params are smoothed (~30 ms) so signals never zipper. The
+ * regulator panel (J) docks the signal sliders (the scrubber), the signature
+ * picker with lock / unlock buttons, the bind table, the ranges and free
+ * notes. The bench autosaves to bench.sfx; S stamps it to projects/ as a
+ * palette, the `signature` button to spells/. shift+H sends a timeline clip
+ * over as a layer; a layer's menu copies it back.
+ *
  * MARKERS: K drops a named marker at the playhead (shift+K removes the
  * nearest; right-click one in the ruler to delete). Clip drags snap to
  * markers, so: step to the frame where the cue happens, K, drag the clip.
@@ -206,10 +226,15 @@ import java.util.List;
  *   O           open a .sfx into the workspace (ctrl+Z brings back what was
  *               on the timeline before)
  *   N           clear the workspace (undoable)
+ *   H           bench view (the regulator palette); shift+H sends the selected clip there
+ *   J           regulator panel: signal sliders, signature, lock / unlock, binds, ranges, notes
+ *   U           the machine: play the regulator (RegulatorCore) and hear the bench answer
  *
  * FILE FORMATS: .sfx is the lab's editable source (the workspace autosaves
  * to project.sfx; S stamps named copies); exported .wav is what the mod
- * consumes. parseProject/renderWav are static and headless, so the mod's
+ * consumes. Bench files (palettes in projects/, signatures in spells/) use
+ * the same line style with `layer`, `range`, `bind`, `palette` and `note`
+ * lines, which the timeline parser skips. parseProject/renderWav are static and headless, so the mod's
  * build can also batch-render .sfx files via --render, or embed this class
  * and synthesize at runtime.
  *   DEL         delete clip     D duplicate       arrows nudge / change track
@@ -461,7 +486,7 @@ public class SfxLab extends JPanel {
                 new PSpec("gather swp", -1, 1, 0)),
         withLfo(new PSpec("start", 0, 1, 0), new PSpec("speed", 0, 3, 1),   // keep-len time (0 freezes: partials hold, residual grain-freezes)
                 new PSpec("sines", 0, 2, 1), new PSpec("residual", 0, 2, 1),   // the two halves of the model, mixed separately
-                new PSpec("floor", 6, 30, 14),      // dB a peak must rise above the frame's median to count as a partial
+                new PSpec("floor", 6, 42, 14),      // dB a peak must rise above the frame's median to count as a partial
                 new PSpec("min len", 20, 200, 46),  // ms a partial must persist; shorter = noise, stays in the residual
                 new PSpec("loop", 0, 1, 0),
                 // harmonic controls (shared with the tones bank, see harmGain / harmFreq)
@@ -703,12 +728,13 @@ public class SfxLab extends JPanel {
                 SwingUtilities.invokeLater(() -> {
                     try {
                         double dur = sample(f)[0].length / (double) SR;
-                        lab.pushUndo("");
+                        if (!lab.benchOn) lab.pushUndo("");
                         Clip c = new Clip(forgeName(Paths.get(f).getFileName().toString()), PARTIALS, lab.selTrack, lab.playPos, dur, lab.uiRng.nextLong());
                         c.file = f; c.p[P_PITCH] = t; c.p[P_ATT] = 0.005; c.p[P_REL] = 0.05;
-                        synchronized (lab.lock) { lab.clips.add(c); }
-                        lab.sel = c; lab.markEdit(); partials(c, false);
-                        lab.toast(String.format(Locale.ROOT, "%s as partials on track %d, tuned %+.2f st%s", f, lab.selTrack + 1, t, b[0] > 0 ? " -> " + noteName(b[0] * Math.pow(2, t / 12)) : " (no clear pitch)"));
+                        if (lab.benchOn) c.p[NCOMMON + PA_LOOP] = 1;
+                        lab.place(c);
+                        partials(c, false);
+                        lab.toast(String.format(Locale.ROOT, "%s as partials %s, tuned %+.2f st%s", f, lab.benchOn ? "layer " + c.id : "on track " + (lab.selTrack + 1), t, b[0] > 0 ? " -> " + noteName(b[0] * Math.pow(2, t / 12)) : " (no clear pitch)"));
                         lab.requestFocusInWindow();
                     } catch (Exception e) { lab.toast("add failed: " + e); }
                 });
@@ -982,6 +1008,13 @@ public class SfxLab extends JPanel {
         boolean vlink; // moves with the video (its own audio track, by default)
         int keyed;     // which of this clip's params follow the global key (KEY_* bits)
         Partials pa; long paFloor = Long.MIN_VALUE, paMin; int paRetry;   // PARTIALS: analysis cached for the current floor / min len
+        // ---- bench (regulator palette) state; null / 0 on ordinary timeline clips
+        String id;                 // stable handle for binds and signature blending
+        int on;                    // ON_NONE = endless layer; ON_LOCK / ON_UNLOCK = one-shot fired by that event
+        boolean lmute;             // layer muted on the bench
+        volatile double[] mod;     // live modulation, added to p by the engine (smoothed); written by the audio thread
+        HashMap<Integer, double[]> range;   // param index -> {lo, hi}: the span that sounded good (authoring notes, default bind range)
+        HashMap<Integer, String> rnote;     // param index -> free note
         Clip(String name, int type, int track, double start, double dur, long seed) {
             this.name = name; this.type = type; this.track = track;
             this.start = start; this.dur = dur; this.seed = seed;
@@ -1045,6 +1078,26 @@ public class SfxLab extends JPanel {
         double nextPing;                                  // sparkle spawn clock
         final double[] pf = new double[12], pp = new double[12], pa = new double[12], ppan = new double[12];
         final double[] pm = new double[12];               // sparkle per-ping FM phases
+        double[] pe, sm;                                  // bench: effective params (p + smoothed mod) and the smoother state
+        /** The params the engine reads this sample: the clip's own plus its live
+         *  modulation through a one-pole smoother (~30 ms), clamped to each spec.
+         *  Params that rebuild per-partial caches when they move (the harmonic
+         *  controls) are quantised so a glide costs a few rebuilds, not one per
+         *  sample. Clips without modulation never come here, so old renders are
+         *  untouched. */
+        double[] effective(Clip c) {
+            double[] m = c.mod, p = c.p;
+            if (pe == null || pe.length != p.length) { pe = new double[p.length]; sm = new double[p.length]; }
+            boolean[] q = quantised(c.type);
+            for (int i = 0; i < p.length; i++) {
+                sm[i] += (m[i] - sm[i]) * MOD_K;
+                PSpec s = spec(c.type, i);
+                double v = p[i] + sm[i];
+                if (q[i]) v = p[i] + Math.rint(sm[i] / (s.max() - s.min()) * 100) * (s.max() - s.min()) / 100;
+                pe[i] = v < s.min() ? s.min() : v > s.max() ? s.max() : v;
+            }
+            return pe;
+        }
         Voice(Clip c) {
             rng = new Random(c.seed);
             if (c.type == PLUCK) { ks = new float[KSN]; ks2 = new float[KSN]; }
@@ -1072,6 +1125,22 @@ public class SfxLab extends JPanel {
         }
     }
 
+    static final double MOD_K = 1 - Math.exp(-1.0 / (0.03 * SR));   // live-param smoother: ~30 ms
+    static final boolean[][] QUANT = new boolean[EXTRAS.length][];
+    /** Which params of a type are expensive to move continuously (they rebuild per-partial caches). */
+    static boolean[] quantised(int type) {
+        boolean[] q = QUANT[type];
+        if (q == null) {
+            q = new boolean[nParams(type)];
+            for (int i = 0; i < q.length; i++) {
+                String n = spec(type, i).name();
+                q[i] = n.equals("odd/even") || n.equals("tilt") || n.equals("purity") || n.equals("stretch")
+                    || n.equals("gather") && type != CLOUD && type != CHOIR || n.equals("root shift") || n.equals("harm tol");
+            }
+            QUANT[type] = q;
+        }
+        return q;
+    }
     static double wrap01(double x) { x = x % 1; return x < 0 ? x + 1 : x; }
     static final int KSN = 4096;   // string delay-line size; floors pitch at ~11 Hz
     static final int FLN = 256;    // flanger delay-line size (max ~5.8 ms)
@@ -1205,11 +1274,72 @@ public class SfxLab extends JPanel {
     static String partKey(Clip c) { return partKey(c.file, paFloor(c), paMinLen(c)); }
     static Partials partials(Clip c, boolean sync) { return partials(c.file, paFloor(c), paMinLen(c), sync); }
     /** The analysis, or null while a worker computes it (sync = block instead). */
+    // Analyses are kept on disk (forge/.parts/, git-ignored), keyed by file, thresholds, size and mtime:
+    // a 20 s recording takes ~2 s to analyse and ~7 MB to store, and a palette has half a dozen of them.
+    static final Path PARTS_DIR = DIR.resolve("forge").resolve(".parts");
+    static Path partsCachePath(String file, double fl, double ml) {
+        try {
+            Path f = samplePath(file);
+            String key = file + "|" + Math.round(fl) + "|" + Math.round(ml) + "|" + Files.size(f) + "|" + Files.getLastModifiedTime(f).toMillis();
+            String base = f.getFileName().toString().replaceAll("[^A-Za-z0-9_.-]", "_");
+            return PARTS_DIR.resolve(String.format("%08x-%s.parts", key.hashCode(), base));
+        } catch (Exception e) { return null; }
+    }
+    static Partials analyzeCached(String file, double fl, double ml) {
+        Path cp = partsCachePath(file, fl, ml);
+        if (cp != null && Files.exists(cp)) { try { return loadPartials(cp); } catch (Exception e) { System.err.println("partials cache read failed: " + e); } }
+        Partials pa = analyzePartials(file, fl, ml);
+        if (cp != null) { try { savePartials(cp, pa); } catch (Exception e) { System.err.println("partials cache write failed: " + e); } }
+        return pa;
+    }
+    static final int PARTS_MAGIC = 0x50415254;
+    static void savePartials(Path cp, Partials pa) throws IOException {
+        Files.createDirectories(cp.getParent());
+        Path tmp = cp.resolveSibling(cp.getFileName() + ".tmp");
+        try (DataOutputStream o = new DataOutputStream(new BufferedOutputStream(Files.newOutputStream(tmp), 1 << 16))) {
+            o.writeInt(PARTS_MAGIC); o.writeInt(1);
+            o.writeInt(pa.nFrames); o.writeInt(pa.nTracks); o.writeDouble(pa.f0); o.writeDouble(pa.share);
+            o.writeInt(pa.res[0].length);
+            for (int ch = 0; ch < 2; ch++) for (float x : pa.res[ch]) o.writeFloat(x);
+            o.writeInt(pa.tracks.length);
+            for (PTrack t : pa.tracks) {
+                o.writeInt(t.start); o.writeInt(t.len); o.writeFloat(t.fmed); o.writeFloat(t.ratio); o.writeInt(t.harm);
+                o.writeInt(t.freq.length); for (float x : t.freq) o.writeFloat(x);
+                o.writeInt(t.amp.length); for (float x : t.amp) o.writeFloat(x);
+            }
+        }
+        Files.move(tmp, cp, StandardCopyOption.REPLACE_EXISTING);
+    }
+    static Partials loadPartials(Path cp) throws IOException {
+        try (DataInputStream in = new DataInputStream(new BufferedInputStream(Files.newInputStream(cp), 1 << 16))) {
+            if (in.readInt() != PARTS_MAGIC || in.readInt() != 1) throw new IOException("not a partials cache");
+            Partials pa = new Partials();
+            pa.nFrames = in.readInt(); pa.nTracks = in.readInt(); pa.f0 = in.readDouble(); pa.share = in.readDouble();
+            int n = in.readInt();
+            pa.res = new float[2][n];
+            for (int ch = 0; ch < 2; ch++) for (int i = 0; i < n; i++) pa.res[ch][i] = in.readFloat();
+            int nt = in.readInt();
+            pa.tracks = new PTrack[nt];
+            List<List<Integer>> act = new ArrayList<>();
+            for (int f = 0; f < pa.nFrames; f++) act.add(new ArrayList<>());
+            for (int k = 0; k < nt; k++) {
+                PTrack t = new PTrack();
+                t.start = in.readInt(); t.len = in.readInt(); t.fmed = in.readFloat(); t.ratio = in.readFloat(); t.harm = in.readInt();
+                t.freq = new float[in.readInt()]; for (int i = 0; i < t.freq.length; i++) t.freq[i] = in.readFloat();
+                t.amp = new float[in.readInt()]; for (int i = 0; i < t.amp.length; i++) t.amp[i] = in.readFloat();
+                pa.tracks[k] = t;
+                for (int f = Math.max(0, t.start); f < Math.min(pa.nFrames, t.start + t.len); f++) act.get(f).add(k);
+            }
+            pa.active = new int[pa.nFrames][];
+            for (int f = 0; f < pa.nFrames; f++) pa.active[f] = act.get(f).stream().mapToInt(Integer::intValue).toArray();
+            return pa;
+        }
+    }
     static Partials partials(String file, double fl, double ml, boolean sync) {
         String k = partKey(file, fl, ml);
         Partials pa = PARTS.get(k);
         if (pa != null) return pa;
-        if (sync) { pa = analyzePartials(file, fl, ml); PARTS.put(k, pa); return pa; }
+        if (sync) { pa = analyzeCached(file, fl, ml); PARTS.put(k, pa); return pa; }
         if (PARTS_PENDING.add(k)) {
             // one analysis at a time, newest request first: dragging a slider on a
             // 20 s clip used to launch a thread per value (25 analyses at once,
@@ -1225,7 +1355,7 @@ public class SfxLab extends JPanel {
             partsWorker = new Thread(() -> {
                 String[] job;
                 while ((job = PARTS_QUEUE.pollFirst()) != null) {
-                    try { PARTS.put(job[0], analyzePartials(job[1], Double.parseDouble(job[2]), Double.parseDouble(job[3]))); }
+                    try { PARTS.put(job[0], analyzeCached(job[1], Double.parseDouble(job[2]), Double.parseDouble(job[3]))); }
                     catch (Exception e) { e.printStackTrace(); }
                     finally { PARTS_PENDING.remove(job[0]); }
                 }
@@ -1788,6 +1918,7 @@ public class SfxLab extends JPanel {
             return s;
         }
 
+        final double[] o1 = new double[6];
         /** Render one sample of the mix into out[0..1] and advance time. */
         void render(List<Clip> cs, Clip solo, boolean[] mute, double[] tvol, double[] out) {
             double mixL = 0, mixR = 0, sendL = 0, sendR = 0, rvInL = 0, rvInR = 0;
@@ -1796,17 +1927,94 @@ public class SfxLab extends JPanel {
                 if (solo != null ? c != solo : (mute != null && mute[c.track])) continue;
                 double lt = t - c.start;
                 if (lt < 0 || lt >= c.dur) continue;
-                double[] p = c.p;
+                Voice v = voices.computeIfAbsent(c, Voice::new);
+                if (!clipSample(c, v, lt, tvol, o1)) continue;
+                double sL = o1[0], sR = o1[1];
+                trackAbs[c.track] = Math.max(trackAbs[c.track], Math.max(Math.abs(sL), Math.abs(sR)));
+                mixL += sL; mixR += sR; sendL += o1[2]; sendR += o1[3]; rvInL += o1[4]; rvInR += o1[5];
+            }
+            post(mixL, mixR, sendL, sendR, rvInL, rvInR, out);
+        }
+
+        /** Renders n samples of the mix into outL / outR. With several clips and no sidechain in play (the
+         *  duck couples clips within a sample), every clip's block is rendered on its own thread and the
+         *  per-sample mix, sends and effects run afterwards in clip order, so the output is bit-identical
+         *  to the sample-by-sample path; otherwise it falls back to that path. */
+        void renderBlock(List<Clip> cs, Clip solo, boolean[] mute, double[] tvol, double[] outL, double[] outR, int n) {
+            boolean duck = false; int live = 0;
+            for (Clip c : cs) {
+                if (solo != null ? c != solo : (mute != null && mute[c.track])) continue;
+                live++;
+                int di = c.p.length - N_TAIL + 9;
+                if (c.p[di] + (c.mod != null ? c.mod[di] : 0) > 0.005) duck = true;
+            }
+            if (duck || live < 2 || POOL_N < 2) {
+                for (int i = 0; i < n; i++) { render(cs, solo, mute, tvol, o1); outL[i] = o1[0]; outR[i] = o1[1]; }
+                return;
+            }
+            if (ts == null || ts.length < n + 1) ts = new double[n + 1];
+            ts[0] = t;
+            for (int i = 0; i < n; i++) ts[i + 1] = ts[i] + 1.0 / SR;   // the same accumulation post() does
+            final ArrayList<Clip> act = new ArrayList<>();
+            for (Clip c : cs) {
+                if (solo != null ? c != solo : (mute != null && mute[c.track])) continue;
+                if (c.start >= ts[n] || c.end() <= ts[0]) continue;
+                voices.computeIfAbsent(c, Voice::new);
+                act.add(c);
+            }
+            int m = act.size();
+            if (cbuf == null || cbuf.length < m || cbuf[0].length < 6 * n) { cbuf = new double[Math.max(m, 8)][6 * n]; cact = new boolean[Math.max(m, 8)][n]; }
+            ArrayList<java.util.concurrent.Callable<Void>> tasks = new ArrayList<>(m);
+            final int nn = n;
+            for (int ci = 0; ci < m; ci++) {
+                final int k = ci; final Clip c = act.get(ci); final Voice v = voices.get(c);
+                final double[] buf = cbuf[k]; final boolean[] on = cact[k];
+                tasks.add(() -> {
+                    double[] o = new double[6];
+                    for (int i = 0; i < nn; i++) {
+                        double lt = ts[i] - c.start;
+                        if (lt < 0 || lt >= c.dur || !clipSample(c, v, lt, tvol, o)) { on[i] = false; continue; }
+                        on[i] = true;
+                        System.arraycopy(o, 0, buf, 6 * i, 6);
+                    }
+                    return null;
+                });
+            }
+            try { for (var f : POOL.invokeAll(tasks)) f.get(); }
+            catch (Exception e) { throw new RuntimeException(e); }
+            double[] o = new double[2];
+            for (int i = 0; i < n; i++) {
+                double mixL = 0, mixR = 0, sendL = 0, sendR = 0, rvInL = 0, rvInR = 0;
+                for (int ci = 0; ci < m; ci++) {
+                    if (!cact[ci][i]) continue;
+                    double[] b = cbuf[ci]; int j = 6 * i;
+                    double sL = b[j], sR = b[j + 1];
+                    int tr = act.get(ci).track;
+                    trackAbs[tr] = Math.max(trackAbs[tr], Math.max(Math.abs(sL), Math.abs(sR)));
+                    mixL += sL; mixR += sR; sendL += b[j + 2]; sendR += b[j + 3]; rvInL += b[j + 4]; rvInR += b[j + 5];
+                }
+                post(mixL, mixR, sendL, sendR, rvInL, rvInR, o);
+                outL[i] = o[0]; outR[i] = o[1];
+            }
+        }
+        double[] ts; double[][] cbuf; boolean[][] cact;
+        static final int POOL_N = Math.max(1, Math.min(8, Runtime.getRuntime().availableProcessors()));
+        static final java.util.concurrent.ExecutorService POOL = java.util.concurrent.Executors.newFixedThreadPool(POOL_N, r -> {
+            Thread th = new Thread(r, "engine-worker"); th.setDaemon(true); th.setPriority(Thread.MAX_PRIORITY - 1); return th; });
+
+        /** One sample of one clip: its stereo output and its echo / reverb sends into o[0..5]. False when it is silent. */
+        boolean clipSample(Clip c, Voice v, double lt, double[] tvol, double[] o) {
+                double[] p = c.mod != null ? v.effective(c) : c.p;
+                if (p[P_LEVEL] < 1e-4) return false;   // silent (a bench layer waiting for its cue): costs nothing
                 double prog = lt / c.dur;
                 int lb = p.length - N_TAIL;
                 double kp = (c.keyed & KEY_PITCH) != 0 ? key : 0, ku = (c.keyed & KEY_FILTER) != 0 ? key * KEY_U : 0;
                 double env = 1;
                 if (p[P_ATT] > 1e-4) env = Math.min(1, lt / p[P_ATT]);
                 if (p[P_REL] > 1e-4) env = Math.min(env, (c.dur - lt) / p[P_REL]);
-                if (env <= 0) continue;
+                if (env <= 0) return false;
                 double curve = p[lb + 5];
                 if (curve != 0) env = Math.pow(env, Math.pow(8, curve));
-                Voice v = voices.computeIfAbsent(c, Voice::new);
                 // per-clip LFO: phase runs in clip-local time; random shape is
                 // hashed from the cycle count + seed so renders stay deterministic
                 double lfo = 0, lfoAmp = p[lb + 3];
@@ -2264,11 +2472,12 @@ public class SfxLab extends JPanel {
                 if (duckFrom > 0 && p[lb + 9] > 0.005)   // sidechain: full dip once the key track passes -12 dBFS
                     amp *= 1 - p[lb + 9] * Math.min(1, trackEnv[duckFrom - 1] * 4);
                 sL *= amp * gL; sR *= amp * gR;
-                trackAbs[c.track] = Math.max(trackAbs[c.track], Math.max(Math.abs(sL), Math.abs(sR)));
-                mixL += sL; mixR += sR;
-                sendL += sL * p[P_ECHO]; sendR += sR * p[P_ECHO];
-                rvInL += sL * p[lb + 6]; rvInR += sR * p[lb + 6];
-            }
+                o[0] = sL; o[1] = sR; o[2] = sL * p[P_ECHO]; o[3] = sR * p[P_ECHO]; o[4] = sL * p[lb + 6]; o[5] = sR * p[lb + 6];
+                return true;
+        }
+
+        /** The shared tail of a sample: sidechain envelopes, the ping-pong delay, the room, the limiter; advances time. */
+        void post(double mixL, double mixR, double sendL, double sendR, double rvInL, double rvInR, double[] out) {
             // sidechain envelopes: fast up, slow down, ready for the next sample
             for (int tr = 0; tr < TRACKS; tr++) {
                 double a = trackAbs[tr];
@@ -2359,7 +2568,7 @@ public class SfxLab extends JPanel {
     volatile String msg = ""; volatile long msgAt = 0;
     final ArrayList<double[]> combos = new ArrayList<>();
     int comboIdx = -1;
-    static final int DR_NONE = 0, DR_MOVE = 1, DR_SIZE = 2, DR_SEEK = 3, DR_SLIDER = 4, DR_TVOL = 5, DR_VIDEO = 6, DR_TRIM = 7;
+    static final int DR_NONE = 0, DR_MOVE = 1, DR_SIZE = 2, DR_SEEK = 3, DR_SLIDER = 4, DR_TVOL = 5, DR_VIDEO = 6, DR_TRIM = 7, DR_LEVEL = 8;
     int dragMode = DR_NONE, dragParam = -1, dragTrack = -1;
     double grabOff = 0;
     boolean dirty = false;
@@ -2383,6 +2592,9 @@ public class SfxLab extends JPanel {
         Clip n = new Clip(c.name, c.type, c.track, c.start, c.dur, c.seed);
         System.arraycopy(c.p, 0, n.p, 0, c.p.length);
         n.file = c.file; n.vlink = c.vlink; n.keyed = c.keyed;
+        n.id = c.id; n.on = c.on; n.lmute = c.lmute;
+        if (c.range != null) { n.range = new HashMap<>(); for (var e : c.range.entrySet()) n.range.put(e.getKey(), e.getValue().clone()); }
+        if (c.rnote != null) n.rnote = new HashMap<>(c.rnote);
         return n;
     }
     Snap snapshot() {
@@ -2396,6 +2608,7 @@ public class SfxLab extends JPanel {
         return s;
     }
     void pushUndo(String tag) {
+        if (benchOn) { pushBenchUndo(tag); return; }
         long now = System.currentTimeMillis();
         if (!tag.isEmpty() && tag.equals(lastOpTag) && now - lastOpAt < 1200) { lastOpAt = now; return; }
         lastOpTag = tag; lastOpAt = now;
@@ -2404,6 +2617,13 @@ public class SfxLab extends JPanel {
         redoStack.clear();
     }
     void commitPending() {
+        if (pendingBench != null) {
+            bUndo.push(pendingBench);
+            if (bUndo.size() > 100) bUndo.removeLast();
+            bRedo.clear();
+            lastOpTag = ""; pendingBench = null;
+            return;
+        }
         if (pendingSnap == null) return;
         undoStack.push(pendingSnap);
         if (undoStack.size() > 100) undoStack.removeLast();
@@ -2425,6 +2645,7 @@ public class SfxLab extends JPanel {
         markEdit();
     }
     void doUndo() {
+        if (benchOn) { benchUndo(); return; }
         if (undoStack.isEmpty()) { toast("nothing to undo"); return; }
         redoStack.push(snapshot());
         restore(undoStack.pop());
@@ -2432,6 +2653,7 @@ public class SfxLab extends JPanel {
         toast("undo");
     }
     void doRedo() {
+        if (benchOn) { benchRedo(); return; }
         if (redoStack.isEmpty()) { toast("nothing to redo"); return; }
         undoStack.push(snapshot());
         restore(redoStack.pop());
@@ -2443,7 +2665,7 @@ public class SfxLab extends JPanel {
     int scopePos = 0;
 
     void toast(String s) { msg = s; msgAt = System.currentTimeMillis(); }
-    void markEdit() { dirty = true; lastEditAt = System.currentTimeMillis(); }
+    void markEdit() { if (benchOn) benchDirty = true; else dirty = true; lastEditAt = System.currentTimeMillis(); }
 
     String projectText() {
         StringBuilder sb = new StringBuilder("# SfxLab project v2: clip name type track start dur seed key=value...\n");
@@ -2493,7 +2715,1348 @@ public class SfxLab extends JPanel {
         if (c.file != null) sb.append(" file=").append(c.file);
         if (c.vlink) sb.append(" vlink=1");
         sb.append(" keyed=").append(c.keyed);
+        if (c.id != null) sb.append(" id=").append(c.id);   // only bench-born clips carry one: old files re-save byte-identical
+        if (c.on != ON_NONE) sb.append(" on=").append(ON_NAMES[c.on]);
         return sb.append('\n').toString();
+    }
+
+    // =====================================================================
+    // The bench: a regulator palette (H switches the workbench to it).
+    // Layers are clips with no timeline position: every endless layer sounds
+    // continuously while the bench plays, one-shot layers fire on the lock /
+    // unlock events. Signals from the machine (HARMONIC-REGULATOR.md §4) drive
+    // layer params through binds; a signature (a saved layer set for one spell)
+    // blends in as the score rises. Bench files use the .sfx line style:
+    //   layer id name type dur seed key=value...     dur 0 = endless
+    //   range id param lo hi [note...]               the span that sounded good
+    //   bind signal id|* param [lo hi] [rel]         rel = added to the layer's own value
+    //   palette projects/x.sfx                       (signatures) the palette they belong to
+    //   note free text
+    // The timeline parser skips all of these, and old clip lines never carry
+    // the new tokens, so both directions stay compatible.
+    // =====================================================================
+    static final int ON_NONE = 0, ON_LOCK = 1, ON_UNLOCK = 2;
+    static final String[] ON_NAMES = {"none", "lock", "unlock"};
+    static final double ENDLESS = 1e9;   // dur of a layer that loops for ever
+    static final Path BENCH_FILE = DIR.resolve("bench.sfx");   // the bench autosaves here, like project.sfx
+    static final Path SPELLS_DIR = DIR.resolve("spells");      // signatures: one bench file per spell
+
+    /** The regulator's signal contract. arm{n}.pitch is derived from arm{n}.ratio
+     *  (12·log2 of the ratio folded into one octave), so it has no slider. */
+    static final String[] SIGNALS = {"arm1.ratio", "arm2.ratio", "arm3.ratio", "arm1.reach", "arm2.reach", "arm3.reach",
+                                     "radiance", "consonance", "tension", "drive", "coherence", "score"};
+    static final double[] SIG_MAX = {8, 8, 8, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+    static final int SIG_SCORE = 11;
+    static final String[] SIGNAL_CHOICES = {"arm1.ratio", "arm1.pitch", "arm1.reach", "arm2.ratio", "arm2.pitch", "arm2.reach",
+                                            "arm3.ratio", "arm3.pitch", "arm3.reach", "radiance", "consonance", "tension", "drive", "coherence", "score"};
+    static int sigIdx(String name) { for (int i = 0; i < SIGNALS.length; i++) if (SIGNALS[i].equals(name)) return i; return -1; }
+
+    static class Bind {
+        String sig, layer, param; double lo, hi; boolean rel;   // lo/hi NaN = auto: the layer's marked range, else the full spec range
+        Bind(String sig, String layer, String param, double lo, double hi, boolean rel) { this.sig = sig; this.layer = layer; this.param = param; this.lo = lo; this.hi = hi; this.rel = rel; }
+        boolean auto() { return Double.isNaN(lo) || Double.isNaN(hi); }
+        String line() { return "bind " + sig + " " + layer + " " + param + (auto() ? "" : " " + fmtNum5(lo) + " " + fmtNum5(hi)) + (rel ? " rel" : ""); }
+    }
+    static String fmtNum5(double v) {
+        String s = String.format(Locale.ROOT, "%.5f", v);
+        return s.contains(".") ? s.replaceAll("0+$", "").replaceAll("\\.$", "") : s;
+    }
+
+    static class Bench {
+        final ArrayList<Clip> layers = new ArrayList<>();
+        final ArrayList<Bind> binds = new ArrayList<>();
+        final ArrayList<String> notes = new ArrayList<>();
+        String palette;            // signature files: the palette (workspace-relative) they were authored against
+        double root = ROOT_DEFAULT;
+        Clip byId(String id) { if (id != null) for (Clip c : layers) if (id.equals(c.id)) return c; return null; }
+    }
+
+    static Bench parseBench(List<String> lines) {
+        Bench b = new Bench();
+        for (String line : lines) {
+            String[] t = line.trim().split("\\s+");
+            if (t.length == 0 || t[0].isEmpty() || t[0].startsWith("#")) continue;
+            switch (t[0]) {
+                case "root" -> { if (t.length > 1) b.root = Double.parseDouble(t[1]); }
+                case "palette" -> { if (t.length > 1) b.palette = t[1]; }
+                case "note" -> b.notes.add(line.trim().length() > 5 ? line.trim().substring(5) : "");
+                case "layer" -> {
+                    if (t.length < 6) continue;
+                    int type = Math.max(0, Math.min(TYPE_NAMES.length - 1, Integer.parseInt(t[3])));
+                    double dur = Double.parseDouble(t[4]);
+                    Clip c = new Clip(t[2], type, 0, 0, dur > 0 ? dur : ENDLESS, Long.parseLong(t[5]));
+                    c.id = t[1];
+                    parseTokens(c, t, 6);
+                    if (c.on == ON_NONE) c.dur = ENDLESS;
+                    b.layers.add(c);
+                }
+                case "range" -> {
+                    if (t.length < 5) continue;
+                    Clip c = b.byId(t[1]);
+                    if (c == null) continue;
+                    int pi = idxOf(c.type, t[2]);
+                    if (pi < 0) continue;
+                    if (c.range == null) c.range = new HashMap<>();
+                    c.range.put(pi, new double[]{Double.parseDouble(t[3]), Double.parseDouble(t[4])});
+                    if (t.length > 5) { if (c.rnote == null) c.rnote = new HashMap<>(); c.rnote.put(pi, String.join(" ", Arrays.copyOfRange(t, 5, t.length))); }
+                }
+                case "bind" -> {
+                    if (t.length < 4) continue;
+                    boolean rel = t[t.length - 1].equals("rel");
+                    int n = t.length - (rel ? 1 : 0);
+                    double lo = n > 5 ? Double.parseDouble(t[4]) : Double.NaN, hi = n > 5 ? Double.parseDouble(t[5]) : Double.NaN;
+                    b.binds.add(new Bind(t[1], t[2], t[3], lo, hi, rel));
+                }
+                default -> {}
+            }
+        }
+        return b;
+    }
+
+    static String benchText(Bench b, double rootHz) {
+        StringBuilder sb = new StringBuilder("# SfxLab bench v1: layer id name type dur seed key=value... (dur 0 = endless) · range id param lo hi [note] · bind signal id|* param [lo hi] [rel]\n");
+        sb.append("bench 1\n");
+        sb.append(String.format(Locale.ROOT, "root %.4f%n", rootHz));
+        if (b.palette != null) sb.append("palette ").append(b.palette).append('\n');
+        for (Clip c : b.layers) sb.append(layerLine(c));
+        for (Clip c : b.layers)
+            if (c.range != null)
+                for (int pi : new TreeSet<>(c.range.keySet())) {
+                    double[] r = c.range.get(pi);
+                    sb.append("range ").append(c.id).append(' ').append(key(c.type, pi)).append(' ').append(fmtNum5(r[0])).append(' ').append(fmtNum5(r[1]));
+                    String nt = c.rnote != null ? c.rnote.get(pi) : null;
+                    if (nt != null && !nt.isBlank()) sb.append(' ').append(nt.trim());
+                    sb.append('\n');
+                }
+        for (Bind bd : b.binds) sb.append(bd.line()).append('\n');
+        for (String n : b.notes) sb.append("note ").append(n).append('\n');
+        return sb.toString();
+    }
+    static String layerLine(Clip c) {
+        StringBuilder sb = new StringBuilder(String.format(Locale.ROOT, "layer %s %s %d %.4f %d", c.id, c.name, c.type, c.on == ON_NONE ? 0 : c.dur, c.seed));
+        for (int i = 0; i < c.p.length; i++) sb.append(String.format(Locale.ROOT, " %s=%.5f", key(c.type, i), c.p[i]));
+        if (c.file != null) sb.append(" file=").append(c.file);
+        sb.append(" keyed=").append(c.keyed);
+        if (c.on != ON_NONE) sb.append(" on=").append(ON_NAMES[c.on]);
+        if (c.lmute) sb.append(" mute=1");
+        return sb.append('\n').toString();
+    }
+
+    // ---- bench state (UI writes, audio reads)
+    final Bench bench = new Bench();
+    boolean benchOn;                        // the workbench shows the bench instead of the timeline (H); remembered in lab.cfg
+    String benchName;                       // workspace-relative file the bench was opened from / stamped to
+    volatile boolean benchPlaying;
+    volatile Clip benchSolo;
+    final double[] sigVal = new double[SIGNALS.length];
+    volatile Bench sig; volatile String sigName;   // the signature blended in by the score signal
+    final java.util.concurrent.ConcurrentLinkedQueue<Clip> fireQ = new java.util.concurrent.ConcurrentLinkedQueue<>();
+    final ArrayList<Clip> transients = new ArrayList<>();   // one-shots in flight (audio thread only)
+    boolean benchDirty;
+    int benchScroll, benchGen;              // benchGen: bumped on structural changes so the panel knows to rebuild its lists
+    final ArrayDeque<String> bUndo = new ArrayDeque<>(), bRedo = new ArrayDeque<>();   // bench undo: whole-bench text snapshots
+    String pendingBench;
+    BenchPanel bpanel; boolean bpanelOn;    // the docked regulator panel (J); remembered in lab.cfg
+    volatile boolean sigDriven;             // the machine window is writing the signals: the panel's sliders follow, not lead
+    volatile boolean bindsOn = true;        // panel toggle: off = hear every layer at its saved params (auditioning)
+
+    double signal(String name) {
+        int i = sigIdx(name);
+        if (i >= 0) return sigVal[i];
+        if (name.endsWith(".pitch")) {
+            int a = sigIdx(name.substring(0, name.length() - 6) + ".ratio");
+            if (a < 0) return 0;
+            double r = sigVal[a];
+            if (r <= 0.05) return 0;
+            double st = 12 * Math.log(r) / Math.log(2);
+            return ((st % 12) + 12) % 12;
+        }
+        return 0;
+    }
+    double signalMax(String name) { int i = sigIdx(name); return i >= 0 ? SIG_MAX[i] : name.endsWith(".pitch") ? 12 : 1; }
+    double signalNorm(String name) { return Math.max(0, Math.min(1, signal(name) / signalMax(name))); }
+    static double smoothstep(double a, double b, double x) { double u = Math.max(0, Math.min(1, (x - a) / (b - a))); return u * u * (3 - 2 * u); }
+    /** How far the signature has blended in: 0 below score 0.55, 1 at 1. */
+    double blendW() { return smoothstep(0.55, 1.0, sigVal[SIG_SCORE]); }
+
+    /** Audio thread, once per block: the clips that sound now, with each
+     *  layer's modulation target computed from the signals, the binds and the
+     *  signature. Bound params are absolute targets (the modulation is the
+     *  difference from the saved value) unless the bind is `rel`; the blend
+     *  then moves everything toward the signature's values by w. */
+    void benchLive(double now, List<Clip> out) {
+        double w = blendW();
+        Bench sg = sig;
+        Clip so = benchSolo;
+        List<Clip> ls; List<Bind> bs;
+        synchronized (lock) { ls = new ArrayList<>(bench.layers); bs = new ArrayList<>(bench.binds); }
+        for (Clip c : ls) {
+            if (c.on != ON_NONE) continue;                      // one-shots only sound when fired
+            if (so != null ? c != so : c.lmute) continue;
+            double[] m = c.mod;
+            if (m == null || m.length != c.p.length) m = new double[c.p.length]; else Arrays.fill(m, 0);
+            if (bindsOn) for (Bind b : bs) {
+                if (!(b.layer.equals("*") || b.layer.equals(c.id))) continue;
+                int pi = idxOf(c.type, b.param);
+                if (pi < 0) continue;
+                double lo = b.lo, hi = b.hi;
+                if (b.auto()) {
+                    double[] r = c.range != null ? c.range.get(pi) : null;
+                    PSpec s = spec(c.type, pi);
+                    lo = r != null ? r[0] : b.rel ? 0 : s.min();
+                    hi = r != null ? r[1] : b.rel ? s.max() - s.min() : s.max();
+                }
+                double v = lo + (hi - lo) * signalNorm(b.sig);
+                m[pi] += b.rel ? v : v - c.p[pi];
+            }
+            if (sg != null && w > 0) {
+                Clip s = sg.byId(c.id);
+                if (s != null && s.type == c.type) for (int i = 0; i < m.length; i++) m[i] = (1 - w) * m[i] + w * (s.p[i] - c.p[i]);
+            }
+            c.mod = m;
+            out.add(c);
+        }
+        if (sg != null && w > 0 && so == null)
+            for (Clip s : sg.layers) {   // layers only the signature has fade in with the blend
+                if (s.on != ON_NONE) continue;
+                boolean inPalette = false;
+                for (Clip c : ls) if (s.id != null && s.id.equals(c.id)) { inPalette = true; break; }
+                if (inPalette) continue;
+                double[] m = s.mod;
+                if (m == null || m.length != s.p.length) m = new double[s.p.length]; else Arrays.fill(m, 0);
+                m[P_LEVEL] = (w - 1) * s.p[P_LEVEL];
+                s.mod = m;
+                out.add(s);
+            }
+        for (Clip f; (f = fireQ.poll()) != null; ) { f.start = now; transients.add(f); }
+        transients.removeIf(f -> now >= f.end());
+        out.addAll(transients);
+    }
+
+    /** Fires a one-shot layer: a copy, so a layer can overlap itself. Starts the bench if it is stopped. */
+    void fire(Clip c) {
+        Clip f = copyClip(c);
+        f.id = null; f.on = ON_NONE; f.lmute = false; f.range = null; f.rnote = null;
+        if (f.dur >= ENDLESS / 2) f.dur = naturalDur(c);
+        fireQ.add(f);
+        if (!benchPlaying) { seekTo = 0; benchPlaying = true; }
+    }
+    /** The lock / unlock event: every one-shot layer marked for it fires (the bench's own and the picked signature's). */
+    void fireEvent(int on) { fireEvent(on, true); }
+    void fireEvent(int on, boolean setScore) {
+        int n = 0;
+        List<Clip> ls;
+        synchronized (lock) { ls = new ArrayList<>(bench.layers); }
+        for (Clip c : ls) if (c.on == on) { fire(c); n++; }
+        Bench sg = sig;
+        if (sg != null && (sigName == null || benchName == null || !benchName.endsWith("/" + sigName + ".sfx")))
+            for (Clip c : sg.layers) if (c.on == on) { fire(c); n++; }
+        if (setScore) { if (on == ON_LOCK) setSignal(SIG_SCORE, 1); else if (sigVal[SIG_SCORE] > 0.5) setSignal(SIG_SCORE, 0.5); }
+        toast(ON_NAMES[on] + (n > 0 ? ": " + n + " one-shot" + (n > 1 ? "s" : "") + " fired" : " — no one-shot layer is set to fire on it"));
+    }
+    void setSignal(int i, double v) { sigVal[i] = Math.max(0, Math.min(SIG_MAX[i], v)); if (bpanel != null) bpanel.pull(); }
+
+    // ---- layer management
+    String newLayerId(String base) {
+        String b = base.replaceAll("^.*/", "").replaceAll("\\.[^.]+$", "").replaceAll("[^A-Za-z0-9_]+", "").toLowerCase(Locale.ROOT);
+        if (b.isEmpty()) b = "layer";
+        if (b.length() > 16) b = b.substring(0, 16);
+        String id = b; int n = 2;
+        while (bench.byId(id) != null) id = b + n++;
+        return id;
+    }
+    /** Adds any clip to the bench as a layer: endless unless it already carries on=. */
+    Clip addLayer(Clip c) {
+        pushUndo("");
+        c.track = 0; c.start = 0; c.vlink = false;
+        if (c.id == null || bench.byId(c.id) != null) c.id = newLayerId(c.id != null ? c.id : c.name);
+        if (c.on == ON_NONE) c.dur = ENDLESS;
+        if (c.type == SAMPLE && c.on == ON_NONE) c.p[NCOMMON] = 1;   // an endless sample layer loops
+        synchronized (lock) { bench.layers.add(c); }
+        sel = c; benchGen++; markEdit();
+        return c;
+    }
+    /** In bench mode a new clip becomes a layer; on the timeline it lands as usual. */
+    void place(Clip c) {
+        if (benchOn) addLayer(c);
+        else { synchronized (lock) { clips.add(c); } sel = c; markEdit(); }
+    }
+    void removeLayer(Clip c) {
+        pushUndo("");
+        synchronized (lock) { bench.layers.remove(c); }
+        if (sel == c) sel = null;
+        if (benchSolo == c) benchSolo = null;
+        benchGen++; markEdit();
+    }
+    /** How long a layer plays once: the recording's length at its rate, else 1.5 s. */
+    double naturalDur(Clip c) {
+        if (sampled(c)) {
+            float[][] s = sample(c.file);
+            double rate = c.p[speedIdx(c.type)] * (keepLen(c) ? 1 : Math.pow(2, c.p[P_PITCH] / 12.0));
+            if (rate < 0.01) rate = 1;
+            return Math.max(0.05, s[0].length / (double) SR / rate);
+        }
+        return 1.5;
+    }
+    void setLayerOn(Clip c, int on) {
+        pushUndo("");
+        c.on = on;
+        c.dur = on == ON_NONE ? ENDLESS : (c.dur >= ENDLESS / 2 ? naturalDur(c) : c.dur);
+        if (on == ON_NONE && c.type == SAMPLE) c.p[NCOMMON] = 1;
+        benchGen++; markEdit();
+    }
+    void renameLayer(Clip c) {
+        String in = (String) JOptionPane.showInputDialog(this, "Layer id (binds and signatures refer to it):", "Rename layer", JOptionPane.PLAIN_MESSAGE, null, null, c.id);
+        if (in == null) return;
+        String id = in.trim().replaceAll("[^A-Za-z0-9_]+", "");
+        if (id.isEmpty() || id.equals(c.id)) return;
+        if (bench.byId(id) != null) { toast("id " + id + " is taken"); return; }
+        pushUndo("");
+        for (Bind b : bench.binds) if (b.layer.equals(c.id)) b.layer = id;
+        c.id = id; benchGen++; markEdit();
+    }
+    void setRange(Clip c, int pi, double lo, double hi) {
+        pushUndo("");
+        if (c.range == null) c.range = new HashMap<>();
+        double[] r = c.range.get(pi);
+        if (Double.isNaN(lo)) lo = r != null ? r[0] : spec(c.type, pi).min();
+        if (Double.isNaN(hi)) hi = r != null ? r[1] : spec(c.type, pi).max();
+        c.range.put(pi, new double[]{Math.min(lo, hi), Math.max(lo, hi)});
+        benchGen++; markEdit();
+    }
+    void clearRange(Clip c, int pi) {
+        pushUndo("");
+        if (c.range != null) c.range.remove(pi);
+        if (c.rnote != null) c.rnote.remove(pi);
+        benchGen++; markEdit();
+    }
+    void addBind(String sg, String layer, String pname) {
+        pushUndo("");
+        boolean rel = pname.equals("pitch");   // pitch rides on the layer's own tuning; everything else targets absolute knob positions
+        synchronized (lock) { bench.binds.add(new Bind(sg, layer, pname, rel ? 0 : Double.NaN, rel ? 12 : Double.NaN, rel)); }
+        benchGen++; markEdit();
+        toast("bind " + sg + " → " + layer + "." + pname + (rel ? " (+0..12 st)" : " (marked range, else full range — edit in the panel)"));
+    }
+    void removeBind(Bind b) { pushUndo(""); synchronized (lock) { bench.binds.remove(b); } benchGen++; markEdit(); }
+    List<Bind> bindsOn(Clip c, int pi) {
+        ArrayList<Bind> out = new ArrayList<>();
+        String k = key(c.type, pi);
+        for (Bind b : bench.binds) if (b.param.equals(k) && (b.layer.equals("*") || b.layer.equals(c.id))) out.add(b);
+        return out;
+    }
+    /** shift+H: the selected timeline clip joins the bench. Loops become beds; anything else a lock one-shot. */
+    void sendSelToBench() {
+        if (sel == null) { toast("select a clip first"); return; }
+        Clip c = copyClip(sel);
+        c.id = null;
+        boolean bed = c.type == CLOUD || c.type == TONE || c.type == NOISE || c.type == CHOIR || (sampled(c) && looping(c));
+        c.on = bed ? ON_NONE : ON_LOCK;
+        boolean was = benchOn;
+        benchOn = true;
+        addLayer(c);
+        benchOn = was;
+        toast(c.id + " added to the bench as " + (bed ? "an endless layer" : "a one-shot on lock") + (was ? "" : " (H shows the bench)"));
+    }
+    /** A layer goes back to the timeline as a clip at the playhead. */
+    void layerToTimeline(Clip c) {
+        Clip n = copyClip(c);
+        n.id = null; n.on = ON_NONE; n.lmute = false; n.range = null; n.rnote = null;
+        n.track = selTrack; n.start = playPos;
+        if (n.dur >= ENDLESS / 2) n.dur = sampled(c) ? naturalDur(c) : 4.0;
+        boolean was = benchOn;
+        benchOn = false;
+        pushUndo("");
+        synchronized (lock) { clips.add(n); }
+        benchOn = was;
+        markEdit();
+        toast(c.id + " copied to the timeline at the playhead (H shows it)");
+    }
+
+    // ---- bench files
+    void saveBench(boolean quiet) {
+        try {
+            Files.createDirectories(DIR);
+            Files.writeString(BENCH_FILE, benchText(bench, rootHz));
+            benchDirty = false;
+            if (!quiet) toast("bench autosaved — S stamps it to a named palette");
+        } catch (Exception e) { toast("bench save failed: " + e); }
+    }
+    void installBench(Bench b) {
+        synchronized (lock) {
+            bench.layers.clear(); bench.layers.addAll(b.layers);
+            bench.binds.clear(); bench.binds.addAll(b.binds);
+        }
+        bench.notes.clear(); bench.notes.addAll(b.notes);
+        bench.palette = b.palette;
+        benchSolo = null; benchScroll = 0; benchGen++;
+    }
+    String relPath(Path f) {
+        try { return DIR.relativize(f.toAbsolutePath().normalize()).toString().replace('\\', '/'); }
+        catch (Exception e) { return f.toString(); }
+    }
+    void loadBenchFile(Path f) {
+        try {
+            Bench b = parseBench(Files.readAllLines(f));
+            pushBenchUndo("");
+            benchPlaying = false;
+            installBench(b);
+            rootHz = b.root > 0 ? b.root : ROOT_DEFAULT;
+            sel = null;
+            if (!f.equals(BENCH_FILE)) benchName = relPath(f);
+            markEdit();
+            toast("opened " + f.getFileName() + " (" + b.layers.size() + " layers, " + b.binds.size() + " binds)" + (b.palette != null ? " — a signature of " + b.palette : ""));
+        } catch (Exception e) { toast("open failed: " + e); }
+    }
+    void openBench() {
+        JFileChooser fc = new JFileChooser((Files.isDirectory(PROJECTS_DIR) ? PROJECTS_DIR : DIR).toFile());
+        fc.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("bench files: palettes (projects/) and signatures (spells/)", "sfx"));
+        if (fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) loadBenchFile(fc.getSelectedFile().toPath());
+    }
+    /** S on the bench: stamp it as a palette (projects/) or, from the action bar, as a spell signature (spells/). */
+    void stampBench(boolean signature) {
+        Path dir = signature ? SPELLS_DIR : PROJECTS_DIR;
+        String def = benchName != null ? Paths.get(benchName).getFileName().toString().replaceFirst("\\.sfx$", "") : "";
+        String name = (String) JOptionPane.showInputDialog(this,
+                signature ? "Save the layers as a spell signature (in spells/):" : "Save the bench as a palette (in projects/):",
+                "Save", JOptionPane.PLAIN_MESSAGE, null, null, def);
+        if (name == null) return;
+        name = name.trim();
+        if (name.isEmpty()) return;
+        if (!name.toLowerCase(Locale.ROOT).endsWith(".sfx")) name += ".sfx";
+        Path f = dir.resolve(name);
+        String rel = relPath(f);
+        if (Files.exists(f) && !rel.equals(benchName) && JOptionPane.showConfirmDialog(this,
+                name + " exists — overwrite?", "Save", JOptionPane.OK_CANCEL_OPTION) != JOptionPane.OK_OPTION)
+            return;
+        try {
+            Files.createDirectories(dir);
+            if (signature) { if (benchName != null && benchName.startsWith("projects/")) bench.palette = benchName; }
+            else bench.palette = null;
+            Files.writeString(f, benchText(bench, rootHz));
+            benchName = rel; benchGen++;
+            toast("saved " + rel + (signature ? "  — pick it in the regulator panel (J) and drag score to hear it blend in" : ""));
+        } catch (Exception e) { toast("save failed: " + e); }
+    }
+    void clearBench() {
+        pushBenchUndo("");
+        benchPlaying = false;
+        installBench(new Bench());
+        sel = null; benchName = null;
+        markEdit();
+        toast("bench cleared (ctrl+Z undoes)");
+    }
+    void pickSignature(String name) {
+        if (name == null || name.equals("(none)")) { sig = null; sigName = null; return; }
+        try {
+            Bench b = parseBench(Files.readAllLines(SPELLS_DIR.resolve(name + ".sfx")));
+            sig = b; sigName = name;
+            toast("signature " + name + ": " + b.layers.size() + " layers — score blends it in above 0.55");
+        } catch (Exception e) { toast("signature failed: " + e); }
+    }
+    static List<String> signatureNames() {
+        ArrayList<String> out = new ArrayList<>();
+        try (var st = Files.list(SPELLS_DIR)) {
+            st.map(p -> p.getFileName().toString()).filter(n -> n.endsWith(".sfx")).map(n -> n.substring(0, n.length() - 4)).sorted().forEach(out::add);
+        } catch (IOException ignored) {}
+        return out;
+    }
+
+    // ---- bench undo (whole-bench text snapshots; pushUndo / commitPending route here in bench mode)
+    void pushBenchUndo(String tag) {
+        long now = System.currentTimeMillis();
+        if (!tag.isEmpty() && tag.equals(lastOpTag) && now - lastOpAt < 1200) { lastOpAt = now; return; }
+        lastOpTag = tag; lastOpAt = now;
+        bUndo.push(benchText(bench, rootHz));
+        if (bUndo.size() > 100) bUndo.removeLast();
+        bRedo.clear();
+    }
+    void restoreBench(String text) {
+        Bench b = parseBench(Arrays.asList(text.split("\n")));
+        String selId = sel != null ? sel.id : null;
+        installBench(b);
+        sel = bench.byId(selId);
+        markEdit();
+    }
+    void benchUndo() {
+        if (bUndo.isEmpty()) { toast("nothing to undo"); return; }
+        bRedo.push(benchText(bench, rootHz));
+        restoreBench(bUndo.pop());
+        lastOpTag = "";
+        toast("undo");
+    }
+    void benchRedo() {
+        if (bRedo.isEmpty()) { toast("nothing to redo"); return; }
+        bUndo.push(benchText(bench, rootHz));
+        restoreBench(bRedo.pop());
+        lastOpTag = "";
+        toast("redo");
+    }
+    /** Mouse-press bookkeeping for a drag: the undo snapshot is taken now, committed on the first change. */
+    void grabUndo() { if (benchOn) pendingBench = benchText(bench, rootHz); else pendingSnap = snapshot(); }
+
+    // ---- bench UI: the layer rows take the timeline's place
+    static final String[] BENCH_ACTIONS = {"open", "save as", "signature", "panel", "browser", "timeline"};
+    String[] actions() { return benchOn ? BENCH_ACTIONS : ACTIONS; }
+    int benchRowH() { return 26; }
+    int benchRowsY() { return rulerY() + 26; }
+    int benchRowsN() { return Math.max(1, (panelY() - 8 - benchRowsY()) / benchRowH()); }
+    Rectangle benchRowRect(int i) { return new Rectangle(8, benchRowsY() + (i - benchScroll) * benchRowH(), getWidth() - 20, benchRowH() - 2); }
+    Rectangle levelRect(int i) { Rectangle r = benchRowRect(i); return new Rectangle(r.x + r.width - 400, r.y + 8, 110, 9); }
+
+    void toggleBench() {
+        benchOn = !benchOn;
+        playing = false; benchPlaying = false; solo = null; benchSolo = null; sel = null;
+        dragMode = DR_NONE;
+        saveCfg();
+        toast(benchOn ? "bench: layers sound together; signals drive them — J opens the regulator panel, H returns to the timeline"
+                      : "timeline");
+    }
+    void toggleBenchPlay() {
+        if (!benchPlaying) { seekTo = 0; benchPlaying = true; }
+        else benchPlaying = false;
+    }
+    void selectLayer(int d) {
+        if (bench.layers.isEmpty()) return;
+        int i = sel != null ? bench.layers.indexOf(sel) : -1;
+        i = Math.max(0, Math.min(bench.layers.size() - 1, i + d));
+        sel = bench.layers.get(i);
+        if (i < benchScroll) benchScroll = i;
+        if (i >= benchScroll + benchRowsN()) benchScroll = i - benchRowsN() + 1;
+    }
+
+    void paintBench(Graphics2D g, int w) {
+        int y0 = rulerY();
+        g.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 13));
+        g.setColor(new Color(245, 235, 215));
+        int n = bench.layers.size();
+        g.drawString(String.format(Locale.ROOT, "BENCH  %s   %d layer%s   %s   score %.2f → blend %.0f%%   signature %s%s",
+                benchName != null ? benchName : "(unsaved bench)", n, n == 1 ? "" : "s", benchPlaying ? "▶" : "‖",
+                sigVal[SIG_SCORE], 100 * blendW(), sigName != null ? sigName : "none",
+                bench.palette != null ? "   (this file is a signature of " + bench.palette + ")" : ""), tlX() - 40, y0 + 14);
+        g.setColor(new Color(60, 60, 60));
+        g.drawLine(8, y0 + 20, w - 12, y0 + 20);
+        g.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
+        if (n == 0) {
+            g.setColor(Color.GRAY);
+            g.drawString("no layers yet — 1-9/0 add a synth layer, W imports a recording, A opens the sample browser (its adds land here),", 20, benchRowsY() + 20);
+            g.drawString("shift+H sends the selected timeline clip over. Every layer sounds at once while the bench plays (SPACE).", 20, benchRowsY() + 38);
+            return;
+        }
+        int rows = benchRowsN();
+        benchScroll = Math.max(0, Math.min(benchScroll, Math.max(0, n - rows)));
+        Shape clip0 = g.getClip();
+        g.clipRect(0, benchRowsY() - 2, w, rows * benchRowH() + 4);
+        for (int i = benchScroll; i < Math.min(n, benchScroll + rows); i++) {
+            Clip c = bench.layers.get(i);
+            Rectangle r = benchRowRect(i);
+            boolean isSel = c == sel, muted = c.lmute && benchSolo == null || benchSolo != null && benchSolo != c;
+            g.setColor(isSel ? new Color(42, 42, 42) : i % 2 == 0 ? new Color(16, 16, 16) : new Color(23, 23, 23));
+            g.fillRect(r.x, r.y, r.width, r.height);
+            // mute / solo boxes
+            g.setColor(c.lmute ? new Color(180, 60, 60) : new Color(60, 60, 60));
+            if (c.lmute) g.fillRect(r.x + 4, r.y + 5, 14, 14); else g.drawRect(r.x + 4, r.y + 5, 14, 14);
+            g.setColor(c.lmute ? Color.WHITE : Color.GRAY);
+            g.drawString("M", r.x + 7, r.y + 17);
+            boolean so = benchSolo == c;
+            g.setColor(so ? new Color(90, 200, 160) : new Color(60, 60, 60));
+            if (so) g.fillRect(r.x + 24, r.y + 5, 14, 14); else g.drawRect(r.x + 24, r.y + 5, 14, 14);
+            g.setColor(so ? Color.BLACK : Color.GRAY);
+            g.drawString("S", r.x + 28, r.y + 17);
+            Color tc = TYPE_COLORS[c.type];
+            g.setColor(new Color(tc.getRed(), tc.getGreen(), tc.getBlue(), muted ? 90 : 220));
+            g.fillRect(r.x + 46, r.y + 5, 6, 14);
+            g.setColor(isSel ? Color.WHITE : muted ? Color.GRAY : Color.LIGHT_GRAY);
+            g.drawString(String.format(Locale.ROOT, "%-14s", c.id.length() > 14 ? c.id.substring(0, 14) : c.id), r.x + 60, r.y + 17);
+            g.setColor(muted ? new Color(90, 90, 90) : Color.GRAY);
+            String nm = c.name.length() > 30 ? c.name.substring(0, 29) + "…" : c.name;
+            g.drawString(String.format(Locale.ROOT, "%-31s %-8s", nm, TYPE_NAMES[c.type]), r.x + 60 + 15 * 7, r.y + 17);
+            // level bar with the live (modulated) level as a white tick
+            Rectangle lr = levelRect(i);
+            g.setColor(new Color(70, 70, 70));
+            g.drawRect(lr.x, lr.y, lr.width, lr.height);
+            double lmax = spec(c.type, P_LEVEL).max();
+            g.setColor(new Color(tc.getRed(), tc.getGreen(), tc.getBlue(), muted ? 60 : 170));
+            g.fillRect(lr.x + 1, lr.y + 1, (int) (Math.min(1, c.p[P_LEVEL] / lmax) * (lr.width - 1)), lr.height - 1);
+            double[] m = c.mod;
+            if (m != null && benchPlaying && !muted) {
+                int lx = lr.x + 1 + (int) (Math.max(0, Math.min(1, (c.p[P_LEVEL] + m[P_LEVEL]) / lmax)) * (lr.width - 2));
+                g.setColor(Color.WHITE);
+                g.drawLine(lx, lr.y - 2, lx, lr.y + lr.height + 2);
+            }
+            g.setColor(Color.GRAY);
+            g.drawString("level", lr.x - 42, r.y + 17);
+            // right: what the layer is and what moves it
+            int nb = 0, nr = c.range != null ? c.range.size() : 0;
+            for (Bind b : bench.binds) if (b.layer.equals("*") || b.layer.equals(c.id)) nb++;
+            String tag = c.on != ON_NONE ? String.format(Locale.ROOT, "on %s %.2fs", ON_NAMES[c.on], c.dur) : "endless";
+            g.setColor(c.on != ON_NONE ? new Color(255, 200, 120) : new Color(120, 120, 120));
+            g.drawString(tag, lr.x + lr.width + 14, r.y + 17);
+            g.setColor(new Color(120, 120, 120));
+            g.drawString((nb > 0 ? nb + " bind" + (nb > 1 ? "s" : "") : "") + (nr > 0 ? (nb > 0 ? " · " : "") + nr + " range" + (nr > 1 ? "s" : "") : ""),
+                    lr.x + lr.width + 14 + 16 * 7, r.y + 17);
+        }
+        g.setClip(clip0);
+        if (n > rows) {
+            g.setColor(Color.GRAY);
+            g.drawString(String.format(Locale.ROOT, "↕ %d-%d of %d (wheel scrolls)", benchScroll + 1, Math.min(n, benchScroll + rows), n), w - 12 - 30 * 7, y0 + 14);
+        }
+    }
+
+    void benchClick(MouseEvent e) {
+        int mx = e.getX(), my = e.getY();
+        if (my < benchRowsY()) return;
+        int row = (my - benchRowsY()) / benchRowH() + benchScroll;
+        if (row < 0 || row >= bench.layers.size() || row - benchScroll >= benchRowsN()) { if (!SwingUtilities.isRightMouseButton(e)) sel = null; return; }
+        Clip c = bench.layers.get(row);
+        Rectangle r = benchRowRect(row);
+        if (SwingUtilities.isRightMouseButton(e)) { sel = c; layerMenu(c, mx, my); return; }
+        if (mx >= r.x + 4 && mx < r.x + 18) { pushUndo(""); c.lmute = !c.lmute; markEdit(); return; }
+        if (mx >= r.x + 24 && mx < r.x + 38) { benchSolo = benchSolo == c ? null : c; return; }
+        sel = c;
+        Rectangle lr = levelRect(row);
+        if (new Rectangle(lr.x - 2, lr.y - 5, lr.width + 4, lr.height + 10).contains(mx, my)) {
+            grabUndo(); dragMode = DR_LEVEL; setLevel(mx); return;
+        }
+        if (e.getClickCount() >= 2) renameLayer(c);
+    }
+    void setLevel(int mx) {
+        if (sel == null) return;
+        int row = bench.layers.indexOf(sel);
+        if (row < 0) return;
+        Rectangle lr = levelRect(row);
+        double u = Math.max(0, Math.min(1, (mx - lr.x) / (double) lr.width));
+        double v = Math.round(u * spec(sel.type, P_LEVEL).max() * 200) / 200.0;
+        if (sel.p[P_LEVEL] == v) return;
+        commitPending();
+        sel.p[P_LEVEL] = v;
+        markEdit();
+    }
+    static JMenuItem item(String label, Runnable r) { JMenuItem m = new JMenuItem(label); m.addActionListener(e -> r.run()); return m; }
+    void layerMenu(Clip c, int mx, int my) {
+        JPopupMenu m = new JPopupMenu();
+        m.add(item("rename id…  (" + c.id + ")", () -> renameLayer(c)));
+        m.addSeparator();
+        for (int on = 0; on < 3; on++) {
+            final int o = on;
+            JCheckBoxMenuItem it = new JCheckBoxMenuItem(on == ON_NONE ? "endless layer (a bed)" : "one-shot, fires on " + ON_NAMES[on], c.on == on);
+            it.addActionListener(e -> { if (c.on != o) setLayerOn(c, o); });
+            m.add(it);
+        }
+        if (c.on != ON_NONE) {
+            m.add(item(String.format(Locale.ROOT, "one-shot length…  (%.2fs)", c.dur), () -> {
+                String in = (String) JOptionPane.showInputDialog(this, "Seconds this one-shot plays:", "Length", JOptionPane.PLAIN_MESSAGE, null, null, String.format(Locale.ROOT, "%.2f", c.dur));
+                if (in == null) return;
+                try { double d = Double.parseDouble(in.trim()); if (d > 0.01) { pushUndo(""); c.dur = d; markEdit(); } } catch (NumberFormatException ex) { toast("couldn't parse \"" + in + "\""); }
+            }));
+            m.add(item("fire it now  (P)", () -> fire(c)));
+        }
+        m.addSeparator();
+        m.add(item("duplicate  (D)", () -> { sel = c; dupSel(); }));
+        m.add(item("copy to the timeline at the playhead", () -> layerToTimeline(c)));
+        m.add(item("remove  (DEL)", () -> removeLayer(c)));
+        m.show(this, mx, my);
+    }
+    /** Right-click on a slider in bench mode: value, range notes and binds for that param. */
+    void sliderMenu(int i, int mx, int my) {
+        Clip c = sel;
+        if (c == null) return;
+        PSpec s = spec(c.type, i);
+        String pname = key(c.type, i);
+        double[] r = c.range != null ? c.range.get(i) : null;
+        JPopupMenu m = new JPopupMenu();
+        m.add(item("type value…", () -> typeParam(i)));
+        m.addSeparator();
+        m.add(item(String.format(Locale.ROOT, "range low = here (%s)%s", fmtVal(c, i), r != null ? "   now " + fmtNum5(r[0]) : ""), () -> setRange(c, i, c.p[i], Double.NaN)));
+        m.add(item(String.format(Locale.ROOT, "range high = here (%s)%s", fmtVal(c, i), r != null ? "   now " + fmtNum5(r[1]) : ""), () -> setRange(c, i, Double.NaN, c.p[i])));
+        m.add(item("type range…", () -> {
+            String in = (String) JOptionPane.showInputDialog(this, s.name() + " range that sounds good: low high  (spec " + fmtNum(s.min()) + " .. " + fmtNum(s.max()) + ")",
+                    "Range", JOptionPane.PLAIN_MESSAGE, null, null, r != null ? fmtNum5(r[0]) + " " + fmtNum5(r[1]) : fmtNum(s.min()) + " " + fmtNum(s.max()));
+            if (in == null) return;
+            String[] t = in.trim().split("[\\s,]+");
+            try { setRange(c, i, Double.parseDouble(t[0]), Double.parseDouble(t[t.length > 1 ? 1 : 0])); }
+            catch (Exception ex) { toast("couldn't parse \"" + in + "\" — type two numbers"); }
+        }));
+        m.add(item("note…" + (c.rnote != null && c.rnote.get(i) != null ? "  (" + c.rnote.get(i) + ")" : ""), () -> {
+            String in = (String) JOptionPane.showInputDialog(this, "Note on " + c.id + "." + s.name() + " (what this range does, what to avoid):", "Note", JOptionPane.PLAIN_MESSAGE, null, null,
+                    c.rnote != null && c.rnote.get(i) != null ? c.rnote.get(i) : "");
+            if (in == null) return;
+            pushUndo("");
+            if (c.range == null || !c.range.containsKey(i)) setRange(c, i, s.min(), s.max());
+            if (c.rnote == null) c.rnote = new HashMap<>();
+            if (in.isBlank()) c.rnote.remove(i); else c.rnote.put(i, in.trim());
+            benchGen++; markEdit();
+        }));
+        if (r != null) m.add(item("clear range", () -> clearRange(c, i)));
+        m.addSeparator();
+        JMenu bm = new JMenu("bind a signal to " + c.id + "." + s.name());
+        for (String sg : SIGNAL_CHOICES) bm.add(item(sg, () -> addBind(sg, c.id, pname)));
+        m.add(bm);
+        JMenu bAll = new JMenu("bind a signal to every layer's " + s.name());
+        for (String sg : SIGNAL_CHOICES) bAll.add(item(sg, () -> addBind(sg, "*", pname)));
+        m.add(bAll);
+        for (Bind b : bindsOn(c, i)) m.add(item("remove bind " + b.sig + " → " + b.layer + "." + b.param, () -> removeBind(b)));
+        m.show(this, mx, my);
+    }
+
+    void showBenchPanel(boolean on) {
+        if (frame == null) return;
+        if (bpanel == null) bpanel = new BenchPanel(this);
+        if (on == bpanelOn && on == (bpanel.getParent() != null)) return;
+        dock(bpanel, on);
+        bpanelOn = on;
+        saveCfg();
+        if (!on) requestFocusInWindow();
+    }
+    void toggleBenchPanel() { showBenchPanel(!bpanelOn); }
+
+    // ---- the machine window (U): RegulatorCore with the prototype's controls, driving the bench
+    Machine machine;
+    void showMachine() {
+        if (machine == null) machine = new Machine(this);
+        machine.open();
+    }
+
+    /** The regulator machine: the prototype's control panel and stage around a RegulatorCore.
+     *  While "drive the bench" is on, the core's signals replace the panel's sliders every
+     *  frame and its lock / unlock events fire the bench's one-shots. */
+    static class Machine extends JPanel {
+        final SfxLab lab;
+        final RegulatorCore core = new RegulatorCore();
+        JFrame frame;
+        final Stage stage = new Stage();
+        final Crank crank = new Crank();
+        final JToggleButton power = new JToggleButton("Power receiver");
+        final JToggleButton[] armB = new JToggleButton[3];
+        final JButton[] axB = new JButton[3];
+        final JButton latchB = new JButton("Latch"), phaseB = new JButton("Phase ¼"), setpointB = new JButton("Load research setpoint"),
+                      voiceB = new JButton("Voice crystal"), readB = new JButton("Read into machine");
+        final JSlider reach = new JSlider(0, 100, 70);
+        final JCheckBox driveB = new JCheckBox("drive the bench", true), valsB = new JCheckBox("show values");
+        final JComboBox<String> viewBox = new JComboBox<>(new String[]{"orbit", "front", "top"});
+        final java.util.List<JToggleButton> targetB = new ArrayList<>();
+        final DefaultListModel<String> shelf = new DefaultListModel<>();
+        final JList<String> shelfL = new JList<>(shelf);
+        final JTextArea status = new JTextArea(2, 30);
+        final JTextArea vals = new JTextArea(8, 30);
+        String flash; long flashUntil;
+        long lastNs; double flashV; int frameNo;
+        double yaw, pitch = 0.35, dYaw, dPitch, ext = 1;
+
+        Machine(SfxLab lab) {
+            this.lab = lab;
+            setLayout(new BorderLayout(6, 6));
+            setBackground(Color.BLACK);
+            add(stage, BorderLayout.CENTER);
+            JPanel ctl = new JPanel(); ctl.setLayout(new BoxLayout(ctl, BoxLayout.Y_AXIS));
+            ctl.setBorder(BorderFactory.createEmptyBorder(6, 6, 6, 6));
+            Font mono = new Font(Font.MONOSPACED, Font.PLAIN, 12);
+            JPanel tg = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 2));
+            tg.add(new JLabel("blueprint:"));
+            ButtonGroup g = new ButtonGroup();
+            for (RegulatorCore.Recipe r : core.recipes) {
+                if (r.secret) continue;
+                JToggleButton b = new JToggleButton(r.name + " " + new String[]{"", "I", "II", "III"}[r.tier]);
+                b.addActionListener(e -> { core.setTarget(r); syncTarget(); });
+                g.add(b); tg.add(b); targetB.add(b);
+            }
+            targetB.get(0).setSelected(true);
+            ctl.add(tg);
+            JPanel pw = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 2));
+            power.addActionListener(e -> {
+                core.power(power.isSelected());
+                if (driveB.isSelected() && lab.benchOn) { if (power.isSelected() && !lab.benchPlaying) lab.toggleBenchPlay(); else if (!power.isSelected() && lab.benchPlaying) lab.toggleBenchPlay(); }
+                power.setText(power.isSelected() ? "Cut power" : "Power receiver");
+            });
+            pw.add(power); pw.add(new JLabel("view")); pw.add(viewBox);
+            ctl.add(pw);
+            ctl.add(section("arms — which one the motion levers act on"));
+            JPanel arms = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 2));
+            ButtonGroup ag = new ButtonGroup();
+            for (int i = 0; i < 3; i++) {
+                final int k = i;
+                armB[i] = new JToggleButton("Arm " + (i + 1));
+                armB[i].addActionListener(e -> core.selectArm(k));
+                ag.add(armB[i]); arms.add(armB[i]);
+            }
+            armB[0].setSelected(true);
+            ctl.add(arms);
+            ctl.add(section("motions — down is driven, lit is held; stop: crank to rest, latch"));
+            JPanel axes = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 2));
+            for (int i = 0; i < 3; i++) {
+                final int k = i;
+                axB[i] = new JButton(RegulatorCore.AXIS[i] + "  off");
+                axB[i].setFont(mono);
+                axB[i].setPreferredSize(new Dimension(118, 28));
+                axB[i].addActionListener(e -> { if (!core.axisLever(k)) notify("At tier " + core.target.tier + " each arm can hold " + core.target.motionsPerArm() + " motion" + (core.target.motionsPerArm() > 1 ? "s" : "") + "."); });
+                axes.add(axB[i]);
+            }
+            ctl.add(axes);
+            ctl.add(section("crank — drag to spin, wheel to nudge (shift: fine); it winds down and catches"));
+            JPanel ck = new JPanel(new FlowLayout(FlowLayout.LEFT, 6, 2));
+            ck.add(crank);
+            JPanel nb = new JPanel(new GridLayout(3, 1, 2, 2));
+            JButton up = new JButton("+"), dn = new JButton("−");
+            up.addActionListener(e -> core.nudge(1, RegulatorCore.NUDGE_BUTTON));
+            dn.addActionListener(e -> core.nudge(-1, RegulatorCore.NUDGE_BUTTON));
+            latchB.addActionListener(e -> { int d = core.drivenCount(); if (d == 0) return; int caught = core.caught; int st = core.latch();
+                notify(st == d ? "Stopped. Those motions are at rest." : caught >= 0 ? "Held at resonance." : "Held off-resonance. It will drift."); });
+            nb.add(up); nb.add(dn); nb.add(latchB);
+            ck.add(nb);
+            ctl.add(ck);
+            ctl.add(section("trim — applies to every driven motion"));
+            JPanel tr = new JPanel(new FlowLayout(FlowLayout.LEFT, 6, 2));
+            phaseB.addActionListener(e -> core.phaseStep());
+            reach.setPreferredSize(new Dimension(140, 20));
+            reach.addChangeListener(e -> core.setReach(reach.getValue() / 100.0));
+            tr.add(phaseB); tr.add(new JLabel("reach")); tr.add(reach);
+            ctl.add(tr);
+            ctl.add(section("research station · shelf"));
+            JPanel rs = new JPanel(new FlowLayout(FlowLayout.LEFT, 6, 2));
+            setpointB.addActionListener(e -> { core.loadSetpoint(new Random()); notify("Setpoint loaded from the research station. It is close, not exact."); });
+            voiceB.addActionListener(e -> {
+                java.util.List<RegulatorCore.Snap> snap = core.voice();
+                if (snap == null) return;
+                shelf.addElement(core.target.name + "  (" + snap.size() + " motions)");
+                flashV = 1;
+                notify(core.target.name + " voiced. A fresh crystal is in the socket.");
+            });
+            rs.add(setpointB); rs.add(voiceB);
+            ctl.add(rs);
+            shelfL.setFont(mono); shelfL.setVisibleRowCount(3);
+            JScrollPane sp = new JScrollPane(shelfL); sp.setPreferredSize(new Dimension(360, 60));
+            ctl.add(sp);
+            readB.addActionListener(e -> {
+                int i = shelfL.getSelectedIndex();
+                if (i < 0 || i >= core.voiced().size()) return;
+                core.applySnapshot(core.voiced().get(i), RegulatorCore.SOCKET_JITTER, false, new Random());
+                notify("The copy socket got close. Re-catch each motion to clean it up.");
+            });
+            JPanel rb = new JPanel(new FlowLayout(FlowLayout.LEFT, 6, 2)); rb.add(readB); rb.add(driveB); rb.add(valsB);
+            ctl.add(rb);
+            status.setFont(new Font(Font.SANS_SERIF, Font.ITALIC, 13));
+            status.setEditable(false); status.setLineWrap(true); status.setWrapStyleWord(true); status.setOpaque(false);
+            status.setMaximumSize(new Dimension(380, 40));
+            ctl.add(status);
+            vals.setFont(mono); vals.setEditable(false);
+            JScrollPane vs = new JScrollPane(vals); vs.setPreferredSize(new Dimension(360, 150));
+            ctl.add(vs);
+            ctl.add(Box.createVerticalGlue());
+            add(ctl, BorderLayout.EAST);
+            syncTarget();
+            new javax.swing.Timer(33, e -> frameTick()).start();
+        }
+        static JLabel section(String t) { JLabel l = new JLabel(t); l.setForeground(Color.GRAY); l.setBorder(BorderFactory.createEmptyBorder(6, 2, 0, 2)); return l; }
+        void open() {
+            if (frame == null) {
+                frame = new JFrame("Harmonic Regulator — the machine");
+                frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+                frame.add(this);
+                frame.setSize(1180, 720);
+                frame.setLocationByPlatform(true);
+            }
+            frame.setVisible(true); frame.toFront();
+        }
+        void notify(String m) { flash = m; flashUntil = System.currentTimeMillis() + 3500; }
+        void syncTarget() {
+            for (int i = 0; i < 3; i++) armB[i].setEnabled(i < core.target.arms());
+            armB[0].setSelected(true);
+            stage.repaint();
+        }
+        void frameTick() {
+            if (frame != null && !frame.isVisible()) { lastNs = 0; if (lab.sigDriven) { lab.sigDriven = false; lab.benchGen++; } return; }   // closed: nothing runs, the panel's sliders are free again
+            long now = System.nanoTime();
+            double dt = lastNs == 0 ? 1 / 60.0 : Math.min(0.05, (now - lastNs) / 1e9);
+            lastNs = now;
+            core.tick(dt);
+            flashV = Math.max(0, flashV - dt * 1.2);
+            frameNo++;
+            boolean driving = driveB.isSelected();
+            if (driving != lab.sigDriven) { lab.sigDriven = driving; lab.benchGen++; }
+            if (driving) {
+                for (int i = 0; i < RegulatorCore.SIGNALS.length; i++) { int k = sigIdx(RegulatorCore.SIGNALS[i]); if (k >= 0) lab.sigVal[k] = core.signals[i]; }
+                if (lab.bpanel != null && lab.bpanelOn && frameNo % 3 == 0) lab.bpanel.pull();   // 10 Hz is plenty for twelve sliders
+            }
+            for (String ev : core.events()) {
+                if (ev.equals("lock")) { if (driving) lab.fireEvent(ON_LOCK, false); }
+                else if (ev.equals("unlock")) { if (driving) lab.fireEvent(ON_UNLOCK, false); }
+                else if (ev.startsWith("discover:")) notify("Something answered that no blueprint shows: " + core.recipe(ev.substring(9)).name + ".");
+                else if (ev.startsWith("wrong:")) notify("That's the " + core.recipe(ev.substring(6)).name + " sigil. It isn't the one pinned up.");
+            }
+            // panel state
+            RegulatorCore.Motion[] ms = core.comps[core.arm];
+            for (int i = 0; i < 3; i++) {
+                RegulatorCore.Motion m = ms[i];
+                axB[i].setText(RegulatorCore.AXIS[i] + "  " + (!m.eng ? "off" : m.drv ? "driven" : String.format(Locale.ROOT, "held ×%.2f", m.r)));
+                axB[i].setForeground(!m.eng ? Color.GRAY : m.drv ? new Color(200, 120, 40) : new Color(230, 190, 120));
+            }
+            for (int i = 0; i < 3; i++) if (armB[i].isSelected() != (i == core.arm)) armB[i].setSelected(i == core.arm);
+            int d = core.drivenCount();
+            latchB.setEnabled(d > 0); phaseB.setEnabled(d > 0); reach.setEnabled(d > 0);
+            RegulatorCore.Motion fd = core.firstDriven();
+            if (fd != null && !reach.getValueIsAdjusting()) { int v = (int) Math.round(fd.amp * 100); if (reach.getValue() != v) reach.setValue(v); }
+            voiceB.setEnabled(core.targetEval.exact && core.powered);
+            readB.setEnabled(!core.voiced().isEmpty());
+            // status line, the prototype's
+            String m;
+            if (System.currentTimeMillis() < flashUntil) m = flash;
+            else if (!core.powered) m = "Power the receiver to begin.";
+            else if (core.targetEval.exact) m = "The sigil holds. Pull the voice lever to write it to the crystal.";
+            else if (d > 0 && core.caught == 0) m = "At rest. Spin the crank up to drive the motion, or latch to stop it.";
+            else if (d > 0 && core.caught > 0) m = "Caught a resonance. Latch to hold it, or nudge on.";
+            else if (d > 0) m = "Spin the crank and let it wind down until it catches.";
+            else if (core.engaged().isEmpty()) m = "Pick an arm, pull a motion lever, then turn the crank.";
+            else if (core.targetEval.score > 0.7) m = "Close. Listen for the beating to slow.";
+            else m = " ";
+            if (!status.getText().equals(m)) status.setText(m);
+            if (valsB.isSelected() && frameNo % 4 == 0) {
+                StringBuilder sb = new StringBuilder(String.format(Locale.ROOT, "crank ×%.3f%s%n", core.crankRatio(), core.caught >= 0 ? "  caught " + core.caught : ""));
+                for (RegulatorCore.Eng e : core.engaged()) sb.append(String.format(Locale.ROOT, "arm%d %s  ×%.3f  φ%s  reach %.2f%n", e.arm() + 1, RegulatorCore.AXIS[e.axis()], e.r(), RegulatorCore.PHASE[e.ph()], e.amp()));
+                sb.append('\n');
+                for (RegulatorCore.Recipe r : core.recipes) sb.append(String.format(Locale.ROOT, "%-14s %.3f%s%n", r.name, core.eval.get(r.id).score, core.eval.get(r.id).exact ? "  ✓" : ""));
+                sb.append('\n');
+                for (int i = 0; i < RegulatorCore.SIGNALS.length; i++) sb.append(String.format(Locale.ROOT, "%-12s %.3f%n", RegulatorCore.SIGNALS[i], core.signals[i]));
+                for (int a = 0; a < 3; a++) sb.append(String.format(Locale.ROOT, "arm%d.pitch   %.2f st%n", a + 1, core.pitch(a)));
+                if (!vals.getText().contentEquals(sb)) vals.setText(sb.toString());
+            } else if (!vals.getText().isEmpty()) vals.setText("");
+            stage.repaint(); crank.repaint();
+        }
+
+        /** The crank: a dial that spins with the core's angle; drag it to drive, wheel to nudge. */
+        class Crank extends JComponent {
+            double lastA; long lastT;
+            Crank() {
+                setPreferredSize(new Dimension(150, 150));
+                setFocusable(true);
+                MouseAdapter m = new MouseAdapter() {
+                    double ang(MouseEvent e) { return Math.atan2(e.getY() - getHeight() / 2.0, e.getX() - getWidth() / 2.0); }
+                    @Override public void mousePressed(MouseEvent e) { requestFocusInWindow(); core.dragStart(); lastA = ang(e); lastT = System.nanoTime(); }
+                    @Override public void mouseDragged(MouseEvent e) {
+                        double a = ang(e); long now = System.nanoTime();
+                        double d = a - lastA; if (d > Math.PI) d -= 2 * Math.PI; if (d < -Math.PI) d += 2 * Math.PI;
+                        double dt = Math.max(0.008, (now - lastT) / 1e9);
+                        core.dragVelocity(d / (2 * Math.PI) / dt);
+                        lastA = a; lastT = now;
+                    }
+                    @Override public void mouseReleased(MouseEvent e) { core.dragEnd(); }
+                    @Override public void mouseWheelMoved(MouseWheelEvent e) { core.nudge(e.getWheelRotation() < 0 ? 1 : -1, e.isShiftDown() ? RegulatorCore.NUDGE_FINE : RegulatorCore.NUDGE_WHEEL); }
+                };
+                addMouseListener(m); addMouseMotionListener(m); addMouseWheelListener(m);
+                addKeyListener(new KeyAdapter() { @Override public void keyPressed(KeyEvent e) {
+                    int k = e.getKeyCode();
+                    if (k == KeyEvent.VK_UP || k == KeyEvent.VK_RIGHT) core.nudge(1, e.isShiftDown() ? RegulatorCore.NUDGE_FINE : RegulatorCore.NUDGE_WHEEL);
+                    if (k == KeyEvent.VK_DOWN || k == KeyEvent.VK_LEFT) core.nudge(-1, e.isShiftDown() ? RegulatorCore.NUDGE_FINE : RegulatorCore.NUDGE_WHEEL);
+                } });
+            }
+            @Override protected void paintComponent(Graphics g0) {
+                Graphics2D g = (Graphics2D) g0;
+                g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                int w = getWidth(), h = getHeight(), cx = w / 2, cy = h / 2, r = Math.min(w, h) / 2 - 8;
+                g.setColor(new Color(20, 14, 10)); g.fillOval(cx - r, cy - r, 2 * r, 2 * r);
+                g.setColor(core.caught > 0 ? new Color(255, 194, 122) : new Color(184, 140, 78));
+                g.setStroke(new BasicStroke(5)); g.drawOval(cx - r, cy - r, 2 * r, 2 * r);
+                double a = Math.toRadians(core.ang - 90);
+                int hx = cx + (int) (Math.cos(a) * (r - 14)), hy = cy + (int) (Math.sin(a) * (r - 14));
+                g.setStroke(new BasicStroke(4)); g.drawLine(cx, cy, hx, hy);
+                g.fillOval(hx - 8, hy - 8, 16, 16);
+                g.setColor(Color.GRAY); g.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
+                String s = String.format(Locale.ROOT, "×%.2f", core.crankRatio());
+                g.drawString(s, cx - g.getFontMetrics().stringWidth(s) / 2, cy + 5);
+            }
+        }
+
+        /** The stage: receiver, arms and the ribbon (the prototype's drawStage) with the blueprint strip under it. */
+        class Stage extends JPanel {
+            final double[] pt = new double[3], av = new double[3];
+            Point dragAt; double dragYaw, dragPitch;
+            Stage() {
+                setBackground(new Color(19, 14, 12));
+                MouseAdapter m = new MouseAdapter() {
+                    @Override public void mousePressed(MouseEvent e) { if (viewBox.getSelectedIndex() == 0) { dragAt = e.getPoint(); dragYaw = dYaw; dragPitch = dPitch; } }
+                    @Override public void mouseDragged(MouseEvent e) { if (dragAt != null) { dYaw = dragYaw + (e.getX() - dragAt.x) * 0.01; dPitch = Math.max(-1.2, Math.min(1.2, dragPitch + (e.getY() - dragAt.y) * 0.01)); } }
+                    @Override public void mouseReleased(MouseEvent e) { dragAt = null; }
+                };
+                addMouseListener(m); addMouseMotionListener(m);
+            }
+            double[] proj(double[] p, double u, int W, int H) {
+                double cy = Math.cos(yaw), sy = Math.sin(yaw), cp = Math.cos(pitch), sp = Math.sin(pitch);
+                double x = p[0] * cy + p[2] * sy, z1 = -p[0] * sy + p[2] * cy;
+                double y = p[1] * cp - z1 * sp, z = p[1] * sp + z1 * cp;
+                double k = 3.4 / (3.4 + z * 0.5);
+                return new double[]{W / 2.0 + x * u * k, H * 0.47 - y * u * k, z, k};
+            }
+            @Override protected void paintComponent(Graphics g0) {
+                super.paintComponent(g0);
+                Graphics2D g = (Graphics2D) g0;
+                g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                int BP = 150, W = getWidth(), H = getHeight() - BP;
+                int view = viewBox.getSelectedIndex();
+                double tY = view == 0 ? 0.45 * Math.sin(core.tau * 0.12) + dYaw : 0, tP = view == 0 ? 0.3 + dPitch : view == 1 ? 0 : Math.PI / 2 - 0.001;
+                yaw += (tY - yaw) * 0.08; pitch += (tP - pitch) * 0.08;
+                double R = Math.min(W, H) * 0.34;
+                double extT = core.extent() + core.noise * 0.6; ext += (extT - ext) * 0.05;
+                double u = R / ext;
+                boolean hold = core.targetEval.exact;
+                double tHead = (core.tau * 1.1) % (Math.PI * 2);
+                // arms
+                for (int i = 0; i < 3; i++) {
+                    double th = Math.PI / 2 + i * 2 * Math.PI / 3;
+                    double[] an = {Math.cos(th) * 1.35, -1.05, Math.sin(th) * 1.35};
+                    core.armVector(i, tHead, av);
+                    for (int k = 0; k < 3; k++) av[k] = av[k] / ext * 0.45;
+                    double[] py = {an[0] * 0.62 + av[0], -0.35 + av[1] * 0.8, an[2] * 0.62 + av[2]};
+                    double[] el = {(an[0] + py[0]) / 2 * 1.15, (an[1] + py[1]) / 2 + 0.55, (an[2] + py[2]) / 2 * 1.15};
+                    double[] P0 = proj(an, R, W, H), P1 = proj(el, R, W, H), P2 = proj(py, R, W, H);
+                    boolean active = i < core.target.arms(), on = core.engagedCount(i) > 0;
+                    g.setColor(active ? (i == core.arm ? new Color(230, 189, 124, 217) : new Color(184, 140, 78, 140)) : new Color(120, 95, 70, 64));
+                    g.setStroke(active ? new BasicStroke(3f) : new BasicStroke(2f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 1, new float[]{4, 5}, 0));
+                    g.drawLine((int) P0[0], (int) P0[1], (int) P1[0], (int) P1[1]);
+                    g.drawLine((int) P1[0], (int) P1[1], (int) P2[0], (int) P2[1]);
+                    g.setColor(on ? new Color(255, 194, 122) : new Color(107, 82, 56));
+                    int hx = (int) P2[0], hy = (int) P2[1], s = (int) (9 * P2[3]);
+                    g.fillPolygon(new int[]{hx, hx + s / 2, hx, hx - s / 2}, new int[]{hy - s, hy, hy + s, hy}, 4);
+                }
+                // receiver
+                int cx = W / 2, cy = (int) (H * 0.47), cs = (int) (Math.min(W, H) * 0.045);
+                float pulse = core.powered ? (float) (0.5 + 0.25 * Math.sin(core.tau * 2)) : 0.15f;
+                g.setColor(new Color(255, 210, 150, (int) (255 * (0.35 + pulse * 0.4))));
+                g.fillPolygon(new int[]{cx, cx + (int) (cs * 0.7), cx + (int) (cs * 0.7), cx, cx - (int) (cs * 0.7), cx - (int) (cs * 0.7)},
+                              new int[]{cy - (int) (cs * 1.6), cy - cs / 2, cy + cs / 2, cy + (int) (cs * 1.6), cy + cs / 2, cy - cs / 2}, 6);
+                if (!core.powered) {
+                    g.setColor(new Color(233, 220, 196, 140)); g.setFont(new Font(Font.SERIF, Font.ITALIC, 20));
+                    String t = "The receiver is dark."; g.drawString(t, cx - g.getFontMetrics().stringWidth(t) / 2, cy + (int) (Math.min(W, H) * 0.2));
+                } else {
+                    // ribbon: two passes, glow then line, coloured by depth; gold when the sigil holds
+                    // the ribbon's segments are bucketed by depth into a few paths: 16 strokes a frame instead of 1500
+                    int N = 600, NB = 8;
+                    double[][] pts = new double[N + 1][];
+                    double zmin = 1e9, zmax = -1e9;
+                    for (int i = 0; i <= N; i++) { core.figurePoint(i / (double) N * Math.PI * 2, true, pt); pts[i] = proj(pt, u, W, H); zmin = Math.min(zmin, pts[i][2]); zmax = Math.max(zmax, pts[i][2]); }
+                    double zr = Math.max(1e-3, zmax - zmin);
+                    java.awt.geom.Path2D.Float[] paths = new java.awt.geom.Path2D.Float[NB];
+                    for (int i = 0; i < N; i++) {
+                        int b = Math.min(NB - 1, (int) ((pts[i][2] - zmin) / zr * NB));
+                        if (paths[b] == null) paths[b] = new java.awt.geom.Path2D.Float();
+                        paths[b].moveTo(pts[i][0], pts[i][1]); paths[b].lineTo(pts[i + 1][0], pts[i + 1][1]);
+                    }
+                    for (int pass = 0; pass < 2; pass++) {
+                        g.setStroke(new BasicStroke((float) (pass == 1 ? 1.4 + flashV * 2 : 6 + flashV * 8), BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+                        for (int b = 0; b < NB; b++) {
+                            if (paths[b] == null) continue;
+                            double dz = (b + 0.5) / NB;
+                            float hue = (float) ((hold ? 40 + dz * 8 : 14 + dz * 28) / 360), light = (float) ((hold ? 70 - dz * 10 : 58 - dz * 16) / 100);
+                            double al = (pass == 1 ? 0.85 : 0.07) * (1 - dz * 0.55) * (hold ? 1.15 : 1);
+                            Color c = Color.getHSBColor(hue, 1f, Math.min(1f, light * 1.3f));
+                            g.setColor(new Color(c.getRed(), c.getGreen(), c.getBlue(), (int) (255 * Math.min(1, al))));
+                            g.draw(paths[b]);
+                        }
+                    }
+                    core.figurePoint(tHead, true, pt);
+                    double[] hp = proj(pt, u, W, H);
+                    g.setColor(new Color(255, 240, 210, 220)); g.fillOval((int) hp[0] - 4, (int) hp[1] - 4, 8, 8);
+                    if (flashV > 0) { g.setColor(new Color(255, 200, 140, (int) (flashV * 64))); g.fillRect(0, 0, W, H); }
+                }
+                // blueprint strip: front (X right, Y up) and top (X right, +Z toward the bottom); static per
+                // target and size, so it is drawn once into an image
+                if (bpImg == null || bpRec != core.target || bpImg.getWidth() != W || bpImg.getHeight() != BP) {
+                    bpImg = new BufferedImage(Math.max(1, W), BP, BufferedImage.TYPE_INT_RGB);
+                    Graphics2D gi = bpImg.createGraphics();
+                    gi.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                    gi.translate(0, -H);
+                    paintBlueprint(gi, W, H, BP);
+                    gi.dispose();
+                    bpRec = core.target;
+                }
+                g.drawImage(bpImg, 0, H, null);
+            }
+            BufferedImage bpImg; RegulatorCore.Recipe bpRec;
+            void paintBlueprint(Graphics2D g, int W, int H, int BP) {
+                int by = H;
+                g.setColor(new Color(24, 34, 48)); g.fillRect(0, by, W, BP);
+                g.setColor(new Color(214, 230, 245, 20));
+                for (int x = 0; x < W; x += 12) g.drawLine(x, by, x, by + BP);
+                for (int y = by; y < by + BP; y += 12) g.drawLine(0, y, W, y);
+                RegulatorCore.Recipe rec = core.target;
+                double E = RegulatorCore.extent(rec);
+                int pw = Math.min(W / 2, 2 * BP);
+                int ox0 = W / 2 - pw;
+                g.setFont(new Font(Font.SERIF, Font.ITALIC, 13));
+                int inner = BP - 22;   // a caption row on top, the panes under it
+                for (int k = 0; k < 2; k++) {
+                    double[][] bp = RegulatorCore.blueprint(rec, k);
+                    int ox = ox0 + pw * k + pw / 2, oy = by + 22 + inner / 2;
+                    double uu = Math.min(pw, inner) * 0.40 / E;
+                    g.setColor(new Color(214, 230, 245, 64));
+                    g.drawLine(ox - (int) (uu * E), oy, ox + (int) (uu * E), oy); g.drawLine(ox, oy - (int) (uu * E), ox, oy + (int) (uu * E));
+                    g.setColor(new Color(222, 236, 250, 140)); g.setStroke(new BasicStroke(0.8f));
+                    for (int i = 1; i < bp.length; i++)
+                        g.drawLine((int) Math.round(ox + bp[i - 1][0] * uu), (int) Math.round(oy - bp[i - 1][1] * uu), (int) Math.round(ox + bp[i][0] * uu), (int) Math.round(oy - bp[i][1] * uu));
+                    g.setColor(new Color(214, 230, 245, 150)); g.drawString(k == 0 ? "front" : "top", ox0 + pw * k + 6, by + BP - 6);
+                }
+                g.setColor(new Color(214, 230, 245, 200));
+                g.drawString(rec.name + " — tier " + new String[]{"", "I", "II", "III"}[rec.tier] + " blueprint: " + rec.arms() + " arms, " + rec.motionsPerArm() + " motion" + (rec.motionsPerArm() > 1 ? "s" : "") + " each   (front: X right, Y up · top: X right, +Z down)", 8, by + 15);
+            }
+        }
+    }
+
+    /** The docked regulator panel: signal sliders (the scrubber), the signature
+     *  picker with the lock / unlock events, the bind table, the marked ranges
+     *  and the bench's free notes. */
+    static class BenchPanel extends JPanel {
+        final SfxLab lab;
+        final JSlider[] sl = new JSlider[SIGNALS.length];
+        final JLabel[] sv = new JLabel[SIGNALS.length];
+        final JComboBox<String> sigBox = new JComboBox<>();
+        final JCheckBox bindsB = new JCheckBox("binds", true);
+        final JLabel drivenL = new JLabel(" ");
+        final DefaultListModel<String> rangeModel = new DefaultListModel<>();
+        final ArrayList<Object[]> rangeRows = new ArrayList<>();   // {Clip, Integer}
+        final JList<String> rangeList = new JList<>(rangeModel);
+        final JTable bindTable;
+        final JTextArea notes = new JTextArea(4, 20);
+        boolean refreshing; int seenGen = -1;
+        static final String[] BCOLS = {"signal", "layer", "param", "lo", "hi", "rel"};
+
+        BenchPanel(SfxLab lab) {
+            this.lab = lab;
+            setLayout(new BorderLayout(4, 4));
+            setPreferredSize(new Dimension(430, 100));
+            setBackground(Color.BLACK);
+            Font mono = new Font(Font.MONOSPACED, Font.PLAIN, 12);
+
+            JPanel top = new JPanel(new GridBagLayout());
+            GridBagConstraints gc = new GridBagConstraints();
+            gc.insets = new Insets(1, 4, 1, 4); gc.anchor = GridBagConstraints.WEST; gc.fill = GridBagConstraints.HORIZONTAL;
+            gc.gridy = 0; gc.gridx = 0; gc.gridwidth = 3;
+            JPanel sigRow = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 0));
+            sigRow.add(new JLabel("signature"));
+            sigBox.setFont(mono);
+            sigBox.addActionListener(e -> { if (!refreshing) lab.pickSignature((String) sigBox.getSelectedItem()); });
+            sigRow.add(sigBox);
+            JButton lockB = new JButton("lock"), unlockB = new JButton("unlock"), rescanB = new JButton("↻");
+            bindsB.setToolTipText("off: every layer plays its saved params, no signal moves anything — for auditioning a layer on its own");
+            bindsB.addActionListener(e -> { lab.bindsOn = bindsB.isSelected(); lab.toast(lab.bindsOn ? "binds on: signals move bound params" : "binds off: layers play as saved (solo / mute to audition)"); });
+            lockB.setToolTipText("the lock event: score → 1, fires the one-shots marked on=lock");
+            unlockB.setToolTipText("the unlock event: fires the one-shots marked on=unlock");
+            lockB.addActionListener(e -> lab.fireEvent(ON_LOCK));
+            unlockB.addActionListener(e -> lab.fireEvent(ON_UNLOCK));
+            rescanB.addActionListener(e -> rescanSigs());
+            sigRow.add(lockB); sigRow.add(unlockB); sigRow.add(rescanB); sigRow.add(bindsB);
+            top.add(sigRow, gc);
+            gc.gridy = 99; gc.gridwidth = 3;
+            drivenL.setForeground(new Color(200, 120, 40));
+            top.add(drivenL, gc);
+            gc.gridwidth = 1;
+            for (int i = 0; i < SIGNALS.length; i++) {
+                final int k = i;
+                gc.gridy = i + 1;
+                gc.gridx = 0; gc.weightx = 0;
+                JLabel nm = new JLabel(SIGNALS[i]); nm.setFont(mono);
+                top.add(nm, gc);
+                gc.gridx = 1; gc.weightx = 1;
+                sl[i] = new JSlider(0, 1000, 0);
+                sl[i].addChangeListener(e -> { if (!refreshing) { lab.sigVal[k] = sl[k].getValue() / 1000.0 * SIG_MAX[k]; label(k); } });
+                top.add(sl[i], gc);
+                gc.gridx = 2; gc.weightx = 0;
+                sv[i] = new JLabel(); sv[i].setFont(mono); sv[i].setPreferredSize(new Dimension(150, 16));
+                top.add(sv[i], gc);
+                label(i);
+            }
+            add(top, BorderLayout.NORTH);
+
+            JPanel mid = new JPanel(new GridLayout(3, 1, 2, 4));
+            bindTable = new JTable(new javax.swing.table.AbstractTableModel() {
+                public int getRowCount() { return lab.bench.binds.size(); }
+                public int getColumnCount() { return BCOLS.length; }
+                public String getColumnName(int c) { return BCOLS[c]; }
+                public Class<?> getColumnClass(int c) { return c == 5 ? Boolean.class : String.class; }
+                public boolean isCellEditable(int r, int c) { return true; }
+                public Object getValueAt(int r, int c) {
+                    if (r >= lab.bench.binds.size()) return "";
+                    Bind b = lab.bench.binds.get(r);
+                    return switch (c) {
+                        case 0 -> b.sig; case 1 -> b.layer; case 2 -> b.param;
+                        case 3 -> b.auto() ? "auto" : fmtNum5(b.lo); case 4 -> b.auto() ? "auto" : fmtNum5(b.hi);
+                        default -> b.rel;
+                    };
+                }
+                public void setValueAt(Object v, int r, int c) {
+                    if (r >= lab.bench.binds.size()) return;
+                    Bind b = lab.bench.binds.get(r);
+                    lab.pushUndo("");
+                    try {
+                        switch (c) {
+                            case 0 -> b.sig = v.toString().trim();
+                            case 1 -> b.layer = v.toString().trim();
+                            case 2 -> b.param = v.toString().trim().replace(' ', '_');
+                            case 3, 4 -> {
+                                String s = v.toString().trim().toLowerCase(Locale.ROOT);
+                                if (s.isEmpty() || s.equals("auto")) { b.lo = Double.NaN; b.hi = Double.NaN; }
+                                else {
+                                    if (b.auto()) { Clip lc = lab.bench.byId(b.layer); int pi = lc != null ? idxOf(lc.type, b.param) : -1; PSpec ps = pi >= 0 ? spec(lc.type, pi) : new PSpec("", 0, 1, 0); b.lo = ps.min(); b.hi = ps.max(); }
+                                    if (c == 3) b.lo = Double.parseDouble(s); else b.hi = Double.parseDouble(s);
+                                }
+                            }
+                            default -> b.rel = Boolean.TRUE.equals(v);
+                        }
+                    } catch (NumberFormatException ex) { lab.toast("couldn't parse \"" + v + "\""); }
+                    lab.markEdit();
+                    fireTableRowsUpdated(r, r);
+                }
+            });
+            bindTable.setFont(mono);
+            bindTable.getColumnModel().getColumn(0).setPreferredWidth(90);
+            bindTable.getColumnModel().getColumn(1).setPreferredWidth(80);
+            bindTable.getColumnModel().getColumn(2).setPreferredWidth(80);
+            bindTable.getColumnModel().getColumn(3).setPreferredWidth(50);
+            bindTable.getColumnModel().getColumn(4).setPreferredWidth(50);
+            bindTable.getColumnModel().getColumn(5).setPreferredWidth(30);
+            JPanel bindsP = new JPanel(new BorderLayout(2, 2));
+            JPanel bh = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 0));
+            bh.add(new JLabel("binds   signal → layer.param over lo..hi (auto = the marked range)"));
+            bindsP.add(bh, BorderLayout.NORTH);
+            bindsP.add(new JScrollPane(bindTable), BorderLayout.CENTER);
+            JPanel bb = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 0));
+            JButton addB = new JButton("+ bind…"), remB = new JButton("− remove");
+            addB.addActionListener(e -> addBindDialog());
+            remB.addActionListener(e -> {
+                int[] rows = bindTable.getSelectedRows();
+                ArrayList<Bind> del = new ArrayList<>();
+                for (int r : rows) if (r < lab.bench.binds.size()) del.add(lab.bench.binds.get(r));
+                for (Bind b : del) lab.removeBind(b);
+            });
+            bb.add(addB); bb.add(remB);
+            bindsP.add(bb, BorderLayout.SOUTH);
+            mid.add(bindsP);
+
+            JPanel rangesP = new JPanel(new BorderLayout(2, 2));
+            rangesP.add(new JLabel("ranges   marked on sliders (right-click one on the bench)"), BorderLayout.NORTH);
+            rangeList.setFont(mono);
+            rangesP.add(new JScrollPane(rangeList), BorderLayout.CENTER);
+            JPanel rb = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 0));
+            JButton clrB = new JButton("− clear");
+            clrB.addActionListener(e -> { int i = rangeList.getSelectedIndex(); if (i >= 0 && i < rangeRows.size()) lab.clearRange((Clip) rangeRows.get(i)[0], (Integer) rangeRows.get(i)[1]); });
+            rb.add(clrB);
+            rangesP.add(rb, BorderLayout.SOUTH);
+            mid.add(rangesP);
+
+            JPanel notesP = new JPanel(new BorderLayout(2, 2));
+            notesP.add(new JLabel("notes   saved with the bench"), BorderLayout.NORTH);
+            notes.setFont(mono); notes.setLineWrap(true); notes.setWrapStyleWord(true);
+            notes.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+                void push() {
+                    if (refreshing) return;
+                    lab.bench.notes.clear();
+                    for (String l : notes.getText().split("\n")) lab.bench.notes.add(l);
+                    while (!lab.bench.notes.isEmpty() && lab.bench.notes.get(lab.bench.notes.size() - 1).isBlank()) lab.bench.notes.remove(lab.bench.notes.size() - 1);
+                    lab.markEdit();
+                }
+                public void insertUpdate(javax.swing.event.DocumentEvent e) { push(); }
+                public void removeUpdate(javax.swing.event.DocumentEvent e) { push(); }
+                public void changedUpdate(javax.swing.event.DocumentEvent e) { push(); }
+            });
+            notesP.add(new JScrollPane(notes), BorderLayout.CENTER);
+            mid.add(notesP);
+            add(mid, BorderLayout.CENTER);
+            add(new JLabel("  ESC: back to the bench · bound sliders show a white tick at the live value"), BorderLayout.SOUTH);
+            for (JComponent c : new JComponent[]{bindTable, rangeList, notes, sigBox}) {
+                c.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke("ESCAPE"), "back");
+                c.getActionMap().put("back", new AbstractAction() { public void actionPerformed(ActionEvent e) { lab.requestFocusInWindow(); } });
+            }
+            rescanSigs();
+            refresh();
+            new javax.swing.Timer(200, e -> {
+                if (lab.benchGen != seenGen) refresh();
+                boolean drv = lab.sigDriven;
+                if (sl[0].isEnabled() == drv) {
+                    for (JSlider s : sl) s.setEnabled(!drv);
+                    drivenL.setText(drv ? "signals driven by the machine (U) — untick 'drive the bench' there, or close it, to use these" : " ");
+                }
+                for (int i = 0; i < 3; i++) label(i);   // ratio rows show the derived pitch
+                label(SIG_SCORE);
+            }).start();
+        }
+        void label(int i) {
+            double v = lab.sigVal[i];
+            String s = String.format(Locale.ROOT, "%.2f", v);
+            if (i < 3) { double st = lab.signal(SIGNALS[i].replace(".ratio", ".pitch")); s += v > 0.05 ? String.format(Locale.ROOT, "  pitch %.2f st", st) : "  (off)"; }
+            if (i == SIG_SCORE) s += String.format(Locale.ROOT, "  blend %.0f%%", 100 * lab.blendW());
+            sv[i].setText(s);
+        }
+        /** The lab moved a signal (lock / unlock): the sliders follow. */
+        void pull() {
+            refreshing = true;
+            for (int i = 0; i < SIGNALS.length; i++) { sl[i].setValue((int) Math.round(lab.sigVal[i] / SIG_MAX[i] * 1000)); label(i); }
+            refreshing = false;
+        }
+        void rescanSigs() {
+            refreshing = true;
+            Object cur = sigBox.getSelectedItem();
+            sigBox.removeAllItems();
+            sigBox.addItem("(none)");
+            for (String s : signatureNames()) sigBox.addItem(s);
+            sigBox.setSelectedItem(lab.sigName != null ? lab.sigName : cur != null ? cur : "(none)");
+            refreshing = false;
+        }
+        void refresh() {
+            refreshing = true;
+            seenGen = lab.benchGen;
+            ((javax.swing.table.AbstractTableModel) bindTable.getModel()).fireTableDataChanged();
+            rangeModel.clear(); rangeRows.clear();
+            List<Clip> ls;
+            synchronized (lab.lock) { ls = new ArrayList<>(lab.bench.layers); }
+            for (Clip c : ls)
+                if (c.range != null)
+                    for (int pi : new TreeSet<>(c.range.keySet())) {
+                        double[] r = c.range.get(pi);
+                        String nt = c.rnote != null ? c.rnote.get(pi) : null;
+                        rangeModel.addElement(String.format(Locale.ROOT, "%s.%s  %s .. %s%s", c.id, spec(c.type, pi).name(), fmtNum5(r[0]), fmtNum5(r[1]), nt != null ? "   " + nt : ""));
+                        rangeRows.add(new Object[]{c, pi});
+                    }
+            if (!notes.hasFocus()) notes.setText(String.join("\n", lab.bench.notes));
+            if (sigBox.getItemCount() == 0 || (lab.sigName != null && !lab.sigName.equals(sigBox.getSelectedItem()))) rescanSigs();
+            refreshing = false;
+        }
+        void addBindDialog() {
+            List<Clip> ls;
+            synchronized (lab.lock) { ls = new ArrayList<>(lab.bench.layers); }
+            if (ls.isEmpty()) { lab.toast("add a layer first"); return; }
+            JComboBox<String> sigC = new JComboBox<>(SIGNAL_CHOICES);
+            JComboBox<String> layC = new JComboBox<>();
+            layC.addItem("*");
+            for (Clip c : ls) layC.addItem(c.id);
+            if (lab.sel != null && lab.sel.id != null) layC.setSelectedItem(lab.sel.id);
+            JComboBox<String> parC = new JComboBox<>();
+            Runnable fillParams = () -> {
+                parC.removeAllItems();
+                String lid = (String) layC.getSelectedItem();
+                Clip c = lab.bench.byId(lid);
+                if (c == null) c = ls.get(0);
+                for (int i = 0; i < c.p.length; i++) parC.addItem(key(c.type, i));
+            };
+            fillParams.run();
+            layC.addActionListener(e -> fillParams.run());
+            JTextField loF = new JTextField("auto", 6), hiF = new JTextField("auto", 6);
+            JCheckBox relC = new JCheckBox("rel (added to the layer's own value)");
+            parC.addActionListener(e -> { boolean pitch = "pitch".equals(parC.getSelectedItem()); relC.setSelected(pitch); if (pitch) { loF.setText("0"); hiF.setText("12"); } });
+            JPanel p = new JPanel(new GridLayout(0, 2, 4, 4));
+            p.add(new JLabel("signal")); p.add(sigC);
+            p.add(new JLabel("layer (* = all)")); p.add(layC);
+            p.add(new JLabel("param")); p.add(parC);
+            p.add(new JLabel("lo (auto = marked range)")); p.add(loF);
+            p.add(new JLabel("hi")); p.add(hiF);
+            p.add(new JLabel("")); p.add(relC);
+            if (JOptionPane.showConfirmDialog(this, p, "Add bind", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE) != JOptionPane.OK_OPTION) return;
+            try {
+                String lo = loF.getText().trim().toLowerCase(Locale.ROOT), hi = hiF.getText().trim().toLowerCase(Locale.ROOT);
+                boolean auto = lo.isEmpty() || lo.equals("auto") || hi.isEmpty() || hi.equals("auto");
+                lab.pushUndo("");
+                synchronized (lab.lock) {
+                    lab.bench.binds.add(new Bind((String) sigC.getSelectedItem(), (String) layC.getSelectedItem(), (String) parC.getSelectedItem(),
+                            auto ? Double.NaN : Double.parseDouble(lo), auto ? Double.NaN : Double.parseDouble(hi), relC.isSelected()));
+                }
+                lab.benchGen++; lab.markEdit();
+            } catch (NumberFormatException ex) { lab.toast("couldn't parse the range"); }
+        }
     }
 
     // =====================================================================
@@ -2603,11 +4166,16 @@ public class SfxLab extends JPanel {
         float[][] smp = sample(fname);
         if (smp[0].length <= 1) { toast("couldn't decode " + fname); return null; }
         double dur = smp[0].length / (double) SR;
-        pushUndo("");
         Clip c = new Clip(fname.replaceFirst("\\.[^.]+$", ""), SAMPLE, track, start, dur, uiRng.nextLong());
         c.file = fname;
         c.p[P_ATT] = 0.002;
         c.p[P_REL] = 0.02;   // near-zero fades: let the recording speak
+        if (benchOn) {
+            addLayer(c);
+            toast(String.format(Locale.ROOT, "sample %s (%.2fs) is layer %s — right-click its row to make it a one-shot", fname, dur, c.id));
+            return c;
+        }
+        pushUndo("");
         synchronized (lock) { clips.add(c); }
         sel = c;
         markEdit();
@@ -2968,6 +4536,9 @@ public class SfxLab extends JPanel {
                     case "export_dir" -> exportDir = v;
                     case "forge_mirror" -> forgeMirror = v;
                     case "browser" -> browserOn = v.equals("1");
+                    case "bench" -> benchOn = v.equals("1");
+                    case "bpanel" -> bpanelOn = v.equals("1");
+                    case "bench_name" -> benchName = v.isEmpty() ? null : v;
                     case "export_ogg" -> expOgg = v.equals("1");
                     case "export_mono" -> expMono = v.equals("1");
                     case "export_norm" -> expNorm = v.equals("1");
@@ -2979,8 +4550,9 @@ public class SfxLab extends JPanel {
     void saveCfg() {
         try {
             Files.createDirectories(DIR);
-            Files.writeString(CFG_FILE, String.format("export_dir=%s%nexport_ogg=%d%nexport_mono=%d%nexport_norm=%d%nexport_trim=%d%nforge_mirror=%s%nbrowser=%d%n",
-                    exportDir, expOgg ? 1 : 0, expMono ? 1 : 0, expNorm ? 1 : 0, expTrim ? 1 : 0, forgeMirror, browserOn ? 1 : 0));
+            Files.writeString(CFG_FILE, String.format("export_dir=%s%nexport_ogg=%d%nexport_mono=%d%nexport_norm=%d%nexport_trim=%d%nforge_mirror=%s%nbrowser=%d%nbench=%d%nbpanel=%d%nbench_name=%s%n",
+                    exportDir, expOgg ? 1 : 0, expMono ? 1 : 0, expNorm ? 1 : 0, expTrim ? 1 : 0, forgeMirror, browserOn ? 1 : 0,
+                    benchOn ? 1 : 0, bpanelOn ? 1 : 0, benchName != null ? benchName : ""));
         } catch (IOException e) { toast("cfg save failed: " + e); }
     }
 
@@ -3120,20 +4692,35 @@ public class SfxLab extends JPanel {
             int track = Math.max(0, Math.min(TRACKS - 1, Integer.parseInt(t[3])));
             Clip c = new Clip(t[1], type, track,
                     Double.parseDouble(t[4]), Double.parseDouble(t[5]), Long.parseLong(t[6]));
-            // v2 tokens are key=value; bare numbers are legacy positional
-            for (int i = 7; i < t.length; i++) {
-                int eq = t[i].indexOf('=');
-                String k = eq >= 0 ? t[i].substring(0, eq) : legacyName(type, i - 7);
-                if (k == null) continue;
-                if (k.equals("file")) { c.file = t[i].substring(eq + 1); continue; }
-                if (k.equals("vlink")) { c.vlink = t[i].endsWith("=1"); continue; }
-                if (k.equals("keyed")) { c.keyed = Integer.parseInt(t[i].substring(eq + 1)) & KEY_BOTH; continue; }
-                int pi = idxOf(type, k);
-                if (pi >= 0) c.p[pi] = Double.parseDouble(eq >= 0 ? t[i].substring(eq + 1) : t[i]);
-            }
+            parseTokens(c, t, 7);
             out.add(c);
         }
         return out;
+    }
+
+    /** The key=value tail of a clip or layer line (bare numbers are legacy
+     *  positional params). Unknown keys are skipped, so newer files load in
+     *  older builds. */
+    static void parseTokens(Clip c, String[] t, int from) {
+        int type = c.type;
+        for (int i = from; i < t.length; i++) {
+            int eq = t[i].indexOf('=');
+            String k = eq >= 0 ? t[i].substring(0, eq) : legacyName(type, i - from);
+            if (k == null) continue;
+            String val = eq >= 0 ? t[i].substring(eq + 1) : t[i];
+            switch (k) {
+                case "file" -> c.file = val;
+                case "vlink" -> c.vlink = val.equals("1");
+                case "keyed" -> c.keyed = Integer.parseInt(val) & KEY_BOTH;
+                case "id" -> c.id = val;
+                case "on" -> c.on = val.equals("lock") ? ON_LOCK : val.equals("unlock") ? ON_UNLOCK : ON_NONE;
+                case "mute" -> c.lmute = val.equals("1");
+                default -> {
+                    int pi = idxOf(type, k);
+                    if (pi >= 0) c.p[pi] = Double.parseDouble(val);
+                }
+            }
+        }
     }
 
     /** A small starter arrangement so an empty install makes a sound: a spell impact. */
@@ -3236,36 +4823,39 @@ public class SfxLab extends JPanel {
         long startedAt = System.currentTimeMillis();
         byte[] buf = new byte[BLOCK * 4];
         Engine eng = new Engine();
-        double[] out = new double[2];
+        double[] bufL = new double[BLOCK], bufR = new double[BLOCK];
         List<Clip> snap = new ArrayList<>();
 
         while (true) {
+            boolean bm = benchOn;   // bench: every layer sounds, time never wraps, signals set the modulation targets
             double sk = seekTo;
-            if (sk >= 0) { seekTo = -1; eng.t = sk; eng.voices.clear(); }
+            if (sk >= 0) { seekTo = -1; eng.t = sk; eng.voices.clear(); transients.clear(); }
             snap.clear();
-            synchronized (lock) { snap.addAll(clips); }
-            Clip so = solo;
-            boolean pl = playing;
-            double end = so != null ? so.end() + 1.0 : timelineEnd(snap) + (loopOn ? 0 : 1.0);
+            Clip so = null;
+            boolean pl;
+            double end;
+            if (bm) { benchLive(eng.t, snap); pl = benchPlaying; end = Double.MAX_VALUE; }
+            else {
+                synchronized (lock) { snap.addAll(clips); }
+                so = solo; pl = playing;
+                end = so != null ? so.end() + 1.0 : timelineEnd(snap) + (loopOn ? 0 : 1.0);
+            }
             eng.voices.keySet().removeIf(c -> !snap.contains(c) || eng.t < c.start || eng.t >= c.end());
             eng.key = keyOff;
 
+            if (pl) eng.renderBlock(snap, so, bm ? null : mute, bm ? null : trackVol, bufL, bufR, BLOCK);
             for (int i = 0; i < BLOCK; i++) {
-                double l = 0, r = 0;
-                if (pl) {
-                    eng.render(snap, so, mute, trackVol, out);
-                    l = out[0]; r = out[1];
-                    if (eng.t >= end) {
-                        if (so == null && loopOn) { eng.t = 0; eng.voices.clear(); }
-                        else { playing = false; pl = false; solo = null; }
-                    }
-                }
+                double l = pl ? bufL[i] : 0, r = pl ? bufR[i] : 0;
                 scopeL[scopePos] = (float) l; scopeR[scopePos] = (float) r;
                 scopePos = (scopePos + 1) % scopeL.length;
                 // clamp: the limiter keeps this under 0.85, but an unclamped cast would wrap past full scale
                 int sl = (int) Math.max(-32768, Math.min(32767, l * 32767)), sr = (int) Math.max(-32768, Math.min(32767, r * 32767));
                 buf[i * 4] = (byte) sl; buf[i * 4 + 1] = (byte) (sl >> 8);
                 buf[i * 4 + 2] = (byte) sr; buf[i * 4 + 3] = (byte) (sr >> 8);
+            }
+            if (pl && eng.t >= end) {   // the end is now checked per block (5.8 ms), not per sample
+                if (so == null && loopOn) { eng.t = 0; eng.voices.clear(); }
+                else { playing = false; solo = null; }
             }
             playPos = eng.t;
             if (eng.inPeak > 1) clipAt = System.currentTimeMillis();
@@ -3351,16 +4941,19 @@ public class SfxLab extends JPanel {
         Engine e = new Engine();
         e.key = key;
         for (Clip c : cs) if (c.type == PARTIALS && c.file != null) partials(c, true);
-        double[] out = new double[2];
+        double[] bl = new double[BLOCK], br = new double[BLOCK];
         double peak = 0;
         int last = 0;
-        for (int i = 0; i < total; i++) {
+        for (int i = 0; i < total; i += BLOCK) {   // blocks: the clips render in parallel, bit-identical to sample by sample
             if ((i & 1023) == 0) e.voices.keySet().removeIf(c -> e.t < c.start || e.t >= c.end());
-            e.render(cs, null, mute, tvol, out);
-            double a = Math.max(Math.abs(out[0]), Math.abs(out[1]));
-            peak = Math.max(peak, a);
-            if (a > 0.001) last = i;
-            mix[i * 2] = out[0]; mix[i * 2 + 1] = out[1];
+            int n = Math.min(BLOCK, total - i);
+            e.renderBlock(cs, null, mute, tvol, bl, br, n);
+            for (int k = 0; k < n; k++) {
+                double a = Math.max(Math.abs(bl[k]), Math.abs(br[k]));
+                peak = Math.max(peak, a);
+                if (a > 0.001) last = i + k;
+                mix[(i + k) * 2] = bl[k]; mix[(i + k) * 2 + 1] = br[k];
+            }
         }
         if (trim) total = Math.min(total, last + SR / 20);
         double gain = normalize && peak > 1e-6 ? 0.891 / peak : 1;
@@ -3406,7 +4999,7 @@ public class SfxLab extends JPanel {
 
     Rectangle palRect(int i) { return new Rectangle(12 + i * 70, paletteY(), 66, 24); }
     static final String[] ACTIONS = {"video", "library", "+ lib", "preview", "export", "save"};
-    Rectangle actRect(int i) { return new Rectangle(getWidth() - (ACTIONS.length - i) * 74 - 12, paletteY(), 68, 24); }
+    Rectangle actRect(int i) { return new Rectangle(getWidth() - (actions().length - i) * 74 - 12, paletteY(), 68, 24); }
     static final int SLIDER_ROWS = 15;   // partials has 43 params: three columns of 15
     Rectangle sliderRect(int i) {
         int col = i / SLIDER_ROWS, row = i % SLIDER_ROWS;
@@ -3441,6 +5034,16 @@ public class SfxLab extends JPanel {
             System.err.println("project load failed: " + e);
             toast("project load failed — starting empty");
         }
+        try {
+            if (Files.exists(BENCH_FILE)) {
+                Bench b = parseBench(Files.readAllLines(BENCH_FILE));
+                installBench(b);
+                if (benchOn && b.root > 0) rootHz = b.root;
+            }
+        } catch (Exception e) {
+            System.err.println("bench load failed: " + e);
+            toast("bench load failed — starting with an empty bench");
+        }
 
         addKeyListener(new KeyAdapter() {
             @Override public void keyPressed(KeyEvent e) { handleKey(e); }
@@ -3449,6 +5052,7 @@ public class SfxLab extends JPanel {
 
         new javax.swing.Timer(33, ev -> {
             if (dirty && System.currentTimeMillis() - lastEditAt > 1200 && !Boolean.getBoolean("sfxlab.noautosave")) saveProject(true);   // -Dsfxlab.noautosave=true: headless tests must not touch project.sfx
+            if (benchDirty && System.currentTimeMillis() - lastEditAt > 1200 && !Boolean.getBoolean("sfxlab.noautosave")) saveBench(true);
             repaint();
             if (monitor != null && monitor.isVisible()) monitor.repaint();
         }).start();
@@ -3459,6 +5063,37 @@ public class SfxLab extends JPanel {
         int kc = e.getKeyCode();
         if (kc >= KeyEvent.VK_1 && kc <= KeyEvent.VK_9) { addFromPalette(kc - KeyEvent.VK_1); return; }
         if (kc == KeyEvent.VK_0) { addFromPalette(9); return; }
+        if (kc == KeyEvent.VK_H) { if (e.isShiftDown()) sendSelToBench(); else toggleBench(); return; }
+        if (kc == KeyEvent.VK_J) { toggleBenchPanel(); return; }
+        if (kc == KeyEvent.VK_U) { showMachine(); return; }
+        if (benchOn) {   // the bench's own bindings; everything timeline-only is inert here
+            switch (kc) {
+                case KeyEvent.VK_SPACE -> toggleBenchPlay();
+                case KeyEvent.VK_ENTER -> { benchPlaying = false; seekTo = 0; }
+                case KeyEvent.VK_P -> previewSel();
+                case KeyEvent.VK_S -> stampBench(false);
+                case KeyEvent.VK_O -> openBench();
+                case KeyEvent.VK_N -> clearBench();
+                case KeyEvent.VK_DELETE, KeyEvent.VK_BACK_SPACE -> deleteSel();
+                case KeyEvent.VK_D -> dupSel();
+                case KeyEvent.VK_UP -> selectLayer(-1);
+                case KeyEvent.VK_DOWN -> selectLayer(1);
+                case KeyEvent.VK_COMMA -> { if (e.isShiftDown()) setKey(keyOff - 1); }
+                case KeyEvent.VK_PERIOD -> { if (e.isShiftDown()) setKey(keyOff + 1); }
+                case KeyEvent.VK_SLASH -> { if (e.isShiftDown()) setKey(0); }
+                case KeyEvent.VK_T -> cycleKeyed();
+                case KeyEvent.VK_F -> showForge();
+                case KeyEvent.VK_A -> toggleBrowser();
+                case KeyEvent.VK_R -> { if (e.isControlDown()) rootDialog(); else if (e.isShiftDown()) tuneDialog(); else tuneSel(0); }
+                case KeyEvent.VK_W -> importSample();
+                case KeyEvent.VK_C -> { if (!e.isControlDown()) toggleChoir(); }
+                case KeyEvent.VK_Z -> { if (e.isControlDown()) { if (e.isShiftDown()) doRedo(); else doUndo(); } }
+                case KeyEvent.VK_Y -> { if (e.isControlDown()) doRedo(); }
+                case KeyEvent.VK_L, KeyEvent.VK_X, KeyEvent.VK_K, KeyEvent.VK_V, KeyEvent.VK_M, KeyEvent.VK_I, KeyEvent.VK_B, KeyEvent.VK_Q,
+                     KeyEvent.VK_E, KeyEvent.VK_G, KeyEvent.VK_OPEN_BRACKET, KeyEvent.VK_CLOSE_BRACKET -> toast("timeline only — H switches back");
+            }
+            return;
+        }
         switch (kc) {
             case KeyEvent.VK_SPACE -> togglePlay();
             case KeyEvent.VK_ENTER -> { playing = false; solo = null; seekTo = 0; }
@@ -3507,9 +5142,16 @@ public class SfxLab extends JPanel {
                 int mx = e.getX(), my = e.getY();
                 for (int i = 0; i < PALETTE.length; i++)
                     if (palRect(i).contains(mx, my)) { addFromPalette(i); return; }
-                for (int i = 0; i < ACTIONS.length; i++)
+                for (int i = 0; i < actions().length; i++)
                     if (actRect(i).contains(mx, my)) {
-                        switch (i) {
+                        if (benchOn) switch (i) {
+                            case 0 -> openBench();
+                            case 1 -> stampBench(false);
+                            case 2 -> stampBench(true);
+                            case 3 -> toggleBenchPanel();
+                            case 4 -> toggleBrowser();
+                            case 5 -> toggleBench();
+                        } else switch (i) {
                             case 0 -> showVideoMenu();
                             case 1 -> showLibraryMenu();
                             case 2 -> saveToLibrary();
@@ -3524,17 +5166,19 @@ public class SfxLab extends JPanel {
                         for (int i = 0; i < sel.p.length; i++) {
                             Rectangle r = sliderRect(i);
                             if (new Rectangle(r.x - 4, r.y - 5, r.width + 8, r.height + 10).contains(mx, my)) {
+                                if (SwingUtilities.isRightMouseButton(e) && benchOn) { sliderMenu(i, mx, my); return; }
                                 if (SwingUtilities.isRightMouseButton(e) || e.getClickCount() >= 2) {
                                     typeParam(i);
                                     return;
                                 }
-                                pendingSnap = snapshot();
+                                grabUndo();
                                 dragMode = DR_SLIDER; dragParam = i; setParam(mx);
                                 return;
                             }
                         }
                     return;
                 }
+                if (benchOn) { if (my >= rulerY()) benchClick(e); return; }
                 if (my >= rulerY() && my < videoY()) {
                     if (SwingUtilities.isRightMouseButton(e)) { removeMarker(nearestMarker(tOf(mx), 6 / pps)); return; }
                     dragMode = DR_SEEK; seekTo = tOf(mx); return;
@@ -3601,6 +5245,7 @@ public class SfxLab extends JPanel {
                         markEdit();
                     }
                     case DR_SLIDER -> setParam(mx);
+                    case DR_LEVEL -> setLevel(mx);
                     case DR_TVOL -> setTrackVol(mx);
                     case DR_VIDEO -> {
                         VideoRef v = video;
@@ -3612,9 +5257,10 @@ public class SfxLab extends JPanel {
                 }
             }
             @Override public void mouseReleased(MouseEvent e) {
-                dragMode = DR_NONE; dragParam = -1; dragTrack = -1; pendingSnap = null;
+                dragMode = DR_NONE; dragParam = -1; dragTrack = -1; pendingSnap = null; pendingBench = null;
             }
             @Override public void mouseWheelMoved(MouseWheelEvent e) {
+                if (benchOn && e.getY() < panelY()) { benchScroll = Math.max(0, benchScroll + (e.getWheelRotation() > 0 ? 1 : -1)); return; }
                 if (e.getY() >= panelY()) {
                     // wheel over a slider row fine-feeds that param
                     if (sel == null) return;
@@ -3659,6 +5305,11 @@ public class SfxLab extends JPanel {
 
     void addFromPalette(int i) {
         if (i < 0 || i >= PALETTE.length) return;
+        if (benchOn) {
+            Clip c = addLayer(fromPal(PALETTE[i], 0, 0));
+            toast(c.name + " added to the bench as layer " + c.id);
+            return;
+        }
         pushUndo("");
         Clip c = fromPal(PALETTE[i], selTrack, playPos);
         synchronized (lock) { clips.add(c); }
@@ -3668,6 +5319,7 @@ public class SfxLab extends JPanel {
     }
 
     void togglePlay() {
+        if (benchOn) { toggleBenchPlay(); return; }
         solo = null;
         if (!playing) {
             List<Clip> snap;
@@ -3678,7 +5330,12 @@ public class SfxLab extends JPanel {
     }
 
     void previewSel() {
-        if (sel == null) { toast("select a clip first"); return; }
+        if (sel == null) { toast(benchOn ? "select a layer first" : "select a clip first"); return; }
+        if (benchOn) {
+            if (sel.on != ON_NONE) { fire(sel); toast(sel.id + " fired"); }
+            else { benchSolo = benchSolo == sel ? null : sel; if (benchSolo != null && !benchPlaying) toggleBenchPlay(); toast(benchSolo != null ? sel.id + " solo (P again clears)" : "solo off"); }
+            return;
+        }
         solo = sel;
         seekTo = Math.max(0, sel.start);   // clips may hang off the left of 0
         playing = true;
@@ -3686,6 +5343,7 @@ public class SfxLab extends JPanel {
 
     void deleteSel() {
         if (sel == null) return;
+        if (benchOn) { removeLayer(sel); return; }
         pushUndo("");
         synchronized (lock) { clips.remove(sel); }
         sel = null;
@@ -3712,7 +5370,20 @@ public class SfxLab extends JPanel {
         if (nt == SAMPLE) { c.p[NCOMMON] = o.type == PARTIALS ? o.p[NCOMMON + PA_LOOP] : 1; c.p[NCOMMON + 2] = 1; }   // loop, keep len
         else if (nt == CHOIR && o.p[P_REL] < 0.1) { c.p[P_ATT] = 0.3; c.p[P_REL] = 0.6; }   // a raw import's near-zero fades don't suit a pad
         else if (nt == PARTIALS) { c.p[NCOMMON + PA_LOOP] = 1; partials(c, false); }   // choir was looping; start the analysis now
-        synchronized (lock) { clips.set(clips.indexOf(o), c); }
+        if (benchOn) {   // a layer keeps its identity; marked ranges follow their params by name
+            c.id = o.id; c.on = o.on; c.lmute = o.lmute;
+            if (o.range != null) for (var en : o.range.entrySet()) {
+                int ni = idxOf(nt, key(o.type, en.getKey()));
+                if (ni < 0) continue;
+                if (c.range == null) c.range = new HashMap<>();
+                c.range.put(ni, en.getValue().clone());
+                String nt2 = o.rnote != null ? o.rnote.get(en.getKey()) : null;
+                if (nt2 != null) { if (c.rnote == null) c.rnote = new HashMap<>(); c.rnote.put(ni, nt2); }
+            }
+            synchronized (lock) { int at = bench.layers.indexOf(o); if (at >= 0) bench.layers.set(at, c); }
+            if (benchSolo == o) benchSolo = c;
+            benchGen++;
+        } else synchronized (lock) { clips.set(clips.indexOf(o), c); }
         sel = c;
         markEdit();
         toast(switch (nt) {
@@ -3724,6 +5395,13 @@ public class SfxLab extends JPanel {
 
     void dupSel() {
         if (sel == null) return;
+        if (benchOn) {
+            Clip c = copyClip(sel);
+            c.seed = uiRng.nextLong();
+            c.id = newLayerId(sel.id); c.lmute = false;
+            addLayer(c);
+            return;
+        }
         pushUndo("");
         Clip c = new Clip(sel.name, sel.type, sel.track, sel.end(), sel.dur, uiRng.nextLong());
         System.arraycopy(sel.p, 0, c.p, 0, sel.p.length);
@@ -3796,21 +5474,30 @@ public class SfxLab extends JPanel {
     SampleBrowser browser;
     boolean browserOn;         // remembered in lab.cfg
     void toggleBrowser() { showBrowser(!browserOn); }
-    void showBrowser(boolean on) {
+    JPanel east;               // the frame's right-hand dock: browser and regulator panel sit side by side in it
+    /** Docks a panel on the right (or removes it), widening the window by its
+     *  width so the timeline keeps its size, but never past the screen. */
+    void dock(JComponent c, boolean on) {
         if (frame == null) return;
-        if (browser == null) browser = new SampleBrowser(this);
-        if (on == browserOn && (on == (browser.getParent() != null))) return;
-        int dw = browser.getPreferredSize().width;
+        if (east == null) { east = new JPanel(); east.setLayout(new BoxLayout(east, BoxLayout.X_AXIS)); east.setBackground(Color.BLACK); frame.add(east, BorderLayout.EAST); }
+        int dw = c.getPreferredSize().width;
         boolean maximized = (frame.getExtendedState() & Frame.MAXIMIZED_BOTH) != 0;
-        if (on) { frame.add(browser, BorderLayout.EAST); if (!maximized) frame.setSize(frame.getWidth() + dw, frame.getHeight()); }
-        else { browser.stop(); frame.remove(browser); if (!maximized) frame.setSize(frame.getWidth() - dw, frame.getHeight()); }
+        if (on) { east.add(c); if (!maximized) frame.setSize(frame.getWidth() + dw, frame.getHeight()); }
+        else { east.remove(c); if (!maximized) frame.setSize(frame.getWidth() - dw, frame.getHeight()); }
         if (!maximized) {   // never grow past the screen: the timeline shrinks instead
             Rectangle scr = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
             if (frame.getWidth() > scr.width) frame.setSize(scr.width, frame.getHeight());
             if (frame.getX() + frame.getWidth() > scr.x + scr.width) frame.setLocation(Math.max(scr.x, scr.x + scr.width - frame.getWidth()), frame.getY());
         }
-        browserOn = on;
         frame.revalidate(); frame.repaint();
+    }
+    void showBrowser(boolean on) {
+        if (frame == null) return;
+        if (browser == null) browser = new SampleBrowser(this);
+        if (on == browserOn && (on == (browser.getParent() != null))) return;
+        if (!on) browser.stop();
+        dock(browser, on);
+        browserOn = on;
         saveCfg();
         if (on) browser.filter.requestFocusInWindow(); else requestFocusInWindow();
     }
@@ -3996,10 +5683,13 @@ public class SfxLab extends JPanel {
 
         // ---- top bar
         g.setColor(new Color(90, 255, 190));
-        g.drawString("SynthLab SFX · workspace" + (lastStampName != null ? " (" + lastStampName + ")" : ""), 14, 24);
+        g.drawString(benchOn ? "SynthLab SFX · bench (H: timeline)" : "SynthLab SFX · workspace" + (lastStampName != null ? " (" + lastStampName + ")" : ""), 14, 24);
         g.setColor(Color.GRAY);
         VideoRef vid = video;
-        String tp = (vid != null && vid.frames > 0 ? String.format(Locale.ROOT, "frame %d   ", vid.frameAt(playPos)) : "")
+        String tp = benchOn
+                ? String.format(Locale.ROOT, "%6.1fs   %s   root %s   %s", playPos, benchPlaying ? "▶ " : "‖ ", noteName(rootHz),
+                                keyOff != 0 ? String.format(Locale.ROOT, "KEY %+.0f (%s)  ", keyOff, noteName(rootHz * Math.pow(2, keyOff / 12))) : "")
+                : (vid != null && vid.frames > 0 ? String.format(Locale.ROOT, "frame %d   ", vid.frameAt(playPos)) : "")
                 + String.format(Locale.ROOT, "%6.2fs / %.2fs   %s%s%s%s%s",
                 playPos, end, playing ? "▶ " : "‖ ", loopOn ? "loop " : "", snapOn ? "snap " : "",
                 "root " + noteName(rootHz) + "   " + (keyOff != 0 ? String.format(Locale.ROOT, "KEY %+.0f (%s)  ", keyOff, noteName(rootHz * Math.pow(2, keyOff / 12))) : ""),
@@ -4027,15 +5717,18 @@ public class SfxLab extends JPanel {
             g.drawString(lb, r.x + (r.width - g.getFontMetrics().stringWidth(lb)) / 2, r.y + 16);
         }
         g.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 13));
-        for (int i = 0; i < ACTIONS.length; i++) {
+        String[] acts = actions();
+        for (int i = 0; i < acts.length; i++) {
             Rectangle r = actRect(i);
             g.setColor(new Color(40, 40, 40));
             g.fillRect(r.x, r.y, r.width, r.height);
             g.setColor(Color.GRAY);
             g.drawRect(r.x, r.y, r.width, r.height);
-            g.drawString(ACTIONS[i], r.x + (r.width - g.getFontMetrics().stringWidth(ACTIONS[i])) / 2, r.y + 17);
+            g.drawString(acts[i], r.x + (r.width - g.getFontMetrics().stringWidth(acts[i])) / 2, r.y + 17);
         }
 
+        if (benchOn) paintBench(g, w);
+        else {
         // ---- ruler
         double[] steps = {0.05, 0.1, 0.25, 0.5, 1, 2, 5};
         double step = 5;
@@ -4146,6 +5839,7 @@ public class SfxLab extends JPanel {
             g.drawLine(px, rulerY(), px, panelY() - 6);
             g.fillPolygon(new int[]{px - 5, px + 5, px}, new int[]{rulerY(), rulerY(), rulerY() + 7}, 3);
         }
+        }   // end of the timeline view
 
         // ---- parameter panel
         g.setColor(new Color(40, 40, 40));
@@ -4153,6 +5847,7 @@ public class SfxLab extends JPanel {
         if (sel != null) {
             Color tc = TYPE_COLORS[sel.type];
             g.setColor(tc);
+            g.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 13));
             String pinfo = "";
             if (sampled(sel)) {
                 double hz = clipHz(sel);   // also kicks off the analysis for plain sample / choir clips
@@ -4163,9 +5858,16 @@ public class SfxLab extends JPanel {
                                         pa.share < 0.2 ? String.format(Locale.ROOT, " (faint: %.0f%% sines)", 100 * pa.share) : "")
                                      : "   no clear pitch");
             } else pinfo = "   " + noteName(clipHz(sel));
+            if (benchOn)
+                g.drawString(String.format(Locale.ROOT, "%s  (%s)   layer %s   %s%s   key: %s   —  P %s · right-click a slider: range / bind",
+                        sel.name, TYPE_NAMES[sel.type], sel.id,
+                        sel.on != ON_NONE ? String.format(Locale.ROOT, "one-shot %.2fs on %s", sel.dur, ON_NAMES[sel.on]) : "endless",
+                        pinfo, KEY_NAMES[sel.keyed], sel.on != ON_NONE ? "fires it" : "solos it"), 14, panelY() + 16);
+            else
             g.drawString(String.format(Locale.ROOT, "%s  (%s)   track %d   start %.2fs   dur %.2fs%s%s   key: %s   —  P previews solo",
                     sel.name, TYPE_NAMES[sel.type], sel.track + 1, sel.start, sel.dur,
                     sel.vlink ? "   linked to video" : "", pinfo, KEY_NAMES[sel.keyed]), 14, panelY() + 16);
+            double[] smod = benchOn ? sel.mod : null;
             for (int i = 0; i < sel.p.length; i++) {
                 PSpec s = spec(sel.type, i);
                 Rectangle r = sliderRect(i);
@@ -4175,15 +5877,39 @@ public class SfxLab extends JPanel {
                 double u = (sel.p[i] - s.min()) / (s.max() - s.min());
                 g.setColor(new Color(tc.getRed(), tc.getGreen(), tc.getBlue(), 170));
                 g.fillRect(r.x + 1, r.y + 1, (int) (u * (r.width - 2)), r.height - 1);
+                if (benchOn) {
+                    // authoring marks: the range that sounded good (yellow brackets under the bar),
+                    // a dot for a bound param, and the live modulated value as a white tick
+                    double[] rg = sel.range != null ? sel.range.get(i) : null;
+                    if (rg != null) {
+                        g.setColor(new Color(255, 220, 80));
+                        int x0 = r.x + 1 + (int) ((rg[0] - s.min()) / (s.max() - s.min()) * (r.width - 2));
+                        int x1 = r.x + 1 + (int) ((rg[1] - s.min()) / (s.max() - s.min()) * (r.width - 2));
+                        g.drawLine(x0, r.y + r.height + 1, x1, r.y + r.height + 1);
+                        g.drawLine(x0, r.y + r.height - 1, x0, r.y + r.height + 3);
+                        g.drawLine(x1, r.y + r.height - 1, x1, r.y + r.height + 3);
+                    }
+                    if (!bindsOn(sel, i).isEmpty()) {
+                        g.setColor(new Color(120, 200, 255));
+                        g.fillOval(r.x - 9, r.y + 4, 5, 5);
+                        if (smod != null && benchPlaying && i < smod.length) {
+                            double ue = Math.max(0, Math.min(1, (sel.p[i] + smod[i] - s.min()) / (s.max() - s.min())));
+                            int xe = r.x + 1 + (int) (ue * (r.width - 2));
+                            g.setColor(Color.WHITE);
+                            g.drawLine(xe, r.y - 2, xe, r.y + r.height + 2);
+                        }
+                    }
+                }
                 // value lives inside the bar so long readouts can't collide
                 // with the next column's label
                 String vs = fmtVal(sel, i);
-                g.setColor(u > 0.72 ? Color.BLACK : Color.LIGHT_GRAY);
+                g.setColor(u * (r.width - 2) > r.width - g.getFontMetrics().stringWidth(vs) - 8 ? Color.BLACK : Color.LIGHT_GRAY);   // black only once the fill is under the text
                 g.drawString(vs, r.x + r.width - g.getFontMetrics().stringWidth(vs) - 4, r.y + 11);
             }
         } else {
             g.setColor(Color.GRAY);
-            g.drawString("no clip selected — click one, or add with the palette / keys 1-9 (lands at the playhead)", 14, panelY() + 16);
+            g.drawString(benchOn ? "no layer selected — click a row, or add with the palette / keys 1-9, W import, A browser"
+                                 : "no clip selected — click one, or add with the palette / keys 1-9 (lands at the playhead)", 14, panelY() + 16);
         }
 
         // ---- little Lissajous, because it would be wrong to lose it
@@ -4192,6 +5918,15 @@ public class SfxLab extends JPanel {
         // ---- help: every binding in handleKey / buildMouse (keep in sync)
         g.setColor(new Color(110, 110, 110));
         g.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));   // 7 px/char: ~165 chars fit at 1200 wide
+        if (benchOn) {
+            g.drawString("mouse  click row: select · M / S boxes: mute / solo · level bar: drag · r-click row: id, endless / one-shot, fire, remove · dbl-click row: rename id", 14, h - 74);
+            g.drawString("       slider: drag · wheel: fine · r-click slider: type value, mark the range that sounds good, note, bind a signal · wheel over rows: scroll", 14, h - 61);
+            g.drawString("keys   1-9 0 add a synth layer · W import recording · A sample browser (adds land here) · DEL remove · D dup · up/down select · C sample/choir/partials", 14, h - 48);
+            g.drawString("       SPACE play bench · ENTER stop · P solo / fire · T key-track · R tune to root · shift+R degree · ctrl+R root · < > key ±1 st · U the machine", 14, h - 35);
+            g.drawString("       J regulator panel: signal sliders, signature picker, lock / unlock events, binds, ranges, notes · signals move bound params live (white tick)", 14, h - 22);
+            g.drawString("       S save as palette · signature button: save as spells/<spell>.sfx · O open · N clear · H timeline (shift+H sends a clip here) · ctrl+Z undo", 14, h - 9);
+            return;
+        }
         g.drawString("mouse  drag clip: move (up/down = track) · left edge: trim · right edge: resize · shift-drag: invert snap · track #: mute · bar under #: volume · ruler: scrub", 14, h - 74);
         g.drawString("       r-click marker: delete · ctrl-drag video: slide · wheel: scroll · ctrl+wheel: zoom · slider: drag · r-click: type value · wheel on slider: fine (shift: finer)", 14, h - 61);
         g.drawString("keys   1-9 0 palette at playhead · X split · D dup · DEL · arrows: nudge 10ms (shift 100) / track · C sample/choir/partials · T key-track · G snap · + - zoom", 14, h - 48);
@@ -4286,7 +6021,7 @@ public class SfxLab extends JPanel {
             JFrame f = new JFrame("SynthLab SFX — timeline workbench");
             f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             f.addWindowListener(new WindowAdapter() {
-                @Override public void windowClosing(WindowEvent e) { lab.saveProject(true); }
+                @Override public void windowClosing(WindowEvent e) { lab.saveProject(true); if (lab.benchDirty) lab.saveBench(true); }
             });
             f.add(lab, BorderLayout.CENTER);
             lab.frame = f;
@@ -4294,7 +6029,440 @@ public class SfxLab extends JPanel {
             f.setLocationRelativeTo(null);
             f.setVisible(true);
             if (lab.browserOn) { lab.browserOn = false; lab.showBrowser(true); }
+            if (lab.bpanelOn) { lab.bpanelOn = false; lab.showBenchPanel(true); }
             lab.requestFocusInWindow();
         });
+    }
+}
+
+// =========================================================================
+// RegulatorCore: the Harmonic Regulator's machine, with no Swing and no
+// Minecraft in it. Crank physics, the lever state machine, figure sampling,
+// recipe matching with shape equivalence, the research setpoint / copy
+// socket, and the signal contract (docs/HARMONIC-REGULATOR.md §3–4). Every
+// constant is the web prototype's (docs/regulator-prototype.html), which is
+// the oracle: when a port behaves differently, the prototype is right.
+//
+// The mod copies this class verbatim (it is a plain top-level class; add
+// `public` and a package line). Java 21's single-file launcher is why it
+// lives in this file rather than its own.
+//
+// Use: construct, setTarget(recipe), power(true); feed input (selectArm,
+// axisLever, nudge / drag*, latch, phaseStep, setReach); call tick(dt) each
+// frame; read signals[] (SIGNALS names), eval, targetEval, and drain
+// events(). figurePoint / armVector / blueprint draw the ribbon and the
+// pinned sigil.
+// =========================================================================
+class RegulatorCore {
+    // ---- tuning constants (prototype-exact)
+    static final int ARMS = 3, AXES = 3, MAX_N = 8;
+    static final double MAX_VEL = 4;            // crank rev/s; ratio = 2·|vel|, so ratio 8 at most
+    static final double CATCH_W = 0.16;         // catch half-width at integer n is CATCH_W / n
+    static final double REST_R = 0.12;          // below this ratio the crank settles to rest
+    static final double CATCH_RATE = 7, REST_RATE = 9, FRICTION = 0.09;
+    static final double BRAKE = 0.16;           // extra linear brake below ratio 1, in vel units (0.32 ratio/s)
+    static final double SLIP_NUDGE = 0.5, SLIP_DRAG = 0.15, DRAG_SMOOTH = 0.35;
+    static final double NUDGE_WHEEL = 0.05, NUDGE_FINE = 0.01, NUDGE_BUTTON = 0.125;   // vel steps: ratio ±0.1, ±0.02, ±0.25
+    static final double ENGAGE_AMP = 0.04, ENGAGE_R = 0.05;
+    static final double SETPOINT_JITTER = 0.2, SOCKET_JITTER = 0.035;
+    static final double DEFAULT_REACH = 0.7;
+    static final int[][] TIERS = {{2, 1}, {3, 2}, {3, 3}};   // tier 1..3 -> {arms, motions per arm}
+    static final String[] AXIS = {"X", "Y", "Z"};
+    static final String[] PHASE = {"0", "¼", "½", "¾"};
+
+    /** The signal contract, in the order of signals[]. arm{n}.pitch is derived (pitch(arm)). */
+    static final String[] SIGNALS = {"arm1.ratio", "arm2.ratio", "arm3.ratio", "arm1.reach", "arm2.reach", "arm3.reach",
+                                     "radiance", "consonance", "tension", "drive", "coherence", "score"};
+    static final int S_RATIO = 0, S_REACH = 3, S_RADIANCE = 6, S_CONSONANCE = 7, S_TENSION = 8, S_DRIVE = 9, S_COHERENCE = 10, S_SCORE = 11;
+
+    // ---- recipes
+    /** One motion of a recipe: axis (0 X, 1 Y, 2 Z), integer ratio, phase in quarter cycles, drawing amplitude. */
+    record Comp(int axis, int n, int phase, double amp) {}
+    static final class Recipe {
+        final String id, name, reward; final int tier; final boolean secret; final Comp[] comps;
+        private java.util.List<Comp[]> variants;
+        Recipe(String id, String name, int tier, String reward, boolean secret, Comp... comps) {
+            this.id = id; this.name = name; this.tier = tier; this.reward = reward; this.secret = secret; this.comps = comps;
+        }
+        int arms() { return TIERS[tier - 1][0]; }
+        int motionsPerArm() { return TIERS[tier - 1][1]; }
+        /** Phase sets that trace the identical figure: start a quarter cycle later (each ×n motion gains n
+         *  quarters) and / or run it backwards (p becomes 2 − p). Mirroring one axis alone is NOT here, so a
+         *  mirrored asymmetric sigil is a wrong answer; a symmetric sigil's mirror is already in the set. */
+        java.util.List<Comp[]> variants() {
+            if (variants != null) return variants;
+            java.util.List<Comp[]> out = new java.util.ArrayList<>();
+            java.util.Set<String> seen = new java.util.HashSet<>();
+            for (int rev = 0; rev < 2; rev++)
+                for (int k = 0; k < 4; k++) {
+                    Comp[] cs = new Comp[comps.length];
+                    StringBuilder key = new StringBuilder();
+                    for (int i = 0; i < comps.length; i++) {
+                        Comp c = comps[i];
+                        int p = ((((rev == 1 ? 2 - c.phase : c.phase) + c.n * k) % 4) + 4) % 4;
+                        cs[i] = new Comp(c.axis, c.n, p, c.amp);
+                        key.append(p).append(',');
+                    }
+                    if (seen.add(key.toString())) out.add(cs);
+                }
+            return variants = out;
+        }
+    }
+    /** The prototype's roster. A mod supplies its own list to the constructor. */
+    static final Recipe[] DEFAULT_RECIPES = {
+        new Recipe("firebolt", "Fire bolt", 1, "fire", false, new Comp(0, 3, 1, 1), new Comp(1, 2, 0, 1)),
+        new Recipe("cinder", "Cinder bloom", 2, "lava", false, new Comp(0, 1, 1, 1), new Comp(1, 1, 0, 1),
+                   new Comp(0, 5, 1, 0.35), new Comp(1, 5, 2, 0.35), new Comp(2, 3, 0, 0.55)),
+        new Recipe("lance", "Torch lance", 3, "torch", false, new Comp(0, 1, 0, 1), new Comp(1, 2, 1, 0.8), new Comp(2, 3, 1, 0.7),
+                   new Comp(0, 4, 2, 0.4), new Comp(1, 5, 0, 0.3), new Comp(2, 6, 3, 0.25)),
+        new Recipe("wisp", "Will-o'-wisp", 1, "cloud", true, new Comp(0, 1, 0, 1), new Comp(1, 2, 0, 1)),
+    };
+
+    // ---- machine state
+    /** One arm × axis motion. off: !eng. driven: eng && drv (follows the crank and trim). held: eng && !drv. */
+    static final class Motion { boolean eng, drv; double r = 1, amp = DEFAULT_REACH; int ph; }
+    /** A saved motion (voiced crystals, the copy socket). */
+    record Snap(int arm, int axis, double r, int phase, double amp) {}
+    static final class Eval { double score; boolean exact; }
+
+    final Recipe[] recipes;
+    final Motion[][] comps = new Motion[ARMS][AXES];
+    Recipe target;
+    int arm;                       // the selected arm the axis levers act on
+    boolean powered;
+    double vel, ang, slip;         // crank: rev/s, degrees, seconds of slip left
+    int caught = -1;               // -1 free, 0 at rest, n = caught at integer n
+    boolean drag;
+    double tau;                    // machine time in seconds (the figure's roll term)
+    double noise = 1;              // ribbon noise level, smoothed (1 = dark receiver)
+    final java.util.Map<String, Eval> eval = new java.util.LinkedHashMap<>();
+    Eval targetEval = new Eval();
+    final double[] signals = new double[SIGNALS.length];
+    final java.util.Set<String> discovered = new java.util.HashSet<>();
+    private final java.util.Map<String, Boolean> prevExact = new java.util.HashMap<>();
+    private final java.util.List<String> events = new java.util.ArrayList<>();
+    private final java.util.List<java.util.List<Snap>> voiced = new java.util.ArrayList<>();   // one snapshot per voiced crystal
+
+    RegulatorCore() { this(DEFAULT_RECIPES); }
+    RegulatorCore(Recipe[] recipes) {
+        this.recipes = recipes;
+        for (Motion[] a : comps) for (int i = 0; i < AXES; i++) a[i] = new Motion();
+        for (Recipe r : recipes) eval.put(r.id, new Eval());
+        if (recipes.length > 0) target = recipes[0];
+    }
+    Recipe recipe(String id) { for (Recipe r : recipes) if (r.id.equals(id)) return r; return null; }
+    void resetComps() { for (Motion[] a : comps) for (int i = 0; i < AXES; i++) a[i] = new Motion(); }
+    /** Events since the last drain: lock, unlock (the target), discover:<id>, wrong:<id> (another blueprint's
+     *  sigil matched), voice, stopped:<arm>:<axis>. */
+    java.util.List<String> events() { java.util.List<String> out = new java.util.ArrayList<>(events); events.clear(); return out; }
+    java.util.List<java.util.List<Snap>> voiced() { return voiced; }
+
+    // ---- crank
+    double crankRatio() { return 2 * Math.abs(vel); }
+    static double catchWidth(int n) { return CATCH_W / n; }
+    /** A scroll notch / button press: dir ±1, step in vel units (NUDGE_*). Sets the slip timer. */
+    void nudge(int dir, double step) {
+        double s = Math.signum(vel); if (s == 0) s = 1;
+        vel = Math.max(-MAX_VEL, Math.min(MAX_VEL, vel + s * dir * step));
+        if (Math.abs(vel) < 0.001) vel = 0;
+        slip = SLIP_NUDGE;
+    }
+    void dragStart() { drag = true; }
+    /** While dragging: the measured crank speed in rev/s (the pointer's angular velocity), smoothed in. */
+    void dragVelocity(double revPerSec) { if (!drag) return; double v = Math.max(-MAX_VEL, Math.min(MAX_VEL, revPerSec)); vel += (v - vel) * DRAG_SMOOTH; }
+    void dragEnd() { drag = false; slip = SLIP_DRAG; }
+    /** Loads a held motion's ratio into the crank (held → driven with no others driven). */
+    void loadCrank(double r) { vel = r / 2; slip = 0; int n = (int) Math.round(r); caught = Math.abs(r - n) < 1e-6 ? n : -1; }
+    void updateCrank(double dt) {
+        slip = Math.max(0, slip - dt);
+        if (!drag) {
+            double r = 2 * Math.abs(vel); int n = (int) Math.round(r);
+            double sg = Math.signum(vel); if (sg == 0) sg = 1;
+            if (slip <= 0 && n == 0 && r < REST_R) {
+                vel *= Math.exp(-dt * REST_RATE);
+                if (Math.abs(vel) < 5e-4) vel = 0;
+                caught = 0;
+            } else if (slip <= 0 && n >= 1 && n <= MAX_N && Math.abs(r - n) < catchWidth(n)) {
+                double tv = sg * n / 2;
+                vel += (tv - vel) * Math.min(1, dt * CATCH_RATE);
+                if (Math.abs(vel - tv) < 2e-4) vel = tv;
+                caught = n;
+            } else {
+                caught = -1;
+                vel *= Math.exp(-FRICTION * dt);
+                if (r < 1 && slip <= 0) vel = sg * Math.max(0, Math.abs(vel) - BRAKE * dt);   // the dead zone under the first resonance
+            }
+        } else caught = -1;
+        ang += vel * dt * 360;
+        double cr = 2 * Math.abs(vel);
+        for (Motion[] a : comps) for (Motion c : a) if (c.eng && c.drv) c.r = cr;
+    }
+
+    // ---- levers
+    int drivenCount() { int n = 0; for (Motion[] a : comps) for (Motion c : a) if (c.eng && c.drv) n++; return n; }
+    int engagedCount(int arm) { int n = 0; for (Motion c : comps[arm]) if (c.eng) n++; return n; }
+    boolean selectArm(int i) { if (target == null || i < 0 || i >= target.arms()) return false; arm = i; return true; }
+    void setTarget(Recipe r) { target = r; resetComps(); arm = 0; }
+    void power(boolean on) { powered = on; }
+    private void snapIfCaught(Motion c) { if (caught >= 0) c.r = caught; }
+    /** driven → held; a motion held at rest is switched off (that is how motions are released). */
+    private boolean holdOrStop(Motion c) {
+        snapIfCaught(c);
+        c.drv = false;
+        if (c.r < 1e-6) { c.eng = false; c.r = 0; return true; }
+        return false;
+    }
+    /** The axis lever of the selected arm: off → driven (from rest, or joining the others at the crank's
+     *  ratio), driven → held (or off at rest), held → driven (loading the crank, or ganging). Returns false
+     *  when the tier allows no more motions on this arm. */
+    boolean axisLever(int ax) {
+        if (target == null) return false;
+        Motion c = comps[arm][ax];
+        int others = drivenCount();
+        if (!c.eng) {
+            if (engagedCount(arm) >= target.motionsPerArm()) return false;
+            c.eng = true; c.drv = true; c.ph = 0; c.amp = DEFAULT_REACH;
+            if (others > 0) c.r = crankRatio(); else { c.r = 0; loadCrank(0); }
+        } else if (c.drv) {
+            if (holdOrStop(c)) events.add("stopped:" + arm + ":" + ax);
+        } else {
+            c.drv = true;
+            if (others > 0) c.r = crankRatio(); else loadCrank(c.r);
+        }
+        return true;
+    }
+    /** Latch: every driven motion is held (snapped to the caught integer), or switched off at rest. Returns how many stopped. */
+    int latch() {
+        int stopped = 0;
+        for (int a = 0; a < ARMS; a++) for (int x = 0; x < AXES; x++) {
+            Motion c = comps[a][x];
+            if (c.eng && c.drv && holdOrStop(c)) { stopped++; events.add("stopped:" + a + ":" + x); }
+        }
+        return stopped;
+    }
+    /** The phase dial: every driven motion turns a quarter cycle. */
+    void phaseStep() { for (Motion[] a : comps) for (Motion c : a) if (c.eng && c.drv) c.ph = (c.ph + 1) % 4; }
+    /** The reach control: every driven motion takes this amplitude. */
+    void setReach(double amp) { for (Motion[] a : comps) for (Motion c : a) if (c.eng && c.drv) c.amp = amp; }
+    /** The first driven motion (what the trim controls show), or null. */
+    Motion firstDriven() { for (Motion[] a : comps) for (Motion c : a) if (c.eng && c.drv) return c; return null; }
+
+    // ---- matching
+    record Eng(int arm, int axis, double r, int ph, double amp) {}
+    java.util.List<Eng> engaged() {
+        java.util.List<Eng> out = new java.util.ArrayList<>();
+        for (int a = 0; a < ARMS; a++) for (int x = 0; x < AXES; x++) {
+            Motion c = comps[a][x];
+            if (c.eng && c.amp > ENGAGE_AMP && c.r > ENGAGE_R) out.add(new Eng(a, x, c.r, c.ph, c.amp));
+        }
+        return out;
+    }
+    static Eval evalOnce(Comp[] comps, java.util.List<Eng> eng) {
+        boolean[] used = new boolean[eng.size()];
+        double sum = 0; boolean exact = true; int nUsed = 0;
+        for (Comp t : comps) {
+            int best = -1; double bs = 0; boolean bx = false;
+            for (int i = 0; i < eng.size(); i++) {
+                Eng e = eng.get(i);
+                if (used[i] || e.axis != t.axis) continue;
+                double d = Math.abs(e.r - t.n);
+                double s = Math.exp(-d * 5) * (e.ph == t.phase ? 1 : 0.5);
+                if (s > bs) { bs = s; best = i; bx = d < 1e-6 && e.ph == t.phase; }
+            }
+            if (best >= 0) { used[best] = true; nUsed++; sum += bs; if (!bx) exact = false; }
+            else exact = false;
+        }
+        int extra = eng.size() - nUsed;
+        if (extra > 0) exact = false;
+        Eval ev = new Eval();
+        ev.score = sum / comps.length * Math.pow(0.6, extra);
+        ev.exact = exact;
+        return ev;
+    }
+    /** The best score over every phase set that traces the recipe's figure (§3.4). */
+    static Eval evaluate(Recipe rec, java.util.List<Eng> eng) {
+        Eval best = new Eval();
+        for (Comp[] cs : rec.variants()) {
+            Eval e = evalOnce(cs, eng);
+            if (e.exact) return e;
+            if (e.score > best.score) best = e;
+        }
+        return best;
+    }
+
+    // ---- the frame: physics, evaluation, events, signals
+    void tick(double dt) {
+        tau += dt;
+        updateCrank(dt);
+        java.util.List<Eng> eng = engaged();
+        for (Recipe r : recipes) {
+            Eval e = evaluate(r, eng);
+            eval.put(r.id, e);
+            boolean was = prevExact.getOrDefault(r.id, false);
+            if (e.exact && !was && powered) {
+                if (r == target) events.add("lock");
+                else if (r.secret) { if (discovered.add(r.id)) events.add("discover:" + r.id); }
+                else events.add("wrong:" + r.id);
+            } else if (!e.exact && was && r == target) events.add("unlock");
+            prevExact.put(r.id, e.exact && powered);
+        }
+        targetEval = target != null ? eval.get(target.id) : new Eval();
+        computeSignals(eng);
+        double coh = signals[S_COHERENCE];
+        double noiseT = powered ? (targetEval.exact ? 0 : 0.015 + (eng.isEmpty() ? 0.45 : 0.12) * (1 - coh)) : 0;
+        noise += (noiseT - noise) * (1 - Math.exp(-dt * 3.7));   // the prototype's 0.06 per 60 Hz frame
+    }
+    void computeSignals(java.util.List<Eng> eng) {
+        java.util.Arrays.fill(signals, 0);
+        for (int a = 0; a < ARMS; a++) {
+            double best = -1, reach = 0;
+            for (Eng e : eng) if (e.arm == a) { reach += e.amp; if (e.amp > best) { best = e.amp; signals[S_RATIO + a] = e.r; } }
+            signals[S_REACH + a] = Math.min(1, reach);
+        }
+        double z = 0, coh = 0, cons = 0, tension = 0; int pairs = 0;
+        for (int i = 0; i < eng.size(); i++) {
+            Eng e = eng.get(i);
+            if (e.axis == 2) z += e.amp;
+            coh += Math.exp(-8 * Math.abs(e.r - Math.round(e.r)));
+            tension = Math.max(tension, e.r);
+            for (int j = i + 1; j < eng.size(); j++) {
+                int ni = Math.max(1, (int) Math.round(e.r)), nj = Math.max(1, (int) Math.round(eng.get(j).r)), g = gcd(ni, nj);
+                cons += 2.0 / (ni / g + nj / g);
+                pairs++;
+            }
+        }
+        signals[S_RADIANCE] = Math.min(1, z);
+        signals[S_CONSONANCE] = pairs > 0 ? cons / pairs : eng.size() == 1 ? 1 : 0;
+        signals[S_TENSION] = Math.min(1, tension / MAX_N);
+        signals[S_DRIVE] = Math.min(1, crankRatio() / MAX_N);
+        signals[S_COHERENCE] = eng.isEmpty() ? 0 : coh / eng.size();
+        signals[S_SCORE] = targetEval.score;
+    }
+    static int gcd(int a, int b) { while (b != 0) { int t = a % b; a = b; b = t; } return a; }
+    /** arm{n}.pitch: the arm's ratio as semitones folded into one octave (0 when the arm is silent). */
+    double pitch(int arm) { return pitchOf(signals[S_RATIO + arm]); }
+    static double pitchOf(double ratio) { if (ratio <= 0.05) return 0; double st = 12 * Math.log(ratio) / Math.log(2); return ((st % 12) + 12) % 12; }
+
+    // ---- the figure (§3.3)
+    /** The sigil at trace position t ∈ [0, 2π): the sum of every engaged motion per axis. Off-integer motions
+     *  roll with tau (the oscilloscope behaviour). Adds the receiver's noise (scaled by `noise`) when asked. */
+    void figurePoint(double t, boolean withNoise, double[] out) {
+        out[0] = out[1] = out[2] = 0;
+        for (Motion[] a : comps) for (int ax = 0; ax < AXES; ax++) {
+            Motion c = a[ax];
+            if (!c.eng) continue;
+            double d = c.r - Math.round(c.r);
+            out[ax] += c.amp * Math.min(1, c.r / 0.6) * Math.sin(c.r * t + c.ph * Math.PI / 2 + d * tau * 4.4);
+        }
+        if (withNoise && noise > 0) for (int ax = 0; ax < AXES; ax++) {
+            double s = 0;
+            for (double[] z : NZ[ax]) s += Math.sin(z[0] * t + z[1] + z[2] * tau);
+            out[ax] += noise * s / 4;
+        }
+    }
+    /** One arm's own contribution (for drawing the arm heads). */
+    void armVector(int arm, double t, double[] out) {
+        out[0] = out[1] = out[2] = 0;
+        for (int ax = 0; ax < AXES; ax++) {
+            Motion c = comps[arm][ax];
+            if (!c.eng) continue;
+            double d = c.r - Math.round(c.r);
+            out[ax] += c.amp * Math.min(1, c.r / 0.6) * Math.sin(c.r * t + c.ph * Math.PI / 2 + d * tau * 4.4);
+        }
+    }
+    /** Per-axis extent of the engaged motions (summed reach), floored at 0.7 like the prototype's stage. */
+    double extent() { double m = 0.7; for (int ax = 0; ax < AXES; ax++) { double s = 0; for (Motion[] a : comps) if (a[ax].eng) s += a[ax].amp; m = Math.max(m, s); } return m; }
+    /** The receiver's noise: four jagged sinusoids per axis, fixed so every client draws the same ribbon. */
+    static final double[][][] NZ = new double[AXES][4][];
+    static {
+        java.util.Random r = new java.util.Random(7);
+        for (int ax = 0; ax < AXES; ax++) for (int i = 0; i < 4; i++) NZ[ax][i] = new double[]{9 + r.nextInt(26), r.nextDouble() * 6.28, (r.nextDouble() - 0.5) * 3};
+    }
+
+    // ---- the blueprint (§3.6): a damped harmonograph trace of the recipe
+    static final int BP_FRONT = 0, BP_TOP = 1, BP_POINTS = 2401;
+    /** Points {h, v} of the recipe's trace in one view, in figure units (divide by extent(rec) to fit).
+     *  Front: h = X, v = Y up. Top: h = X, v = −Z, so +Z draws toward the bottom, matching the machine's top camera. */
+    static double[][] blueprint(Recipe rec, int view) {
+        double[][] out = new double[BP_POINTS][2];
+        int ha = 0, va = view == BP_TOP ? 2 : 1;
+        double T = Math.PI * 2 * 4;
+        double[] p = new double[3];
+        for (int i = 0; i < BP_POINTS; i++) {
+            double t = i / (double) (BP_POINTS - 1) * T, damp = Math.exp(-0.022 * t);
+            p[0] = p[1] = p[2] = 0;
+            for (int j = 0; j < rec.comps.length; j++) {
+                Comp c = rec.comps[j];
+                double drift = 0.0025 * (j % 2 == 1 ? 1 : -1) * (1 + j * 0.3);
+                p[c.axis] += c.amp * Math.sin(c.n * t + c.phase * Math.PI / 2 + drift * t);
+            }
+            out[i][0] = p[ha] * damp;
+            out[i][1] = (view == BP_TOP ? -1 : 1) * p[va] * damp;
+        }
+        return out;
+    }
+    static double extent(Recipe rec) { double m = 0.7; for (int ax = 0; ax < AXES; ax++) { double s = 0; for (Comp c : rec.comps) if (c.axis == ax) s += c.amp; m = Math.max(m, s); } return m; }
+    /** Authoring check: true when the recipe's curve retraces itself into an open line (some c has
+     *  p(c − t) = p(t) for all t, e.g. sin 3t against cos 2t). Valid but reads poorly as a sigil. */
+    static boolean degenerate(Recipe rec) {
+        int N = 240;
+        double[][] pts = new double[N][3];
+        for (int i = 0; i < N; i++) {
+            double t = 2 * Math.PI * i / N;
+            for (Comp c : rec.comps) pts[i][c.axis] += c.amp * Math.sin(c.n * t + c.phase * Math.PI / 2);
+        }
+        for (int k = 0; k < N; k++) {   // candidate c = 2π k / N: compare p(t) with p(c − t)
+            double worst = 0;
+            for (int i = 0; i < N && worst < 1e-6; i++) {
+                int j = ((k - i) % N + N) % N;
+                for (int ax = 0; ax < 3; ax++) worst = Math.max(worst, Math.abs(pts[i][ax] - pts[j][ax]));
+            }
+            if (worst < 1e-6) return true;
+        }
+        return false;
+    }
+
+    // ---- research setpoint, copy socket, voicing
+    /** The recipe laid onto arms the way the station would: greedily, one motion per arm-axis within the tier. */
+    static java.util.List<Snap> recipeSnapshot(Recipe rec) {
+        int arms = rec.arms(), per = rec.motionsPerArm();
+        int[] load = new int[ARMS]; boolean[] used = new boolean[ARMS * AXES];
+        java.util.List<Snap> snap = new java.util.ArrayList<>();
+        for (Comp cp : rec.comps)
+            for (int a = 0; a < arms; a++)
+                if (load[a] < per && !used[a * 3 + cp.axis]) { used[a * 3 + cp.axis] = true; load[a]++; snap.add(new Snap(a, cp.axis, cp.n, cp.phase, Math.max(0.35, cp.amp * 0.8))); break; }
+        return snap;
+    }
+    /** Loads motions with ratios jittered by ±jit·(0.5..1) (never below 0.5), every motion held; with phaseErr one
+     *  random phase is a quarter off. Setpoint: recipeSnapshot(target), SETPOINT_JITTER, true. Copy socket: a
+     *  voiced crystal's snapshot, SOCKET_JITTER, false. */
+    void applySnapshot(java.util.List<Snap> snap, double jit, boolean phaseErr, java.util.Random rng) {
+        resetComps();
+        int wrong = phaseErr && !snap.isEmpty() ? rng.nextInt(snap.size()) : -1;
+        for (int i = 0; i < snap.size(); i++) {
+            Snap s = snap.get(i);
+            Motion c = comps[s.arm][s.axis];
+            c.eng = true; c.drv = false; c.amp = s.amp;
+            double d = (rng.nextDouble() < 0.5 ? -1 : 1) * (jit * (0.5 + rng.nextDouble() * 0.5));
+            c.r = Math.max(0.5, s.r + d);
+            c.ph = i == wrong ? (s.phase + 1) % 4 : s.phase;
+        }
+        arm = 0;
+    }
+    void loadSetpoint(java.util.Random rng) { if (target != null) applySnapshot(recipeSnapshot(target), SETPOINT_JITTER, true, rng); }
+    /** Every engaged motion as it stands. */
+    java.util.List<Snap> snapshot() {
+        java.util.List<Snap> out = new java.util.ArrayList<>();
+        for (int a = 0; a < ARMS; a++) for (int x = 0; x < AXES; x++) { Motion c = comps[a][x]; if (c.eng) out.add(new Snap(a, x, c.r, c.ph, c.amp)); }
+        return out;
+    }
+    /** The voice lever: only at an exact match. Writes the sigil (returned) and clears the machine for a fresh crystal. */
+    java.util.List<Snap> voice() {
+        if (target == null || !targetEval.exact) return null;
+        java.util.List<Snap> snap = snapshot();
+        voiced.add(snap);
+        resetComps();
+        events.add("voice");
+        return snap;
     }
 }

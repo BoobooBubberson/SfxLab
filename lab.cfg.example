@@ -14,3 +14,8 @@ export_trim=1
 forge_mirror=
 # start with the sample browser (A) docked
 browser=1
+# start on the bench (H) with the regulator panel (J) docked; bench_name is the
+# palette or signature the bench was last opened from / stamped to
+bench=0
+bpanel=0
+bench_name=

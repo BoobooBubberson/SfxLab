@@ -187,6 +187,54 @@ loud clips saturate; the default per-clip `cutoff` of 1 is a 10 kHz lowpass
 that trims the top octave of noisy residuals; the residual of a partials
 clip is read straight at speed 1 (grains only when stretching).
 
+## 8. The bench (2026-09-24)
+
+`H` swaps the timeline for the regulator palette: layers (clips with no
+position) that all sound at once, steered by the machine's signals through
+`bind` lines, with per-param `range` marks that turn listening notes into
+the bind ranges, and signatures in `spells/` that blend in with the score.
+`J` docks the scrubber panel; `U` opens the machine (RegulatorCore with the
+prototype's controls) which drives those signals live. Details and the file format are in
+`docs/HARMONIC-REGULATOR.md` §5.3; the engine side is a per-clip `mod` array
+added to the params through a 30 ms smoother (`Voice.effective`), which
+ordinary timeline clips never use, so old renders stay byte-identical.
+
+## 8b. Performance (2026-09-24)
+
+The machine stuttered on a slower PC. Measured on the palette (8 layers, 6 of
+them partials with 1.8k–12k tracks): every layer costs ~0.05× realtime on one
+core, 0.4× for all of them, and no single layer dominates; the machine's
+stage painted in ~6 ms a frame. Three changes, none of which alter a single
+output bit (verified sample for sample against the old path on the pyretic
+project and on the live palette with moving signals):
+
+- **Parallel block rendering.** `Engine.render` is split into `clipSample`
+  (one clip, one sample, into its own six-value slot) and `post` (sidechain
+  envelopes, delay, room, limiter). `renderBlock` renders each clip's 256
+  samples on a small thread pool and then mixes in clip order, so the sums
+  are the same doubles in the same order. It falls back to the sample path
+  when any clip ducks (the sidechain couples clips within a sample) or with a
+  single clip. The realtime loop and the export both use it: 2.9× faster on
+  8 threads here, and the loop-end check moved from per sample to per block.
+- **Silent clips are skipped** at effective level < 1e-4 (a bench layer
+  waiting for its cue, a signature-only layer before the blend).
+- **Partials analyses are cached on disk** in `forge/.parts/` (git-ignored),
+  keyed by file, thresholds, size and mtime, and loaded exactly (residual as
+  floats). Opening the palette went from ~14 s of background analysis to
+  0.6 s; the palette's cache is ~85 MB.
+- What a partials layer costs is its *active* tracks per frame, not its
+  total track count (a long file has thousands of short tracks in turn).
+  Measured on the palette at floor 14: 00001 14 active, 00003 12, 00008 31,
+  lava 42, fire 25 of 12 034 total; at floor 30 the synth loops lose a
+  quarter, fire drops to 628 tracks / 1 active (its "partials" were crackle,
+  and its sines share falls 32 → 17 %), lava does not move (its bubbles are
+  strong peaks; 88 % of it is residual anyway). The floor slider now reaches
+  42 dB. So the floor is a sound decision (what gets re-pitched, what stays
+  texture), not a CPU one; `min len` is the lever for crackle.
+- The machine's ribbon is stroked as 16 depth-bucketed paths instead of
+  1500 segments, the blueprint strip is drawn once into an image per target,
+  and the values readout and panel sliders update at 8–10 Hz.
+
 ## 9. Harmonic controls (2026-09-21)
 
 Partials clips gained seven sliders that act on the tracked partials only

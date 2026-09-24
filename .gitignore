@@ -1,7 +1,8 @@
 # per-machine state: export folder, forge mirror, browser toggle (see lab.cfg.example)
 lab.cfg
-# the workspace autosave; S stamps named copies into projects/
+# the workspace autosaves; S stamps named copies into projects/ (and spells/ for signatures)
 project.sfx
+bench.sfx
 
 # caches, rebuilt on demand
 samples/.decoded/
