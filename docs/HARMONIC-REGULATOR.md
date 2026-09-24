@@ -292,7 +292,8 @@ line style, which the timeline parser skips:
 ```
 layer <id> <name> <type> <dur> <seed> key=value... [on=lock|unlock] [mute=1]   dur 0 = endless
 range <id> <param> <lo> <hi> [note]      the span that sounded good (authoring notes; default bind range)
-bind <signal> <id|*> <param> [lo hi] [rel]   no range = the layer's marked range, else the full spec range
+bind <signal> <id|*> <param> [lo hi] [rel] [steps=N | scale=<chord>]   no range = the marked range, else the spec range;
+                                         steps quantises the sweep, scale snaps a semitone value to a chord's degrees
 palette projects/x.sfx                   (signature files) the palette they were authored against
 note <free text>
 ```

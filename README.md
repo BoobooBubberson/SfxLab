@@ -88,7 +88,10 @@ the machine's signals rather than by time. **H** swaps the timeline for that ben
 - Add layers with the palette keys, **W** import, the sample browser (**A**), or
   **shift+H** from a selected timeline clip. **DEL**, **D**, **C**, **T**, **R** work on layers.
 - Right-click a slider to mark the **range** that sounded good, with a note, or to
-  **bind** a signal to it. Marked ranges are the default bind ranges, so the
+  **bind** a signal to it. A bind sweeps linearly unless its map says otherwise:
+  `steps=3` turns the sweep into a staircase, `scale=penta` (any chord name the
+  cloud knows) snaps a pitch bind to the nearest degree, so a signal can step
+  through a scale or through octaves instead of gliding. Marked ranges are the default bind ranges, so the
   listening notes become the machine's data. Bound params show a dot and a white
   tick at the live value.
 - **J** docks the regulator panel: a slider per signal (the scrubber), a **score**

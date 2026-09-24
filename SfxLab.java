@@ -2753,9 +2753,51 @@ public class SfxLab extends JPanel {
 
     static class Bind {
         String sig, layer, param; double lo, hi; boolean rel;   // lo/hi NaN = auto: the layer's marked range, else the full spec range
+        int steps;      // > 0: the value is quantised to this many steps across lo..hi (a sweep becomes a staircase)
+        String scale;   // a chord name (CHORD_NAMES, spaces as _): the value, in semitones, snaps to that scale's nearest degree
         Bind(String sig, String layer, String param, double lo, double hi, boolean rel) { this.sig = sig; this.layer = layer; this.param = param; this.lo = lo; this.hi = hi; this.rel = rel; }
         boolean auto() { return Double.isNaN(lo) || Double.isNaN(hi); }
-        String line() { return "bind " + sig + " " + layer + " " + param + (auto() ? "" : " " + fmtNum5(lo) + " " + fmtNum5(hi)) + (rel ? " rel" : ""); }
+        String map() { return steps > 0 ? "steps=" + steps : scale != null ? "scale=" + scale : ""; }
+        /** Sets the mapping from its text form ("steps=5", "scale=penta", or nothing). False if unknown. */
+        boolean setMap(String m) {
+            m = m == null ? "" : m.trim();
+            if (m.isEmpty()) { steps = 0; scale = null; return true; }
+            if (m.startsWith("steps=")) { try { steps = Math.max(0, Integer.parseInt(m.substring(6).trim())); scale = null; return true; } catch (NumberFormatException e) { return false; } }
+            if (m.startsWith("scale=")) { String n = m.substring(6).trim().replace(' ', '_'); if (scaleDegrees(n) == null) return false; scale = n; steps = 0; return true; }
+            return false;
+        }
+        /** The mapping applied to a raw bind value across lo..hi. */
+        double map(double v, double lo, double hi) {
+            if (steps > 0 && hi != lo) v = lo + Math.round((v - lo) / (hi - lo) * steps) / (double) steps * (hi - lo);
+            if (scale != null) {
+                double[] deg = scaleDegrees(scale);
+                if (deg != null) {
+                    double best = v, bd = Double.MAX_VALUE;
+                    for (double d : deg) for (int k = (int) Math.floor((v - d) / 12) - 1; k <= (int) Math.floor((v - d) / 12) + 1; k++) {
+                        double c = d + 12 * k, dist = Math.abs(c - v);
+                        if (dist < bd) { bd = dist; best = c; }
+                    }
+                    v = best;
+                }
+            }
+            return v;
+        }
+        String line() { return "bind " + sig + " " + layer + " " + param + (auto() ? "" : " " + fmtNum5(lo) + " " + fmtNum5(hi)) + (rel ? " rel" : "") + (map().isEmpty() ? "" : " " + map()); }
+    }
+    /** A chord's pitch classes in semitones (0..12), from its just ratios; null for an unknown name. */
+    static final HashMap<String, double[]> SCALES = new HashMap<>();
+    static double[] scaleDegrees(String name) {
+        synchronized (SCALES) {
+            if (SCALES.containsKey(name)) return SCALES.get(name);
+            double[] out = null;
+            for (int i = 0; i < NCHORD; i++) if (CHORD_NAMES[i].replace(' ', '_').equals(name)) {
+                TreeSet<Long> pcs = new TreeSet<>();
+                for (double r : CHORDS[i]) { double st = 12 * Math.log(r) / Math.log(2); pcs.add(Math.round((((st % 12) + 12) % 12) * 1000)); }
+                out = pcs.stream().mapToDouble(x -> x / 1000.0).toArray();
+            }
+            SCALES.put(name, out);
+            return out;
+        }
     }
     static String fmtNum5(double v) {
         String s = String.format(Locale.ROOT, "%.5f", v);
@@ -2800,12 +2842,17 @@ public class SfxLab extends JPanel {
                     c.range.put(pi, new double[]{Double.parseDouble(t[3]), Double.parseDouble(t[4])});
                     if (t.length > 5) { if (c.rnote == null) c.rnote = new HashMap<>(); c.rnote.put(pi, String.join(" ", Arrays.copyOfRange(t, 5, t.length))); }
                 }
-                case "bind" -> {
+                case "bind" -> {   // bind signal id|* param [lo hi] [rel] [steps=N | scale=name]
                     if (t.length < 4) continue;
-                    boolean rel = t[t.length - 1].equals("rel");
-                    int n = t.length - (rel ? 1 : 0);
-                    double lo = n > 5 ? Double.parseDouble(t[4]) : Double.NaN, hi = n > 5 ? Double.parseDouble(t[5]) : Double.NaN;
-                    b.binds.add(new Bind(t[1], t[2], t[3], lo, hi, rel));
+                    Bind bd = new Bind(t[1], t[2], t[3], Double.NaN, Double.NaN, false);
+                    int nums = 0;
+                    for (int i = 4; i < t.length; i++) {
+                        if (t[i].equals("rel")) bd.rel = true;
+                        else if (t[i].contains("=")) bd.setMap(t[i]);
+                        else { try { double v = Double.parseDouble(t[i]); if (nums == 0) bd.lo = v; else if (nums == 1) bd.hi = v; nums++; } catch (NumberFormatException ignored) {} }
+                    }
+                    if (nums < 2) { bd.lo = Double.NaN; bd.hi = Double.NaN; }
+                    b.binds.add(bd);
                 }
                 default -> {}
             }
@@ -2906,7 +2953,7 @@ public class SfxLab extends JPanel {
                     lo = r != null ? r[0] : b.rel ? 0 : s.min();
                     hi = r != null ? r[1] : b.rel ? s.max() - s.min() : s.max();
                 }
-                double v = lo + (hi - lo) * signalNorm(b.sig);
+                double v = b.map(lo + (hi - lo) * signalNorm(b.sig), lo, hi);
                 m[pi] += b.rel ? v : v - c.p[pi];
             }
             if (sg != null && w > 0) {
@@ -3814,7 +3861,7 @@ public class SfxLab extends JPanel {
         final JTable bindTable;
         final JTextArea notes = new JTextArea(4, 20);
         boolean refreshing; int seenGen = -1;
-        static final String[] BCOLS = {"signal", "layer", "param", "lo", "hi", "rel"};
+        static final String[] BCOLS = {"signal", "layer", "param", "lo", "hi", "rel", "map"};
 
         BenchPanel(SfxLab lab) {
             this.lab = lab;
@@ -3876,6 +3923,7 @@ public class SfxLab extends JPanel {
                     return switch (c) {
                         case 0 -> b.sig; case 1 -> b.layer; case 2 -> b.param;
                         case 3 -> b.auto() ? "auto" : fmtNum5(b.lo); case 4 -> b.auto() ? "auto" : fmtNum5(b.hi);
+                        case 6 -> b.map();
                         default -> b.rel;
                     };
                 }
@@ -3896,6 +3944,7 @@ public class SfxLab extends JPanel {
                                     if (c == 3) b.lo = Double.parseDouble(s); else b.hi = Double.parseDouble(s);
                                 }
                             }
+                            case 6 -> { if (!b.setMap(v.toString())) lab.toast("map: steps=N or scale=<chord name: " + String.join(", ", CHORD_NAMES).replace(' ', '_') + ">"); }
                             default -> b.rel = Boolean.TRUE.equals(v);
                         }
                     } catch (NumberFormatException ex) { lab.toast("couldn't parse \"" + v + "\""); }
@@ -3910,9 +3959,10 @@ public class SfxLab extends JPanel {
             bindTable.getColumnModel().getColumn(3).setPreferredWidth(50);
             bindTable.getColumnModel().getColumn(4).setPreferredWidth(50);
             bindTable.getColumnModel().getColumn(5).setPreferredWidth(30);
+            bindTable.getColumnModel().getColumn(6).setPreferredWidth(80);
             JPanel bindsP = new JPanel(new BorderLayout(2, 2));
             JPanel bh = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 0));
-            bh.add(new JLabel("binds   signal → layer.param over lo..hi (auto = the marked range)"));
+            bh.add(new JLabel("binds   signal → layer.param over lo..hi (auto = marked range) · map: steps=N or scale=penta"));
             bindsP.add(bh, BorderLayout.NORTH);
             bindsP.add(new JScrollPane(bindTable), BorderLayout.CENTER);
             JPanel bb = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 0));
@@ -4035,7 +4085,7 @@ public class SfxLab extends JPanel {
             };
             fillParams.run();
             layC.addActionListener(e -> fillParams.run());
-            JTextField loF = new JTextField("auto", 6), hiF = new JTextField("auto", 6);
+            JTextField loF = new JTextField("auto", 6), hiF = new JTextField("auto", 6), mapF = new JTextField("", 12);
             JCheckBox relC = new JCheckBox("rel (added to the layer's own value)");
             parC.addActionListener(e -> { boolean pitch = "pitch".equals(parC.getSelectedItem()); relC.setSelected(pitch); if (pitch) { loF.setText("0"); hiF.setText("12"); } });
             JPanel p = new JPanel(new GridLayout(0, 2, 4, 4));
@@ -4045,15 +4095,16 @@ public class SfxLab extends JPanel {
             p.add(new JLabel("lo (auto = marked range)")); p.add(loF);
             p.add(new JLabel("hi")); p.add(hiF);
             p.add(new JLabel("")); p.add(relC);
+            p.add(new JLabel("map: steps=N or scale=name")); p.add(mapF);
             if (JOptionPane.showConfirmDialog(this, p, "Add bind", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE) != JOptionPane.OK_OPTION) return;
             try {
                 String lo = loF.getText().trim().toLowerCase(Locale.ROOT), hi = hiF.getText().trim().toLowerCase(Locale.ROOT);
                 boolean auto = lo.isEmpty() || lo.equals("auto") || hi.isEmpty() || hi.equals("auto");
                 lab.pushUndo("");
-                synchronized (lab.lock) {
-                    lab.bench.binds.add(new Bind((String) sigC.getSelectedItem(), (String) layC.getSelectedItem(), (String) parC.getSelectedItem(),
-                            auto ? Double.NaN : Double.parseDouble(lo), auto ? Double.NaN : Double.parseDouble(hi), relC.isSelected()));
-                }
+                Bind nb = new Bind((String) sigC.getSelectedItem(), (String) layC.getSelectedItem(), (String) parC.getSelectedItem(),
+                        auto ? Double.NaN : Double.parseDouble(lo), auto ? Double.NaN : Double.parseDouble(hi), relC.isSelected());
+                if (!nb.setMap(mapF.getText())) { lab.toast("map: steps=N or scale=<" + String.join(", ", CHORD_NAMES).replace(' ', '_') + ">"); return; }
+                synchronized (lab.lock) { lab.bench.binds.add(nb); }
                 lab.benchGen++; lab.markEdit();
             } catch (NumberFormatException ex) { lab.toast("couldn't parse the range"); }
         }
