@@ -1,0 +1,27 @@
+# per-machine state: export folder, forge mirror, browser toggle (see lab.cfg.example)
+lab.cfg
+# the workspace autosave; S stamps named copies into projects/
+project.sfx
+
+# caches, rebuilt on demand
+samples/.decoded/
+video-cache/
+forge/.badges-*.txt
+tools/__pycache__/
+*.pyc
+
+# outputs
+renders/
+forge/
+
+# local-only material, kept on disk but not shared
+# archive/: retired test projects and old renders; clips/: video reference recordings
+archive/
+clips/
+*.bak
+
+# sample library: only the cleared pyretic/ set is tracked (see samples/README.md)
+samples/*
+!samples/README.md
+!samples/CREDITS.md
+!samples/pyretic/

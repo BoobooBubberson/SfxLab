@@ -1,0 +1,7 @@
+# partials demo: the frost ice cast and the electric charge-up as `partials` clips.
+# pitch (and the key: < > in the GUI, --key N headless) transposes only the tracked
+# sinusoids; each recording's crackle and hiss (the residual) plays exactly as recorded.
+# Try: sines=0 (texture only), residual=0 (the pure ring), speed=0 (freeze), floor/min len (what counts as a partial).
+loop 0
+clip ice-cast 7 0 0.00 2.40 21 level=0.9 attack=0.005 release=0.05 reverb=0.10 file=minecraft_sounds_assets/frost/ice_cast.ogg
+clip charge-up 7 1 2.60 2.50 22 level=0.8 attack=0.005 release=0.05 file=minecraft_sounds_assets/electric/charge_up.ogg

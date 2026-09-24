@@ -1,0 +1,16 @@
+# SfxLab settings. Copy to lab.cfg (git-ignored); the E export dialog and the
+# forge panel's folder… button rewrite it, so you rarely edit it by hand.
+# Relative paths resolve inside the workspace (the folder holding SfxLab.java).
+
+# where E puts exported mixes
+export_dir=renders
+# export defaults: ogg needs ffmpeg with libvorbis; Minecraft positional sounds must be mono
+export_ogg=1
+export_mono=1
+export_norm=1
+export_trim=1
+# the mod's sounds folder that the forge panel (F) browses and promotes into;
+# leave empty if you are not targeting a mod checkout
+forge_mirror=
+# start with the sample browser (A) docked
+browser=1
