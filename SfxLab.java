@@ -34,7 +34,7 @@ import java.util.List;
  *              sustain = ring length, pick = attack brightness, interval
  *              adds a second string (root+7 = a power chord that distorts
  *              as one, which is THE overdriven-chord sound).
- *     sample   a recorded audio file (W imports it into ~/synthlab/samples/
+ *     sample   a recorded audio file (W imports it into samples/
  *              and drops a clip; anything ffmpeg can read is accepted —
  *              mp3/ogg/video files are decoded to .wav on the way in).
  *              Two pitch modes:
@@ -112,7 +112,7 @@ import java.util.List;
  * empty track space to scrub it.
  *
  * VIDEO REFERENCE: V attaches a screen recording (anything ffmpeg reads).
- * Its frames are extracted once into ~/synthlab/video-cache/ and shown as a
+ * Its frames are extracted once into video-cache/ and shown as a
  * filmstrip lane under the ruler (ctrl-drag slides it in time, negative
  * starts are fine) and in the monitor window (M), which follows the
  * playhead. [ and ] step one frame. The video's own audio track lands on
@@ -150,7 +150,7 @@ import java.util.List;
  * chosen degree above it (7 = a fifth) for chord-tone layers.
  *
  * SAMPLE BROWSER: A docks a panel on the right listing everything under
- * ~/synthlab/samples with a filter box and tonal badges (share, note, length,
+ * samples with a filter box and tonal badges (share, note, length,
  * computed in the background and cached), preview / stop / play-on-select,
  * and one-click adds: as a sample clip at the playhead (double-click or
  * ENTER) or as a partials clip already tuned to the root. ESC hands the
@@ -179,7 +179,7 @@ import java.util.List;
  *
  * LIBRARY: bank any clip you've dialed in for reuse across projects.
  *   B (or the "+ lib" button)  save the selected clip to the library under a
- *                              chosen name (~/synthlab/library.sfx — same
+ *                              chosen name (library.sfx — same
  *                              format as projects; clip lines can even be
  *                              hand-copied between the two)
  *   Q (or the "library" button)  browse the library: click an entry to drop
@@ -193,7 +193,7 @@ import java.util.List;
  *   E           export the mix as .wav or .ogg, with mono (Minecraft
  *               positional sounds must be mono), normalize and trim-tail
  *               options. The folder and options are remembered in
- *               ~/synthlab/lab.cfg — point it at the mod's sounds dir once
+ *               lab.cfg — point it at the mod's sounds dir once
  *   V / M       attach a video / toggle the monitor window
  *   [ ]         step the playhead one video frame (50 ms without a video)
  *   K           add a marker at the playhead (shift+K removes the nearest)
@@ -219,7 +219,9 @@ import java.util.List;
  *   , / .       browse combos.txt entries   I  insert combo as clips
  *   ctrl+wheel  zoom            wheel scroll
  *
- * Run:  java SfxLab.java
+ * Run:  java SfxLab.java        from the checkout — the folder holding SfxLab.java
+ *       is the workspace (samples/, projects/, forge/, renders/, lab.cfg live in it).
+ *       $SFXLAB_DIR overrides that; ~/synthlab is the fallback when run elsewhere.
  * Headless render:  java SfxLab.java --render [project.sfx] [out.wav|out.ogg] [--mono] [--normalize] [--no-trim] [--key N]
  * Headless forge:   java SfxLab.java --forge <sound.ogg|project.sfx> [--name n] [--root C2] [--register nearest|0|1|2] [--keys 0,2,4,...] [--wav] [--stereo]
  */
@@ -228,8 +230,19 @@ public class SfxLab extends JPanel {
     static final int SR = 44100, BLOCK = 256;
     static final int PH_MAX = 12;   // phaser all-pass stage limit (each pair of stages adds a notch)
     static final int TRACKS = 6, NV = 14;
-    static final Path DIR = Paths.get(System.getProperty("user.home"), "synthlab");
+    /** The workspace: $SFXLAB_DIR if set; else the current directory when it is
+     *  a checkout (SfxLab.java or lab.cfg beside it); else ~/synthlab. samples/,
+     *  projects/, forge/, renders/ and lab.cfg all live inside it. */
+    static final Path DIR = workspaceDir();
+    static Path workspaceDir() {
+        String env = System.getenv("SFXLAB_DIR");
+        if (env != null && !env.isBlank()) return Paths.get(env).toAbsolutePath().normalize();
+        Path cwd = Paths.get("").toAbsolutePath();
+        if (Files.exists(cwd.resolve("SfxLab.java")) || Files.exists(cwd.resolve("lab.cfg"))) return cwd;
+        return Paths.get(System.getProperty("user.home"), "synthlab");
+    }
     static final Path PROJECT_FILE = DIR.resolve("project.sfx");
+    static final Path PROJECTS_DIR = DIR.resolve("projects");   // named .sfx stamps (S) and the open dialog (O)
     static final Path COMBO_FILE = DIR.resolve("combos.txt");
     static final Path LIB_FILE = DIR.resolve("library.sfx");
 
@@ -580,7 +593,7 @@ public class SfxLab extends JPanel {
     }
 
     /** The sample browser, docked on the right of the workbench (A toggles it):
-     *  a filtered list of everything under ~/synthlab/samples with tonal badges,
+     *  a filtered list of everything under samples with tonal badges,
      *  preview, and one-click adds to the timeline. */
     static class SampleBrowser extends JPanel {
         final SfxLab lab;
@@ -665,7 +678,7 @@ public class SfxLab extends JPanel {
         void preview() {
             String f = sel();
             if (f == null) return;
-            bg.submit(() -> { try { player = playWav(decodedPath(SAMPLE_DIR.resolve(f)), player); } catch (Exception e) { lab.toast("preview failed: " + e); } });
+            bg.submit(() -> { try { player = playWav(decodedPath(samplePath(f)), player); } catch (Exception e) { lab.toast("preview failed: " + e); } });
         }
         void stop() { if (player != null) { try { player.stop(); player.close(); } catch (Exception ignored) {} player = null; } }
         void addSample() {
@@ -706,7 +719,7 @@ public class SfxLab extends JPanel {
     /** The forge window: a read-only mirror of the mod's sounds folder on the
      *  left, the selected sound's analysis in the middle, the promotion form
      *  on the right. Everything it does goes through forge() and is staged in
-     *  ~/synthlab/forge/<name>/. */
+     *  forge/<name>/. */
     static class Forge extends JPanel {
         final SfxLab lab;
         JFrame frame;
@@ -755,7 +768,7 @@ public class SfxLab extends JPanel {
 
         Forge(SfxLab lab) {
             this.lab = lab;
-            badges = new BadgeCache(Paths.get(lab.forgeMirror));
+            badges = new BadgeCache(lab.mirrorRoot());
             setLayout(new BorderLayout(6, 6));
             setBackground(Color.BLACK);
             // left: mirror
@@ -853,13 +866,21 @@ public class SfxLab extends JPanel {
         }
 
         void pickFolder() {
-            JFileChooser fc = new JFileChooser(lab.forgeMirror);
+            JFileChooser fc = new JFileChooser(lab.mirrorRoot().toFile());
             fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
             if (fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) { lab.forgeMirror = fc.getSelectedFile().toString(); lab.saveCfg(); rescan(); }
         }
         void rescan() {
             all.clear();
-            Path root = Paths.get(lab.forgeMirror);
+            if (lab.forgeMirror.isBlank()) {
+                badges = new BadgeCache(FORGE_DIR);
+                folderL.setText("(no folder yet)");
+                folderL.setToolTipText("folder… picks the mod's sounds directory; remembered in lab.cfg as forge_mirror");
+                logLine("no mirror folder set — folder… to pick the mod's sounds directory");
+                refilter();
+                return;
+            }
+            Path root = lab.mirrorRoot();
             badges = new BadgeCache(root);
             folderL.setText(root.getFileName() == null ? root.toString() : ".../" + root.getParent().getFileName() + "/" + root.getFileName());
             folderL.setToolTipText(root.toString());
@@ -882,7 +903,7 @@ public class SfxLab extends JPanel {
             selected = rel; selPa = null; selImg = null;
             card.repaint();
             if (rel == null) return;
-            Path f = Paths.get(lab.forgeMirror).resolve(rel);
+            Path f = lab.mirrorRoot().resolve(rel);
             bg.submit(() -> {
                 try {
                     Partials pa = partials(f.toString(), 14, 46, true);
@@ -898,7 +919,7 @@ public class SfxLab extends JPanel {
         void preview(String what) {
             if (what.equals("stop")) { stopPlayer(); return; }
             if (selected == null || (selPa == null && !what.equals("orig"))) return;
-            Path f = Paths.get(lab.forgeMirror).resolve(selected);
+            Path f = lab.mirrorRoot().resolve(selected);
             bg.submit(() -> {
                 try {
                     if (what.equals("orig")) { playFile(decodedPath(f)); return; }
@@ -916,7 +937,7 @@ public class SfxLab extends JPanel {
 
         void run() {
             if (selected == null) { logLine("select a sound first"); return; }
-            Path f = Paths.get(lab.forgeMirror).resolve(selected);
+            Path f = lab.mirrorRoot().resolve(selected);
             runOn(f, forgeName(f.getFileName().toString()));
         }
         void runOn(Path src, String name) {
@@ -934,7 +955,7 @@ public class SfxLab extends JPanel {
         /** Renders what is on the workbench right now and promotes that. */
         void promoteTimeline() {
             String def = lab.lastStampName != null ? forgeName(lab.lastStampName) : "";
-            String name = (String) JOptionPane.showInputDialog(this, "Promote the current timeline as (folder name under ~/synthlab/forge):",
+            String name = (String) JOptionPane.showInputDialog(this, "Promote the current timeline as (folder name under forge/):",
                     "Promote timeline", JOptionPane.PLAIN_MESSAGE, null, null, def);
             if (name == null || name.trim().isEmpty()) return;
             try {
@@ -946,7 +967,7 @@ public class SfxLab extends JPanel {
         }
         void openInWorkbench() {
             if (selected == null) return;
-            Path f = Paths.get(lab.forgeMirror).resolve(selected);
+            Path f = lab.mirrorRoot().resolve(selected);
             double tune = selPa != null ? tuneFor(selPa.f0) : 0;
             lab.importAsPartials(f, forgeName(f.getFileName().toString()), tune);
             Window w = SwingUtilities.getWindowAncestor(lab);
@@ -957,7 +978,7 @@ public class SfxLab extends JPanel {
 
     static class Clip {
         String name; int type, track; double start, dur; long seed; double[] p;
-        String file;   // SAMPLE clips: filename inside ~/synthlab/samples/
+        String file;   // SAMPLE clips: filename inside samples/
         boolean vlink; // moves with the video (its own audio track, by default)
         int keyed;     // which of this clip's params follow the global key (KEY_* bits)
         Partials pa; long paFloor = Long.MIN_VALUE, paMin; int paRetry;   // PARTIALS: analysis cached for the current floor / min len
@@ -1055,15 +1076,36 @@ public class SfxLab extends JPanel {
     static final int KSN = 4096;   // string delay-line size; floors pitch at ~11 Hz
     static final int FLN = 256;    // flanger delay-line size (max ~5.8 ms)
 
-    // ---- sample store: files from ~/synthlab/samples/, decoded once to
+    // ---- sample store: files from samples/, decoded once to
     // stereo floats at engine rate. A failed load caches as silence.
     static final Path SAMPLE_DIR = DIR.resolve("samples");
     static final java.util.concurrent.ConcurrentHashMap<String, float[][]> SAMPLES = new java.util.concurrent.ConcurrentHashMap<>();
+    static final java.util.concurrent.ConcurrentHashMap<String, Path> SAMPLE_PATHS = new java.util.concurrent.ConcurrentHashMap<>();
+
+    /** samples/<name> — or, when that file has since been sorted into another
+     *  subfolder, the first file under samples/ with the same basename, so old
+     *  projects keep resolving after the library is reorganised. */
+    static Path samplePath(String name) {
+        Path p = SAMPLE_DIR.resolve(name);
+        if (Files.exists(p)) return p;
+        return SAMPLE_PATHS.computeIfAbsent(name, nm -> {
+            String base = Paths.get(nm).getFileName().toString();
+            try (var st = Files.walk(SAMPLE_DIR)) {
+                Optional<Path> hit = st.filter(f -> Files.isRegularFile(f) && f.getFileName().toString().equals(base)
+                                                 && !SAMPLE_DIR.relativize(f).toString().startsWith(".decoded")).sorted().findFirst();
+                if (hit.isPresent()) {
+                    System.err.println("sample " + nm + " not found; using " + SAMPLE_DIR.relativize(hit.get()));
+                    return hit.get();
+                }
+            } catch (IOException e) { /* no samples/ at all: fall through to the plain path */ }
+            return p;
+        });
+    }
 
     static float[][] sample(String name) {
         return SAMPLES.computeIfAbsent(name, nm -> {
             try {
-                AudioInputStream in = AudioSystem.getAudioInputStream(decodedPath(SAMPLE_DIR.resolve(nm)).toFile());
+                AudioInputStream in = AudioSystem.getAudioInputStream(decodedPath(samplePath(nm)).toFile());
                 AudioFormat f = in.getFormat();
                 AudioFormat target = new AudioFormat(f.getSampleRate(), 16, 2, true, false);
                 byte[] data = AudioSystem.getAudioInputStream(target, in).readAllBytes();
@@ -1475,7 +1517,7 @@ public class SfxLab extends JPanel {
 
     // ---- FORGE: promotes a finished sound (a recording, or a workbench project
     // rendered first) into a root-tuned, keyed package for the mod, staged in
-    // ~/synthlab/forge/<name>/ and never touching the source. Output:
+    // forge/<name>/ and never touching the source. Output:
     //   <name>_residual.ogg, <name>_sines.ogg   the two halves of the model
     //   <name>_k00.ogg …                        one per key (semitones above the root; kn05 = -5)
     //   <name>.partials.json                    the partial tracks + tuning, for a runtime resynth
@@ -2296,10 +2338,11 @@ public class SfxLab extends JPanel {
     final ArrayList<Marker> markers = new ArrayList<>();
     volatile VideoRef video = null;
 
-    // ---- export settings, remembered in ~/synthlab/lab.cfg
+    // ---- export settings, remembered in lab.cfg (git-ignored; see lab.cfg.example)
     static final Path CFG_FILE = DIR.resolve("lab.cfg");
-    String exportDir = DIR.toString();
-    String forgeMirror = Paths.get(System.getProperty("user.home"), "minecraft-mod-v2", "src", "main", "resources", "assets", "bubbys_world", "sounds").toString();
+    String exportDir = "renders";   // relative = inside the workspace
+    String forgeMirror = "";        // the mod's sounds folder the forge panel browses; empty until picked (folder… button)
+    Path mirrorRoot() { return DIR.resolve(forgeMirror); }
     boolean expOgg = false, expMono = false, expNorm = false, expTrim = true;
 
     // ---- transport (UI writes, audio reads)
@@ -2528,7 +2571,7 @@ public class SfxLab extends JPanel {
     }
 
     /** W: bring a recorded audio file in as a clip. The file lands in
-     *  ~/synthlab/samples/ so projects stay portable; anything ffmpeg can
+     *  samples/ so projects stay portable; anything ffmpeg can
      *  read is accepted (non-PCM files are decoded to .wav on the way in). */
     void importSample() {
         JFileChooser fc = new JFileChooser(DIR.toFile());
@@ -2575,7 +2618,7 @@ public class SfxLab extends JPanel {
     // =====================================================================
     // Video reference: a screen recording laid on the timeline so sounds
     // can be timed to what's on screen. ffmpeg extracts its frames once into
-    // ~/synthlab/video-cache/<name>-<hash>/ as JPEGs (≤ 30 fps, 640 px wide,
+    // video-cache/<name>-<hash>/ as JPEGs (≤ 30 fps, 640 px wide,
     // first VIDEO_MAX_SECS seconds); the filmstrip lane and the monitor
     // window decode them on demand.
     // =====================================================================
@@ -2988,7 +3031,7 @@ public class SfxLab extends JPanel {
     /** S: the one save. Stamps the current timeline into a named .sfx copy. */
     void stampProject() {
         String def = lastStampName != null ? lastStampName.replaceFirst("\\.sfx$", "") : "";
-        String name = (String) JOptionPane.showInputDialog(this, "Save timeline as (in ~/synthlab):",
+        String name = (String) JOptionPane.showInputDialog(this, "Save timeline as (in projects/):",
                 "Save", JOptionPane.PLAIN_MESSAGE, null, null, def);
         if (name == null) return;
         name = name.trim();
@@ -2998,14 +3041,14 @@ public class SfxLab extends JPanel {
             toast("that's the workspace file — pick another name");
             return;
         }
-        Path f = DIR.resolve(name);
+        Path f = PROJECTS_DIR.resolve(name);
         // re-stamping the last-used name is plain "save"; a different existing
         // name is a real overwrite and asks first
         if (Files.exists(f) && !name.equals(lastStampName) && JOptionPane.showConfirmDialog(this,
                 name + " exists — overwrite?", "Save", JOptionPane.OK_CANCEL_OPTION) != JOptionPane.OK_OPTION)
             return;
         try {
-            Files.createDirectories(DIR);
+            Files.createDirectories(PROJECTS_DIR);
             Files.writeString(f, projectText());
             lastStampName = name;
             toast("saved " + name);
@@ -3037,7 +3080,7 @@ public class SfxLab extends JPanel {
     }
 
     void openProject() {
-        JFileChooser fc = new JFileChooser(DIR.toFile());
+        JFileChooser fc = new JFileChooser((Files.isDirectory(PROJECTS_DIR) ? PROJECTS_DIR : DIR).toFile());
         fc.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("SfxLab projects (*.sfx)", "sfx"));
         if (fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION)
             loadProjectFile(fc.getSelectedFile().toPath());
@@ -3241,7 +3284,7 @@ public class SfxLab extends JPanel {
     void exportWav() {
         String def = lastStampName != null ? lastStampName.replaceFirst("\\.sfx$", "") : "sfx-" + System.currentTimeMillis();
         JTextField nameF = new JTextField(def, 26);
-        JTextField dirF = new JTextField(exportDir, 26);
+        JTextField dirF = new JTextField(DIR.resolve(exportDir).toString(), 26);
         JButton browse = new JButton("…");
         browse.addActionListener(ev -> {
             JFileChooser fc = new JFileChooser(dirF.getText());
@@ -3272,9 +3315,9 @@ public class SfxLab extends JPanel {
         if (name.isEmpty()) name = def;
         name = name.replaceFirst("(?i)\\.(wav|ogg)$", "");
         expOgg = ogg.isSelected(); expMono = mono.isSelected(); expNorm = norm.isSelected(); expTrim = trim.isSelected();
-        exportDir = dirF.getText().trim().isEmpty() ? DIR.toString() : dirF.getText().trim();
+        exportDir = dirF.getText().trim().isEmpty() ? "renders" : dirF.getText().trim();
         saveCfg();
-        Path outFile = Paths.get(exportDir).resolve(name + (expOgg ? ".ogg" : ".wav"));
+        Path outFile = DIR.resolve(exportDir).resolve(name + (expOgg ? ".ogg" : ".wav"));
         if (Files.exists(outFile) && JOptionPane.showConfirmDialog(this, outFile.getFileName() + " exists — overwrite?",
                 "Export", JOptionPane.OK_CANCEL_OPTION) != JOptionPane.OK_OPTION) return;
         List<Clip> snap;
@@ -3302,6 +3345,7 @@ public class SfxLab extends JPanel {
     static double renderFile(List<Clip> cs, double[] tvol, boolean[] mute, Path outFile,
                              boolean ogg, boolean mono, boolean normalize, boolean trim, double key) throws Exception {
         double end = timelineEnd(cs) + 1.5;   // room for release + echo tail
+        if (outFile.toAbsolutePath().getParent() != null) Files.createDirectories(outFile.toAbsolutePath().getParent());
         int total = (int) (end * SR);
         double[] mix = new double[total * 2];
         Engine e = new Engine();
@@ -4204,7 +4248,7 @@ public class SfxLab extends JPanel {
             int ki = a.indexOf("--key");
             if (ki >= 0 && ki + 1 < a.size()) { key = Double.parseDouble(a.get(ki + 1)); a.remove(ki + 1); a.remove(ki); }
             Path proj = a.size() > 0 ? Paths.get(a.get(0)) : PROJECT_FILE;
-            Path outw = a.size() > 1 ? Paths.get(a.get(1)) : DIR.resolve("sfx-render.wav");
+            Path outw = a.size() > 1 ? Paths.get(a.get(1)) : DIR.resolve("renders").resolve("sfx-render.wav");
             double[] tv = new double[TRACKS];
             Arrays.fill(tv, 1.0);
             boolean[] mu = new boolean[TRACKS];
