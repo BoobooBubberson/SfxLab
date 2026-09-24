@@ -77,5 +77,11 @@ code and clip lines can be copied between projects and the library by hand.
 ## Contributing samples
 
 Recordings go in a subfolder of `samples/` with a row in `samples/CREDITS.md`
-naming the source and license. Only files that are clear to redistribute are
-committed; everything else stays local under the git-ignore rules.
+naming the author, license and original title. Only files that are clear to
+redistribute are committed; everything else stays local under the git-ignore
+rules.
+
+## License
+
+The code and the in-lab synthesis are MIT (see `LICENSE`). Downloaded
+recordings keep their own terms, listed per file in `samples/CREDITS.md`.
