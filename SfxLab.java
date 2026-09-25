@@ -2739,7 +2739,7 @@ public class SfxLab extends JPanel {
     static final String[] ON_NAMES = {"none", "lock", "unlock"};
     static final double ENDLESS = 1e9;   // dur of a layer that loops for ever
     static final Path BENCH_FILE = DIR.resolve("bench.sfx");   // the bench autosaves here, like project.sfx
-    static final Path SPELLS_DIR = DIR.resolve("spells");      // signatures: one bench file per spell
+    static final Path REG_DIR = DIR.resolve("regulator");      // regulator/<family>/<family>.sfx (palette) + spells/<spell>.sfx (signatures with their recipes)
 
     /** The regulator's signal contract. arm{n}.pitch is derived from arm{n}.ratio
      *  (12·log2 of the ratio folded into one octave), so it has no slider. */
@@ -2808,7 +2808,9 @@ public class SfxLab extends JPanel {
         final ArrayList<Clip> layers = new ArrayList<>();
         final ArrayList<Bind> binds = new ArrayList<>();
         final ArrayList<String> notes = new ArrayList<>();
-        String palette;            // signature files: the palette (workspace-relative) they were authored against
+        String palette;            // (older signature files) the palette they were authored against; the folder says it now
+        String name;               // spell files: the display name
+        int tier; boolean secret; RegulatorCore.Comp[] comps;   // spell files: the recipe (null when the file has none)
         double root = ROOT_DEFAULT;
         Clip byId(String id) { if (id != null) for (Clip c : layers) if (id.equals(c.id)) return c; return null; }
     }
@@ -2821,6 +2823,20 @@ public class SfxLab extends JPanel {
             switch (t[0]) {
                 case "root" -> { if (t.length > 1) b.root = Double.parseDouble(t[1]); }
                 case "palette" -> { if (t.length > 1) b.palette = t[1]; }
+                case "name" -> b.name = line.trim().length() > 5 ? line.trim().substring(5) : null;
+                case "recipe" -> {   // recipe tier=1 [secret=1] X3p1 Y2p0 X5p1@0.35 ...   (axis, integer ratio, phase in quarters, drawing amplitude)
+                    ArrayList<RegulatorCore.Comp> cs = new ArrayList<>();
+                    for (int i = 1; i < t.length; i++) {
+                        if (t[i].startsWith("tier=")) b.tier = Integer.parseInt(t[i].substring(5));
+                        else if (t[i].startsWith("secret=")) b.secret = t[i].endsWith("1");
+                        else {
+                            java.util.regex.Matcher mm = java.util.regex.Pattern.compile("([XYZxyz])(\\d+)p(\\d)(?:@([0-9.]+))?").matcher(t[i]);
+                            if (mm.matches()) cs.add(new RegulatorCore.Comp("xyz".indexOf(Character.toLowerCase(mm.group(1).charAt(0))), Integer.parseInt(mm.group(2)), Integer.parseInt(mm.group(3)) % 4, mm.group(4) != null ? Double.parseDouble(mm.group(4)) : 1));
+                        }
+                    }
+                    if (b.tier < 1 || b.tier > 3) b.tier = 1;
+                    b.comps = cs.toArray(new RegulatorCore.Comp[0]);
+                }
                 case "note" -> b.notes.add(line.trim().length() > 5 ? line.trim().substring(5) : "");
                 case "layer" -> {
                     if (t.length < 6) continue;
@@ -2864,7 +2880,8 @@ public class SfxLab extends JPanel {
         StringBuilder sb = new StringBuilder("# SfxLab bench v1: layer id name type dur seed key=value... (dur 0 = endless) · range id param lo hi [note] · bind signal id|* param [lo hi] [rel]\n");
         sb.append("bench 1\n");
         sb.append(String.format(Locale.ROOT, "root %.4f%n", rootHz));
-        if (b.palette != null) sb.append("palette ").append(b.palette).append('\n');
+        if (b.name != null) sb.append("name ").append(b.name).append('\n');
+        if (b.comps != null) sb.append(recipeLine(b)).append('\n');
         for (Clip c : b.layers) sb.append(layerLine(c));
         for (Clip c : b.layers)
             if (c.range != null)
@@ -2877,6 +2894,11 @@ public class SfxLab extends JPanel {
                 }
         for (Bind bd : b.binds) sb.append(bd.line()).append('\n');
         for (String n : b.notes) sb.append("note ").append(n).append('\n');
+        return sb.toString();
+    }
+    static String recipeLine(Bench b) {
+        StringBuilder sb = new StringBuilder("recipe tier=" + b.tier + (b.secret ? " secret=1" : ""));
+        for (RegulatorCore.Comp c : b.comps) sb.append(' ').append("XYZ".charAt(c.axis())).append(c.n()).append('p').append(c.phase()).append(c.amp() != 1 ? "@" + fmtNum5(c.amp()) : "");
         return sb.toString();
     }
     static String layerLine(Clip c) {
@@ -2896,7 +2918,12 @@ public class SfxLab extends JPanel {
     volatile boolean benchPlaying;
     volatile Clip benchSolo;
     final double[] sigVal = new double[SIGNALS.length];
-    volatile Bench sig; volatile String sigName;   // the signature blended in by the score signal
+    /** A spell of the loaded family: its signature (a bench file) and, when the file carries one, its recipe. */
+    static class Spell { String id, name; RegulatorCore.Recipe recipe; Bench bench; Path file; volatile double w; }
+    volatile String family;                                  // the loaded family (regulator/<family>/), remembered in lab.cfg
+    volatile java.util.List<Spell> spells = new ArrayList<>();
+    int familyGen;                                           // bumped when the family or its spells change (the panel and machine rebuild)
+    final java.util.concurrent.ConcurrentHashMap<String, Double> spellScore = new java.util.concurrent.ConcurrentHashMap<>();   // score.<id>: each spell's own match
     final java.util.concurrent.ConcurrentLinkedQueue<Clip> fireQ = new java.util.concurrent.ConcurrentLinkedQueue<>();
     final ArrayList<Clip> transients = new ArrayList<>();   // one-shots in flight (audio thread only)
     boolean benchDirty;
@@ -2910,6 +2937,7 @@ public class SfxLab extends JPanel {
     double signal(String name) {
         int i = sigIdx(name);
         if (i >= 0) return sigVal[i];
+        if (name.startsWith("score.")) return spellScore.getOrDefault(name.substring(6), 0.0);
         if (name.endsWith(".pitch")) {
             int a = sigIdx(name.substring(0, name.length() - 6) + ".ratio");
             if (a < 0) return 0;
@@ -2922,6 +2950,12 @@ public class SfxLab extends JPanel {
     }
     double signalMax(String name) { int i = sigIdx(name); return i >= 0 ? SIG_MAX[i] : name.endsWith(".pitch") ? 12 : 1; }
     double signalNorm(String name) { return Math.max(0, Math.min(1, signal(name) / signalMax(name))); }
+    /** The bindable signal names: the contract plus one score per spell of the family. */
+    java.util.List<String> signalChoices() {
+        ArrayList<String> out = new ArrayList<>(Arrays.asList(SIGNAL_CHOICES));
+        for (Spell sp : spells) out.add("score." + sp.id);
+        return out;
+    }
     static double smoothstep(double a, double b, double x) { double u = Math.max(0, Math.min(1, (x - a) / (b - a))); return u * u * (3 - 2 * u); }
     /** How far the signature has blended in: 0 below score 0.55, 1 at 1. */
     double blendW() { return smoothstep(0.55, 1.0, sigVal[SIG_SCORE]); }
@@ -2932,8 +2966,11 @@ public class SfxLab extends JPanel {
      *  difference from the saved value) unless the bind is `rel`; the blend
      *  then moves everything toward the signature's values by w. */
     void benchLive(double now, List<Clip> out) {
-        double w = blendW();
-        Bench sg = sig;
+        // every spell's signature blends in by that spell's own score; when their weights add past 1 they share
+        java.util.List<Spell> sps = spells;
+        double sumW = 0;
+        for (Spell sp : sps) { sp.w = smoothstep(0.55, 1.0, spellScore.getOrDefault(sp.id, 0.0)); sumW += sp.w; }
+        double norm = sumW > 1 ? 1 / sumW : 1;
         Clip so = benchSolo;
         List<Clip> ls; List<Bind> bs;
         synchronized (lock) { ls = new ArrayList<>(bench.layers); bs = new ArrayList<>(bench.binds); }
@@ -2956,24 +2993,36 @@ public class SfxLab extends JPanel {
                 double v = b.map(lo + (hi - lo) * signalNorm(b.sig), lo, hi);
                 m[pi] += b.rel ? v : v - c.p[pi];
             }
-            if (sg != null && w > 0) {
-                Clip s = sg.byId(c.id);
-                if (s != null && s.type == c.type) for (int i = 0; i < m.length; i++) m[i] = (1 - w) * m[i] + w * (s.p[i] - c.p[i]);
+            if (sumW > 0) {
+                double wl = 0; double[] acc = null;
+                for (Spell sp : sps) {
+                    if (sp.w <= 0) continue;
+                    Clip s = sp.bench.byId(c.id);
+                    if (s == null || s.type != c.type) continue;   // a spell that omits the layer leaves it at its searching value
+                    double w = sp.w * norm;
+                    if (acc == null) acc = new double[m.length];
+                    wl += w;
+                    for (int i = 0; i < m.length; i++) acc[i] += w * (s.p[i] - c.p[i]);
+                }
+                if (acc != null) for (int i = 0; i < m.length; i++) m[i] = (1 - wl) * m[i] + acc[i];
             }
             c.mod = m;
             out.add(c);
         }
-        if (sg != null && w > 0 && so == null)
-            for (Clip s : sg.layers) {   // layers only the signature has fade in with the blend
-                if (s.on != ON_NONE) continue;
-                boolean inPalette = false;
-                for (Clip c : ls) if (s.id != null && s.id.equals(c.id)) { inPalette = true; break; }
-                if (inPalette) continue;
-                double[] m = s.mod;
-                if (m == null || m.length != s.p.length) m = new double[s.p.length]; else Arrays.fill(m, 0);
-                m[P_LEVEL] = (w - 1) * s.p[P_LEVEL];
-                s.mod = m;
-                out.add(s);
+        if (sumW > 0 && so == null)
+            for (Spell sp : sps) {
+                if (sp.w <= 0) continue;
+                for (Clip s : sp.bench.layers) {   // layers only this spell has fade in with its weight
+                    if (s.on != ON_NONE) continue;
+                    boolean inPalette = false;
+                    for (Clip c : ls) if (s.id != null && s.id.equals(c.id)) { inPalette = true; break; }
+                    if (inPalette) continue;
+                    double[] m = s.mod;
+                    if (m == null || m.length != s.p.length) m = new double[s.p.length]; else Arrays.fill(m, 0);
+                    m[P_LEVEL] = (sp.w * norm - 1) * s.p[P_LEVEL];
+                    s.mod = m;
+                    out.add(s);
+                }
             }
         for (Clip f; (f = fireQ.poll()) != null; ) { f.start = now; transients.add(f); }
         transients.removeIf(f -> now >= f.end());
@@ -2990,16 +3039,116 @@ public class SfxLab extends JPanel {
     }
     /** The lock / unlock event: every one-shot layer marked for it fires (the bench's own and the picked signature's). */
     void fireEvent(int on) { fireEvent(on, true); }
+    /** The lock / unlock event for the bench's own layers (the palette's, or the spell being edited). */
     void fireEvent(int on, boolean setScore) {
         int n = 0;
         List<Clip> ls;
         synchronized (lock) { ls = new ArrayList<>(bench.layers); }
         for (Clip c : ls) if (c.on == on) { fire(c); n++; }
-        Bench sg = sig;
-        if (sg != null && (sigName == null || benchName == null || !benchName.endsWith("/" + sigName + ".sfx")))
-            for (Clip c : sg.layers) if (c.on == on) { fire(c); n++; }
         if (setScore) { if (on == ON_LOCK) setSignal(SIG_SCORE, 1); else if (sigVal[SIG_SCORE] > 0.5) setSignal(SIG_SCORE, 0.5); }
-        toast(ON_NAMES[on] + (n > 0 ? ": " + n + " one-shot" + (n > 1 ? "s" : "") + " fired" : " — no one-shot layer is set to fire on it"));
+        toast(ON_NAMES[on] + (n > 0 ? ": " + n + " one-shot" + (n > 1 ? "s" : "") + " fired" : " — no bench layer is set to fire on it"));
+    }
+    /** A spell's own event: its one-shots marked for it fire (unless that spell is the file open on the bench, whose layers fire through fireEvent). */
+    int fireSpell(String id, int on) {
+        int n = 0;
+        for (Spell sp : spells) {
+            if (!sp.id.equals(id)) continue;
+            if (benchName != null && benchName.endsWith("/spells/" + id + ".sfx")) { fireEvent(on, false); continue; }
+            for (Clip c : sp.bench.layers) if (c.on == on) { fire(c); n++; }
+        }
+        return n;
+    }
+
+    // ---- families: regulator/<family>/<family>.sfx is the palette, regulator/<family>/spells/*.sfx the roster
+    static java.util.List<String> familyNames() {
+        ArrayList<String> out = new ArrayList<>();
+        try (var st = Files.list(REG_DIR)) {
+            st.filter(Files::isDirectory).map(p -> p.getFileName().toString()).filter(n -> Files.exists(REG_DIR.resolve(n).resolve(n + ".sfx"))).sorted().forEach(out::add);
+        } catch (IOException ignored) {}
+        return out;
+    }
+    Path familyDir() { return family != null ? REG_DIR.resolve(family) : null; }
+    /** Loads a family: its palette onto the bench (optional) and its spells beside it. */
+    void loadFamily(String name, boolean withPalette) {
+        if (name == null || name.isEmpty()) { family = null; spells = new ArrayList<>(); spellScore.clear(); familyGen++; benchGen++; saveCfg(); return; }
+        family = name;
+        if (withPalette) loadBenchFile(REG_DIR.resolve(name).resolve(name + ".sfx"));
+        loadSpells();
+        saveCfg();
+    }
+    void loadSpells() {
+        ArrayList<Spell> out = new ArrayList<>();
+        Path dir = familyDir();
+        if (dir != null && Files.isDirectory(dir.resolve("spells"))) {
+            try (var st = Files.list(dir.resolve("spells"))) {
+                for (Path p : st.filter(f -> f.getFileName().toString().endsWith(".sfx")).sorted().toList()) {
+                    try {
+                        Bench b = parseBench(Files.readAllLines(p));
+                        Spell sp = new Spell();
+                        sp.id = p.getFileName().toString().replaceFirst("\\.sfx$", "");
+                        sp.name = b.name != null ? b.name : sp.id.replace('_', ' ');
+                        sp.bench = b; sp.file = p;
+                        if (b.comps != null && b.comps.length > 0) sp.recipe = new RegulatorCore.Recipe(sp.id, sp.name, b.tier, "", b.secret, b.comps);
+                        out.add(sp);
+                    } catch (Exception e) { toast("spell " + p.getFileName() + " failed: " + e); }
+                }
+            } catch (IOException e) { toast("spells scan failed: " + e); }
+        }
+        spells = out;
+        spellScore.keySet().removeIf(k -> out.stream().noneMatch(sp -> sp.id.equals(k)));
+        familyGen++; benchGen++;
+    }
+    /** The family's recipes for the machine (spells with a recipe line); the prototype's roster when there are none. */
+    RegulatorCore.Recipe[] familyRecipes() {
+        ArrayList<RegulatorCore.Recipe> out = new ArrayList<>();
+        for (Spell sp : spells) if (sp.recipe != null) out.add(sp.recipe);
+        return out.isEmpty() ? RegulatorCore.DEFAULT_RECIPES : out.toArray(new RegulatorCore.Recipe[0]);
+    }
+    Spell spell(String id) { for (Spell sp : spells) if (sp.id.equals(id)) return sp; return null; }
+    /** The recipe's text form without the keyword: "tier=1 [secret=1] X3p1 Y2p0@0.35 ...". */
+    static String recipeText(Bench b) { return b.comps == null ? "" : recipeLine(b).substring(7); }
+    /** Why a recipe cannot be built at its tier (null when it can): a tier gives arms × motions per arm, each
+     *  motion takes one arm-axis slot, so at most arms×per motions in all and at most `arms` on any one axis. */
+    static String recipeProblem(int tier, RegulatorCore.Comp[] comps) {
+        int arms = RegulatorCore.TIERS[tier - 1][0], per = RegulatorCore.TIERS[tier - 1][1];
+        if (comps.length > arms * per) return comps.length + " motions, but tier " + tier + " has " + arms + " arms × " + per + " = " + arms * per + " slots";
+        int[] perAxis = new int[3];
+        for (RegulatorCore.Comp c : comps) perAxis[c.axis()]++;
+        for (int ax = 0; ax < 3; ax++) if (perAxis[ax] > arms) return perAxis[ax] + " motions on " + RegulatorCore.AXIS[ax] + ", but only " + arms + " arms can each hold one " + RegulatorCore.AXIS[ax] + " at tier " + tier;
+        for (RegulatorCore.Comp c : comps) if (c.n() < 1 || c.n() > 7) return "ratio ×" + c.n() + " — the crank catches 1..7 (×8 cannot be caught after the slip)";
+        return null;
+    }
+    static String recipeProblem(Bench r) { return r == null || r.comps == null ? null : recipeProblem(r.tier, r.comps); }
+    /** Parses recipe text; null when it holds no motions. */
+    static Bench parseRecipe(String text) {
+        if (text == null || text.isBlank()) return null;
+        Bench b = parseBench(List.of("recipe " + text.trim()));
+        return b.comps != null && b.comps.length > 0 ? b : null;
+    }
+    /** Writes a spell's recipe (and keeps everything else in its file), then reloads the roster. */
+    boolean setSpellRecipe(Spell sp, String text) {
+        Bench r = parseRecipe(text);
+        if (r == null) { toast("recipe: tier=N [secret=1] then motions like X3p1 or Y5p2@0.35 (axis, integer ratio, phase in quarters, blueprint amplitude)"); return false; }
+        try {
+            ArrayList<String> lines = new ArrayList<>(Files.readAllLines(sp.file));
+            lines.removeIf(l -> l.trim().startsWith("recipe "));
+            int at = 0;
+            for (int i = 0; i < lines.size(); i++) if (lines.get(i).trim().startsWith("name ")) { at = i + 1; break; } else if (!lines.get(i).trim().startsWith("#") && at == 0) { at = i; break; }
+            lines.add(at, recipeLine(r));
+            Files.write(sp.file, lines);
+            if (benchName != null && benchName.endsWith("/spells/" + sp.id + ".sfx")) { bench.comps = r.comps; bench.tier = r.tier; bench.secret = r.secret; }
+            loadSpells();
+            RegulatorCore.Recipe rc = spell(sp.id).recipe;
+            String prob = recipeProblem(r);
+            toast(sp.id + " recipe: " + recipeLine(r).substring(7) + (prob != null ? "   — WARNING, unbuildable: " + prob : rc != null && RegulatorCore.degenerate(rc) ? "   — WARNING: this trace retraces itself into an open line (reads poorly as a sigil)" : ""));
+            return true;
+        } catch (Exception e) { toast("recipe save failed: " + e); return false; }
+    }
+    void recipeDialog(Spell sp, String prefill) {
+        String in = (String) JOptionPane.showInputDialog(this,
+                "Recipe of " + sp.name + " (tier=N [secret=1], then motions: axis, integer ratio, phase in quarters, optional @amplitude for the blueprint):",
+                "Recipe", JOptionPane.PLAIN_MESSAGE, null, null, prefill != null ? prefill : recipeText(sp.bench));
+        if (in != null) setSpellRecipe(sp, in);
     }
     void setSignal(int i, double v) { sigVal[i] = Math.max(0, Math.min(SIG_MAX[i], v)); if (bpanel != null) bpanel.pull(); }
 
@@ -3155,16 +3304,28 @@ public class SfxLab extends JPanel {
         } catch (Exception e) { toast("open failed: " + e); }
     }
     void openBench() {
-        JFileChooser fc = new JFileChooser((Files.isDirectory(PROJECTS_DIR) ? PROJECTS_DIR : DIR).toFile());
-        fc.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("bench files: palettes (projects/) and signatures (spells/)", "sfx"));
-        if (fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) loadBenchFile(fc.getSelectedFile().toPath());
+        JFileChooser fc = new JFileChooser((familyDir() != null ? familyDir() : Files.isDirectory(REG_DIR) ? REG_DIR : PROJECTS_DIR).toFile());
+        fc.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("bench files: a family's palette or one of its spells", "sfx"));
+        if (fc.showOpenDialog(this) != JFileChooser.APPROVE_OPTION) return;
+        Path f = fc.getSelectedFile().toPath().toAbsolutePath().normalize();
+        // a file inside regulator/<family>/ loads that family's spells beside it
+        Path d = f.getParent();
+        if (d != null && d.getFileName().toString().equals("spells")) d = d.getParent();
+        if (d != null && d.getParent() != null && d.getParent().equals(REG_DIR.toAbsolutePath().normalize()) && Files.exists(d.resolve(d.getFileName() + ".sfx"))) {
+            String fam = d.getFileName().toString();
+            loadBenchFile(f);
+            if (!fam.equals(family)) { family = fam; loadSpells(); saveCfg(); } else loadSpells();
+        } else loadBenchFile(f);
     }
-    /** S on the bench: stamp it as a palette (projects/) or, from the action bar, as a spell signature (spells/). */
+    /** S on the bench: stamp it as a palette (the family's folder, else projects/) or, from the action bar, as a
+     *  spell signature in the family's spells/. A spell keeps its name and recipe lines unless the bench carries its own. */
     void stampBench(boolean signature) {
-        Path dir = signature ? SPELLS_DIR : PROJECTS_DIR;
-        String def = benchName != null ? Paths.get(benchName).getFileName().toString().replaceFirst("\\.sfx$", "") : "";
+        if (signature && family == null) { toast("pick a family in the regulator panel (J) first — spells live in regulator/<family>/spells/"); return; }
+        Path dir = signature ? familyDir().resolve("spells") : family != null ? familyDir() : PROJECTS_DIR;
+        String def = benchName != null ? Paths.get(benchName).getFileName().toString().replaceFirst("\\.sfx$", "") : family != null && !signature ? family : "";
         String name = (String) JOptionPane.showInputDialog(this,
-                signature ? "Save the layers as a spell signature (in spells/):" : "Save the bench as a palette (in projects/):",
+                signature ? "Save the layers as a spell signature (regulator/" + family + "/spells/):\nA new spell gets its recipe from a `recipe` line you add to the file, e.g. recipe tier=1 X3p1 Y2p0"
+                          : "Save the bench as a palette (" + relPath(dir) + "/):",
                 "Save", JOptionPane.PLAIN_MESSAGE, null, null, def);
         if (name == null) return;
         name = name.trim();
@@ -3177,11 +3338,24 @@ public class SfxLab extends JPanel {
             return;
         try {
             Files.createDirectories(dir);
-            if (signature) { if (benchName != null && benchName.startsWith("projects/")) bench.palette = benchName; }
-            else bench.palette = null;
+            bench.palette = null;
+            if (signature) {
+                String id = name.replaceFirst("\\.sfx$", "");
+                Spell old = spell(id);
+                if (old != null) { if (bench.name == null) bench.name = old.bench.name; if (bench.comps == null) { bench.comps = old.bench.comps; bench.tier = old.bench.tier; bench.secret = old.bench.secret; } }
+                if (bench.comps == null) {   // a new spell: its recipe, prefilled from the machine's sigil when one is on the arms
+                    String pre = machine != null && machine.frame != null && machine.frame.isVisible() ? machine.currentSigil() : "tier=1 ";
+                    String in = (String) JOptionPane.showInputDialog(this, "Recipe of the new spell " + id + " (tier=N [secret=1], then motions like X3p1 Y2p0@0.35; leave empty to add it later):",
+                            "Recipe", JOptionPane.PLAIN_MESSAGE, null, null, pre);
+                    Bench r = parseRecipe(in);
+                    if (r != null) { bench.comps = r.comps; bench.tier = r.tier; bench.secret = r.secret; }
+                }
+                if (bench.name == null) bench.name = id.replace('_', ' ');
+            } else { bench.name = null; bench.comps = null; }
             Files.writeString(f, benchText(bench, rootHz));
             benchName = rel; benchGen++;
-            toast("saved " + rel + (signature ? "  — pick it in the regulator panel (J) and drag score to hear it blend in" : ""));
+            if (signature) loadSpells();
+            toast("saved " + rel + (signature ? "  — every spell blends in by its own score.<id>; the machine scores them all" : ""));
         } catch (Exception e) { toast("save failed: " + e); }
     }
     void clearBench() {
@@ -3191,21 +3365,6 @@ public class SfxLab extends JPanel {
         sel = null; benchName = null;
         markEdit();
         toast("bench cleared (ctrl+Z undoes)");
-    }
-    void pickSignature(String name) {
-        if (name == null || name.equals("(none)")) { sig = null; sigName = null; return; }
-        try {
-            Bench b = parseBench(Files.readAllLines(SPELLS_DIR.resolve(name + ".sfx")));
-            sig = b; sigName = name;
-            toast("signature " + name + ": " + b.layers.size() + " layers — score blends it in above 0.55");
-        } catch (Exception e) { toast("signature failed: " + e); }
-    }
-    static List<String> signatureNames() {
-        ArrayList<String> out = new ArrayList<>();
-        try (var st = Files.list(SPELLS_DIR)) {
-            st.map(p -> p.getFileName().toString()).filter(n -> n.endsWith(".sfx")).map(n -> n.substring(0, n.length() - 4)).sorted().forEach(out::add);
-        } catch (IOException ignored) {}
-        return out;
     }
 
     // ---- bench undo (whole-bench text snapshots; pushUndo / commitPending route here in bench mode)
@@ -3276,10 +3435,10 @@ public class SfxLab extends JPanel {
         g.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 13));
         g.setColor(new Color(245, 235, 215));
         int n = bench.layers.size();
-        g.drawString(String.format(Locale.ROOT, "BENCH  %s   %d layer%s   %s   score %.2f → blend %.0f%%   signature %s%s",
+        g.drawString(String.format(Locale.ROOT, "BENCH  %s   %d layer%s   %s   score %.2f → blend %.0f%%   family %s%s",
                 benchName != null ? benchName : "(unsaved bench)", n, n == 1 ? "" : "s", benchPlaying ? "▶" : "‖",
-                sigVal[SIG_SCORE], 100 * blendW(), sigName != null ? sigName : "none",
-                bench.palette != null ? "   (this file is a signature of " + bench.palette + ")" : ""), tlX() - 40, y0 + 14);
+                sigVal[SIG_SCORE], 100 * blendW(), family != null ? family + " (" + spells.size() + " spell" + (spells.size() == 1 ? "" : "s") + ")" : "none",
+                bench.comps != null ? "   (a spell: " + recipeLine(bench) + ")" : ""), tlX() - 40, y0 + 14);
         g.setColor(new Color(60, 60, 60));
         g.drawLine(8, y0 + 20, w - 12, y0 + 20);
         g.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
@@ -3436,10 +3595,10 @@ public class SfxLab extends JPanel {
         if (r != null) m.add(item("clear range", () -> clearRange(c, i)));
         m.addSeparator();
         JMenu bm = new JMenu("bind a signal to " + c.id + "." + s.name());
-        for (String sg : SIGNAL_CHOICES) bm.add(item(sg, () -> addBind(sg, c.id, pname)));
+        for (String sg : signalChoices()) bm.add(item(sg, () -> addBind(sg, c.id, pname)));
         m.add(bm);
         JMenu bAll = new JMenu("bind a signal to every layer's " + s.name());
-        for (String sg : SIGNAL_CHOICES) bAll.add(item(sg, () -> addBind(sg, "*", pname)));
+        for (String sg : signalChoices()) bAll.add(item(sg, () -> addBind(sg, "*", pname)));
         m.add(bAll);
         for (Bind b : bindsOn(c, i)) m.add(item("remove bind " + b.sig + " → " + b.layer + "." + b.param, () -> removeBind(b)));
         m.show(this, mx, my);
@@ -3468,7 +3627,14 @@ public class SfxLab extends JPanel {
      *  frame and its lock / unlock events fire the bench's one-shots. */
     static class Machine extends JPanel {
         final SfxLab lab;
-        final RegulatorCore core = new RegulatorCore();
+        RegulatorCore core;
+        int seenFamily = -1;
+        final JPanel tg = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 2));
+        final ButtonGroup tgGroup = new ButtonGroup();
+        final Autopilot auto = new Autopilot(System.nanoTime());
+        final JToggleButton autoB = new JToggleButton("▶ auto-play"), pauseB = new JToggleButton("pause");
+        final JSlider speedS = new JSlider(5, 40, 10);
+        final JCheckBox mistakesB = new JCheckBox("mistakes", true), anyB = new JCheckBox("any spell", false);
         JFrame frame;
         final Stage stage = new Stage();
         final Crank crank = new Crank();
@@ -3497,16 +3663,7 @@ public class SfxLab extends JPanel {
             JPanel ctl = new JPanel(); ctl.setLayout(new BoxLayout(ctl, BoxLayout.Y_AXIS));
             ctl.setBorder(BorderFactory.createEmptyBorder(6, 6, 6, 6));
             Font mono = new Font(Font.MONOSPACED, Font.PLAIN, 12);
-            JPanel tg = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 2));
-            tg.add(new JLabel("blueprint:"));
-            ButtonGroup g = new ButtonGroup();
-            for (RegulatorCore.Recipe r : core.recipes) {
-                if (r.secret) continue;
-                JToggleButton b = new JToggleButton(r.name + " " + new String[]{"", "I", "II", "III"}[r.tier]);
-                b.addActionListener(e -> { core.setTarget(r); syncTarget(); });
-                g.add(b); tg.add(b); targetB.add(b);
-            }
-            targetB.get(0).setSelected(true);
+            rebuildCore();
             ctl.add(tg);
             JPanel pw = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 2));
             power.addActionListener(e -> {
@@ -3527,6 +3684,7 @@ public class SfxLab extends JPanel {
             }
             armB[0].setSelected(true);
             ctl.add(arms);
+            syncTarget();
             ctl.add(section("motions — down is driven, lit is held; stop: crank to rest, latch"));
             JPanel axes = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 2));
             for (int i = 0; i < 3; i++) {
@@ -3567,7 +3725,10 @@ public class SfxLab extends JPanel {
                 flashV = 1;
                 notify(core.target.name + " voiced. A fresh crystal is in the socket.");
             });
-            rs.add(setpointB); rs.add(voiceB);
+            JButton recipeB = new JButton("→ recipe");
+            recipeB.setToolTipText("write the motions on the arms (rounded to their resonances) as the pinned spell's recipe");
+            recipeB.addActionListener(e -> captureRecipe());
+            rs.add(setpointB); rs.add(voiceB); rs.add(recipeB);
             ctl.add(rs);
             shelfL.setFont(mono); shelfL.setVisibleRowCount(3);
             JScrollPane sp = new JScrollPane(shelfL); sp.setPreferredSize(new Dimension(360, 60));
@@ -3580,6 +3741,18 @@ public class SfxLab extends JPanel {
             });
             JPanel rb = new JPanel(new FlowLayout(FlowLayout.LEFT, 6, 2)); rb.add(readB); rb.add(driveB); rb.add(valsB);
             ctl.add(rb);
+            ctl.add(section("auto-play — a player works the controls toward the pinned spell; pause it, tweak the layers, resume"));
+            JPanel ap = new JPanel(new FlowLayout(FlowLayout.LEFT, 6, 2));
+            autoB.addActionListener(e -> { if (autoB.isSelected()) { if (!power.isSelected()) power.doClick(); auto.start(); } else auto.stop(); });
+            pauseB.addActionListener(e -> auto.paused = pauseB.isSelected());
+            speedS.setPreferredSize(new Dimension(90, 20)); speedS.setToolTipText("speed ×0.5 .. ×4");
+            speedS.addChangeListener(e -> auto.speed = speedS.getValue() / 10.0);
+            mistakesB.setToolTipText("catch the wrong resonance first now and then, and listen before correcting");
+            anyB.setToolTipText("after each lock, pin a random spell of the family and go for that one");
+            mistakesB.addActionListener(e -> auto.mistakes = mistakesB.isSelected());
+            anyB.addActionListener(e -> auto.anySpell = anyB.isSelected());
+            ap.add(autoB); ap.add(pauseB); ap.add(new JLabel("speed")); ap.add(speedS); ap.add(mistakesB); ap.add(anyB);
+            ctl.add(ap);
             status.setFont(new Font(Font.SANS_SERIF, Font.ITALIC, 13));
             status.setEditable(false); status.setLineWrap(true); status.setWrapStyleWord(true); status.setOpaque(false);
             status.setMaximumSize(new Dimension(380, 40));
@@ -3591,6 +3764,33 @@ public class SfxLab extends JPanel {
             add(ctl, BorderLayout.EAST);
             syncTarget();
             new javax.swing.Timer(33, e -> frameTick()).start();
+        }
+        /** The motions on the arms as recipe text: integer ratios, phases, reach scaled so the largest is 1. */
+        String currentSigil() {
+            java.util.List<RegulatorCore.Eng> eng = core.engaged();
+            StringBuilder sb = new StringBuilder("tier=" + (core.target != null ? core.target.tier : 1));
+            if (core.target != null && core.target.secret) sb.append(" secret=1");
+            double max = 0;
+            for (RegulatorCore.Eng e : eng) max = Math.max(max, e.amp());
+            for (RegulatorCore.Eng e : eng) {
+                double amp = max > 0 ? Math.round(e.amp() / max * 20) / 20.0 : 1;
+                sb.append(' ').append("XYZ".charAt(e.axis())).append((int) Math.max(1, Math.round(e.r()))).append('p').append(e.ph()).append(amp != 1 ? "@" + fmtNum5(amp) : "");
+            }
+            return sb.toString();
+        }
+        void captureRecipe() {
+            if (core.target == null) return;
+            Spell sp = lab.spell(core.target.id);
+            if (sp == null) { lab.toast("the pinned blueprint is not a spell of the loaded family (pick the family in the panel, J)"); return; }
+            if (core.engaged().isEmpty()) { lab.toast("nothing on the arms — pull levers and set the motions first"); return; }
+            String text = currentSigil();
+            Bench r = parseRecipe(text);
+            RegulatorCore.Recipe probe = new RegulatorCore.Recipe(sp.id, sp.name, r.tier, "", r.secret, r.comps);
+            String prob = recipeProblem(r);
+            String warn = prob != null ? "\n\nWARNING, unbuildable at this tier: " + prob : RegulatorCore.degenerate(probe) ? "\n\nWARNING: this trace retraces itself into an open line; it will read poorly as a sigil." : "";
+            if (JOptionPane.showConfirmDialog(this, "Make this the recipe of " + sp.name + "?\n\n" + text + warn + "\n\n(the file keeps its layers; the machine scores the new sigil from now on)",
+                    "Recipe", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE) != JOptionPane.OK_OPTION) return;
+            lab.setSpellRecipe(sp, text);
         }
         static JLabel section(String t) { JLabel l = new JLabel(t); l.setForeground(Color.GRAY); l.setBorder(BorderFactory.createEmptyBorder(6, 2, 0, 2)); return l; }
         void open() {
@@ -3605,16 +3805,48 @@ public class SfxLab extends JPanel {
         }
         void notify(String m) { flash = m; flashUntil = System.currentTimeMillis() + 3500; }
         void syncTarget() {
+            if (armB[0] == null || core.target == null) return;   // called once before the panel exists
             for (int i = 0; i < 3; i++) armB[i].setEnabled(i < core.target.arms());
             armB[0].setSelected(true);
+            for (JToggleButton b : targetB) if (b.isSelected() != (b.getClientProperty("recipe") == core.target)) b.setSelected(b.getClientProperty("recipe") == core.target);
             stage.repaint();
+        }
+        /** The core follows the loaded family's roster (spell files with a recipe line); the blueprint buttons follow the core. */
+        void rebuildCore() {
+            seenFamily = lab.familyGen;
+            RegulatorCore.Recipe[] rs = lab.familyRecipes();
+            boolean wasOn = core != null && core.powered;
+            core = new RegulatorCore(rs);
+            core.power(wasOn);
+            auto.stop(); autoB.setSelected(false);
+            for (JToggleButton b : targetB) tgGroup.remove(b);
+            targetB.clear(); tg.removeAll();
+            tg.add(new JLabel("blueprint:"));
+            for (RegulatorCore.Recipe r : core.recipes) {
+                if (r.secret) continue;
+                JToggleButton b = new JToggleButton(r.name + " " + new String[]{"", "I", "II", "III"}[r.tier]);
+                b.putClientProperty("recipe", r);
+                b.addActionListener(e -> { core.setTarget(r); syncTarget(); });
+                tgGroup.add(b); tg.add(b); targetB.add(b);
+            }
+            if (!targetB.isEmpty()) targetB.get(0).setSelected(true);
+            tg.revalidate(); tg.repaint();
+            shelf.clear();
+            syncTarget();
         }
         void frameTick() {
             if (frame != null && !frame.isVisible()) { lastNs = 0; if (lab.sigDriven) { lab.sigDriven = false; lab.benchGen++; } return; }   // closed: nothing runs, the panel's sliders are free again
             long now = System.nanoTime();
             double dt = lastNs == 0 ? 1 / 60.0 : Math.min(0.05, (now - lastNs) / 1e9);
             lastNs = now;
+            if (lab.familyGen != seenFamily) rebuildCore();
+            step(dt);
+        }
+        /** One frame of machine time: the auto-player's move, the core, the hand-off to the bench. Tests call this with fixed dt. */
+        void step(double dt) {
+            if (auto.on && !auto.paused) auto.advance(dt * auto.speed);
             core.tick(dt);
+            for (RegulatorCore.Recipe r : core.recipes) lab.spellScore.put(r.id, core.eval.get(r.id).score);
             flashV = Math.max(0, flashV - dt * 1.2);
             frameNo++;
             boolean driving = driveB.isSelected();
@@ -3626,6 +3858,8 @@ public class SfxLab extends JPanel {
             for (String ev : core.events()) {
                 if (ev.equals("lock")) { if (driving) lab.fireEvent(ON_LOCK, false); }
                 else if (ev.equals("unlock")) { if (driving) lab.fireEvent(ON_UNLOCK, false); }
+                else if (ev.startsWith("match:")) { if (driving) lab.fireSpell(ev.substring(6), ON_LOCK); }
+                else if (ev.startsWith("unmatch:")) { if (driving) lab.fireSpell(ev.substring(8), ON_UNLOCK); }
                 else if (ev.startsWith("discover:")) notify("Something answered that no blueprint shows: " + core.recipe(ev.substring(9)).name + ".");
                 else if (ev.startsWith("wrong:")) notify("That's the " + core.recipe(ev.substring(6)).name + " sigil. It isn't the one pinned up.");
             }
@@ -3645,7 +3879,8 @@ public class SfxLab extends JPanel {
             readB.setEnabled(!core.voiced().isEmpty());
             // status line, the prototype's
             String m;
-            if (System.currentTimeMillis() < flashUntil) m = flash;
+            if (auto.on) m = "auto: " + auto.doing + (auto.paused ? "  (paused)" : "");
+            else if (System.currentTimeMillis() < flashUntil) m = flash;
             else if (!core.powered) m = "Power the receiver to begin.";
             else if (core.targetEval.exact) m = "The sigil holds. Pull the voice lever to write it to the crystal.";
             else if (d > 0 && core.caught == 0) m = "At rest. Spin the crank up to drive the motion, or latch to stop it.";
@@ -3666,6 +3901,87 @@ public class SfxLab extends JPanel {
                 if (!vals.getText().contentEquals(sb)) vals.setText(sb.toString());
             } else if (!vals.getText().isEmpty()) vals.setText("");
             stage.repaint(); crank.repaint();
+        }
+
+        /** The auto-player: works the machine's real controls toward the pinned spell along a randomised path
+         *  (arm order, reach, overshoot, an occasional wrong resonance first), so the soundscape can be listened
+         *  to as it will be played. Every move goes through the core's input API. */
+        class Autopilot {
+            final Random rng;
+            boolean on, paused, mistakes = true, anySpell; double speed = 1;
+            String doing = "";
+            final ArrayDeque<Object[]> plan = new ArrayDeque<>();   // {what, delay, act, until (BooleanSupplier or null), timeout}
+            Object[] cur; double sinceAct, elapsed;
+            Autopilot(long seed) { rng = new Random(seed); }
+            void start() { on = true; paused = false; plan.clear(); cur = null; core.resetComps(); planTarget(); }
+            void stop() { on = false; plan.clear(); cur = null; doing = ""; }
+            double pause(double a, double b) { return a + rng.nextDouble() * (b - a); }
+            void step(String what, double delay, Runnable act, java.util.function.BooleanSupplier until, double timeout) { plan.add(new Object[]{what, delay, act, until, timeout}); }
+            void planTarget() {
+                if (anySpell) {
+                    ArrayList<RegulatorCore.Recipe> rs = new ArrayList<>();
+                    for (RegulatorCore.Recipe r : core.recipes) if (!r.secret) rs.add(r);
+                    if (!rs.isEmpty()) { core.setTarget(rs.get(rng.nextInt(rs.size()))); syncTarget(); }
+                }
+                RegulatorCore.Recipe rec = core.target;
+                if (rec == null) return;
+                java.util.List<RegulatorCore.Snap> snap = new ArrayList<>(RegulatorCore.recipeSnapshot(rec));
+                java.util.List<Integer> perm = new ArrayList<>();   // any arm assignment matches; take a random one
+                for (int i = 0; i < rec.arms(); i++) perm.add(i);
+                Collections.shuffle(perm, rng);
+                Collections.shuffle(snap, rng);
+                for (RegulatorCore.Snap sn : snap) planMotion(perm.get(sn.arm()), sn.axis(), (int) Math.round(sn.r()), sn.phase());
+                step("holding the lock, listening", pause(3, 6), () -> {}, null, 0);
+                step("a fresh crystal", 0.5, () -> { if (core.voice() == null) core.resetComps(); planTarget(); }, null, 0);
+            }
+            void planMotion(int arm, int ax, int n, int ph) {
+                step("arm " + (arm + 1), pause(0.4, 1.0), () -> { core.selectArm(arm); armB[arm].setSelected(true); }, null, 0);
+                step("pull " + RegulatorCore.AXIS[ax], pause(0.3, 0.8), () -> core.axisLever(ax), null, 0);
+                if (rng.nextDouble() < 0.6) { double a = 0.45 + rng.nextDouble() * 0.45; step("reach", pause(0.2, 0.6), () -> core.setReach(a), null, 0); }
+                if (mistakes && rng.nextDouble() < 0.35) {
+                    int wrong = n < 7 ? n + 1 : n - 1;
+                    if (wrong >= 1) { spinTo(wrong); step("that's ×" + wrong + " — listening, then correcting", pause(0.8, 2.2), () -> {}, null, 0); }
+                }
+                spinTo(n);
+                for (int k = 0; k < ph; k++) step("phase dial", pause(0.3, 0.7), core::phaseStep, null, 0);
+                step("latch", pause(0.4, 1.0), core::latch, null, 0);
+                if (rng.nextDouble() < 0.5) step("listening", pause(0.5, 1.5), () -> {}, null, 0);
+            }
+            /** Spin the crank into resonance n: nudge up past the point friction brings back into the window during the
+             *  slip, then let it coast in; from above, nudge down to that point. Keeps trying until it catches. */
+            void spinTo(int n) {
+                // release point: after the slip's friction the crank lands inside n's window and catches
+                double over = n * Math.exp(RegulatorCore.FRICTION * RegulatorCore.SLIP_NUDGE) + RegulatorCore.catchWidth(n) * 0.4;
+                double w = RegulatorCore.catchWidth(n);
+                double[] st = {0, 0};   // {released (1/0), machine time since release}
+                step("spinning to ×" + n, 0.02, () -> {
+                    double r = core.crankRatio();
+                    if (core.caught == n) return;
+                    if (st[0] == 1) {   // hands off: let it coast in. Re-spin if it caught elsewhere or fell through the window
+                        st[1] += 0.02;
+                        boolean wrongCatch = core.caught > 0 && core.caught != n, fell = st[1] > 1.5 && core.slip <= 0 && r < n - 2 * w;
+                        if (!wrongCatch && !fell) return;
+                        st[0] = 0; st[1] = 0;
+                    }
+                    if (r < over - 0.1) core.nudge(1, RegulatorCore.NUDGE_WHEEL);
+                    else if (r < over - 0.004) core.nudge(1, RegulatorCore.NUDGE_FINE);
+                    else if (r > over + 0.1) core.nudge(-1, RegulatorCore.NUDGE_WHEEL);
+                    else if (r > over + 0.03) core.nudge(-1, RegulatorCore.NUDGE_FINE);
+                    else st[0] = 1;
+                }, () -> core.caught == n, 40);
+            }
+            void advance(double dt) {
+                if (cur == null) { cur = plan.poll(); if (cur == null) { on = false; doing = ""; return; } sinceAct = 0; elapsed = 0; doing = (String) cur[0]; }
+                sinceAct += dt; elapsed += dt;
+                double delay = (Double) cur[1];
+                java.util.function.BooleanSupplier until = (java.util.function.BooleanSupplier) cur[3];
+                if (until == null) {   // one move after its pause
+                    if (sinceAct >= delay) { ((Runnable) cur[2]).run(); cur = null; }
+                    return;
+                }
+                if (until.getAsBoolean() || elapsed > (Double) cur[4]) { cur = null; return; }
+                if (sinceAct >= delay) { sinceAct = 0; ((Runnable) cur[2]).run(); }
+            }
         }
 
         /** The crank: a dial that spins with the core's angle; drag it to drive, wheel to nudge. */
@@ -3852,7 +4168,10 @@ public class SfxLab extends JPanel {
         final SfxLab lab;
         final JSlider[] sl = new JSlider[SIGNALS.length];
         final JLabel[] sv = new JLabel[SIGNALS.length];
-        final JComboBox<String> sigBox = new JComboBox<>();
+        final JComboBox<String> famBox = new JComboBox<>();
+        final JPanel spellsP = new JPanel(new GridBagLayout());
+        final ArrayList<Object[]> spellRows = new ArrayList<>();   // {Spell, JSlider, JLabel}
+        int seenFamily = -1;
         final JCheckBox bindsB = new JCheckBox("binds", true);
         final JLabel drivenL = new JLabel(" ");
         final DefaultListModel<String> rangeModel = new DefaultListModel<>();
@@ -3875,21 +4194,24 @@ public class SfxLab extends JPanel {
             gc.insets = new Insets(1, 4, 1, 4); gc.anchor = GridBagConstraints.WEST; gc.fill = GridBagConstraints.HORIZONTAL;
             gc.gridy = 0; gc.gridx = 0; gc.gridwidth = 3;
             JPanel sigRow = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 0));
-            sigRow.add(new JLabel("signature"));
-            sigBox.setFont(mono);
-            sigBox.addActionListener(e -> { if (!refreshing) lab.pickSignature((String) sigBox.getSelectedItem()); });
-            sigRow.add(sigBox);
-            JButton lockB = new JButton("lock"), unlockB = new JButton("unlock"), rescanB = new JButton("↻");
+            sigRow.add(new JLabel("family"));
+            famBox.setFont(mono);
+            famBox.setToolTipText("regulator/<family>/: loads the palette onto the bench and the family's spells beside it");
+            famBox.addActionListener(e -> { if (!refreshing) { String f = (String) famBox.getSelectedItem(); if (f != null && !f.equals(lab.family)) lab.loadFamily(f.equals("(none)") ? null : f, true); } });
+            sigRow.add(famBox);
+            JButton lockB = new JButton("bench lock"), unlockB = new JButton("bench unlock"), rescanB = new JButton("↻");
             bindsB.setToolTipText("off: every layer plays its saved params, no signal moves anything — for auditioning a layer on its own");
             bindsB.addActionListener(e -> { lab.bindsOn = bindsB.isSelected(); lab.toast(lab.bindsOn ? "binds on: signals move bound params" : "binds off: layers play as saved (solo / mute to audition)"); });
-            lockB.setToolTipText("the lock event: score → 1, fires the one-shots marked on=lock");
-            unlockB.setToolTipText("the unlock event: fires the one-shots marked on=unlock");
+            lockB.setToolTipText("the lock event for the layers on the bench: score → 1, fires their on=lock one-shots (each spell has its own buttons below)");
+            unlockB.setToolTipText("the unlock event for the layers on the bench: fires their on=unlock one-shots");
             lockB.addActionListener(e -> lab.fireEvent(ON_LOCK));
             unlockB.addActionListener(e -> lab.fireEvent(ON_UNLOCK));
-            rescanB.addActionListener(e -> rescanSigs());
+            rescanB.addActionListener(e -> { rescanFamilies(); lab.loadSpells(); });
             sigRow.add(lockB); sigRow.add(unlockB); sigRow.add(rescanB); sigRow.add(bindsB);
             top.add(sigRow, gc);
-            gc.gridy = 99; gc.gridwidth = 3;
+            gc.gridy = 98; gc.gridwidth = 3;
+            top.add(spellsP, gc);
+            gc.gridy = 99;
             drivenL.setForeground(new Color(200, 120, 40));
             top.add(drivenL, gc);
             gc.gridwidth = 1;
@@ -4008,17 +4330,23 @@ public class SfxLab extends JPanel {
             mid.add(notesP);
             add(mid, BorderLayout.CENTER);
             add(new JLabel("  ESC: back to the bench · bound sliders show a white tick at the live value"), BorderLayout.SOUTH);
-            for (JComponent c : new JComponent[]{bindTable, rangeList, notes, sigBox}) {
+            for (JComponent c : new JComponent[]{bindTable, rangeList, notes, famBox}) {
                 c.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke("ESCAPE"), "back");
                 c.getActionMap().put("back", new AbstractAction() { public void actionPerformed(ActionEvent e) { lab.requestFocusInWindow(); } });
             }
-            rescanSigs();
+            rescanFamilies();
             refresh();
             new javax.swing.Timer(200, e -> {
                 if (lab.benchGen != seenGen) refresh();
+                if (lab.familyGen != seenFamily) rebuildSpells();
+                for (Object[] r : spellRows) {
+                    Spell sp = (Spell) r[0];
+                    ((JLabel) r[2]).setText(String.format(Locale.ROOT, "%.2f  blend %.0f%%", lab.spellScore.getOrDefault(sp.id, 0.0), 100 * sp.w));
+                }
                 boolean drv = lab.sigDriven;
                 if (sl[0].isEnabled() == drv) {
                     for (JSlider s : sl) s.setEnabled(!drv);
+                    for (Object[] r : spellRows) ((JSlider) r[1]).setEnabled(!drv);
                     drivenL.setText(drv ? "signals driven by the machine (U) — untick 'drive the bench' there, or close it, to use these" : " ");
                 }
                 for (int i = 0; i < 3; i++) label(i);   // ratio rows show the derived pitch
@@ -4029,22 +4357,64 @@ public class SfxLab extends JPanel {
             double v = lab.sigVal[i];
             String s = String.format(Locale.ROOT, "%.2f", v);
             if (i < 3) { double st = lab.signal(SIGNALS[i].replace(".ratio", ".pitch")); s += v > 0.05 ? String.format(Locale.ROOT, "  pitch %.2f st", st) : "  (off)"; }
-            if (i == SIG_SCORE) s += String.format(Locale.ROOT, "  blend %.0f%%", 100 * lab.blendW());
+            if (i == SIG_SCORE) s += "  (the pinned spell's)";
             sv[i].setText(s);
+        }
+        /** One score slider per spell of the family, with its own lock / unlock buttons. */
+        void rebuildSpells() {
+            refreshing = true;
+            seenFamily = lab.familyGen;
+            spellsP.removeAll(); spellRows.clear();
+            GridBagConstraints gc = new GridBagConstraints();
+            gc.insets = new Insets(1, 4, 1, 4); gc.anchor = GridBagConstraints.WEST; gc.fill = GridBagConstraints.HORIZONTAL;
+            Font mono = new Font(Font.MONOSPACED, Font.PLAIN, 12);
+            int row = 0;
+            for (Spell sp : lab.spells) {
+                // row 1: score.<id>  [slider]  value · row 2: what it is, and its buttons
+                gc.gridy = row++; gc.gridwidth = 1;
+                gc.gridx = 0; gc.weightx = 0;
+                JLabel nm = new JLabel("score." + sp.id); nm.setFont(mono);
+                spellsP.add(nm, gc);
+                gc.gridx = 1; gc.weightx = 1;
+                JSlider s = new JSlider(0, 1000, (int) Math.round(lab.spellScore.getOrDefault(sp.id, 0.0) * 1000));
+                s.setEnabled(!lab.sigDriven);
+                s.addChangeListener(e -> { if (!refreshing) lab.spellScore.put(sp.id, s.getValue() / 1000.0); });
+                spellsP.add(s, gc);
+                gc.gridx = 2; gc.weightx = 0;
+                JLabel v = new JLabel(); v.setFont(mono); v.setPreferredSize(new Dimension(150, 16));
+                spellsP.add(v, gc);
+                gc.gridy = row++; gc.gridx = 0; gc.gridwidth = 3;
+                JPanel under = new JPanel(new FlowLayout(FlowLayout.LEFT, 3, 0));
+                String prob = sp.recipe != null ? recipeProblem(sp.bench) : null;
+                JLabel what = new JLabel(sp.recipe == null ? "no recipe — the machine cannot score it" : "tier " + sp.recipe.tier + (sp.recipe.secret ? " secret" : "") + "  " + recipeText(sp.bench).replaceFirst("^tier=\\d( secret=1)? ", "") + (prob != null ? "  ⚠" : ""));
+                what.setFont(mono); what.setForeground(sp.recipe == null || prob != null ? new Color(200, 120, 40) : Color.GRAY);
+                what.setToolTipText(prob != null ? "unbuildable: " + prob : sp.name);
+                JButton lk = new JButton("lock"), ul = new JButton("unlock"), rc = new JButton("recipe…");
+                for (JButton b : new JButton[]{lk, ul, rc}) { b.setMargin(new Insets(0, 4, 0, 4)); b.setFont(mono); }
+                rc.addActionListener(e -> lab.recipeDialog(sp, null));
+                lk.addActionListener(e -> { lab.spellScore.put(sp.id, 1.0); s.setValue(1000); int n = lab.fireSpell(sp.id, ON_LOCK); lab.toast(sp.id + " lock: " + n + " one-shot" + (n == 1 ? "" : "s")); });
+                ul.addActionListener(e -> { lab.spellScore.put(sp.id, 0.5); s.setValue(500); int n = lab.fireSpell(sp.id, ON_UNLOCK); lab.toast(sp.id + " unlock: " + n + " one-shot" + (n == 1 ? "" : "s")); });
+                under.add(Box.createHorizontalStrut(14)); under.add(lk); under.add(ul); under.add(rc); under.add(what);
+                spellsP.add(under, gc);
+                spellRows.add(new Object[]{sp, s, v});
+            }
+            if (lab.spells.isEmpty()) { gc.gridy = 0; gc.gridx = 0; gc.gridwidth = 3; JLabel l = new JLabel(lab.family == null ? "no family loaded — pick one above (regulator/<family>/)" : "no spells in regulator/" + lab.family + "/spells/"); l.setForeground(Color.GRAY); spellsP.add(l, gc); }
+            spellsP.revalidate(); spellsP.repaint();
+            refreshing = false;
         }
         /** The lab moved a signal (lock / unlock): the sliders follow. */
         void pull() {
             refreshing = true;
             for (int i = 0; i < SIGNALS.length; i++) { sl[i].setValue((int) Math.round(lab.sigVal[i] / SIG_MAX[i] * 1000)); label(i); }
+            for (Object[] r : spellRows) ((JSlider) r[1]).setValue((int) Math.round(lab.spellScore.getOrDefault(((Spell) r[0]).id, 0.0) * 1000));
             refreshing = false;
         }
-        void rescanSigs() {
+        void rescanFamilies() {
             refreshing = true;
-            Object cur = sigBox.getSelectedItem();
-            sigBox.removeAllItems();
-            sigBox.addItem("(none)");
-            for (String s : signatureNames()) sigBox.addItem(s);
-            sigBox.setSelectedItem(lab.sigName != null ? lab.sigName : cur != null ? cur : "(none)");
+            famBox.removeAllItems();
+            famBox.addItem("(none)");
+            for (String f : familyNames()) famBox.addItem(f);
+            famBox.setSelectedItem(lab.family != null ? lab.family : "(none)");
             refreshing = false;
         }
         void refresh() {
@@ -4063,14 +4433,14 @@ public class SfxLab extends JPanel {
                         rangeRows.add(new Object[]{c, pi});
                     }
             if (!notes.hasFocus()) notes.setText(String.join("\n", lab.bench.notes));
-            if (sigBox.getItemCount() == 0 || (lab.sigName != null && !lab.sigName.equals(sigBox.getSelectedItem()))) rescanSigs();
+            if (lab.family != null && !lab.family.equals(famBox.getSelectedItem())) rescanFamilies();
             refreshing = false;
         }
         void addBindDialog() {
             List<Clip> ls;
             synchronized (lab.lock) { ls = new ArrayList<>(lab.bench.layers); }
             if (ls.isEmpty()) { lab.toast("add a layer first"); return; }
-            JComboBox<String> sigC = new JComboBox<>(SIGNAL_CHOICES);
+            JComboBox<String> sigC = new JComboBox<>(lab.signalChoices().toArray(new String[0]));
             JComboBox<String> layC = new JComboBox<>();
             layC.addItem("*");
             for (Clip c : ls) layC.addItem(c.id);
@@ -4590,6 +4960,7 @@ public class SfxLab extends JPanel {
                     case "bench" -> benchOn = v.equals("1");
                     case "bpanel" -> bpanelOn = v.equals("1");
                     case "bench_name" -> benchName = v.isEmpty() ? null : v;
+                    case "family" -> family = v.isEmpty() ? null : v;
                     case "export_ogg" -> expOgg = v.equals("1");
                     case "export_mono" -> expMono = v.equals("1");
                     case "export_norm" -> expNorm = v.equals("1");
@@ -4601,9 +4972,9 @@ public class SfxLab extends JPanel {
     void saveCfg() {
         try {
             Files.createDirectories(DIR);
-            Files.writeString(CFG_FILE, String.format("export_dir=%s%nexport_ogg=%d%nexport_mono=%d%nexport_norm=%d%nexport_trim=%d%nforge_mirror=%s%nbrowser=%d%nbench=%d%nbpanel=%d%nbench_name=%s%n",
+            Files.writeString(CFG_FILE, String.format("export_dir=%s%nexport_ogg=%d%nexport_mono=%d%nexport_norm=%d%nexport_trim=%d%nforge_mirror=%s%nbrowser=%d%nbench=%d%nbpanel=%d%nbench_name=%s%nfamily=%s%n",
                     exportDir, expOgg ? 1 : 0, expMono ? 1 : 0, expNorm ? 1 : 0, expTrim ? 1 : 0, forgeMirror, browserOn ? 1 : 0,
-                    benchOn ? 1 : 0, bpanelOn ? 1 : 0, benchName != null ? benchName : ""));
+                    benchOn ? 1 : 0, bpanelOn ? 1 : 0, benchName != null ? benchName : "", family != null ? family : ""));
         } catch (IOException e) { toast("cfg save failed: " + e); }
     }
 
@@ -5091,6 +5462,7 @@ public class SfxLab extends JPanel {
                 installBench(b);
                 if (benchOn && b.root > 0) rootHz = b.root;
             }
+            if (family != null) loadSpells();   // the working palette is the autosave; the family's spells load beside it
         } catch (Exception e) {
             System.err.println("bench load failed: " + e);
             toast("bench load failed — starting with an empty bench");
@@ -6351,10 +6723,11 @@ class RegulatorCore {
             eval.put(r.id, e);
             boolean was = prevExact.getOrDefault(r.id, false);
             if (e.exact && !was && powered) {
+                events.add("match:" + r.id);   // every recipe reports; lock / unlock are the pinned target's
                 if (r == target) events.add("lock");
                 else if (r.secret) { if (discovered.add(r.id)) events.add("discover:" + r.id); }
                 else events.add("wrong:" + r.id);
-            } else if (!e.exact && was && r == target) events.add("unlock");
+            } else if (!e.exact && was) { events.add("unmatch:" + r.id); if (r == target) events.add("unlock"); }
             prevExact.put(r.id, e.exact && powered);
         }
         targetEval = target != null ? eval.get(target.id) : new Eval();

@@ -19,3 +19,5 @@ browser=1
 bench=0
 bpanel=0
 bench_name=
+# the family (regulator/<family>/) whose spells load beside the bench
+family=

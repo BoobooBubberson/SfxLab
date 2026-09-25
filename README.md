@@ -99,18 +99,30 @@ the machine's signals rather than by time. **H** swaps the timeline for that ben
   the ranges and free notes. The **binds** box switches every bind off so a layer
   can be auditioned at its saved params (solo it with **P**). While the machine
   window is open and driving, the sliders follow it and are greyed out.
-- A **signature** is the same layers at their lock values, saved into `spells/`
-  with the `signature` button. Pick it in the panel and drag score toward 1: shared
-  params blend from their searching values to the signature's, layers only the
-  signature has fade in, and lock fires its one-shots.
-- **S** stamps the bench as a palette in `projects/`; the workspace autosaves to
-  `bench.sfx`. `projects/pyretic_regulator.sfx` with `spells/firebolt.sfx` and
-  `spells/torchlance.sfx` is the worked example.
+- Sounds are organised by **family**: `regulator/<family>/<family>.sfx` is the
+  palette that plays through the tuning, `regulator/<family>/spells/<spell>.sfx`
+  the roster. Pick the family in the panel. Each spell file is a **signature**, the
+  same layers at their lock values plus its one-shots, and carries its recipe
+  (`recipe tier=1 X3p1 Y2p0`), which is what the machine and, later, the mod score.
+  Edit it with the spell's `recipe…` button in the panel, or design the sigil on the
+  machine's arms and press `→ recipe` to write it to the pinned spell; a new spell
+  saved with the `signature` button asks for its recipe, prefilled from the machine.
+  Both warn when a sigil retraces itself into an open line.
+- Every spell blends in by its own score signal (`score.<id>`, a slider per spell in
+  the panel, with lock and unlock buttons), above 0.55. Two spells scoring at once
+  share the blend, so overlapping recipes are heard while authoring rather than
+  discovered in the game. Pinning a spell in the machine only changes the blueprint.
+- **S** stamps the bench as the family's palette; the `signature` button saves it as
+  a spell of the family; the workspace autosaves to `bench.sfx`. `regulator/pyretic/`
+  is the worked example, with a hand-off variant of the palette beside it.
 - **U** opens the machine: the regulator itself (crank, arms, motion levers, latch,
   phase and reach, the research setpoint, the voice lever, the copy socket) around
   `RegulatorCore`, with the ribbon and the pinned blueprint. With "drive the bench"
-  on, its signals replace the panel's sliders and its lock / unlock events fire the
-  bench's one-shots, so the puzzle is played and the palette answers.
+  on, its signals replace the panel's sliders and every spell's match fires that
+  spell's one-shots, so the puzzle is played and the palette answers. **Auto-play**
+  works the controls toward the pinned spell along a randomised path, with optional
+  wrong resonances and an "any spell" mode that keeps chaining locks: pause it when
+  the sound goes wrong, adjust the layers, resume.
 
 `RegulatorCore` is the machine with no Swing or Minecraft in it: crank physics, the
 lever state machine, figure sampling, recipe matching with shape equivalence, the

@@ -316,10 +316,26 @@ note <free text>
   layer at lock, the signature includes it at level 0.
 - Live beds: the bench never wraps (endless layers have no end), so the
   timeline-loop click in 5.2 does not arise.
-- Deliverables: `projects/pyretic_regulator.sfx` (8 layers, the palette notes'
+- Deliverables: `regulator/pyretic/pyretic.sfx` (8 layers, the palette notes'
   ranges, a starting bind set with the arm-to-layer question left open in its
-  `note` lines), `spells/firebolt.sfx` and `spells/torchlance.sfx` as first
-  signatures to tune by ear. Old projects render byte-identical.
+  `note` lines; `pyretic_handoff.sfx` beside it hands off between layers instead
+  of stacking), and `regulator/pyretic/spells/` with firebolt, cinder_bloom,
+  torch_lance and the secret will_o_wisp as first signatures to tune by ear.
+  Old projects render byte-identical.
+
+**Families and rosters (as built later the same day).** A family is a folder,
+`regulator/<family>/`, holding its palette `<family>.sfx` and `spells/*.sfx`.
+Each spell file carries `name` and `recipe tier=N [secret=1] X3p1 Y2p0 ...`
+lines (axis, integer ratio, phase in quarters, optional `@amp` for the
+blueprint), so the roster is data: the bench, the machine and the mod read
+one source, and the prototype's hard-coded list is only the fallback. Every
+spell blends by its own `score.<id>` signal with the same 0.55..1 smoothstep;
+when several weights add past 1 they are normalised to share, and a spell
+that omits a layer leaves it at its searching value. The core reports
+`match:<id>` / `unmatch:<id>` for every recipe, which fire that spell's
+one-shots; `lock` / `unlock` stay the pinned target's for the voice lever.
+Pinning a spell is therefore purely visual, as decided, and overlapping
+recipes are audible while authoring.
 
 ### 5.4 Step 2 as built: `RegulatorCore` and the machine window (2026-09-24)
 
@@ -366,6 +382,15 @@ painted stage (ribbon with the receiver's noise, arms, front / top / orbit
 views, the blueprint strip). With "drive the bench" on, the core's signals
 replace the regulator panel's sliders every frame and lock / unlock fire
 the bench's one-shots, so the puzzle is played and the palette answers.
+The machine's **auto-play** is the bench-to-machine bridge: a player works
+the real controls toward the pinned spell along a randomised path (arm
+order, reach, overshoot, an occasional wrong resonance first, listening
+pauses), at a chosen speed, optionally chaining random spells, so a whole
+path through the parameter space can be listened to, paused at the sore
+spot, and the layers adjusted. Its spin-up rule is the one the tests found:
+nudge to n·e^(0.09·0.5) plus a fraction of the window, then let friction
+carry the crank into resonance.
+
 That closes the loop for step 3: the mod's block entity runs the same core
 and the same palette, signature and bind files.
 

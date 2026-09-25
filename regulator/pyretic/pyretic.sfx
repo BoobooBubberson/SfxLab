@@ -1,4 +1,4 @@
-# SfxLab bench v1: the pyretic family palette for the harmonic regulator (HARMONIC-REGULATOR.md §5).
+# SfxLab bench v1: the pyretic family palette for the harmonic regulator (HARMONIC-REGULATOR.md §5; spells/ holds the roster).
 # layer id name type dur seed key=value... (dur 0 = endless) · range id param lo hi [note] · bind signal id|* param [lo hi] [rel]
 bench 1
 root 65.4064
