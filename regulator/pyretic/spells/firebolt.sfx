@@ -1,8 +1,8 @@
 # SfxLab bench v1: layer id name type dur seed key=value... (dur 0 = endless) · range id param lo hi [note] · bind signal id|* param [lo hi] [rel]
-name Fire bolt
-recipe tier=1 X3p1 Y2p0
 bench 1
 root 65.4064
+name Fire bolt
+recipe tier=1 X3p1 Y2p0
 layer cloud cloud 0 0.0000 7253806486286739823 level=0.35000 attack=0.02000 release=0.25000 pitch=-9.00000 pitch_swp=0.00000 cutoff=1.00000 cutoff_swp=0.00000 resonance=0.00000 filter=0.00000 pan=0.00000 pan_swp=0.00000 echo=0.00000 drive=0.00000 voices=10.00000 gather=1.00000 drift=0.25000 timbre=0.60000 chord=0.00000 sub=0.30000 gather_swp=0.00000 lfo_rate=4.00000 lfo>pitch=0.00000 lfo>cut=0.00000 lfo>amp=0.00000 lfo_shape=0.00000 env_curve=0.00000 reverb=0.00000 flange=0.00000 flange_fb=0.50000 duck=0.00000 duck_from=0.00000 phaser=0.00000 phaser_rate=0.40000 ph_stages=4.00000 keyed=3
 layer fire pyretic/fire_loop 7 0.0000 -9185575800890492577 level=0.65000 attack=0.30000 release=0.60000 pitch=2.58432 pitch_swp=0.00000 cutoff=1.00000 cutoff_swp=0.00000 resonance=0.00000 filter=0.00000 pan=0.00000 pan_swp=0.00000 echo=0.00000 drive=0.14000 start=0.00000 speed=1.00000 sines=1.00000 residual=1.00000 floor=14.00000 min_len=46.00000 loop=1.00000 odd/even=0.00000 tilt=0.00000 purity=1.00000 stretch=0.00000 gather=0.00000 chord=1.00000 shimmer=0.00000 root_shift=0.00000 harm_tol=3.00000 lfo_rate=4.00000 lfo>pitch=0.00000 lfo>cut=0.00000 lfo>amp=0.00000 lfo_shape=0.00000 env_curve=0.00000 reverb=0.25000 flange=0.00000 flange_fb=0.50000 duck=0.00000 duck_from=0.00000 phaser=0.00000 phaser_rate=0.40000 ph_stages=4.00000 file=pyretic/fire_loop.ogg keyed=2
 layer ignite thump 4 1.2000 9127553028407451173 level=0.70000 attack=0.00100 release=0.15000 pitch=15.00000 pitch_swp=0.00000 cutoff=0.79333 cutoff_swp=-0.05333 resonance=0.17333 filter=0.00000 pan=0.00000 pan_swp=0.00000 echo=0.00000 drive=0.12000 damp=0.28000 sustain=0.85333 pick=1.00000 interval=7.05000 lfo_rate=4.00000 lfo>pitch=0.00000 lfo>cut=0.00000 lfo>amp=0.00000 lfo_shape=0.00000 env_curve=0.20000 reverb=1.00000 flange=0.00000 flange_fb=0.50000 duck=0.00000 duck_from=0.00000 phaser=0.35333 phaser_rate=0.36800 ph_stages=8.00000 keyed=3 on=lock

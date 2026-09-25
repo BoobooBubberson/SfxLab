@@ -110,9 +110,18 @@ the machine's signals rather than by time. **H** swaps the timeline for that ben
   saved with the `signature` button asks for its recipe, prefilled from the machine.
   Both warn when a sigil retraces itself into an open line.
 - Every spell blends in by its own score signal (`score.<id>`, a slider per spell in
-  the panel, with lock and unlock buttons), above 0.55. Two spells scoring at once
+  the panel, with lock and unlock buttons), above 0.55. The panel stacks a bind table
+  per spell under the palette's: the palette's binds shape the searching mix, a
+  spell's binds move its own target values, blended in with it, and a bind on the
+  reserved layer `spell` (`bind score.firebolt spell blend 0.55 1`) sets when and how
+  sharply the spell comes in. Two spells scoring at once
   share the blend, so overlapping recipes are heard while authoring rather than
   discovered in the game. Pinning a spell in the machine only changes the blueprint.
+- The bench view lists the palette's layers and then every spell of the family as a
+  foldable group of its own layers: each row shows the spell's target level with a
+  white tick where the blend sits right now, and selecting a row edits that spell's
+  target values in the panel (saved to the spell's file, undo covers it). A palette
+  row's menu pushes the layer into a spell at its current values.
 - **S** stamps the bench as the family's palette; the `signature` button saves it as
   a spell of the family; the workspace autosaves to `bench.sfx`. `regulator/pyretic/`
   is the worked example, with a hand-off variant of the palette beside it.

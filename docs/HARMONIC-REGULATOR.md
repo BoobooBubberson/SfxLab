@@ -341,7 +341,14 @@ that omits a layer leaves it at its searching value. The core reports
 `match:<id>` / `unmatch:<id>` for every recipe, which fire that spell's
 one-shots; `lock` / `unlock` stay the pinned target's for the voice lever.
 Pinning a spell is therefore purely visual, as decided, and overlapping
-recipes are audible while authoring.
+recipes are audible while authoring. A spell file's own `bind` lines act
+on its target values (the lock mix), so a locked spell can still move with
+the machine, while the palette's binds shape the searching mix. The blend
+curve itself is a bind on the reserved layer `spell`: `bind score.firebolt
+spell blend 0.55 1` is the default written out; change the range to move
+the timing, `steps=1` for a hard gate, or bind it to another signal such
+as coherence. Per-layer timing inside a spell is an ordinary spell bind on
+its score, e.g. `bind score.firebolt cloud level 0 0.5`.
 
 ### 5.4 Step 2 as built: `RegulatorCore` and the machine window (2026-09-24)
 

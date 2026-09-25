@@ -2665,7 +2665,11 @@ public class SfxLab extends JPanel {
     int scopePos = 0;
 
     void toast(String s) { msg = s; msgAt = System.currentTimeMillis(); }
-    void markEdit() { if (benchOn) benchDirty = true; else dirty = true; lastEditAt = System.currentTimeMillis(); }
+    void markEdit() {
+        if (benchOn) { if (selSpell != null && sel != null && selSpell.bench.layers.contains(sel)) dirtySpells.add(selSpell); else benchDirty = true; }
+        else dirty = true;
+        lastEditAt = System.currentTimeMillis();
+    }
 
     String projectText() {
         StringBuilder sb = new StringBuilder("# SfxLab project v2: clip name type track start dur seed key=value...\n");
@@ -2933,8 +2937,40 @@ public class SfxLab extends JPanel {
     final ArrayList<Clip> transients = new ArrayList<>();   // one-shots in flight (audio thread only)
     boolean benchDirty;
     int benchScroll, benchGen;              // benchGen: bumped on structural changes so the panel knows to rebuild its lists
-    final ArrayDeque<String> bUndo = new ArrayDeque<>(), bRedo = new ArrayDeque<>();   // bench undo: whole-bench text snapshots
-    String pendingBench;
+    /** A bench undo snapshot: the bench's text plus every spell's text (spell layers are edited in the same view). */
+    static class BenchSnap { String text; final HashMap<String, String> spells = new HashMap<>(); }
+    final ArrayDeque<BenchSnap> bUndo = new ArrayDeque<>(), bRedo = new ArrayDeque<>();
+    BenchSnap pendingBench;
+    final HashSet<Spell> dirtySpells = new HashSet<>();   // spells edited on the bench, written back by the autosave timer
+    final HashSet<String> collapsed = new HashSet<>();     // spell groups folded in the bench view
+    Spell selSpell;                                        // the spell whose layer is selected (null: a palette layer)
+    static final int ROW_LAYER = 0, ROW_SPELL = 1, ROW_SPELL_LAYER = 2;
+    record BenchRow(int kind, Clip clip, Spell spell) {}
+    /** What the bench view lists: the palette's layers, then each spell of the family as a group of its own layers
+     *  (the spell that is itself open on the bench is not repeated). */
+    java.util.List<BenchRow> benchRows() {
+        ArrayList<BenchRow> out = new ArrayList<>();
+        for (Clip c : bench.layers) out.add(new BenchRow(ROW_LAYER, c, null));
+        for (Spell sp : spells) {
+            if (benchName != null && benchName.endsWith("/spells/" + sp.id + ".sfx")) continue;
+            out.add(new BenchRow(ROW_SPELL, null, sp));
+            if (!collapsed.contains(sp.id)) for (Clip c : sp.bench.layers) out.add(new BenchRow(ROW_SPELL_LAYER, c, sp));
+        }
+        return out;
+    }
+    BenchSnap benchSnap() {
+        BenchSnap b = new BenchSnap();
+        b.text = benchText(bench, rootHz);
+        for (Spell sp : spells) b.spells.put(sp.id, benchText(sp.bench, rootHz));
+        return b;
+    }
+    void markSpellDirty(Spell sp) { if (sp != null) { dirtySpells.add(sp); benchGen++; lastEditAt = System.currentTimeMillis(); } }
+    void saveDirtySpells() {
+        for (Spell sp : new ArrayList<>(dirtySpells)) {
+            try { Files.writeString(sp.file, benchText(sp.bench, rootHz)); dirtySpells.remove(sp); }
+            catch (Exception e) { toast("spell save failed: " + e); }
+        }
+    }
     BenchPanel bpanel; boolean bpanelOn;    // the docked regulator panel (J); remembered in lab.cfg
     volatile boolean sigDriven;             // the machine window is writing the signals: the panel's sliders follow, not lead
     volatile boolean bindsOn = true;        // panel toggle: off = hear every layer at its saved params (auditioning)
@@ -2971,10 +3007,11 @@ public class SfxLab extends JPanel {
      *  difference from the saved value) unless the bind is `rel`; the blend
      *  then moves everything toward the signature's values by w. */
     void benchLive(double now, List<Clip> out) {
-        // every spell's signature blends in by that spell's own score; when their weights add past 1 they share
+        // every spell's signature blends in by its weight (its own score through smoothstep(0.55, 1) unless the spell
+        // binds `spell blend` to something else); when the weights add past 1 they share
         java.util.List<Spell> sps = spells;
         double sumW = 0;
-        for (Spell sp : sps) { sp.w = smoothstep(0.55, 1.0, spellScore.getOrDefault(sp.id, 0.0)); sumW += sp.w; }
+        for (Spell sp : sps) { sp.w = spellWeight(sp); sumW += sp.w; }
         double norm = sumW > 1 ? 1 / sumW : 1;
         Clip so = benchSolo;
         List<Clip> ls; List<Bind> bs;
@@ -2984,30 +3021,18 @@ public class SfxLab extends JPanel {
             if (so != null ? c != so : c.lmute) continue;
             double[] m = c.mod;
             if (m == null || m.length != c.p.length) m = new double[c.p.length]; else Arrays.fill(m, 0);
-            if (bindsOn) for (Bind b : bs) {
-                if (!(b.layer.equals("*") || b.layer.equals(c.id))) continue;
-                int pi = idxOf(c.type, b.param);
-                if (pi < 0) continue;
-                double lo = b.lo, hi = b.hi;
-                if (b.auto()) {
-                    double[] r = c.range != null ? c.range.get(pi) : null;
-                    PSpec s = spec(c.type, pi);
-                    lo = r != null ? r[0] : b.rel ? 0 : s.min();
-                    hi = r != null ? r[1] : b.rel ? s.max() - s.min() : s.max();
-                }
-                double v = b.map(lo + (hi - lo) * signalNorm(b.sig), lo, hi);
-                m[pi] += b.rel ? v : v - c.p[pi];
-            }
+            if (bindsOn) applyBinds(bs, c, m);
             if (sumW > 0) {
                 double wl = 0; double[] acc = null;
                 for (Spell sp : sps) {
                     if (sp.w <= 0) continue;
                     Clip s = sp.bench.byId(c.id);
-                    if (s == null || s.type != c.type) continue;   // a spell that omits the layer leaves it at its searching value
+                    if (s == null || s.type != c.type || s.lmute) continue;   // a spell that omits (or mutes) the layer leaves it at its searching value
                     double w = sp.w * norm;
                     if (acc == null) acc = new double[m.length];
                     wl += w;
-                    for (int i = 0; i < m.length; i++) acc[i] += w * (s.p[i] - c.p[i]);
+                    double[] sm = spellBindMod(sp, s);   // the spell's own binds move its targets
+                    for (int i = 0; i < m.length; i++) acc[i] += w * (s.p[i] + (sm != null ? sm[i] : 0) - c.p[i]);
                 }
                 if (acc != null) for (int i = 0; i < m.length; i++) m[i] = (1 - wl) * m[i] + acc[i];
             }
@@ -3018,13 +3043,14 @@ public class SfxLab extends JPanel {
             for (Spell sp : sps) {
                 if (sp.w <= 0) continue;
                 for (Clip s : sp.bench.layers) {   // layers only this spell has fade in with its weight
-                    if (s.on != ON_NONE) continue;
+                    if (s.on != ON_NONE || s.lmute) continue;
                     boolean inPalette = false;
                     for (Clip c : ls) if (s.id != null && s.id.equals(c.id)) { inPalette = true; break; }
                     if (inPalette) continue;
                     double[] m = s.mod;
                     if (m == null || m.length != s.p.length) m = new double[s.p.length]; else Arrays.fill(m, 0);
-                    m[P_LEVEL] = (sp.w * norm - 1) * s.p[P_LEVEL];
+                    if (bindsOn) applyBinds(sp.bench.binds, s, m);
+                    m[P_LEVEL] = sp.w * norm * (s.p[P_LEVEL] + m[P_LEVEL]) - s.p[P_LEVEL];   // its own binds, then faded in by the blend
                     s.mod = m;
                     out.add(s);
                 }
@@ -3034,6 +3060,44 @@ public class SfxLab extends JPanel {
         out.addAll(transients);
     }
 
+    /** The reserved layer id and param a spell binds to set its own blend curve. */
+    static final String SPELL_LAYER = "spell", BLEND_PARAM = "blend";
+    /** A spell's blend rule, if its file binds `spell blend`. */
+    Bind blendBind(Spell sp) { for (Bind b : sp.bench.binds) if (SPELL_LAYER.equals(b.layer) && BLEND_PARAM.equals(b.param)) return b; return null; }
+    /** How far a spell is blended in: smoothstep over the bound signal's lo..hi (default score.<id> over 0.55..1),
+     *  with the bind's map (steps=1 makes a gate). */
+    double spellWeight(Spell sp) {
+        Bind b = blendBind(sp);
+        if (b == null || !bindsOn) return smoothstep(0.55, 1.0, spellScore.getOrDefault(sp.id, 0.0));
+        double lo = b.auto() ? 0.55 : b.lo, hi = b.auto() ? 1.0 : b.hi;
+        double w = smoothstep(Math.min(lo, hi), Math.max(lo, hi), signal(b.sig));
+        if (lo > hi) w = 1 - w;
+        return Math.max(0, Math.min(1, b.map(w, 0, 1)));
+    }
+    /** Adds a bind list's modulation of clip c into m (absolute binds as the difference from the saved value). */
+    void applyBinds(List<Bind> bs, Clip c, double[] m) {
+        for (Bind b : bs) {
+            if (!(b.layer.equals("*") || b.layer.equals(c.id))) continue;
+            int pi = idxOf(c.type, b.param);
+            if (pi < 0) continue;
+            double lo = b.lo, hi = b.hi;
+            if (b.auto()) {
+                double[] r = c.range != null ? c.range.get(pi) : null;
+                PSpec s = spec(c.type, pi);
+                lo = r != null ? r[0] : b.rel ? 0 : s.min();
+                hi = r != null ? r[1] : b.rel ? s.max() - s.min() : s.max();
+            }
+            double v = b.map(lo + (hi - lo) * signalNorm(b.sig), lo, hi);
+            m[pi] += b.rel ? v : v - c.p[pi];
+        }
+    }
+    /** A spell's binds applied to one of its layers' targets; null when it has none that touch it. */
+    double[] spellBindMod(Spell sp, Clip s) {
+        if (!bindsOn || sp.bench.binds.isEmpty()) return null;
+        double[] t = new double[s.p.length];
+        applyBinds(sp.bench.binds, s, t);
+        return t;
+    }
     /** Fires a one-shot layer: a copy, so a layer can overlap itself. Starts the bench if it is stopped. */
     void fire(Clip c) {
         Clip f = copyClip(c);
@@ -3232,18 +3296,27 @@ public class SfxLab extends JPanel {
         if (c.rnote != null) c.rnote.remove(pi);
         benchGen++; markEdit();
     }
+    /** Adds a bind to the palette, or to the selected spell when one of its layers is selected. */
     void addBind(String sg, String layer, String pname) {
         pushUndo("");
         boolean rel = pname.equals("pitch");   // pitch rides on the layer's own tuning; everything else targets absolute knob positions
-        synchronized (lock) { bench.binds.add(new Bind(sg, layer, pname, rel ? 0 : Double.NaN, rel ? 12 : Double.NaN, rel)); }
-        benchGen++; markEdit();
-        toast("bind " + sg + " → " + layer + "." + pname + (rel ? " (+0..12 st)" : " (marked range, else full range — edit in the panel)"));
+        Bench target = selSpell != null && sel != null && selSpell.bench.layers.contains(sel) ? selSpell.bench : bench;
+        synchronized (lock) { target.binds.add(new Bind(sg, layer, pname, rel ? 0 : Double.NaN, rel ? 12 : Double.NaN, rel)); }
+        benchGen++;
+        if (target == bench) markEdit(); else markSpellDirty(selSpell);
+        toast((target == bench ? "" : "spell " + selSpell.id + ": ") + "bind " + sg + " → " + layer + "." + pname + (rel ? " (+0..12 st)" : " (marked range, else full range — edit in the panel)"));
     }
-    void removeBind(Bind b) { pushUndo(""); synchronized (lock) { bench.binds.remove(b); } benchGen++; markEdit(); }
+    void removeBind(Bind b) {
+        pushUndo("");
+        synchronized (lock) { if (!bench.binds.remove(b)) for (Spell sp : spells) if (sp.bench.binds.remove(b)) markSpellDirty(sp); }
+        benchGen++; markEdit();
+    }
+    /** The binds on a param: the palette's for a palette layer, the spell's for a spell's layer. */
     List<Bind> bindsOn(Clip c, int pi) {
         ArrayList<Bind> out = new ArrayList<>();
         String k = key(c.type, pi);
-        for (Bind b : bench.binds) if (b.param.equals(k) && (b.layer.equals("*") || b.layer.equals(c.id))) out.add(b);
+        Bench src = selSpell != null && c != null && selSpell.bench.layers.contains(c) ? selSpell.bench : bench;
+        for (Bind b : src.binds) if (b.param.equals(k) && (b.layer.equals("*") || b.layer.equals(c.id))) out.add(b);
         return out;
     }
     /** shift+H: the selected timeline clip joins the bench. Loops become beds; anything else a lock one-shot. */
@@ -3380,33 +3453,42 @@ public class SfxLab extends JPanel {
         long now = System.currentTimeMillis();
         if (!tag.isEmpty() && tag.equals(lastOpTag) && now - lastOpAt < 1200) { lastOpAt = now; return; }
         lastOpTag = tag; lastOpAt = now;
-        bUndo.push(benchText(bench, rootHz));
+        bUndo.push(benchSnap());
         if (bUndo.size() > 100) bUndo.removeLast();
         bRedo.clear();
     }
-    void restoreBench(String text) {
-        Bench b = parseBench(Arrays.asList(text.split("\n")));
-        String selId = sel != null ? sel.id : null;
+    void restoreBench(BenchSnap snap) {
+        Bench b = parseBench(Arrays.asList(snap.text.split("\n")));
+        String selId = sel != null ? sel.id : null; Spell selSp = selSpell;
         installBench(b);
-        sel = bench.byId(selId);
+        for (Spell sp : spells) {
+            String t = snap.spells.get(sp.id);
+            if (t == null || t.equals(benchText(sp.bench, rootHz))) continue;
+            Bench nb = parseBench(Arrays.asList(t.split("\n")));
+            for (Clip c : nb.layers) if (c.on == ON_NONE) c.dur = ENDLESS;
+            sp.bench = nb;
+            if (nb.comps != null && nb.comps.length > 0) { sp.recipe = new RegulatorCore.Recipe(sp.id, sp.name, nb.tier, "", nb.secret, nb.comps); sp.recipe.rtol = nb.rtol; }
+            dirtySpells.add(sp);
+        }
+        sel = selSp != null ? selSp.bench.byId(selId) : bench.byId(selId);
         markEdit();
     }
     void benchUndo() {
         if (bUndo.isEmpty()) { toast("nothing to undo"); return; }
-        bRedo.push(benchText(bench, rootHz));
+        bRedo.push(benchSnap());
         restoreBench(bUndo.pop());
         lastOpTag = "";
         toast("undo");
     }
     void benchRedo() {
         if (bRedo.isEmpty()) { toast("nothing to redo"); return; }
-        bUndo.push(benchText(bench, rootHz));
+        bUndo.push(benchSnap());
         restoreBench(bRedo.pop());
         lastOpTag = "";
         toast("redo");
     }
     /** Mouse-press bookkeeping for a drag: the undo snapshot is taken now, committed on the first change. */
-    void grabUndo() { if (benchOn) pendingBench = benchText(bench, rootHz); else pendingSnap = snapshot(); }
+    void grabUndo() { if (benchOn) pendingBench = benchSnap(); else pendingSnap = snapshot(); }
 
     // ---- bench UI: the layer rows take the timeline's place
     static final String[] BENCH_ACTIONS = {"open", "save as", "signature", "panel", "browser", "timeline"};
@@ -3430,19 +3512,25 @@ public class SfxLab extends JPanel {
         else benchPlaying = false;
     }
     void selectLayer(int d) {
-        if (bench.layers.isEmpty()) return;
-        int i = sel != null ? bench.layers.indexOf(sel) : -1;
-        i = Math.max(0, Math.min(bench.layers.size() - 1, i + d));
-        sel = bench.layers.get(i);
+        java.util.List<BenchRow> rows = benchRows();
+        if (rows.isEmpty()) return;
+        int i = -1;
+        for (int k = 0; k < rows.size(); k++) if (rows.get(k).clip() == sel && sel != null) { i = k; break; }
+        do { i = Math.max(0, Math.min(rows.size() - 1, i + (d == 0 ? 1 : d))); } while (rows.get(i).kind() == ROW_SPELL && i > 0 && i < rows.size() - 1);
+        if (rows.get(i).kind() == ROW_SPELL) return;
+        sel = rows.get(i).clip(); selSpell = rows.get(i).spell();
         if (i < benchScroll) benchScroll = i;
         if (i >= benchScroll + benchRowsN()) benchScroll = i - benchRowsN() + 1;
     }
+    /** A palette layer's live level (its own), or where the blend currently sits for a spell's layer of the same id. */
+    Clip liveRef(Clip c, Spell sp) { if (sp == null) return c; Clip pal = bench.byId(c.id); return pal != null && pal.type == c.type ? pal : c; }
 
     void paintBench(Graphics2D g, int w) {
         int y0 = rulerY();
         g.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 13));
         g.setColor(new Color(245, 235, 215));
         int n = bench.layers.size();
+        java.util.List<BenchRow> rows = benchRows();
         g.drawString(String.format(Locale.ROOT, "BENCH  %s   %d layer%s   %s   score %.2f → blend %.0f%%   family %s%s",
                 benchName != null ? benchName : "(unsaved bench)", n, n == 1 ? "" : "s", benchPlaying ? "▶" : "‖",
                 sigVal[SIG_SCORE], 100 * blendW(), family != null ? family + " (" + spells.size() + " spell" + (spells.size() == 1 ? "" : "s") + ")" : "none",
@@ -3450,92 +3538,165 @@ public class SfxLab extends JPanel {
         g.setColor(new Color(60, 60, 60));
         g.drawLine(8, y0 + 20, w - 12, y0 + 20);
         g.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
-        if (n == 0) {
+        if (rows.isEmpty()) {
             g.setColor(Color.GRAY);
             g.drawString("no layers yet — 1-9/0 add a synth layer, W imports a recording, A opens the sample browser (its adds land here),", 20, benchRowsY() + 20);
             g.drawString("shift+H sends the selected timeline clip over. Every layer sounds at once while the bench plays (SPACE).", 20, benchRowsY() + 38);
             return;
         }
-        int rows = benchRowsN();
-        benchScroll = Math.max(0, Math.min(benchScroll, Math.max(0, n - rows)));
+        int vis = benchRowsN(), total = rows.size();
+        benchScroll = Math.max(0, Math.min(benchScroll, Math.max(0, total - vis)));
         Shape clip0 = g.getClip();
-        g.clipRect(0, benchRowsY() - 2, w, rows * benchRowH() + 4);
-        for (int i = benchScroll; i < Math.min(n, benchScroll + rows); i++) {
-            Clip c = bench.layers.get(i);
+        g.clipRect(0, benchRowsY() - 2, w, vis * benchRowH() + 4);
+        for (int i = benchScroll; i < Math.min(total, benchScroll + vis); i++) {
+            BenchRow row = rows.get(i);
             Rectangle r = benchRowRect(i);
-            boolean isSel = c == sel, muted = c.lmute && benchSolo == null || benchSolo != null && benchSolo != c;
-            g.setColor(isSel ? new Color(42, 42, 42) : i % 2 == 0 ? new Color(16, 16, 16) : new Color(23, 23, 23));
+            if (row.kind() == ROW_SPELL) {   // a spell's group header: click folds it
+                Spell sp = row.spell();
+                g.setColor(new Color(28, 24, 18));
+                g.fillRect(r.x, r.y, r.width, r.height);
+                g.setColor(new Color(255, 214, 110));
+                g.drawString((collapsed.contains(sp.id) ? "▸ " : "▾ ") + "spell " + sp.id, r.x + 8, r.y + 17);
+                g.setColor(new Color(170, 150, 110));
+                g.drawString(String.format(Locale.ROOT, "%-22s score %.2f → blend %3.0f%%   %d layer%s%s%s", sp.name.length() > 22 ? sp.name.substring(0, 21) + "…" : sp.name,
+                        spellScore.getOrDefault(sp.id, 0.0), 100 * sp.w, sp.bench.layers.size(), sp.bench.layers.size() == 1 ? "" : "s",
+                        sp.recipe == null ? "   no recipe" : "", dirtySpells.contains(sp) ? "   (unsaved)" : "") + (blendBind(sp) != null ? "   blend: " + blendBind(sp).sig + " " + (blendBind(sp).auto() ? "0.55..1" : fmtNum5(blendBind(sp).lo) + ".." + fmtNum5(blendBind(sp).hi)) + (blendBind(sp).map().isEmpty() ? "" : " " + blendBind(sp).map()) : ""), r.x + 8 + 27 * 7, r.y + 17);
+                continue;
+            }
+            Clip c = row.clip(); Spell sp = row.spell();
+            boolean spellRow = row.kind() == ROW_SPELL_LAYER;
+            int x0 = r.x + (spellRow ? 20 : 0);
+            boolean isSel = c == sel, muted = spellRow ? c.lmute : (c.lmute && benchSolo == null || benchSolo != null && benchSolo != c);
+            g.setColor(isSel ? new Color(42, 42, 42) : spellRow ? (i % 2 == 0 ? new Color(20, 18, 14) : new Color(26, 23, 18)) : i % 2 == 0 ? new Color(16, 16, 16) : new Color(23, 23, 23));
             g.fillRect(r.x, r.y, r.width, r.height);
-            // mute / solo boxes
+            // mute box (and solo, palette rows only)
             g.setColor(c.lmute ? new Color(180, 60, 60) : new Color(60, 60, 60));
-            if (c.lmute) g.fillRect(r.x + 4, r.y + 5, 14, 14); else g.drawRect(r.x + 4, r.y + 5, 14, 14);
+            if (c.lmute) g.fillRect(x0 + 4, r.y + 5, 14, 14); else g.drawRect(x0 + 4, r.y + 5, 14, 14);
             g.setColor(c.lmute ? Color.WHITE : Color.GRAY);
-            g.drawString("M", r.x + 7, r.y + 17);
-            boolean so = benchSolo == c;
-            g.setColor(so ? new Color(90, 200, 160) : new Color(60, 60, 60));
-            if (so) g.fillRect(r.x + 24, r.y + 5, 14, 14); else g.drawRect(r.x + 24, r.y + 5, 14, 14);
-            g.setColor(so ? Color.BLACK : Color.GRAY);
-            g.drawString("S", r.x + 28, r.y + 17);
+            g.drawString("M", x0 + 7, r.y + 17);
+            if (!spellRow) {
+                boolean so = benchSolo == c;
+                g.setColor(so ? new Color(90, 200, 160) : new Color(60, 60, 60));
+                if (so) g.fillRect(x0 + 24, r.y + 5, 14, 14); else g.drawRect(x0 + 24, r.y + 5, 14, 14);
+                g.setColor(so ? Color.BLACK : Color.GRAY);
+                g.drawString("S", x0 + 28, r.y + 17);
+            }
             Color tc = TYPE_COLORS[c.type];
             g.setColor(new Color(tc.getRed(), tc.getGreen(), tc.getBlue(), muted ? 90 : 220));
-            g.fillRect(r.x + 46, r.y + 5, 6, 14);
+            g.fillRect(x0 + 46, r.y + 5, 6, 14);
             g.setColor(isSel ? Color.WHITE : muted ? Color.GRAY : Color.LIGHT_GRAY);
-            g.drawString(String.format(Locale.ROOT, "%-14s", c.id.length() > 14 ? c.id.substring(0, 14) : c.id), r.x + 60, r.y + 17);
+            g.drawString(String.format(Locale.ROOT, "%-14s", c.id.length() > 14 ? c.id.substring(0, 14) : c.id), x0 + 60, r.y + 17);
             g.setColor(muted ? new Color(90, 90, 90) : Color.GRAY);
-            String nm = c.name.length() > 30 ? c.name.substring(0, 29) + "…" : c.name;
-            g.drawString(String.format(Locale.ROOT, "%-31s %-8s", nm, TYPE_NAMES[c.type]), r.x + 60 + 15 * 7, r.y + 17);
-            // level bar with the live (modulated) level as a white tick
+            String nm = c.name.length() > 28 ? c.name.substring(0, 27) + "…" : c.name;
+            g.drawString(String.format(Locale.ROOT, "%-29s %-8s", nm, TYPE_NAMES[c.type]), x0 + 60 + 15 * 7, r.y + 17);
+            // level bar: the layer's own (target) level, and a white tick where the sound is right now
             Rectangle lr = levelRect(i);
             g.setColor(new Color(70, 70, 70));
             g.drawRect(lr.x, lr.y, lr.width, lr.height);
             double lmax = spec(c.type, P_LEVEL).max();
             g.setColor(new Color(tc.getRed(), tc.getGreen(), tc.getBlue(), muted ? 60 : 170));
             g.fillRect(lr.x + 1, lr.y + 1, (int) (Math.min(1, c.p[P_LEVEL] / lmax) * (lr.width - 1)), lr.height - 1);
-            double[] m = c.mod;
+            Clip ref = liveRef(c, sp);
+            double[] m = ref.mod;
             if (m != null && benchPlaying && !muted) {
-                int lx = lr.x + 1 + (int) (Math.max(0, Math.min(1, (c.p[P_LEVEL] + m[P_LEVEL]) / lmax)) * (lr.width - 2));
+                int lx = lr.x + 1 + (int) (Math.max(0, Math.min(1, (ref.p[P_LEVEL] + m[P_LEVEL]) / lmax)) * (lr.width - 2));
                 g.setColor(Color.WHITE);
                 g.drawLine(lx, lr.y - 2, lx, lr.y + lr.height + 2);
             }
             g.setColor(Color.GRAY);
-            g.drawString("level", lr.x - 42, r.y + 17);
+            g.drawString(spellRow ? "target" : "level", lr.x - 46, r.y + 17);
             // right: what the layer is and what moves it
-            int nb = 0, nr = c.range != null ? c.range.size() : 0;
-            for (Bind b : bench.binds) if (b.layer.equals("*") || b.layer.equals(c.id)) nb++;
             String tag = c.on != ON_NONE ? String.format(Locale.ROOT, "on %s %.2fs", ON_NAMES[c.on], c.dur) : "endless";
             g.setColor(c.on != ON_NONE ? new Color(255, 200, 120) : new Color(120, 120, 120));
             g.drawString(tag, lr.x + lr.width + 14, r.y + 17);
             g.setColor(new Color(120, 120, 120));
-            g.drawString((nb > 0 ? nb + " bind" + (nb > 1 ? "s" : "") : "") + (nr > 0 ? (nb > 0 ? " · " : "") + nr + " range" + (nr > 1 ? "s" : "") : ""),
-                    lr.x + lr.width + 14 + 16 * 7, r.y + 17);
+            if (spellRow) g.drawString(bench.byId(c.id) != null ? "shared with the palette" : "this spell only", lr.x + lr.width + 14 + 16 * 7, r.y + 17);
+            else {
+                int nb = 0, nr = c.range != null ? c.range.size() : 0;
+                for (Bind b : bench.binds) if (b.layer.equals("*") || b.layer.equals(c.id)) nb++;
+                g.drawString((nb > 0 ? nb + " bind" + (nb > 1 ? "s" : "") : "") + (nr > 0 ? (nb > 0 ? " · " : "") + nr + " range" + (nr > 1 ? "s" : "") : ""),
+                        lr.x + lr.width + 14 + 16 * 7, r.y + 17);
+            }
         }
         g.setClip(clip0);
-        if (n > rows) {
+        if (total > vis) {
             g.setColor(Color.GRAY);
-            g.drawString(String.format(Locale.ROOT, "↕ %d-%d of %d (wheel scrolls)", benchScroll + 1, Math.min(n, benchScroll + rows), n), w - 12 - 30 * 7, y0 + 14);
+            g.drawString(String.format(Locale.ROOT, "↕ %d-%d of %d (wheel scrolls)", benchScroll + 1, Math.min(total, benchScroll + vis), total), w - 12 - 30 * 7, y0 + 14);
         }
     }
 
     void benchClick(MouseEvent e) {
         int mx = e.getX(), my = e.getY();
         if (my < benchRowsY()) return;
+        java.util.List<BenchRow> rows = benchRows();
         int row = (my - benchRowsY()) / benchRowH() + benchScroll;
-        if (row < 0 || row >= bench.layers.size() || row - benchScroll >= benchRowsN()) { if (!SwingUtilities.isRightMouseButton(e)) sel = null; return; }
-        Clip c = bench.layers.get(row);
+        if (row < 0 || row >= rows.size() || row - benchScroll >= benchRowsN()) { if (!SwingUtilities.isRightMouseButton(e)) { sel = null; selSpell = null; } return; }
+        BenchRow br = rows.get(row);
         Rectangle r = benchRowRect(row);
-        if (SwingUtilities.isRightMouseButton(e)) { sel = c; layerMenu(c, mx, my); return; }
-        if (mx >= r.x + 4 && mx < r.x + 18) { pushUndo(""); c.lmute = !c.lmute; markEdit(); return; }
-        if (mx >= r.x + 24 && mx < r.x + 38) { benchSolo = benchSolo == c ? null : c; return; }
-        sel = c;
+        if (br.kind() == ROW_SPELL) {
+            if (SwingUtilities.isRightMouseButton(e)) { spellMenu(br.spell(), mx, my); return; }
+            if (!collapsed.remove(br.spell().id)) collapsed.add(br.spell().id);
+            return;
+        }
+        Clip c = br.clip(); Spell sp = br.spell();
+        int x0 = r.x + (sp != null ? 20 : 0);
+        if (SwingUtilities.isRightMouseButton(e)) { sel = c; selSpell = sp; if (sp != null) spellLayerMenu(c, sp, mx, my); else layerMenu(c, mx, my); return; }
+        if (mx >= x0 + 4 && mx < x0 + 18) { if (sp == null) { pushUndo(""); c.lmute = !c.lmute; markEdit(); } else { pushUndo(""); c.lmute = !c.lmute; markSpellDirty(sp); } return; }
+        if (sp == null && mx >= x0 + 24 && mx < x0 + 38) { benchSolo = benchSolo == c ? null : c; return; }
+        sel = c; selSpell = sp;
         Rectangle lr = levelRect(row);
         if (new Rectangle(lr.x - 2, lr.y - 5, lr.width + 4, lr.height + 10).contains(mx, my)) {
             grabUndo(); dragMode = DR_LEVEL; setLevel(mx); return;
         }
-        if (e.getClickCount() >= 2) renameLayer(c);
+        if (e.getClickCount() >= 2 && sp == null) renameLayer(c);
+    }
+    /** The spell group's menu: fold, recipe, and bringing palette layers in. */
+    void spellMenu(Spell sp, int mx, int my) {
+        JPopupMenu m = new JPopupMenu();
+        m.add(item(collapsed.contains(sp.id) ? "expand" : "fold", () -> { if (!collapsed.remove(sp.id)) collapsed.add(sp.id); }));
+        m.add(item("recipe…  (" + recipeText(sp.bench) + ")", () -> recipeDialog(sp, null)));
+        m.add(item("lock  (score → 1, fires its on=lock one-shots)", () -> { spellScore.put(sp.id, 1.0); fireSpell(sp.id, ON_LOCK); if (bpanel != null) bpanel.pull(); }));
+        m.addSeparator();
+        JMenu add = new JMenu("add a palette layer at its current values");
+        for (Clip pc : bench.layers) add.add(item(pc.id + (sp.bench.byId(pc.id) != null ? "  (replace)" : ""), () -> addLayerToSpell(pc, sp)));
+        m.add(add);
+        m.show(this, mx, my);
+    }
+    /** Copies a palette layer into a spell as its target values (replacing the spell's layer of that id). */
+    void addLayerToSpell(Clip pc, Spell sp) {
+        pushUndo("");
+        Clip n = copyClip(pc); n.lmute = false; n.range = null; n.rnote = null;
+        Clip old = sp.bench.byId(pc.id);
+        if (old != null) sp.bench.layers.set(sp.bench.layers.indexOf(old), n); else sp.bench.layers.add(n);
+        markSpellDirty(sp);
+        toast(pc.id + " → " + sp.id + " at its current values");
+    }
+    void spellLayerMenu(Clip c, Spell sp, int mx, int my) {
+        JPopupMenu m = new JPopupMenu();
+        Clip pal = bench.byId(c.id);
+        if (pal != null && pal.type == c.type) m.add(item("take the palette's current values", () -> { pushUndo(""); System.arraycopy(pal.p, 0, c.p, 0, c.p.length); markSpellDirty(sp); }));
+        m.addSeparator();
+        for (int on = 0; on < ON_NAMES.length; on++) {
+            final int o = on;
+            JCheckBoxMenuItem it = new JCheckBoxMenuItem(on == ON_NONE ? "endless layer (a bed)" : "one-shot, fires on " + ON_NAMES[on], c.on == on);
+            it.addActionListener(e -> { if (c.on != o) { pushUndo(""); c.on = o; c.dur = o == ON_NONE ? ENDLESS : (c.dur >= ENDLESS / 2 ? naturalDur(c) : c.dur); markSpellDirty(sp); } });
+            m.add(it);
+        }
+        m.addSeparator();
+        m.add(item("remove from " + sp.id + "  (DEL)", () -> removeSpellLayer(c, sp)));
+        m.show(this, mx, my);
+    }
+    void removeSpellLayer(Clip c, Spell sp) {
+        pushUndo("");
+        sp.bench.layers.remove(c);
+        if (sel == c) { sel = null; selSpell = null; }
+        markSpellDirty(sp);
     }
     void setLevel(int mx) {
         if (sel == null) return;
-        int row = bench.layers.indexOf(sel);
+        java.util.List<BenchRow> rows = benchRows();
+        int row = -1;
+        for (int k = 0; k < rows.size(); k++) if (rows.get(k).clip() == sel) { row = k; break; }
         if (row < 0) return;
         Rectangle lr = levelRect(row);
         double u = Math.max(0, Math.min(1, (mx - lr.x) / (double) lr.width));
@@ -3567,6 +3728,11 @@ public class SfxLab extends JPanel {
         m.addSeparator();
         m.add(item("duplicate  (D)", () -> { sel = c; dupSel(); }));
         m.add(item("copy to the timeline at the playhead", () -> layerToTimeline(c)));
+        if (!spells.isEmpty()) {
+            JMenu add = new JMenu("add to a spell at these values");
+            for (Spell sp : spells) add.add(item(sp.id + (sp.bench.byId(c.id) != null ? "  (replace)" : ""), () -> addLayerToSpell(c, sp)));
+            m.add(add);
+        }
         m.add(item("remove  (DEL)", () -> removeLayer(c)));
         m.show(this, mx, my);
     }
@@ -4257,7 +4423,100 @@ public class SfxLab extends JPanel {
         final DefaultListModel<String> rangeModel = new DefaultListModel<>();
         final ArrayList<Object[]> rangeRows = new ArrayList<>();   // {Clip, Integer}
         final JList<String> rangeList = new JList<>(rangeModel);
-        final JTable bindTable;
+        JPanel bindsBox, spellBindsBox;
+        JTable paletteTable;
+        final ArrayList<BindModel> bindModels = new ArrayList<>();
+        /** One table's model: the binds of a bench (the palette's, or a spell's, whose edits mark that spell dirty). */
+        class BindModel extends javax.swing.table.AbstractTableModel {
+            final Bench target; final Spell sp;
+            BindModel(Bench target, Spell sp) { this.target = target; this.sp = sp; }
+            void edited() { if (sp == null) lab.markEdit(); else lab.markSpellDirty(sp); }
+            public int getRowCount() { return target.binds.size(); }
+            public int getColumnCount() { return BCOLS.length; }
+            public String getColumnName(int c) { return BCOLS[c]; }
+            public Class<?> getColumnClass(int c) { return c == 5 ? Boolean.class : String.class; }
+            public boolean isCellEditable(int r, int c) { return true; }
+            public Object getValueAt(int r, int c) {
+                if (r >= target.binds.size()) return "";
+                Bind b = target.binds.get(r);
+                return switch (c) {
+                    case 0 -> b.sig; case 1 -> b.layer; case 2 -> b.param;
+                    case 3 -> b.auto() ? "auto" : fmtNum5(b.lo); case 4 -> b.auto() ? "auto" : fmtNum5(b.hi);
+                    case 6 -> b.map();
+                    default -> b.rel;
+                };
+            }
+            public void setValueAt(Object v, int r, int c) {
+                if (r >= target.binds.size()) return;
+                Bind b = target.binds.get(r);
+                lab.pushUndo("");
+                try {
+                    switch (c) {
+                        case 0 -> b.sig = v.toString().trim();
+                        case 1 -> b.layer = v.toString().trim();
+                        case 2 -> b.param = v.toString().trim().replace(' ', '_');
+                        case 3, 4 -> {
+                            String t = v.toString().trim().toLowerCase(Locale.ROOT);
+                            if (t.isEmpty() || t.equals("auto")) { b.lo = Double.NaN; b.hi = Double.NaN; }
+                            else {
+                                if (b.auto()) { Clip lc = target.byId(b.layer); int pi = lc != null ? idxOf(lc.type, b.param) : -1; PSpec ps = pi >= 0 ? spec(lc.type, pi) : new PSpec("", 0, 1, 0); b.lo = ps.min(); b.hi = ps.max(); }
+                                if (c == 3) b.lo = Double.parseDouble(t); else b.hi = Double.parseDouble(t);
+                            }
+                        }
+                        case 6 -> { if (!b.setMap(v.toString())) lab.toast("map: steps=N or scale=<chord name: " + String.join(", ", CHORD_NAMES).replace(' ', '_') + ">"); }
+                        default -> b.rel = Boolean.TRUE.equals(v);
+                    }
+                } catch (NumberFormatException ex) { lab.toast("couldn't parse \"" + v + "\""); }
+                edited();
+                fireTableRowsUpdated(r, r);
+            }
+        }
+        /** A vertical stack that takes the scroll pane's width, so tables fit and titles truncate instead of widening it. */
+        static class VBox extends JPanel implements Scrollable {
+            public Dimension getPreferredScrollableViewportSize() { return getPreferredSize(); }
+            public int getScrollableUnitIncrement(Rectangle r, int o, int d) { return 16; }
+            public int getScrollableBlockIncrement(Rectangle r, int o, int d) { return 120; }
+            public boolean getScrollableTracksViewportWidth() { return true; }
+            public boolean getScrollableTracksViewportHeight() { return false; }
+        }
+        /** A titled bind table with its add / remove buttons, for the palette or one spell. */
+        JPanel bindSection(String title, Bench target, Spell sp) {
+            BindModel model = new BindModel(target, sp);
+            bindModels.add(model);
+            JTable table = new JTable(model);
+            if (sp == null) paletteTable = table;
+            table.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
+            int[] widths = {84, 74, 74, 46, 46, 28, 64};
+            for (int i = 0; i < widths.length; i++) table.getColumnModel().getColumn(i).setPreferredWidth(widths[i]);
+            table.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke("ESCAPE"), "back");
+            table.getActionMap().put("back", new AbstractAction() { public void actionPerformed(ActionEvent e) { lab.requestFocusInWindow(); } });
+            JPanel sec = new JPanel(new BorderLayout(2, 2));
+            sec.setBorder(BorderFactory.createEmptyBorder(6, 0, 2, 0));
+            JLabel head = new JLabel(title);
+            if (sp != null) head.setForeground(new Color(150, 110, 30));
+            sec.add(head, BorderLayout.NORTH);
+            JPanel body = new JPanel(new BorderLayout());
+            body.add(table.getTableHeader(), BorderLayout.NORTH);
+            body.add(table, BorderLayout.CENTER);
+            sec.add(body, BorderLayout.CENTER);
+            JPanel bb = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 0));
+            JButton addB = new JButton("+ bind…"), remB = new JButton("− remove");
+            addB.setMargin(new Insets(0, 4, 0, 4)); remB.setMargin(new Insets(0, 4, 0, 4));
+            addB.addActionListener(e -> addBindDialog(target, sp));
+            remB.addActionListener(e -> {
+                int[] rows = table.getSelectedRows();
+                ArrayList<Bind> del = new ArrayList<>();
+                for (int r : rows) if (r < target.binds.size()) del.add(target.binds.get(r));
+                if (del.isEmpty()) return;
+                lab.pushUndo("");
+                synchronized (lab.lock) { target.binds.removeAll(del); }
+                model.edited(); lab.benchGen++;
+            });
+            bb.add(addB); bb.add(remB);
+            sec.add(bb, BorderLayout.SOUTH);
+            sec.setMaximumSize(new Dimension(Integer.MAX_VALUE, sec.getPreferredSize().height + 400));
+            return sec;
+        }
         final JTextArea notes = new JTextArea(4, 20);
         boolean refreshing; int seenGen = -1;
         static final String[] BCOLS = {"signal", "layer", "param", "lo", "hi", "rel", "map"};
@@ -4312,74 +4571,17 @@ public class SfxLab extends JPanel {
             }
             add(top, BorderLayout.NORTH);
 
-            bindTable = new JTable(new javax.swing.table.AbstractTableModel() {
-                public int getRowCount() { return lab.bench.binds.size(); }
-                public int getColumnCount() { return BCOLS.length; }
-                public String getColumnName(int c) { return BCOLS[c]; }
-                public Class<?> getColumnClass(int c) { return c == 5 ? Boolean.class : String.class; }
-                public boolean isCellEditable(int r, int c) { return true; }
-                public Object getValueAt(int r, int c) {
-                    if (r >= lab.bench.binds.size()) return "";
-                    Bind b = lab.bench.binds.get(r);
-                    return switch (c) {
-                        case 0 -> b.sig; case 1 -> b.layer; case 2 -> b.param;
-                        case 3 -> b.auto() ? "auto" : fmtNum5(b.lo); case 4 -> b.auto() ? "auto" : fmtNum5(b.hi);
-                        case 6 -> b.map();
-                        default -> b.rel;
-                    };
-                }
-                public void setValueAt(Object v, int r, int c) {
-                    if (r >= lab.bench.binds.size()) return;
-                    Bind b = lab.bench.binds.get(r);
-                    lab.pushUndo("");
-                    try {
-                        switch (c) {
-                            case 0 -> b.sig = v.toString().trim();
-                            case 1 -> b.layer = v.toString().trim();
-                            case 2 -> b.param = v.toString().trim().replace(' ', '_');
-                            case 3, 4 -> {
-                                String s = v.toString().trim().toLowerCase(Locale.ROOT);
-                                if (s.isEmpty() || s.equals("auto")) { b.lo = Double.NaN; b.hi = Double.NaN; }
-                                else {
-                                    if (b.auto()) { Clip lc = lab.bench.byId(b.layer); int pi = lc != null ? idxOf(lc.type, b.param) : -1; PSpec ps = pi >= 0 ? spec(lc.type, pi) : new PSpec("", 0, 1, 0); b.lo = ps.min(); b.hi = ps.max(); }
-                                    if (c == 3) b.lo = Double.parseDouble(s); else b.hi = Double.parseDouble(s);
-                                }
-                            }
-                            case 6 -> { if (!b.setMap(v.toString())) lab.toast("map: steps=N or scale=<chord name: " + String.join(", ", CHORD_NAMES).replace(' ', '_') + ">"); }
-                            default -> b.rel = Boolean.TRUE.equals(v);
-                        }
-                    } catch (NumberFormatException ex) { lab.toast("couldn't parse \"" + v + "\""); }
-                    lab.markEdit();
-                    fireTableRowsUpdated(r, r);
-                }
-            });
-            bindTable.setFont(mono);
-            bindTable.getColumnModel().getColumn(0).setPreferredWidth(90);
-            bindTable.getColumnModel().getColumn(1).setPreferredWidth(80);
-            bindTable.getColumnModel().getColumn(2).setPreferredWidth(80);
-            bindTable.getColumnModel().getColumn(3).setPreferredWidth(50);
-            bindTable.getColumnModel().getColumn(4).setPreferredWidth(50);
-            bindTable.getColumnModel().getColumn(5).setPreferredWidth(30);
-            bindTable.getColumnModel().getColumn(6).setPreferredWidth(80);
-            JPanel bindsP = new JPanel(new BorderLayout(2, 2));
-            JPanel bh = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 0));
-            bh.add(new JLabel("binds   signal → layer.param over lo..hi (auto = marked range) · map: steps=N or scale=penta"));
-            bindsP.add(bh, BorderLayout.NORTH);
-            bindsP.add(new JScrollPane(bindTable), BorderLayout.CENTER);
-            JPanel bb = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 0));
-            JButton addB = new JButton("+ bind…"), remB = new JButton("− remove");
-            addB.addActionListener(e -> addBindDialog());
-            remB.addActionListener(e -> {
-                int[] rows = bindTable.getSelectedRows();
-                ArrayList<Bind> del = new ArrayList<>();
-                for (int r : rows) if (r < lab.bench.binds.size()) del.add(lab.bench.binds.get(r));
-                for (Bind b : del) lab.removeBind(b);
-            });
-            bb.add(addB); bb.add(remB);
-            bindsP.add(bb, BorderLayout.SOUTH);
-            add(bindsP, BorderLayout.CENTER);   // ranges stay on the sliders (right-click) and notes in the file; the table gets the room
+            // binds: the palette's table (the searching mix), then one table per spell (its lock mix), stacked
+            bindsBox = new VBox(); bindsBox.setLayout(new BoxLayout(bindsBox, BoxLayout.Y_AXIS));
+            bindsBox.setToolTipText("signal → layer.param over lo..hi (auto = the marked range) · map: steps=N or scale=penta");
+            bindsBox.add(bindSection("palette binds — the searching mix", lab.bench, null));
+            spellBindsBox = new JPanel(); spellBindsBox.setLayout(new BoxLayout(spellBindsBox, BoxLayout.Y_AXIS));
+            bindsBox.add(spellBindsBox);
+            bindsBox.add(Box.createVerticalGlue());
+            JScrollPane bsp = new JScrollPane(bindsBox); bsp.getVerticalScrollBar().setUnitIncrement(16);
+            add(bsp, BorderLayout.CENTER);
             add(new JLabel("  ESC: back to the bench · bound sliders show a white tick at the live value · ranges: right-click a slider"), BorderLayout.SOUTH);
-            for (JComponent c : new JComponent[]{bindTable, famBox}) {
+            for (JComponent c : new JComponent[]{famBox}) {
                 c.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke("ESCAPE"), "back");
                 c.getActionMap().put("back", new AbstractAction() { public void actionPerformed(ActionEvent e) { lab.requestFocusInWindow(); } });
             }
@@ -4449,6 +4651,12 @@ public class SfxLab extends JPanel {
             }
             if (lab.spells.isEmpty()) { gc.gridy = 0; gc.gridx = 0; gc.gridwidth = 3; JLabel l = new JLabel(lab.family == null ? "no family loaded — pick one above (regulator/<family>/)" : "no spells in regulator/" + lab.family + "/spells/"); l.setForeground(Color.GRAY); spellsP.add(l, gc); }
             spellsP.revalidate(); spellsP.repaint();
+            if (spellBindsBox != null) {
+                bindModels.removeIf(m -> m.sp != null);
+                spellBindsBox.removeAll();
+                for (Spell sp : lab.spells) spellBindsBox.add(bindSection("spell " + sp.id + " binds — its lock mix", sp.bench, sp));
+                bindsBox.invalidate(); bindsBox.revalidate(); bindsBox.repaint();
+            }
             refreshing = false;
         }
         /** The lab moved a signal (lock / unlock): the sliders follow. */
@@ -4469,7 +4677,7 @@ public class SfxLab extends JPanel {
         void refresh() {
             refreshing = true;
             seenGen = lab.benchGen;
-            ((javax.swing.table.AbstractTableModel) bindTable.getModel()).fireTableDataChanged();
+            for (BindModel m : bindModels) m.fireTableDataChanged();
             rangeModel.clear(); rangeRows.clear();
             List<Clip> ls;
             synchronized (lab.lock) { ls = new ArrayList<>(lab.bench.layers); }
@@ -4484,27 +4692,29 @@ public class SfxLab extends JPanel {
             if (lab.family != null && !lab.family.equals(famBox.getSelectedItem())) rescanFamilies();
             refreshing = false;
         }
-        void addBindDialog() {
+        void addBindDialog(Bench target, Spell sp) {
             List<Clip> ls;
-            synchronized (lab.lock) { ls = new ArrayList<>(lab.bench.layers); }
+            synchronized (lab.lock) { ls = new ArrayList<>(target.layers); }
             if (ls.isEmpty()) { lab.toast("add a layer first"); return; }
             JComboBox<String> sigC = new JComboBox<>(lab.signalChoices().toArray(new String[0]));
             JComboBox<String> layC = new JComboBox<>();
             layC.addItem("*");
             for (Clip c : ls) layC.addItem(c.id);
+            if (sp != null) layC.addItem(SPELL_LAYER);   // the spell itself: `blend`, its weight curve
             if (lab.sel != null && lab.sel.id != null) layC.setSelectedItem(lab.sel.id);
+            JTextField loF = new JTextField("auto", 6), hiF = new JTextField("auto", 6), mapF = new JTextField("", 12);
+            JCheckBox relC = new JCheckBox("rel (added to the layer's own value)");
             JComboBox<String> parC = new JComboBox<>();
             Runnable fillParams = () -> {
                 parC.removeAllItems();
                 String lid = (String) layC.getSelectedItem();
-                Clip c = lab.bench.byId(lid);
+                if (SPELL_LAYER.equals(lid)) { parC.addItem(BLEND_PARAM); loF.setText("0.55"); hiF.setText("1"); return; }
+                Clip c = target.byId(lid);
                 if (c == null) c = ls.get(0);
                 for (int i = 0; i < c.p.length; i++) parC.addItem(key(c.type, i));
             };
             fillParams.run();
             layC.addActionListener(e -> fillParams.run());
-            JTextField loF = new JTextField("auto", 6), hiF = new JTextField("auto", 6), mapF = new JTextField("", 12);
-            JCheckBox relC = new JCheckBox("rel (added to the layer's own value)");
             parC.addActionListener(e -> { boolean pitch = "pitch".equals(parC.getSelectedItem()); relC.setSelected(pitch); if (pitch) { loF.setText("0"); hiF.setText("12"); } });
             JPanel p = new JPanel(new GridLayout(0, 2, 4, 4));
             p.add(new JLabel("signal")); p.add(sigC);
@@ -4514,7 +4724,7 @@ public class SfxLab extends JPanel {
             p.add(new JLabel("hi")); p.add(hiF);
             p.add(new JLabel("")); p.add(relC);
             p.add(new JLabel("map: steps=N or scale=name")); p.add(mapF);
-            if (JOptionPane.showConfirmDialog(this, p, "Add bind", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE) != JOptionPane.OK_OPTION) return;
+            if (JOptionPane.showConfirmDialog(this, p, sp == null ? "Add bind (palette)" : "Add bind (spell " + sp.id + ")", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE) != JOptionPane.OK_OPTION) return;
             try {
                 String lo = loF.getText().trim().toLowerCase(Locale.ROOT), hi = hiF.getText().trim().toLowerCase(Locale.ROOT);
                 boolean auto = lo.isEmpty() || lo.equals("auto") || hi.isEmpty() || hi.equals("auto");
@@ -4522,8 +4732,9 @@ public class SfxLab extends JPanel {
                 Bind nb = new Bind((String) sigC.getSelectedItem(), (String) layC.getSelectedItem(), (String) parC.getSelectedItem(),
                         auto ? Double.NaN : Double.parseDouble(lo), auto ? Double.NaN : Double.parseDouble(hi), relC.isSelected());
                 if (!nb.setMap(mapF.getText())) { lab.toast("map: steps=N or scale=<" + String.join(", ", CHORD_NAMES).replace(' ', '_') + ">"); return; }
-                synchronized (lab.lock) { lab.bench.binds.add(nb); }
-                lab.benchGen++; lab.markEdit();
+                synchronized (lab.lock) { target.binds.add(nb); }
+                lab.benchGen++;
+                if (sp == null) lab.markEdit(); else lab.markSpellDirty(sp);
             } catch (NumberFormatException ex) { lab.toast("couldn't parse the range"); }
         }
     }
@@ -5524,6 +5735,7 @@ public class SfxLab extends JPanel {
         new javax.swing.Timer(33, ev -> {
             if (dirty && System.currentTimeMillis() - lastEditAt > 1200 && !Boolean.getBoolean("sfxlab.noautosave")) saveProject(true);   // -Dsfxlab.noautosave=true: headless tests must not touch project.sfx
             if (benchDirty && System.currentTimeMillis() - lastEditAt > 1200 && !Boolean.getBoolean("sfxlab.noautosave")) saveBench(true);
+            if (!dirtySpells.isEmpty() && System.currentTimeMillis() - lastEditAt > 1200 && !Boolean.getBoolean("sfxlab.noautosave")) saveDirtySpells();
             repaint();
             if (monitor != null && monitor.isVisible()) monitor.repaint();
         }).start();
@@ -5803,6 +6015,7 @@ public class SfxLab extends JPanel {
     void previewSel() {
         if (sel == null) { toast(benchOn ? "select a layer first" : "select a clip first"); return; }
         if (benchOn) {
+            if (selSpell != null) { if (sel.on != ON_NONE) { fire(sel); toast(sel.id + " fired"); } else toast("solo is for palette layers; the spell's lock button (panel) brings its targets in"); return; }
             if (sel.on != ON_NONE) { fire(sel); toast(sel.id + " fired"); }
             else { benchSolo = benchSolo == sel ? null : sel; if (benchSolo != null && !benchPlaying) toggleBenchPlay(); toast(benchSolo != null ? sel.id + " solo (P again clears)" : "solo off"); }
             return;
@@ -5814,7 +6027,7 @@ public class SfxLab extends JPanel {
 
     void deleteSel() {
         if (sel == null) return;
-        if (benchOn) { removeLayer(sel); return; }
+        if (benchOn) { if (selSpell != null) removeSpellLayer(sel, selSpell); else removeLayer(sel); return; }
         pushUndo("");
         synchronized (lock) { clips.remove(sel); }
         sel = null;
@@ -5867,6 +6080,7 @@ public class SfxLab extends JPanel {
     void dupSel() {
         if (sel == null) return;
         if (benchOn) {
+            if (selSpell != null) { toast("a spell's layers mirror the palette's ids — duplicate on the palette, then add it to the spell"); return; }
             Clip c = copyClip(sel);
             c.seed = uiRng.nextLong();
             c.id = newLayerId(sel.id); c.lmute = false;
@@ -6329,7 +6543,11 @@ public class SfxLab extends JPanel {
                                         pa.share < 0.2 ? String.format(Locale.ROOT, " (faint: %.0f%% sines)", 100 * pa.share) : "")
                                      : "   no clear pitch");
             } else pinfo = "   " + noteName(clipHz(sel));
-            if (benchOn)
+            if (benchOn && selSpell != null)
+                g.drawString(String.format(Locale.ROOT, "%s  (%s)   spell %s · layer %s — TARGET values at lock%s   %s   key: %s   —  white ticks: where the blend sits now",
+                        sel.name, TYPE_NAMES[sel.type], selSpell.id, sel.id, bench.byId(sel.id) != null ? " (shared with the palette)" : " (this spell only)",
+                        sel.on != ON_NONE ? String.format(Locale.ROOT, "one-shot %.2fs on %s", sel.dur, ON_NAMES[sel.on]) : "endless", KEY_NAMES[sel.keyed]), 14, panelY() + 16);
+            else if (benchOn)
                 g.drawString(String.format(Locale.ROOT, "%s  (%s)   layer %s   %s%s   key: %s   —  P %s · right-click a slider: range / bind",
                         sel.name, TYPE_NAMES[sel.type], sel.id,
                         sel.on != ON_NONE ? String.format(Locale.ROOT, "one-shot %.2fs on %s", sel.dur, ON_NAMES[sel.on]) : "endless",
@@ -6338,7 +6556,8 @@ public class SfxLab extends JPanel {
             g.drawString(String.format(Locale.ROOT, "%s  (%s)   track %d   start %.2fs   dur %.2fs%s%s   key: %s   —  P previews solo",
                     sel.name, TYPE_NAMES[sel.type], sel.track + 1, sel.start, sel.dur,
                     sel.vlink ? "   linked to video" : "", pinfo, KEY_NAMES[sel.keyed]), 14, panelY() + 16);
-            double[] smod = benchOn ? sel.mod : null;
+            Clip live = benchOn ? liveRef(sel, selSpell) : sel;   // a spell layer's ticks and marks come from the palette layer it blends into
+            double[] smod = benchOn ? live.mod : null;
             for (int i = 0; i < sel.p.length; i++) {
                 PSpec s = spec(sel.type, i);
                 Rectangle r = sliderRect(i);
@@ -6351,7 +6570,7 @@ public class SfxLab extends JPanel {
                 if (benchOn) {
                     // authoring marks: the range that sounded good (yellow brackets under the bar),
                     // a dot for a bound param, and the live modulated value as a white tick
-                    double[] rg = sel.range != null ? sel.range.get(i) : null;
+                    double[] rg = live.range != null ? live.range.get(i) : null;
                     if (rg != null) {
                         g.setColor(new Color(255, 220, 80));
                         int x0 = r.x + 1 + (int) ((rg[0] - s.min()) / (s.max() - s.min()) * (r.width - 2));
@@ -6360,11 +6579,11 @@ public class SfxLab extends JPanel {
                         g.drawLine(x0, r.y + r.height - 1, x0, r.y + r.height + 3);
                         g.drawLine(x1, r.y + r.height - 1, x1, r.y + r.height + 3);
                     }
-                    if (!bindsOn(sel, i).isEmpty()) {
-                        g.setColor(new Color(120, 200, 255));
-                        g.fillOval(r.x - 9, r.y + 4, 5, 5);
-                        if (smod != null && benchPlaying && i < smod.length) {
-                            double ue = Math.max(0, Math.min(1, (sel.p[i] + smod[i] - s.min()) / (s.max() - s.min())));
+                    boolean bound = !bindsOn(live, i).isEmpty();
+                    if (bound) { g.setColor(new Color(120, 200, 255)); g.fillOval(r.x - 9, r.y + 4, 5, 5); }
+                    if ((bound || selSpell != null) && smod != null && benchPlaying && i < smod.length) {
+                        {
+                            double ue = Math.max(0, Math.min(1, (live.p[i] + smod[i] - s.min()) / (s.max() - s.min())));
                             int xe = r.x + 1 + (int) (ue * (r.width - 2));
                             g.setColor(Color.WHITE);
                             g.drawLine(xe, r.y - 2, xe, r.y + r.height + 2);
