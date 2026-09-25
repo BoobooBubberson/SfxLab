@@ -1,15 +1,9 @@
-# SfxLab bench v1: the pyretic family palette for the harmonic regulator (HARMONIC-REGULATOR.md §5; spells/ holds the roster).
-# layer id name type dur seed key=value... (dur 0 = endless) · range id param lo hi [note] · bind signal id|* param [lo hi] [rel]
+# SfxLab bench v1: layer id name type dur seed key=value... (dur 0 = endless) · range id param lo hi [note] · bind signal id|* param [lo hi] [rel]
 bench 1
 root 65.4064
-layer synth1 pyretic/pyretic_synth_00001_loop 7 0.0000 3648935809342043255 level=0.80000 attack=0.30000 release=0.60000 pitch=-5.17941 pitch_swp=0.00000 cutoff=1.00000 cutoff_swp=0.00000 resonance=0.00000 filter=0.00000 pan=0.00000 pan_swp=0.00000 echo=0.00000 drive=0.00000 start=0.00000 speed=1.00000 sines=1.00000 residual=1.00000 floor=14.00000 min_len=46.00000 loop=1.00000 odd/even=0.01333 tilt=0.00000 purity=1.00000 stretch=0.01200 gather=0.00000 chord=0.00000 shimmer=0.00000 root_shift=0.00000 harm_tol=3.00000 lfo_rate=4.00000 lfo>pitch=0.00000 lfo>cut=0.00000 lfo>amp=0.00000 lfo_shape=0.00000 env_curve=0.00000 reverb=0.00000 flange=0.00000 flange_fb=0.50000 duck=0.00000 duck_from=0.00000 phaser=0.00000 phaser_rate=0.40000 ph_stages=4.00000 file=pyretic/pyretic_synth_00001_loop.ogg keyed=1
-layer synth3 pyretic/pyretic_synth_00003_loop 7 0.0000 4241009321552398601 level=0.70000 attack=0.30000 release=0.60000 pitch=-8.03300 pitch_swp=0.00000 cutoff=1.00000 cutoff_swp=0.00000 resonance=0.00000 filter=0.00000 pan=0.00000 pan_swp=0.00000 echo=0.00000 drive=0.00000 start=0.00000 speed=1.00000 sines=1.00000 residual=1.00000 floor=14.00000 min_len=46.00000 loop=1.00000 odd/even=0.00000 tilt=0.00000 purity=1.00000 stretch=0.00000 gather=0.00000 chord=0.00000 shimmer=0.00000 root_shift=0.00000 harm_tol=3.00000 lfo_rate=4.00000 lfo>pitch=0.00000 lfo>cut=0.00000 lfo>amp=0.00000 lfo_shape=0.00000 env_curve=0.00000 reverb=0.00000 flange=0.00000 flange_fb=0.50000 duck=0.00000 duck_from=0.00000 phaser=0.00000 phaser_rate=0.40000 ph_stages=4.00000 file=pyretic/pyretic_synth_00003_loop.ogg keyed=1
-layer synth8 pyretic/pyretic_synth_00008_loop 7 0.0000 -8427613063694102734 level=0.80000 attack=0.30000 release=0.60000 pitch=-0.41601 pitch_swp=0.00000 cutoff=1.00000 cutoff_swp=0.00000 resonance=0.00000 filter=0.00000 pan=0.00000 pan_swp=0.00000 echo=0.00000 drive=0.00000 start=0.00000 speed=0.48000 sines=1.00000 residual=1.00000 floor=14.00000 min_len=46.00000 loop=1.00000 odd/even=0.00000 tilt=0.00000 purity=1.00000 stretch=-0.00400 gather=1.00000 chord=0.00000 shimmer=0.00000 root_shift=-24.00000 harm_tol=3.00000 lfo_rate=1.16133 lfo>pitch=0.00000 lfo>cut=0.00000 lfo>amp=0.00000 lfo_shape=0.00000 env_curve=0.00000 reverb=0.00000 flange=0.00000 flange_fb=0.50000 duck=0.00000 duck_from=0.00000 phaser=0.00000 phaser_rate=0.40000 ph_stages=4.00000 file=pyretic/pyretic_synth_00008_loop.ogg keyed=3
-layer tones tones 1 0.0000 -872403327451993021 level=0.18000 attack=0.05200 release=0.25000 pitch=-9.00000 pitch_swp=0.00000 cutoff=1.00000 cutoff_swp=0.00000 resonance=0.00000 filter=0.00000 pan=0.00000 pan_swp=0.00000 echo=0.00000 drive=0.03000 interval=0.00000 timbre=2.00000 detune=0.00000 shimmer=0.00000 fm_ratio=2.00000 fm_depth=0.00000 bank=0.52000 odd/even=0.00400 tilt=-0.05600 stretch=0.00720 gather=1.00000 chord=0.00000 bank_shimmer=0.00000 lfo_rate=4.00000 lfo>pitch=0.00000 lfo>cut=0.00000 lfo>amp=0.00000 lfo_shape=0.00000 env_curve=0.00000 reverb=0.00000 flange=0.08000 flange_fb=0.02533 duck=0.00000 duck_from=0.00000 phaser=0.63333 phaser_rate=0.26200 ph_stages=4.00000 keyed=3
-layer cloud cloud 0 0.0000 7253806486286739823 level=0.30000 attack=0.02000 release=0.25000 pitch=-9.00000 pitch_swp=0.00000 cutoff=1.00000 cutoff_swp=0.00000 resonance=0.00000 filter=0.00000 pan=0.00000 pan_swp=0.00000 echo=0.00000 drive=0.00000 voices=10.00000 gather=0.50000 drift=0.25000 timbre=0.60000 chord=0.00000 sub=0.30000 gather_swp=0.00000 lfo_rate=4.00000 lfo>pitch=0.00000 lfo>cut=0.00000 lfo>amp=0.00000 lfo_shape=0.00000 env_curve=0.00000 reverb=0.00000 flange=0.00000 flange_fb=0.50000 duck=0.00000 duck_from=0.00000 phaser=0.00000 phaser_rate=0.40000 ph_stages=4.00000 keyed=3
-layer fire pyretic/fire_loop 7 0.0000 -9185575800890492577 level=0.28000 attack=0.30000 release=0.60000 pitch=2.58432 pitch_swp=0.00000 cutoff=1.00000 cutoff_swp=0.00000 resonance=0.00000 filter=0.00000 pan=0.00000 pan_swp=0.00000 echo=0.00000 drive=0.00000 start=0.00000 speed=1.00000 sines=1.00000 residual=1.00000 floor=14.00000 min_len=46.00000 loop=1.00000 odd/even=0.00000 tilt=0.00000 purity=1.00000 stretch=0.00000 gather=0.00000 chord=1.00000 shimmer=0.00000 root_shift=0.00000 harm_tol=3.00000 lfo_rate=4.00000 lfo>pitch=0.00000 lfo>cut=0.00000 lfo>amp=0.00000 lfo_shape=0.00000 env_curve=0.00000 reverb=0.00000 flange=0.00000 flange_fb=0.50000 duck=0.00000 duck_from=0.00000 phaser=0.00000 phaser_rate=0.40000 ph_stages=4.00000 file=pyretic/fire_loop.ogg keyed=2
-layer lava pyretic/lava_loop 7 0.0000 -3075420318144090217 level=0.28000 attack=0.30000 release=0.60000 pitch=-3.75600 pitch_swp=0.00000 cutoff=1.00000 cutoff_swp=0.00000 resonance=0.00000 filter=0.00000 pan=0.00000 pan_swp=0.00000 echo=0.00000 drive=0.00000 start=0.00000 speed=1.00000 sines=1.00000 residual=1.00000 floor=14.00000 min_len=46.00000 loop=1.00000 odd/even=0.00000 tilt=0.00000 purity=1.00000 stretch=0.00000 gather=0.00000 chord=1.00000 shimmer=0.00000 root_shift=0.00000 harm_tol=3.00000 lfo_rate=4.00000 lfo>pitch=0.00000 lfo>cut=0.00000 lfo>amp=0.00000 lfo_shape=0.00000 env_curve=0.00000 reverb=0.00000 flange=0.00000 flange_fb=0.50000 duck=0.00000 duck_from=0.00000 phaser=0.00000 phaser_rate=0.40000 ph_stages=4.00000 file=pyretic/lava_loop.ogg keyed=2
-layer torch pyretic/flamethrower_loop 5 0.0000 2395476570269327066 level=0.00000 attack=0.02200 release=0.02000 pitch=0.00000 pitch_swp=0.00000 cutoff=0.43440 cutoff_swp=0.00000 resonance=0.85000 filter=1.00000 pan=0.00000 pan_swp=0.00000 echo=0.00000 drive=0.00000 loop=1.00000 start=0.00000 pitch_mode=0.00000 speed=1.00000 lfo_rate=4.00000 lfo>pitch=0.00000 lfo>cut=0.00000 lfo>amp=0.00000 lfo_shape=0.00000 env_curve=0.00000 reverb=0.00000 flange=0.00000 flange_fb=0.50000 duck=0.00000 duck_from=0.00000 phaser=0.00000 phaser_rate=0.40000 ph_stages=4.00000 file=pyretic/flamethrower_loop.ogg keyed=2
+layer synth1 pyretic/pyretic_synth_00001_loop 7 0.0000 3648935809342043255 level=0.00000 attack=0.30000 release=0.60000 pitch=-5.17941 pitch_swp=0.00000 cutoff=1.00000 cutoff_swp=0.00000 resonance=0.00000 filter=0.00000 pan=0.00000 pan_swp=0.00000 echo=0.50000 drive=0.00000 start=0.00000 speed=1.00000 sines=1.00000 residual=1.00000 floor=14.00000 min_len=46.00000 loop=1.00000 odd/even=0.01333 tilt=0.00000 purity=1.00000 stretch=0.01200 gather=0.00000 chord=0.00000 shimmer=0.00000 root_shift=0.00000 harm_tol=3.00000 lfo_rate=4.00000 lfo>pitch=0.00000 lfo>cut=0.00000 lfo>amp=0.00000 lfo_shape=0.00000 env_curve=0.00000 reverb=0.00000 flange=0.00000 flange_fb=0.50000 duck=0.00000 duck_from=0.00000 phaser=0.00000 phaser_rate=0.40000 ph_stages=4.00000 file=pyretic/pyretic_synth_00001_loop.ogg keyed=1
+layer synth3 pyretic/pyretic_synth_00003_loop 7 0.0000 4241009321552398601 level=0.68000 attack=0.30000 release=0.60000 pitch=-8.03300 pitch_swp=0.00000 cutoff=1.00000 cutoff_swp=0.00000 resonance=0.00000 filter=0.00000 pan=0.00000 pan_swp=0.00000 echo=0.00000 drive=0.00000 start=0.00000 speed=1.00000 sines=1.00000 residual=1.00000 floor=14.00000 min_len=46.00000 loop=1.00000 odd/even=0.00000 tilt=0.00000 purity=1.00000 stretch=0.00000 gather=0.00000 chord=0.00000 shimmer=0.00000 root_shift=0.00000 harm_tol=3.00000 lfo_rate=4.00000 lfo>pitch=0.00000 lfo>cut=0.00000 lfo>amp=0.00000 lfo_shape=0.00000 env_curve=0.00000 reverb=0.00000 flange=0.00000 flange_fb=0.50000 duck=0.00000 duck_from=0.00000 phaser=0.00000 phaser_rate=0.40000 ph_stages=4.00000 file=pyretic/pyretic_synth_00003_loop.ogg keyed=1
+layer synth8 pyretic/pyretic_synth_00008_loop 7 0.0000 -8427613063694102734 level=0.00000 attack=0.30000 release=0.60000 pitch=-0.41601 pitch_swp=0.00000 cutoff=1.00000 cutoff_swp=0.00000 resonance=0.00000 filter=0.00000 pan=0.00000 pan_swp=0.00000 echo=0.00000 drive=0.00000 start=0.00000 speed=0.48000 sines=1.00000 residual=1.00000 floor=14.00000 min_len=46.00000 loop=1.00000 odd/even=0.00000 tilt=0.00000 purity=1.00000 stretch=-0.00400 gather=0.00000 chord=0.00000 shimmer=0.00000 root_shift=-24.00000 harm_tol=3.00000 lfo_rate=1.16133 lfo>pitch=0.00000 lfo>cut=0.00000 lfo>amp=0.00000 lfo_shape=0.00000 env_curve=0.00000 reverb=0.00000 flange=0.00000 flange_fb=0.50000 duck=0.00000 duck_from=0.00000 phaser=0.00000 phaser_rate=0.40000 ph_stages=4.00000 file=pyretic/pyretic_synth_00008_loop.ogg keyed=3
 range synth1 pitch -17.179 1.821 sounds good from C1 to G2 (key -12 .. +7)
 range synth1 drive 0 0.05 how aggressive the boiling sounds
 range synth1 reverb 0 1 radiating power at 1, small and contained at 0
@@ -22,30 +16,12 @@ range synth8 pitch -12.416 11.584 key -12 (C2) .. +12 (C4); harsh above +7, like
 range synth8 gather 0 1 takes chords well at 1
 range synth8 reverb 0 1
 range synth8 phaser 0 1 avoid touching drive
-range tones level 0 0.25 subtle background layer, about 20% of the synth loops
-range tones drive 0 0.2
-range tones gather 0 1
-range cloud level 0 0.65 dramatic; emphasis when tones is not enough
-range cloud gather 0 1 the biggest lever: THX deep-note sweep 0 to 1; clearest chord player at 1
-range fire pitch -9.416 14.584 key -12 .. +12
-range fire drive 0 0.2 intensity; avoid the other sliders
-range lava pitch -15.756 8.244 key -12 .. +12, faint at either end but never harsh
-range lava drive 0 0.2 intensity; avoid the other sliders
-range torch level 0 0.8 intensity through level, not drive; the loop is dense, use the turn-on / turn-off one-shots as transitions
-range torch cutoff 0.2 0.7 the 440 Hz bandpass keys it; pitch shifts do nothing
-bind arm1.pitch synth3 pitch 0 12 rel
-bind arm2.pitch synth8 pitch 0 12 rel
-bind arm3.pitch tones pitch 0 12 rel
-bind arm1.reach synth3 level 0 0.7
-bind arm2.reach synth8 level 0 0.8
-bind arm3.reach tones level 0 0.25
-bind radiance synth1 reverb
-bind radiance synth3 reverb
-bind radiance synth8 reverb
-bind consonance cloud gather
-bind tension synth1 drive
-bind drive synth1 level 0.45 0.8
-note Starting assignment, to be argued with by ear: synth1 is the always-on bed (crank drive brings it up, tension makes it boil),
-note synth3 / synth8 / tones each follow one arm's pitch and reach. The beds could instead be shared by all arms and crossfaded by a
-note signal (bind tension synth1 level 0.8 0 next to bind tension synth3 level 0 0.7 is a crossfade) so the sound evolves as you tune.
-note Reward layers (fire, lava, torch) stay low in the palette; each spell's signature brings its own up. coherence is unbound so far.
+bind score fire level 0 0.3
+bind orb.radius synth3 level 0 1
+bind stir synth1 level 0.6 0
+note Hand-off set. At rest only synth1 plays (the rumble bed). An arm's layer fades in with that arm's reach and sits on
+note the arm's pitch. coherence swaps the bed's character: boiling and dry while detuned, calm and radiating when caught,
+note and it steps back so the arm layers carry the sound. The crank's spin (drive) is heard as the bed's phaser.
+note cloud is silent unless the motions are consonant; radiance (Z reach, tiers II-III) opens the reverbs; score brings fire
+note up as the near-miss flicker, and the signature takes over past 0.55. tension and lava are unbound: spares to try.
+note Rule of thumb: one absolute bind per param (two add their deltas and surprise you); use rel binds for offsets.

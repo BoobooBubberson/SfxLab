@@ -2745,11 +2745,13 @@ public class SfxLab extends JPanel {
     /** The regulator's signal contract. arm{n}.pitch is derived from arm{n}.ratio
      *  (12·log2 of the ratio folded into one octave), so it has no slider. */
     static final String[] SIGNALS = {"arm1.ratio", "arm2.ratio", "arm3.ratio", "arm1.reach", "arm2.reach", "arm3.reach",
-                                     "radiance", "consonance", "tension", "drive", "coherence", "score"};
-    static final double[] SIG_MAX = {8, 8, 8, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+                                     "radiance", "consonance", "tension", "drive", "coherence", "score",
+                                     "orb.speed", "orb.accel", "orb.curl", "orb.radius", "stir"};   // orb.*: the pen's kinematics; stir: anything turning at all
+    static final double[] SIG_MAX = {8, 8, 8, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
     static final int SIG_SCORE = 11;
     static final String[] SIGNAL_CHOICES = {"arm1.ratio", "arm1.pitch", "arm1.reach", "arm2.ratio", "arm2.pitch", "arm2.reach",
-                                            "arm3.ratio", "arm3.pitch", "arm3.reach", "radiance", "consonance", "tension", "drive", "coherence", "score"};
+                                            "arm3.ratio", "arm3.pitch", "arm3.reach", "radiance", "consonance", "tension", "drive", "coherence", "score",
+                                            "orb.speed", "orb.accel", "orb.curl", "orb.radius", "stir"};
     static int sigIdx(String name) { for (int i = 0; i < SIGNALS.length; i++) if (SIGNALS[i].equals(name)) return i; return -1; }
 
     static class Bind {
@@ -3288,6 +3290,7 @@ public class SfxLab extends JPanel {
         }
         bench.notes.clear(); bench.notes.addAll(b.notes);
         bench.palette = b.palette;
+        bench.name = b.name; bench.tier = b.tier; bench.secret = b.secret; bench.comps = b.comps; bench.rtol = b.rtol;   // a spell keeps its recipe on the bench
         benchSolo = null; benchScroll = 0; benchGen++;
     }
     String relPath(Path f) {
@@ -3324,6 +3327,7 @@ public class SfxLab extends JPanel {
     /** S on the bench: stamp it as a palette (the family's folder, else projects/) or, from the action bar, as a
      *  spell signature in the family's spells/. A spell keeps its name and recipe lines unless the bench carries its own. */
     void stampBench(boolean signature) {
+        if (!signature && benchName != null && benchName.contains("/spells/") && family != null) signature = true;   // S on an open spell saves the spell, not a palette copy
         if (signature && family == null) { toast("pick a family in the regulator panel (J) first — spells live in regulator/<family>/spells/"); return; }
         Path dir = signature ? familyDir().resolve("spells") : family != null ? familyDir() : PROJECTS_DIR;
         String def = benchName != null ? Paths.get(benchName).getFileName().toString().replaceFirst("\\.sfx$", "") : family != null && !signature ? family : "";
@@ -3345,8 +3349,8 @@ public class SfxLab extends JPanel {
             bench.palette = null;
             if (signature) {
                 String id = name.replaceFirst("\\.sfx$", "");
-                Spell old = spell(id);
-                if (old != null) { if (bench.name == null) bench.name = old.bench.name; if (bench.comps == null) { bench.comps = old.bench.comps; bench.tier = old.bench.tier; bench.secret = old.bench.secret; bench.rtol = old.bench.rtol; } }
+                Bench old = spell(id) != null ? spell(id).bench : Files.exists(f) ? parseBench(Files.readAllLines(f)) : null;   // never lose a spell's name or recipe on re-save
+                if (old != null) { if (bench.name == null) bench.name = old.name; if (bench.comps == null) { bench.comps = old.comps; bench.tier = old.tier; bench.secret = old.secret; bench.rtol = old.rtol; } }
                 if (bench.comps == null) {   // a new spell: its recipe, prefilled from the machine's sigil when one is on the arms
                     String pre = machine != null && machine.frame != null && machine.frame.isVisible() ? machine.currentSigil() : "tier=1 ";
                     String in = (String) JOptionPane.showInputDialog(this, "Recipe of the new spell " + id + " (tier=N [secret=1] [rtol=0.1], then motions like X3p1r0.7 Y2p0; leave empty to add it later):",
@@ -3768,7 +3772,9 @@ public class SfxLab extends JPanel {
             ctl.add(rb);
             ctl.add(section("auto-play — a player works the controls toward the pinned spell; pause it, tweak the layers, resume"));
             JPanel ap = new JPanel(new FlowLayout(FlowLayout.LEFT, 6, 2));
-            autoB.addActionListener(e -> { if (autoB.isSelected()) { if (!power.isSelected()) power.doClick(); auto.start(); } else auto.stop(); });
+            autoB.addActionListener(e -> { if (autoB.isSelected()) { if (!power.isSelected()) power.doClick(); auto.start(); } else { auto.stop(); } });
+            pauseB.setText("freeze");
+            pauseB.setToolTipText("stop the machine's time: crank, pen and auto-play hold still, the signals stay put, and the layers can be tuned against this exact moment");
             pauseB.addActionListener(e -> auto.paused = pauseB.isSelected());
             speedS.setPreferredSize(new Dimension(90, 20)); speedS.setToolTipText("speed ×0.5 .. ×4");
             speedS.addChangeListener(e -> auto.speed = speedS.getValue() / 10.0);
@@ -3776,7 +3782,7 @@ public class SfxLab extends JPanel {
             anyB.setToolTipText("after each lock, pin a random spell of the family and go for that one");
             mistakesB.addActionListener(e -> auto.mistakes = mistakesB.isSelected());
             anyB.addActionListener(e -> auto.anySpell = anyB.isSelected());
-            ap.add(autoB); ap.add(pauseB); ap.add(new JLabel("speed")); ap.add(speedS); ap.add(mistakesB); ap.add(anyB);
+            ap.add(autoB); ap.add(new JLabel("speed")); ap.add(speedS); ap.add(mistakesB); ap.add(anyB); ap.add(pauseB);
             ctl.add(ap);
             status.setFont(new Font(Font.SANS_SERIF, Font.ITALIC, 13));
             status.setEditable(false); status.setLineWrap(true); status.setWrapStyleWord(true); status.setOpaque(false);
@@ -3872,8 +3878,12 @@ public class SfxLab extends JPanel {
         }
         /** One frame of machine time: the auto-player's move, the core, the hand-off to the bench. Tests call this with fixed dt. */
         void step(double dt) {
-            if (auto.on && !auto.paused) auto.advance(dt * auto.speed);
-            core.tick(dt);
+            // paused = frozen: no machine time passes (crank, pen, auto-play), so the signals hold still and the
+            // layers can be adjusted against exactly the state that was playing
+            if (!auto.paused) {
+                if (auto.on) auto.advance(dt * auto.speed);
+                core.tick(dt);
+            }
             for (RegulatorCore.Recipe r : core.recipes) lab.spellScore.put(r.id, core.eval.get(r.id).score);
             flashV = Math.max(0, flashV - dt * 1.2);
             frameNo++;
@@ -3916,7 +3926,8 @@ public class SfxLab extends JPanel {
             readB.setEnabled(!core.voiced().isEmpty());
             // status line, the prototype's
             String m;
-            if (auto.on) m = "auto: " + auto.doing + (auto.paused ? "  (paused)" : "");
+            if (auto.paused) m = "FROZEN — the machine's time is stopped; tune the layers, then unfreeze." + (auto.on ? "   (auto: " + auto.doing + ")" : "");
+            else if (auto.on) m = "auto: " + auto.doing;
             else if (System.currentTimeMillis() < flashUntil) m = flash;
             else if (!core.powered) m = "Power the receiver to begin.";
             else if (core.targetEval.exact) m = "The sigil holds. Pull the voice lever to write it to the crystal.";
@@ -4254,7 +4265,7 @@ public class SfxLab extends JPanel {
         BenchPanel(SfxLab lab) {
             this.lab = lab;
             setLayout(new BorderLayout(4, 4));
-            setPreferredSize(new Dimension(430, 100));
+            setPreferredSize(new Dimension(473, 100));
             setBackground(Color.BLACK);
             Font mono = new Font(Font.MONOSPACED, Font.PLAIN, 12);
 
@@ -4301,7 +4312,6 @@ public class SfxLab extends JPanel {
             }
             add(top, BorderLayout.NORTH);
 
-            JPanel mid = new JPanel(new GridLayout(3, 1, 2, 4));
             bindTable = new JTable(new javax.swing.table.AbstractTableModel() {
                 public int getRowCount() { return lab.bench.binds.size(); }
                 public int getColumnCount() { return BCOLS.length; }
@@ -4367,39 +4377,9 @@ public class SfxLab extends JPanel {
             });
             bb.add(addB); bb.add(remB);
             bindsP.add(bb, BorderLayout.SOUTH);
-            mid.add(bindsP);
-
-            JPanel rangesP = new JPanel(new BorderLayout(2, 2));
-            rangesP.add(new JLabel("ranges   marked on sliders (right-click one on the bench)"), BorderLayout.NORTH);
-            rangeList.setFont(mono);
-            rangesP.add(new JScrollPane(rangeList), BorderLayout.CENTER);
-            JPanel rb = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 0));
-            JButton clrB = new JButton("− clear");
-            clrB.addActionListener(e -> { int i = rangeList.getSelectedIndex(); if (i >= 0 && i < rangeRows.size()) lab.clearRange((Clip) rangeRows.get(i)[0], (Integer) rangeRows.get(i)[1]); });
-            rb.add(clrB);
-            rangesP.add(rb, BorderLayout.SOUTH);
-            mid.add(rangesP);
-
-            JPanel notesP = new JPanel(new BorderLayout(2, 2));
-            notesP.add(new JLabel("notes   saved with the bench"), BorderLayout.NORTH);
-            notes.setFont(mono); notes.setLineWrap(true); notes.setWrapStyleWord(true);
-            notes.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
-                void push() {
-                    if (refreshing) return;
-                    lab.bench.notes.clear();
-                    for (String l : notes.getText().split("\n")) lab.bench.notes.add(l);
-                    while (!lab.bench.notes.isEmpty() && lab.bench.notes.get(lab.bench.notes.size() - 1).isBlank()) lab.bench.notes.remove(lab.bench.notes.size() - 1);
-                    lab.markEdit();
-                }
-                public void insertUpdate(javax.swing.event.DocumentEvent e) { push(); }
-                public void removeUpdate(javax.swing.event.DocumentEvent e) { push(); }
-                public void changedUpdate(javax.swing.event.DocumentEvent e) { push(); }
-            });
-            notesP.add(new JScrollPane(notes), BorderLayout.CENTER);
-            mid.add(notesP);
-            add(mid, BorderLayout.CENTER);
-            add(new JLabel("  ESC: back to the bench · bound sliders show a white tick at the live value"), BorderLayout.SOUTH);
-            for (JComponent c : new JComponent[]{bindTable, rangeList, notes, famBox}) {
+            add(bindsP, BorderLayout.CENTER);   // ranges stay on the sliders (right-click) and notes in the file; the table gets the room
+            add(new JLabel("  ESC: back to the bench · bound sliders show a white tick at the live value · ranges: right-click a slider"), BorderLayout.SOUTH);
+            for (JComponent c : new JComponent[]{bindTable, famBox}) {
                 c.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke("ESCAPE"), "back");
                 c.getActionMap().put("back", new AbstractAction() { public void actionPerformed(ActionEvent e) { lab.requestFocusInWindow(); } });
             }
@@ -4501,7 +4481,6 @@ public class SfxLab extends JPanel {
                         rangeModel.addElement(String.format(Locale.ROOT, "%s.%s  %s .. %s%s", c.id, spec(c.type, pi).name(), fmtNum5(r[0]), fmtNum5(r[1]), nt != null ? "   " + nt : ""));
                         rangeRows.add(new Object[]{c, pi});
                     }
-            if (!notes.hasFocus()) notes.setText(String.join("\n", lab.bench.notes));
             if (lab.family != null && !lab.family.equals(famBox.getSelectedItem())) rescanFamilies();
             refreshing = false;
         }
@@ -6564,8 +6543,12 @@ class RegulatorCore {
 
     /** The signal contract, in the order of signals[]. arm{n}.pitch is derived (pitch(arm)). */
     static final String[] SIGNALS = {"arm1.ratio", "arm2.ratio", "arm3.ratio", "arm1.reach", "arm2.reach", "arm3.reach",
-                                     "radiance", "consonance", "tension", "drive", "coherence", "score"};
-    static final int S_RATIO = 0, S_REACH = 3, S_RADIANCE = 6, S_CONSONANCE = 7, S_TENSION = 8, S_DRIVE = 9, S_COHERENCE = 10, S_SCORE = 11;
+                                     "radiance", "consonance", "tension", "drive", "coherence", "score",
+                                     "orb.speed", "orb.accel", "orb.curl", "orb.radius", "stir"};
+    static final int S_RATIO = 0, S_REACH = 3, S_RADIANCE = 6, S_CONSONANCE = 7, S_TENSION = 8, S_DRIVE = 9, S_COHERENCE = 10, S_SCORE = 11,
+                     S_ORB_SPEED = 12, S_ORB_ACCEL = 13, S_ORB_CURL = 14, S_ORB_RADIUS = 15, S_STIR = 16;
+    static final double STIR_SMOOTH = 0.15;   // s: how fast `stir` follows the arms starting or stopping
+    static final double ORB_SMOOTH = 0.06;   // s: the orb signals' envelope follows the pen with this lag
 
     // ---- recipes
     /** One motion of a recipe: axis (0 X, 1 Y, 2 Z), integer ratio, phase in quarter cycles, and the reach target
@@ -6879,7 +6862,7 @@ class RegulatorCore {
         computeSignals(eng);
     }
     void computeSignals(java.util.List<Eng> eng) {
-        java.util.Arrays.fill(signals, 0);
+        java.util.Arrays.fill(signals, 0, S_ORB_SPEED, 0);   // the orb envelopes persist (smoothed across ticks)
         for (int a = 0; a < ARMS; a++) {
             double best = -1, reach = 0;
             for (Eng e : eng) if (e.arm == a) { reach += e.amp; if (e.amp > best) { best = e.amp; signals[S_RATIO + a] = e.r; } }
@@ -6903,6 +6886,40 @@ class RegulatorCore {
         signals[S_DRIVE] = Math.min(1, crankRatio() / MAX_N);
         signals[S_COHERENCE] = eng.isEmpty() ? 0 : coh / eng.size();
         signals[S_SCORE] = targetEval.score;
+        orbSignals();
+    }
+    // ---- the orb's kinematics, from the oscillators' derivatives (exact, whatever the frame rate), each an
+    // envelope smoothed over ORB_SMOOTH so binds get a contour rather than the pen's every wobble
+    private final double[] orbP = new double[3], orbV = new double[3], orbA = new double[3];
+    private double lastOrbTau = -1;
+    void orbSignals() {
+        double vmax = 0, amax = 0, ext = extent();
+        java.util.Arrays.fill(orbP, 0); java.util.Arrays.fill(orbV, 0); java.util.Arrays.fill(orbA, 0);
+        for (Motion[] a : comps) for (int ax = 0; ax < AXES; ax++) {
+            Motion c = a[ax];
+            if (!c.eng) continue;
+            double amp = c.amp * Math.min(1, c.r / 0.6), w = c.r * DRAW_RATE, th = c.osc + c.ph * Math.PI / 2;
+            orbP[ax] += amp * Math.sin(th); orbV[ax] += amp * w * Math.cos(th); orbA[ax] -= amp * w * w * Math.sin(th);
+            vmax += amp * w; amax += amp * w * w;
+        }
+        double v = Math.sqrt(orbV[0] * orbV[0] + orbV[1] * orbV[1] + orbV[2] * orbV[2]);
+        double acc = Math.sqrt(orbA[0] * orbA[0] + orbA[1] * orbA[1] + orbA[2] * orbA[2]);
+        double cx = orbV[1] * orbA[2] - orbV[2] * orbA[1], cy = orbV[2] * orbA[0] - orbV[0] * orbA[2], cz = orbV[0] * orbA[1] - orbV[1] * orbA[0];
+        double kappa = v > 1e-6 ? Math.sqrt(cx * cx + cy * cy + cz * cz) / (v * v * v) : 0;   // curvature: 1/radius of the loop being drawn
+        double speed = vmax > 0 ? v / vmax : 0;                       // 1 = every motion pulling the same way at once
+        double accel = amax > 0 ? acc / amax : 0;
+        double curl = Math.min(1, kappa * ext / 4);                    // a circle at full extent = 0.25, a loop a quarter that size = 1
+        double radius = Math.min(1, Math.sqrt(orbP[0] * orbP[0] + orbP[1] * orbP[1] + orbP[2] * orbP[2]) / ext);
+        double k = lastOrbTau < 0 ? 1 : 1 - Math.exp(-(tau - lastOrbTau) / ORB_SMOOTH), ks = lastOrbTau < 0 ? 1 : 1 - Math.exp(-(tau - lastOrbTau) / STIR_SMOOTH);
+        lastOrbTau = tau;
+        // stir: 0 with every arm at rest, 1 once anything turns at ×0.5 or faster (whatever the crank is doing)
+        double fastest = 0;
+        for (Eng e : engaged()) fastest = Math.max(fastest, e.r);
+        signals[S_STIR] += (Math.min(1, fastest / 0.5) - signals[S_STIR]) * ks;
+        signals[S_ORB_SPEED] += (speed - signals[S_ORB_SPEED]) * k;
+        signals[S_ORB_ACCEL] += (accel - signals[S_ORB_ACCEL]) * k;
+        signals[S_ORB_CURL] += (curl - signals[S_ORB_CURL]) * k;
+        signals[S_ORB_RADIUS] += (radius - signals[S_ORB_RADIUS]) * k;
     }
     static int gcd(int a, int b) { while (b != 0) { int t = a % b; a = b; b = t; } return a; }
     /** arm{n}.pitch: the arm's ratio as semitones folded into one octave (0 when the arm is silent). */

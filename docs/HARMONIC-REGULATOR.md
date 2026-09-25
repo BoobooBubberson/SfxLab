@@ -214,6 +214,11 @@ Formulas marked *proposed* are starting points to tune by ear.
 | `drive` | 0..1 | crank ratio / 8 |
 | `coherence` | 0..1 | mean of e^(−8·|r − round(r)|) over engaged motions (0 if none) |
 | `score` | 0..1 | target recipe score (3.4); per-recipe scores also available for flicker |
+| `orb.speed` | 0..1 | *added 2026-09-24:* the pen's speed over the sum of every motion's peak speed (1 = all pulling the same way), smoothed 60 ms |
+| `orb.accel` | 0..1 | the pen's acceleration over the sum of every motion's peak acceleration, smoothed |
+| `orb.curl` | 0..1 | curvature of the loop being drawn, × extent / 4: a full-size circle 0.25, tight loops → 1, straight runs → 0 |
+| `orb.radius` | 0..1 | the orb's distance from the receiver over the figure's extent |
+| `stir` | 0..1 | 0 with every arm at rest, 1 once any engaged motion turns at ×0.5 or faster, whatever the crank does; 150 ms envelope. `bind stir bed level 0.6 0` is a bed that plays at rest and drops out as soon as the arms move |
 | events | | `lock`, `unlock`, `discover` (a secret recipe matched), `voice` (crystal written) |
 
 ## 5. The sound split (proposed, to build in SfxLab first)
