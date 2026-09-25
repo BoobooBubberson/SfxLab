@@ -292,6 +292,7 @@ line style, which the timeline parser skips:
 ```
 layer <id> <name> <type> <dur> <seed> key=value... [on=lock|unlock] [mute=1]   dur 0 = endless
 range <id> <param> <lo> <hi> [note]      the span that sounded good (authoring notes; default bind range)
+recipe tier=N [secret=1] [rtol=0.1] X3p1r0.7 ...   (spell files) axis, ratio, phase in quarters, reach target
 bind <signal> <id|*> <param> [lo hi] [rel] [steps=N | scale=<chord>]   no range = the marked range, else the spec range;
                                          steps quantises the sweep, scale snaps a semitone value to a chord's degrees
 palette projects/x.sfx                   (signature files) the palette they were authored against
@@ -413,6 +414,38 @@ and the same palette, signature and bind files.
    ribbon and arm rendering, the sound engine consuming signals and signatures,
    the voice lever writing the recipe to the crystal item, then the copy socket
    and research station.
+
+## 6b. Revision after authoring (2026-09-24)
+
+Playing the machine on the bench changed three decisions from sections 2
+and 3. The prototype's behaviour stays available behind a "classic crank"
+toggle for comparison.
+
+- **Reach is part of the recipe.** Reach shapes the figure, so a blueprint
+  drawn with amplitudes the player could not match was inconsistent. Each
+  motion now carries a reach target, `X3p1r0.7`, drawn exactly in the
+  blueprint and matched within the recipe's `rtol` (default 0.1). Phases
+  keep their four notches.
+- **The crank does not catch.** Under the free crank it only winds down
+  under friction (the dead-zone brake below ×1 stays). Exactness comes from
+  the latch: a motion latched within the acceptance window, `snapTol/√n`
+  (0.1 at ×1 by default; the difficulty scaler, later per crystal), snaps
+  to the integer and the core reports `accept:<arm>:<axis>:<n>`, the hook
+  for a chime (`on=accept` layers in the palette). Latched outside the
+  window it is held detuned, beating, and can be re-driven. Integers stay
+  the targets because only integer ratios close the figure and sit on the
+  receiver's harmonic series; the shape-equivalence set is unchanged.
+- **The figure is a pen.** The receiver's own cycle takes 2.5 s of machine
+  time and every motion oscillates at its ratio times that; the stage draws
+  the pen's position with a trail that fades over two cycles. Integer
+  ratios retrace one closed sigil; a detuned motion precesses it at a rate
+  proportional to the detune, slowing to a stop as it is tuned in. The
+  prototype's roll term and noise term are gone; `figurePoint` still gives
+  the shape over one cycle for the degeneracy check.
+
+The auto-player trims first (reach, phase), spins to just above the target
+and latches as friction carries the ratio through the window, which is
+also the human technique.
 
 ## 7. Open questions
 

@@ -103,7 +103,8 @@ the machine's signals rather than by time. **H** swaps the timeline for that ben
   palette that plays through the tuning, `regulator/<family>/spells/<spell>.sfx`
   the roster. Pick the family in the panel. Each spell file is a **signature**, the
   same layers at their lock values plus its one-shots, and carries its recipe
-  (`recipe tier=1 X3p1 Y2p0`), which is what the machine and, later, the mod score.
+  (`recipe tier=1 X3p1r0.7 Y2p0`: axis, integer ratio, phase in quarter turns, reach
+  target; `rtol=` sets the reach tolerance), which is what the machine and, later, the mod score.
   Edit it with the spell's `recipe…` button in the panel, or design the sigil on the
   machine's arms and press `→ recipe` to write it to the pinned spell; a new spell
   saved with the `signature` button asks for its recipe, prefilled from the machine.
@@ -117,7 +118,10 @@ the machine's signals rather than by time. **H** swaps the timeline for that ben
   is the worked example, with a hand-off variant of the palette beside it.
 - **U** opens the machine: the regulator itself (crank, arms, motion levers, latch,
   phase and reach, the research setpoint, the voice lever, the copy socket) around
-  `RegulatorCore`, with the ribbon and the pinned blueprint. With "drive the bench"
+  `RegulatorCore`, with the pen's trail and the pinned blueprint. The crank only winds
+  down; latching within the acceptance window snaps a motion to its integer ratio
+  (the `on=accept` chime hook), outside it the motion is held detuned and beats.
+  The prototype's catching crank is there as a toggle. With "drive the bench"
   on, its signals replace the panel's sliders and every spell's match fires that
   spell's one-shots, so the puzzle is played and the palette answers. **Auto-play**
   works the controls toward the pinned spell along a randomised path, with optional

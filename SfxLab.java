@@ -2736,7 +2736,8 @@ public class SfxLab extends JPanel {
     // the new tokens, so both directions stay compatible.
     // =====================================================================
     static final int ON_NONE = 0, ON_LOCK = 1, ON_UNLOCK = 2;
-    static final String[] ON_NAMES = {"none", "lock", "unlock"};
+    static final int ON_ACCEPT = 3;
+    static final String[] ON_NAMES = {"none", "lock", "unlock", "accept"};   // accept: the crystal took a latched motion (the chime)
     static final double ENDLESS = 1e9;   // dur of a layer that loops for ever
     static final Path BENCH_FILE = DIR.resolve("bench.sfx");   // the bench autosaves here, like project.sfx
     static final Path REG_DIR = DIR.resolve("regulator");      // regulator/<family>/<family>.sfx (palette) + spells/<spell>.sfx (signatures with their recipes)
@@ -2811,6 +2812,7 @@ public class SfxLab extends JPanel {
         String palette;            // (older signature files) the palette they were authored against; the folder says it now
         String name;               // spell files: the display name
         int tier; boolean secret; RegulatorCore.Comp[] comps;   // spell files: the recipe (null when the file has none)
+        double rtol = RegulatorCore.DEFAULT_RTOL;                // spell files: the recipe's reach tolerance
         double root = ROOT_DEFAULT;
         Clip byId(String id) { if (id != null) for (Clip c : layers) if (id.equals(c.id)) return c; return null; }
     }
@@ -2824,14 +2826,15 @@ public class SfxLab extends JPanel {
                 case "root" -> { if (t.length > 1) b.root = Double.parseDouble(t[1]); }
                 case "palette" -> { if (t.length > 1) b.palette = t[1]; }
                 case "name" -> b.name = line.trim().length() > 5 ? line.trim().substring(5) : null;
-                case "recipe" -> {   // recipe tier=1 [secret=1] X3p1 Y2p0 X5p1@0.35 ...   (axis, integer ratio, phase in quarters, drawing amplitude)
+                case "recipe" -> {   // recipe tier=1 [secret=1] [rtol=0.1] X3p1r0.7 Y2p0 ...   (axis, integer ratio, phase in quarters, reach target; @amp is the old spelling of r)
                     ArrayList<RegulatorCore.Comp> cs = new ArrayList<>();
                     for (int i = 1; i < t.length; i++) {
                         if (t[i].startsWith("tier=")) b.tier = Integer.parseInt(t[i].substring(5));
                         else if (t[i].startsWith("secret=")) b.secret = t[i].endsWith("1");
+                        else if (t[i].startsWith("rtol=")) b.rtol = Double.parseDouble(t[i].substring(5));
                         else {
-                            java.util.regex.Matcher mm = java.util.regex.Pattern.compile("([XYZxyz])(\\d+)p(\\d)(?:@([0-9.]+))?").matcher(t[i]);
-                            if (mm.matches()) cs.add(new RegulatorCore.Comp("xyz".indexOf(Character.toLowerCase(mm.group(1).charAt(0))), Integer.parseInt(mm.group(2)), Integer.parseInt(mm.group(3)) % 4, mm.group(4) != null ? Double.parseDouble(mm.group(4)) : 1));
+                            java.util.regex.Matcher mm = java.util.regex.Pattern.compile("([XYZxyz])(\\d+)p(\\d)(?:[r@]([0-9.]+))?").matcher(t[i]);
+                            if (mm.matches()) cs.add(new RegulatorCore.Comp("xyz".indexOf(Character.toLowerCase(mm.group(1).charAt(0))), Integer.parseInt(mm.group(2)), Integer.parseInt(mm.group(3)) % 4, mm.group(4) != null ? Math.max(0.05, Math.min(1, Double.parseDouble(mm.group(4)))) : 1));
                         }
                     }
                     if (b.tier < 1 || b.tier > 3) b.tier = 1;
@@ -2897,8 +2900,8 @@ public class SfxLab extends JPanel {
         return sb.toString();
     }
     static String recipeLine(Bench b) {
-        StringBuilder sb = new StringBuilder("recipe tier=" + b.tier + (b.secret ? " secret=1" : ""));
-        for (RegulatorCore.Comp c : b.comps) sb.append(' ').append("XYZ".charAt(c.axis())).append(c.n()).append('p').append(c.phase()).append(c.amp() != 1 ? "@" + fmtNum5(c.amp()) : "");
+        StringBuilder sb = new StringBuilder("recipe tier=" + b.tier + (b.secret ? " secret=1" : "") + (b.rtol != RegulatorCore.DEFAULT_RTOL ? " rtol=" + fmtNum5(b.rtol) : ""));
+        for (RegulatorCore.Comp c : b.comps) sb.append(' ').append("XYZ".charAt(c.axis())).append(c.n()).append('p').append(c.phase()).append(c.amp() != 1 ? "r" + fmtNum5(c.amp()) : "");
         return sb.toString();
     }
     static String layerLine(Clip c) {
@@ -3088,7 +3091,7 @@ public class SfxLab extends JPanel {
                         sp.id = p.getFileName().toString().replaceFirst("\\.sfx$", "");
                         sp.name = b.name != null ? b.name : sp.id.replace('_', ' ');
                         sp.bench = b; sp.file = p;
-                        if (b.comps != null && b.comps.length > 0) sp.recipe = new RegulatorCore.Recipe(sp.id, sp.name, b.tier, "", b.secret, b.comps);
+                        if (b.comps != null && b.comps.length > 0) { sp.recipe = new RegulatorCore.Recipe(sp.id, sp.name, b.tier, "", b.secret, b.comps); sp.recipe.rtol = b.rtol; }
                         out.add(sp);
                     } catch (Exception e) { toast("spell " + p.getFileName() + " failed: " + e); }
                 }
@@ -3115,14 +3118,15 @@ public class SfxLab extends JPanel {
         int[] perAxis = new int[3];
         for (RegulatorCore.Comp c : comps) perAxis[c.axis()]++;
         for (int ax = 0; ax < 3; ax++) if (perAxis[ax] > arms) return perAxis[ax] + " motions on " + RegulatorCore.AXIS[ax] + ", but only " + arms + " arms can each hold one " + RegulatorCore.AXIS[ax] + " at tier " + tier;
-        for (RegulatorCore.Comp c : comps) if (c.n() < 1 || c.n() > 7) return "ratio ×" + c.n() + " — the crank catches 1..7 (×8 cannot be caught after the slip)";
+        for (RegulatorCore.Comp c : comps) if (c.n() < 1 || c.n() > 7) return "ratio ×" + c.n() + " — ratios run 1..7 (×8 is past the crank's cap once friction has its say)";
+        for (RegulatorCore.Comp c : comps) if (c.amp() < 0.05 || c.amp() > 1) return "reach " + fmtNum5(c.amp()) + " — reach targets run 0.05..1";
         return null;
     }
     static String recipeProblem(Bench r) { return r == null || r.comps == null ? null : recipeProblem(r.tier, r.comps); }
     /** Parses recipe text; null when it holds no motions. */
     static Bench parseRecipe(String text) {
         if (text == null || text.isBlank()) return null;
-        Bench b = parseBench(List.of("recipe " + text.trim()));
+        Bench b = parseBench(List.of("recipe " + text.trim().replaceFirst("^recipe\\s+", "")));
         return b.comps != null && b.comps.length > 0 ? b : null;
     }
     /** Writes a spell's recipe (and keeps everything else in its file), then reloads the roster. */
@@ -3136,7 +3140,7 @@ public class SfxLab extends JPanel {
             for (int i = 0; i < lines.size(); i++) if (lines.get(i).trim().startsWith("name ")) { at = i + 1; break; } else if (!lines.get(i).trim().startsWith("#") && at == 0) { at = i; break; }
             lines.add(at, recipeLine(r));
             Files.write(sp.file, lines);
-            if (benchName != null && benchName.endsWith("/spells/" + sp.id + ".sfx")) { bench.comps = r.comps; bench.tier = r.tier; bench.secret = r.secret; }
+            if (benchName != null && benchName.endsWith("/spells/" + sp.id + ".sfx")) { bench.comps = r.comps; bench.tier = r.tier; bench.secret = r.secret; bench.rtol = r.rtol; }
             loadSpells();
             RegulatorCore.Recipe rc = spell(sp.id).recipe;
             String prob = recipeProblem(r);
@@ -3146,7 +3150,7 @@ public class SfxLab extends JPanel {
     }
     void recipeDialog(Spell sp, String prefill) {
         String in = (String) JOptionPane.showInputDialog(this,
-                "Recipe of " + sp.name + " (tier=N [secret=1], then motions: axis, integer ratio, phase in quarters, optional @amplitude for the blueprint):",
+                "Recipe of " + sp.name + " (tier=N [secret=1] [rtol=0.1], then motions like X3p1r0.7: axis, integer ratio, phase in quarters, reach target):",
                 "Recipe", JOptionPane.PLAIN_MESSAGE, null, null, prefill != null ? prefill : recipeText(sp.bench));
         if (in != null) setSpellRecipe(sp, in);
     }
@@ -3342,13 +3346,13 @@ public class SfxLab extends JPanel {
             if (signature) {
                 String id = name.replaceFirst("\\.sfx$", "");
                 Spell old = spell(id);
-                if (old != null) { if (bench.name == null) bench.name = old.bench.name; if (bench.comps == null) { bench.comps = old.bench.comps; bench.tier = old.bench.tier; bench.secret = old.bench.secret; } }
+                if (old != null) { if (bench.name == null) bench.name = old.bench.name; if (bench.comps == null) { bench.comps = old.bench.comps; bench.tier = old.bench.tier; bench.secret = old.bench.secret; bench.rtol = old.bench.rtol; } }
                 if (bench.comps == null) {   // a new spell: its recipe, prefilled from the machine's sigil when one is on the arms
                     String pre = machine != null && machine.frame != null && machine.frame.isVisible() ? machine.currentSigil() : "tier=1 ";
-                    String in = (String) JOptionPane.showInputDialog(this, "Recipe of the new spell " + id + " (tier=N [secret=1], then motions like X3p1 Y2p0@0.35; leave empty to add it later):",
+                    String in = (String) JOptionPane.showInputDialog(this, "Recipe of the new spell " + id + " (tier=N [secret=1] [rtol=0.1], then motions like X3p1r0.7 Y2p0; leave empty to add it later):",
                             "Recipe", JOptionPane.PLAIN_MESSAGE, null, null, pre);
                     Bench r = parseRecipe(in);
-                    if (r != null) { bench.comps = r.comps; bench.tier = r.tier; bench.secret = r.secret; }
+                    if (r != null) { bench.comps = r.comps; bench.tier = r.tier; bench.secret = r.secret; bench.rtol = r.rtol; }
                 }
                 if (bench.name == null) bench.name = id.replace('_', ' ');
             } else { bench.name = null; bench.comps = null; }
@@ -3542,9 +3546,9 @@ public class SfxLab extends JPanel {
         JPopupMenu m = new JPopupMenu();
         m.add(item("rename id…  (" + c.id + ")", () -> renameLayer(c)));
         m.addSeparator();
-        for (int on = 0; on < 3; on++) {
+        for (int on = 0; on < ON_NAMES.length; on++) {
             final int o = on;
-            JCheckBoxMenuItem it = new JCheckBoxMenuItem(on == ON_NONE ? "endless layer (a bed)" : "one-shot, fires on " + ON_NAMES[on], c.on == on);
+            JCheckBoxMenuItem it = new JCheckBoxMenuItem(on == ON_NONE ? "endless layer (a bed)" : "one-shot, fires on " + ON_NAMES[on] + (on == ON_ACCEPT ? " (the crystal takes a latched motion: the chime)" : ""), c.on == on);
             it.addActionListener(e -> { if (c.on != o) setLayerOn(c, o); });
             m.add(it);
         }
@@ -3635,6 +3639,9 @@ public class SfxLab extends JPanel {
         final JToggleButton autoB = new JToggleButton("▶ auto-play"), pauseB = new JToggleButton("pause");
         final JSlider speedS = new JSlider(5, 40, 10);
         final JCheckBox mistakesB = new JCheckBox("mistakes", true), anyB = new JCheckBox("any spell", false);
+        final JCheckBox classicB = new JCheckBox("classic crank", false);
+        final JSlider snapS = new JSlider(2, 30, 10);
+        final JLabel snapL = new JLabel();
         JFrame frame;
         final Stage stage = new Stage();
         final Crank crank = new Crank();
@@ -3643,7 +3650,7 @@ public class SfxLab extends JPanel {
         final JButton[] axB = new JButton[3];
         final JButton latchB = new JButton("Latch"), phaseB = new JButton("Phase ¼"), setpointB = new JButton("Load research setpoint"),
                       voiceB = new JButton("Voice crystal"), readB = new JButton("Read into machine");
-        final JSlider reach = new JSlider(0, 100, 70);
+        final JSlider reach = new JSlider(0, 100, 100);
         final JCheckBox driveB = new JCheckBox("drive the bench", true), valsB = new JCheckBox("show values");
         final JComboBox<String> viewBox = new JComboBox<>(new String[]{"orbit", "front", "top"});
         final java.util.List<JToggleButton> targetB = new ArrayList<>();
@@ -3691,12 +3698,12 @@ public class SfxLab extends JPanel {
                 final int k = i;
                 axB[i] = new JButton(RegulatorCore.AXIS[i] + "  off");
                 axB[i].setFont(mono);
-                axB[i].setPreferredSize(new Dimension(118, 28));
+                axB[i].setPreferredSize(new Dimension(134, 28));
                 axB[i].addActionListener(e -> { if (!core.axisLever(k)) notify("At tier " + core.target.tier + " each arm can hold " + core.target.motionsPerArm() + " motion" + (core.target.motionsPerArm() > 1 ? "s" : "") + "."); });
                 axes.add(axB[i]);
             }
             ctl.add(axes);
-            ctl.add(section("crank — drag to spin, wheel to nudge (shift: fine); it winds down and catches"));
+            ctl.add(section("crank — drag or wheel (shift: fine); latch near an integer and the crystal takes it"));
             JPanel ck = new JPanel(new FlowLayout(FlowLayout.LEFT, 6, 2));
             ck.add(crank);
             JPanel nb = new JPanel(new GridLayout(3, 1, 2, 2));
@@ -3708,6 +3715,15 @@ public class SfxLab extends JPanel {
             nb.add(up); nb.add(dn); nb.add(latchB);
             ck.add(nb);
             ctl.add(ck);
+            JPanel cm = new JPanel(new FlowLayout(FlowLayout.LEFT, 6, 0));
+            classicB.setToolTipText("the prototype's crank: it catches and holds at integer ratios. Off: friction only, and a latch within the acceptance window snaps the motion to the integer");
+            classicB.addActionListener(e -> core.classic = classicB.isSelected());
+            snapS.setPreferredSize(new Dimension(110, 20));
+            snapS.setToolTipText("acceptance window at ×1 (it narrows as 1/√n): the difficulty scaler");
+            snapS.addChangeListener(e -> { core.snapTol = snapS.getValue() / 100.0; snapLabel(); });
+            cm.add(classicB); cm.add(new JLabel("acceptance")); cm.add(snapS); cm.add(snapL);
+            snapLabel();
+            ctl.add(cm);
             ctl.add(section("trim — applies to every driven motion"));
             JPanel tr = new JPanel(new FlowLayout(FlowLayout.LEFT, 6, 2));
             phaseB.addActionListener(e -> core.phaseStep());
@@ -3765,16 +3781,14 @@ public class SfxLab extends JPanel {
             syncTarget();
             new javax.swing.Timer(33, e -> frameTick()).start();
         }
-        /** The motions on the arms as recipe text: integer ratios, phases, reach scaled so the largest is 1. */
+        /** The motions on the arms as recipe text: integer ratios, phases, and the reaches as targets. */
         String currentSigil() {
             java.util.List<RegulatorCore.Eng> eng = core.engaged();
             StringBuilder sb = new StringBuilder("tier=" + (core.target != null ? core.target.tier : 1));
             if (core.target != null && core.target.secret) sb.append(" secret=1");
-            double max = 0;
-            for (RegulatorCore.Eng e : eng) max = Math.max(max, e.amp());
             for (RegulatorCore.Eng e : eng) {
-                double amp = max > 0 ? Math.round(e.amp() / max * 20) / 20.0 : 1;
-                sb.append(' ').append("XYZ".charAt(e.axis())).append((int) Math.max(1, Math.round(e.r()))).append('p').append(e.ph()).append(amp != 1 ? "@" + fmtNum5(amp) : "");
+                double amp = Math.max(0.05, Math.min(1, Math.round(e.amp() * 20) / 20.0));   // the reach target, to 0.05
+                sb.append(' ').append("XYZ".charAt(e.axis())).append((int) Math.max(1, Math.round(e.r()))).append('p').append(e.ph()).append(amp != 1 ? "r" + fmtNum5(amp) : "");
             }
             return sb.toString();
         }
@@ -3792,6 +3806,7 @@ public class SfxLab extends JPanel {
                     "Recipe", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE) != JOptionPane.OK_OPTION) return;
             lab.setSpellRecipe(sp, text);
         }
+        void snapLabel() { snapL.setText(String.format(Locale.ROOT, "±%.3f at ×1 · ±%.3f at ×7", core.acceptWindow(1), core.acceptWindow(7))); }
         static JLabel section(String t) { JLabel l = new JLabel(t); l.setForeground(Color.GRAY); l.setBorder(BorderFactory.createEmptyBorder(6, 2, 0, 2)); return l; }
         void open() {
             if (frame == null) {
@@ -3803,7 +3818,8 @@ public class SfxLab extends JPanel {
             }
             frame.setVisible(true); frame.toFront();
         }
-        void notify(String m) { flash = m; flashUntil = System.currentTimeMillis() + 3500; }
+        void notify(String m) { notify(m, 3.5); }
+        void notify(String m, double sec) { flash = m; flashUntil = System.currentTimeMillis() + (long) (sec * 1000); }
         void syncTarget() {
             if (armB[0] == null || core.target == null) return;   // called once before the panel exists
             for (int i = 0; i < 3; i++) armB[i].setEnabled(i < core.target.arms());
@@ -3818,6 +3834,7 @@ public class SfxLab extends JPanel {
             boolean wasOn = core != null && core.powered;
             core = new RegulatorCore(rs);
             core.power(wasOn);
+            core.classic = classicB.isSelected(); core.snapTol = snapS.getValue() / 100.0;
             auto.stop(); autoB.setSelected(false);
             for (JToggleButton b : targetB) tgGroup.remove(b);
             targetB.clear(); tg.removeAll();
@@ -3862,6 +3879,8 @@ public class SfxLab extends JPanel {
                 else if (ev.startsWith("unmatch:")) { if (driving) lab.fireSpell(ev.substring(8), ON_UNLOCK); }
                 else if (ev.startsWith("discover:")) notify("Something answered that no blueprint shows: " + core.recipe(ev.substring(9)).name + ".");
                 else if (ev.startsWith("wrong:")) notify("That's the " + core.recipe(ev.substring(6)).name + " sigil. It isn't the one pinned up.");
+                else if (ev.startsWith("accept:")) { if (driving) lab.fireEvent(ON_ACCEPT, false); notify("The crystal takes ×" + ev.substring(ev.lastIndexOf(':') + 1) + ".", 1.8); }
+                else if (ev.startsWith("hold:")) notify("Held off-resonance. It beats until you re-drive it.", 2.5);
             }
             // panel state
             RegulatorCore.Motion[] ms = core.comps[core.arm];
@@ -3884,8 +3903,9 @@ public class SfxLab extends JPanel {
             else if (!core.powered) m = "Power the receiver to begin.";
             else if (core.targetEval.exact) m = "The sigil holds. Pull the voice lever to write it to the crystal.";
             else if (d > 0 && core.caught == 0) m = "At rest. Spin the crank up to drive the motion, or latch to stop it.";
-            else if (d > 0 && core.caught > 0) m = "Caught a resonance. Latch to hold it, or nudge on.";
-            else if (d > 0) m = "Spin the crank and let it wind down until it catches.";
+            else if (d > 0 && core.classic && core.caught > 0) m = "Caught a resonance. Latch to hold it, or nudge on.";
+            else if (d > 0 && !core.classic && core.acceptable(core.crankRatio()) > 0) m = "Within reach of ×" + core.acceptable(core.crankRatio()) + ". Latch and the crystal takes it.";
+            else if (d > 0) m = core.classic ? "Spin the crank and let it wind down until it catches." : "Spin the crank. Listen for the beating to slow, then latch.";
             else if (core.engaged().isEmpty()) m = "Pick an arm, pull a motion lever, then turn the crank.";
             else if (core.targetEval.score > 0.7) m = "Close. Listen for the beating to slow.";
             else m = " ";
@@ -3930,27 +3950,45 @@ public class SfxLab extends JPanel {
                 for (int i = 0; i < rec.arms(); i++) perm.add(i);
                 Collections.shuffle(perm, rng);
                 Collections.shuffle(snap, rng);
-                for (RegulatorCore.Snap sn : snap) planMotion(perm.get(sn.arm()), sn.axis(), (int) Math.round(sn.r()), sn.phase());
+                for (RegulatorCore.Snap sn : snap) planMotion(perm.get(sn.arm()), sn.axis(), (int) Math.round(sn.r()), sn.phase(), sn.amp());
                 step("holding the lock, listening", pause(3, 6), () -> {}, null, 0);
                 step("a fresh crystal", 0.5, () -> { if (core.voice() == null) core.resetComps(); planTarget(); }, null, 0);
             }
-            void planMotion(int arm, int ax, int n, int ph) {
+            void planMotion(int arm, int ax, int n, int ph, double reach) {
                 step("arm " + (arm + 1), pause(0.4, 1.0), () -> { core.selectArm(arm); armB[arm].setSelected(true); }, null, 0);
                 step("pull " + RegulatorCore.AXIS[ax], pause(0.3, 0.8), () -> core.axisLever(ax), null, 0);
-                if (rng.nextDouble() < 0.6) { double a = 0.45 + rng.nextDouble() * 0.45; step("reach", pause(0.2, 0.6), () -> core.setReach(a), null, 0); }
+                // trim first (it applies to the driven motion whatever its ratio), then spin, then latch at once:
+                // with the free crank there is no holding, so the latch has to land while the ratio is in the window
+                double a = Math.max(0.05, Math.min(1, reach + (rng.nextDouble() - 0.5) * 0.08));
+                step("reach", pause(0.2, 0.6), () -> core.setReach(a), null, 0);
+                for (int k = 0; k < ph; k++) step("phase dial", pause(0.3, 0.7), core::phaseStep, null, 0);
                 if (mistakes && rng.nextDouble() < 0.35) {
                     int wrong = n < 7 ? n + 1 : n - 1;
-                    if (wrong >= 1) { spinTo(wrong); step("that's ×" + wrong + " — listening, then correcting", pause(0.8, 2.2), () -> {}, null, 0); }
+                    if (wrong >= 1) {
+                        spinTo(wrong); latchNow();
+                        step("that's ×" + wrong + " — listening, then correcting", pause(0.8, 2.2), () -> {}, null, 0);
+                        step("re-driving it", pause(0.2, 0.5), () -> core.axisLever(ax), null, 0);   // held → driven: the crank picks up its ratio
+                    }
                 }
-                spinTo(n);
-                for (int k = 0; k < ph; k++) step("phase dial", pause(0.3, 0.7), core::phaseStep, null, 0);
-                step("latch", pause(0.4, 1.0), core::latch, null, 0);
+                spinTo(n); latchNow();
                 if (rng.nextDouble() < 0.5) step("listening", pause(0.5, 1.5), () -> {}, null, 0);
             }
+            void latchNow() { step("latch", core.classic ? pause(0.4, 1.0) : 0, core::latch, null, 0); }
             /** Spin the crank into resonance n: nudge up past the point friction brings back into the window during the
              *  slip, then let it coast in; from above, nudge down to that point. Keeps trying until it catches. */
             void spinTo(int n) {
-                // release point: after the slip's friction the crank lands inside n's window and catches
+                if (!core.classic) {   // free crank: bring the ratio just above n and let friction carry it into the window; latch follows at once
+                    double win = core.acceptWindow(n);
+                    step("spinning to ×" + n, 0.02, () -> {
+                        double r = core.crankRatio();
+                        if (r > n + 0.12) core.nudge(-1, RegulatorCore.NUDGE_WHEEL);
+                        else if (r > n + win * 0.5) core.nudge(-1, RegulatorCore.NUDGE_FINE);
+                        else if (r < n - 0.12) core.nudge(1, RegulatorCore.NUDGE_WHEEL);
+                        else if (r < n + win * 0.3) core.nudge(1, RegulatorCore.NUDGE_FINE);
+                    }, () -> Math.abs(core.crankRatio() - n) <= win * 0.6, 40);
+                    return;
+                }
+                // classic crank: a release point from which the slip's friction lands the crank inside n's window, and it catches
                 double over = n * Math.exp(RegulatorCore.FRICTION * RegulatorCore.SLIP_NUDGE) + RegulatorCore.catchWidth(n) * 0.4;
                 double w = RegulatorCore.catchWidth(n);
                 double[] st = {0, 0};   // {released (1/0), machine time since release}
@@ -4015,7 +4053,7 @@ public class SfxLab extends JPanel {
                 g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
                 int w = getWidth(), h = getHeight(), cx = w / 2, cy = h / 2, r = Math.min(w, h) / 2 - 8;
                 g.setColor(new Color(20, 14, 10)); g.fillOval(cx - r, cy - r, 2 * r, 2 * r);
-                g.setColor(core.caught > 0 ? new Color(255, 194, 122) : new Color(184, 140, 78));
+                g.setColor(core.classic && core.caught > 0 ? new Color(255, 194, 122) : new Color(184, 140, 78));
                 g.setStroke(new BasicStroke(5)); g.drawOval(cx - r, cy - r, 2 * r, 2 * r);
                 double a = Math.toRadians(core.ang - 90);
                 int hx = cx + (int) (Math.cos(a) * (r - 14)), hy = cy + (int) (Math.sin(a) * (r - 14));
@@ -4030,6 +4068,8 @@ public class SfxLab extends JPanel {
         /** The stage: receiver, arms and the ribbon (the prototype's drawStage) with the blueprint strip under it. */
         class Stage extends JPanel {
             final double[] pt = new double[3], av = new double[3];
+            static final int TRAIL = 2400;                       // ~5 s of pen at 480 samples/s: two receiver cycles
+            final double[][] trail = new double[TRAIL][3]; int trailN, trailPos; double trailTau = -1;
             Point dragAt; double dragYaw, dragPitch;
             Stage() {
                 setBackground(new Color(19, 14, 12));
@@ -4056,15 +4096,14 @@ public class SfxLab extends JPanel {
                 double tY = view == 0 ? 0.45 * Math.sin(core.tau * 0.12) + dYaw : 0, tP = view == 0 ? 0.3 + dPitch : view == 1 ? 0 : Math.PI / 2 - 0.001;
                 yaw += (tY - yaw) * 0.08; pitch += (tP - pitch) * 0.08;
                 double R = Math.min(W, H) * 0.34;
-                double extT = core.extent() + core.noise * 0.6; ext += (extT - ext) * 0.05;
+                double extT = core.extent(); ext += (extT - ext) * 0.05;
                 double u = R / ext;
                 boolean hold = core.targetEval.exact;
-                double tHead = (core.tau * 1.1) % (Math.PI * 2);
                 // arms
                 for (int i = 0; i < 3; i++) {
                     double th = Math.PI / 2 + i * 2 * Math.PI / 3;
                     double[] an = {Math.cos(th) * 1.35, -1.05, Math.sin(th) * 1.35};
-                    core.armVector(i, tHead, av);
+                    core.armPen(i, core.tau, av);
                     for (int k = 0; k < 3; k++) av[k] = av[k] / ext * 0.45;
                     double[] py = {an[0] * 0.62 + av[0], -0.35 + av[1] * 0.8, an[2] * 0.62 + av[2]};
                     double[] el = {(an[0] + py[0]) / 2 * 1.15, (an[1] + py[1]) / 2 + 0.55, (an[2] + py[2]) / 2 * 1.15};
@@ -4088,34 +4127,44 @@ public class SfxLab extends JPanel {
                     g.setColor(new Color(233, 220, 196, 140)); g.setFont(new Font(Font.SERIF, Font.ITALIC, 20));
                     String t = "The receiver is dark."; g.drawString(t, cx - g.getFontMetrics().stringWidth(t) / 2, cy + (int) (Math.min(W, H) * 0.2));
                 } else {
-                    // ribbon: two passes, glow then line, coloured by depth; gold when the sigil holds
-                    // the ribbon's segments are bucketed by depth into a few paths: 16 strokes a frame instead of 1500
-                    int N = 600, NB = 8;
-                    double[][] pts = new double[N + 1][];
-                    double zmin = 1e9, zmax = -1e9;
-                    for (int i = 0; i <= N; i++) { core.figurePoint(i / (double) N * Math.PI * 2, true, pt); pts[i] = proj(pt, u, W, H); zmin = Math.min(zmin, pts[i][2]); zmax = Math.max(zmax, pts[i][2]); }
-                    double zr = Math.max(1e-3, zmax - zmin);
+                    // the pen: its path since the last frame is sub-sampled into a ring of positions that fade with
+                    // age. Integer ratios retrace one figure; a detuned motion precesses it, slowing as it is tuned in.
+                    if (trailTau < 0 || core.tau < trailTau) { trailTau = core.tau; trailN = 0; trailPos = 0; }
+                    int sub = Math.max(1, Math.min(64, (int) Math.ceil((core.tau - trailTau) * 480)));
+                    for (int k = 1; k <= sub; k++) {
+                        core.pen(trailTau + (core.tau - trailTau) * k / sub, pt);
+                        double[] t3 = trail[trailPos]; t3[0] = pt[0]; t3[1] = pt[1]; t3[2] = pt[2];
+                        trailPos = (trailPos + 1) % TRAIL; trailN = Math.min(TRAIL, trailN + 1);
+                    }
+                    trailTau = core.tau;
+                    int NB = 8;
                     java.awt.geom.Path2D.Float[] paths = new java.awt.geom.Path2D.Float[NB];
-                    for (int i = 0; i < N; i++) {
-                        int b = Math.min(NB - 1, (int) ((pts[i][2] - zmin) / zr * NB));
-                        if (paths[b] == null) paths[b] = new java.awt.geom.Path2D.Float();
-                        paths[b].moveTo(pts[i][0], pts[i][1]); paths[b].lineTo(pts[i + 1][0], pts[i + 1][1]);
+                    double[] prev = null, head = null;
+                    for (int i = 0; i < trailN; i++) {
+                        double[] q = proj(trail[(trailPos - trailN + i + TRAIL) % TRAIL], u, W, H);
+                        if (prev != null) {
+                            int b = Math.min(NB - 1, i * NB / trailN);   // age bucket: 0 oldest, NB-1 newest
+                            if (paths[b] == null) paths[b] = new java.awt.geom.Path2D.Float();
+                            paths[b].moveTo(prev[0], prev[1]); paths[b].lineTo(q[0], q[1]);
+                        }
+                        prev = q; head = q;
                     }
                     for (int pass = 0; pass < 2; pass++) {
-                        g.setStroke(new BasicStroke((float) (pass == 1 ? 1.4 + flashV * 2 : 6 + flashV * 8), BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+                        g.setStroke(new BasicStroke((float) (pass == 1 ? 1.5 + flashV * 2 : 6 + flashV * 8), BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
                         for (int b = 0; b < NB; b++) {
                             if (paths[b] == null) continue;
-                            double dz = (b + 0.5) / NB;
-                            float hue = (float) ((hold ? 40 + dz * 8 : 14 + dz * 28) / 360), light = (float) ((hold ? 70 - dz * 10 : 58 - dz * 16) / 100);
-                            double al = (pass == 1 ? 0.85 : 0.07) * (1 - dz * 0.55) * (hold ? 1.15 : 1);
-                            Color c = Color.getHSBColor(hue, 1f, Math.min(1f, light * 1.3f));
+                            double age = (b + 0.5) / NB;   // 1 = freshest
+                            Color c = hold ? new Color(255, 214, 110) : new Color(255, 150, 70);
+                            double al = (pass == 1 ? 0.95 : 0.09) * age * age * (hold ? 1.1 : 1);
                             g.setColor(new Color(c.getRed(), c.getGreen(), c.getBlue(), (int) (255 * Math.min(1, al))));
                             g.draw(paths[b]);
                         }
                     }
-                    core.figurePoint(tHead, true, pt);
-                    double[] hp = proj(pt, u, W, H);
-                    g.setColor(new Color(255, 240, 210, 220)); g.fillOval((int) hp[0] - 4, (int) hp[1] - 4, 8, 8);
+                    if (head != null) {   // the orb
+                        int hx = (int) head[0], hy = (int) head[1];
+                        g.setColor(new Color(255, 200, 120, 70)); g.fillOval(hx - 11, hy - 11, 22, 22);
+                        g.setColor(new Color(255, 240, 210, 235)); g.fillOval(hx - 5, hy - 5, 10, 10);
+                    }
                     if (flashV > 0) { g.setColor(new Color(255, 200, 140, (int) (flashV * 64))); g.fillRect(0, 0, W, H); }
                 }
                 // blueprint strip: front (X right, Y up) and top (X right, +Z toward the bottom); static per
@@ -5135,7 +5184,7 @@ public class SfxLab extends JPanel {
                 case "vlink" -> c.vlink = val.equals("1");
                 case "keyed" -> c.keyed = Integer.parseInt(val) & KEY_BOTH;
                 case "id" -> c.id = val;
-                case "on" -> c.on = val.equals("lock") ? ON_LOCK : val.equals("unlock") ? ON_UNLOCK : ON_NONE;
+                case "on" -> c.on = val.equals("lock") ? ON_LOCK : val.equals("unlock") ? ON_UNLOCK : val.equals("accept") ? ON_ACCEPT : ON_NONE;
                 case "mute" -> c.lmute = val.equals("1");
                 default -> {
                     int pi = idxOf(type, k);
@@ -6488,7 +6537,7 @@ class RegulatorCore {
     static final double NUDGE_WHEEL = 0.05, NUDGE_FINE = 0.01, NUDGE_BUTTON = 0.125;   // vel steps: ratio ±0.1, ±0.02, ±0.25
     static final double ENGAGE_AMP = 0.04, ENGAGE_R = 0.05;
     static final double SETPOINT_JITTER = 0.2, SOCKET_JITTER = 0.035;
-    static final double DEFAULT_REACH = 0.7;
+    static final double DEFAULT_REACH = 1.0;   // a pulled lever starts at full reach: recipes target 1 unless they say otherwise
     static final int[][] TIERS = {{2, 1}, {3, 2}, {3, 3}};   // tier 1..3 -> {arms, motions per arm}
     static final String[] AXIS = {"X", "Y", "Z"};
     static final String[] PHASE = {"0", "¼", "½", "¾"};
@@ -6499,10 +6548,13 @@ class RegulatorCore {
     static final int S_RATIO = 0, S_REACH = 3, S_RADIANCE = 6, S_CONSONANCE = 7, S_TENSION = 8, S_DRIVE = 9, S_COHERENCE = 10, S_SCORE = 11;
 
     // ---- recipes
-    /** One motion of a recipe: axis (0 X, 1 Y, 2 Z), integer ratio, phase in quarter cycles, drawing amplitude. */
+    /** One motion of a recipe: axis (0 X, 1 Y, 2 Z), integer ratio, phase in quarter cycles, and the reach target
+     *  (amp): the blueprint is drawn with it and a match needs the motion's reach within the recipe's rtol of it. */
     record Comp(int axis, int n, int phase, double amp) {}
+    static final double DEFAULT_RTOL = 0.1;
     static final class Recipe {
         final String id, name, reward; final int tier; final boolean secret; final Comp[] comps;
+        double rtol = DEFAULT_RTOL;   // reach tolerance: |reach − amp| ≤ rtol counts
         private java.util.List<Comp[]> variants;
         Recipe(String id, String name, int tier, String reward, boolean secret, Comp... comps) {
             this.id = id; this.name = name; this.tier = tier; this.reward = reward; this.secret = secret; this.comps = comps;
@@ -6554,10 +6606,13 @@ class RegulatorCore {
     int arm;                       // the selected arm the axis levers act on
     boolean powered;
     double vel, ang, slip;         // crank: rev/s, degrees, seconds of slip left
-    int caught = -1;               // -1 free, 0 at rest, n = caught at integer n
+    int caught = -1;               // -1 free, 0 at rest; classic crank: n = caught at integer n
     boolean drag;
-    double tau;                    // machine time in seconds (the figure's roll term)
-    double noise = 1;              // ribbon noise level, smoothed (1 = dark receiver)
+    double tau;                    // machine time in seconds (drives the pen)
+    /** classic: the prototype's crank, which catches and holds at integer ratios. Default is the free crank: friction
+     *  only, and the crystal accepts a motion when it is latched within snapTol/√n of integer n, snapping it there. */
+    boolean classic;
+    double snapTol = 0.1;          // the acceptance window at ×1 (the difficulty scaler); narrower for higher ratios
     final java.util.Map<String, Eval> eval = new java.util.LinkedHashMap<>();
     Eval targetEval = new Eval();
     final double[] signals = new double[SIGNALS.length];
@@ -6595,7 +6650,11 @@ class RegulatorCore {
     void dragVelocity(double revPerSec) { if (!drag) return; double v = Math.max(-MAX_VEL, Math.min(MAX_VEL, revPerSec)); vel += (v - vel) * DRAG_SMOOTH; }
     void dragEnd() { drag = false; slip = SLIP_DRAG; }
     /** Loads a held motion's ratio into the crank (held → driven with no others driven). */
-    void loadCrank(double r) { vel = r / 2; slip = 0; int n = (int) Math.round(r); caught = Math.abs(r - n) < 1e-6 ? n : -1; }
+    void loadCrank(double r) { vel = r / 2; slip = 0; int n = (int) Math.round(r); caught = classic && Math.abs(r - n) < 1e-6 ? n : -1; }
+    /** Free crank: how close to integer n a latched ratio must be for the crystal to take it. */
+    double acceptWindow(int n) { return snapTol / Math.sqrt(n); }
+    /** Free crank: the integer this ratio would be accepted as on latch, or -1. */
+    int acceptable(double r) { int n = (int) Math.round(r); return n >= 1 && n <= MAX_N && Math.abs(r - n) <= acceptWindow(n) ? n : -1; }
     void updateCrank(double dt) {
         slip = Math.max(0, slip - dt);
         if (!drag) {
@@ -6605,7 +6664,7 @@ class RegulatorCore {
                 vel *= Math.exp(-dt * REST_RATE);
                 if (Math.abs(vel) < 5e-4) vel = 0;
                 caught = 0;
-            } else if (slip <= 0 && n >= 1 && n <= MAX_N && Math.abs(r - n) < catchWidth(n)) {
+            } else if (classic && slip <= 0 && n >= 1 && n <= MAX_N && Math.abs(r - n) < catchWidth(n)) {
                 double tv = sg * n / 2;
                 vel += (tv - vel) * Math.min(1, dt * CATCH_RATE);
                 if (Math.abs(vel - tv) < 2e-4) vel = tv;
@@ -6627,10 +6686,16 @@ class RegulatorCore {
     boolean selectArm(int i) { if (target == null || i < 0 || i >= target.arms()) return false; arm = i; return true; }
     void setTarget(Recipe r) { target = r; resetComps(); arm = 0; }
     void power(boolean on) { powered = on; }
-    private void snapIfCaught(Motion c) { if (caught >= 0) c.r = caught; }
-    /** driven → held; a motion held at rest is switched off (that is how motions are released). */
-    private boolean holdOrStop(Motion c) {
-        snapIfCaught(c);
+    /** driven → held; a motion held at rest is switched off (that is how motions are released). Classic crank: a
+     *  caught ratio is written exactly. Free crank: a ratio within the acceptance window snaps to the integer (the
+     *  crystal answers: event accept:<arm>:<axis>:<n>), anything else is held detuned (event hold:<arm>:<axis>). */
+    private boolean holdOrStop(Motion c, int arm, int ax) {
+        if (classic) { if (caught >= 0) c.r = caught; }
+        else if (c.r >= REST_R) {
+            int n = acceptable(c.r);
+            if (n > 0) { c.r = n; events.add("accept:" + arm + ":" + ax + ":" + n); }
+            else events.add("hold:" + arm + ":" + ax);
+        } else c.r = 0;
         c.drv = false;
         if (c.r < 1e-6) { c.eng = false; c.r = 0; return true; }
         return false;
@@ -6647,7 +6712,7 @@ class RegulatorCore {
             c.eng = true; c.drv = true; c.ph = 0; c.amp = DEFAULT_REACH;
             if (others > 0) c.r = crankRatio(); else { c.r = 0; loadCrank(0); }
         } else if (c.drv) {
-            if (holdOrStop(c)) events.add("stopped:" + arm + ":" + ax);
+            if (holdOrStop(c, arm, ax)) events.add("stopped:" + arm + ":" + ax);
         } else {
             c.drv = true;
             if (others > 0) c.r = crankRatio(); else loadCrank(c.r);
@@ -6659,7 +6724,7 @@ class RegulatorCore {
         int stopped = 0;
         for (int a = 0; a < ARMS; a++) for (int x = 0; x < AXES; x++) {
             Motion c = comps[a][x];
-            if (c.eng && c.drv && holdOrStop(c)) { stopped++; events.add("stopped:" + a + ":" + x); }
+            if (c.eng && c.drv && holdOrStop(c, a, x)) { stopped++; events.add("stopped:" + a + ":" + x); }
         }
         return stopped;
     }
@@ -6680,7 +6745,8 @@ class RegulatorCore {
         }
         return out;
     }
-    static Eval evalOnce(Comp[] comps, java.util.List<Eng> eng) {
+    static Eval evalOnce(Comp[] comps, java.util.List<Eng> eng) { return evalOnce(comps, eng, DEFAULT_RTOL); }
+    static Eval evalOnce(Comp[] comps, java.util.List<Eng> eng, double rtol) {
         boolean[] used = new boolean[eng.size()];
         double sum = 0; boolean exact = true; int nUsed = 0;
         for (Comp t : comps) {
@@ -6689,8 +6755,9 @@ class RegulatorCore {
                 Eng e = eng.get(i);
                 if (used[i] || e.axis != t.axis) continue;
                 double d = Math.abs(e.r - t.n);
-                double s = Math.exp(-d * 5) * (e.ph == t.phase ? 1 : 0.5);
-                if (s > bs) { bs = s; best = i; bx = d < 1e-6 && e.ph == t.phase; }
+                boolean reachOk = Math.abs(e.amp - t.amp) <= rtol + 1e-9;
+                double s = Math.exp(-d * 5) * (e.ph == t.phase ? 1 : 0.5) * (reachOk ? 1 : 0.7);
+                if (s > bs) { bs = s; best = i; bx = d < 1e-6 && e.ph == t.phase && reachOk; }
             }
             if (best >= 0) { used[best] = true; nUsed++; sum += bs; if (!bx) exact = false; }
             else exact = false;
@@ -6706,7 +6773,7 @@ class RegulatorCore {
     static Eval evaluate(Recipe rec, java.util.List<Eng> eng) {
         Eval best = new Eval();
         for (Comp[] cs : rec.variants()) {
-            Eval e = evalOnce(cs, eng);
+            Eval e = evalOnce(cs, eng, rec.rtol);
             if (e.exact) return e;
             if (e.score > best.score) best = e;
         }
@@ -6732,9 +6799,6 @@ class RegulatorCore {
         }
         targetEval = target != null ? eval.get(target.id) : new Eval();
         computeSignals(eng);
-        double coh = signals[S_COHERENCE];
-        double noiseT = powered ? (targetEval.exact ? 0 : 0.015 + (eng.isEmpty() ? 0.45 : 0.12) * (1 - coh)) : 0;
-        noise += (noiseT - noise) * (1 - Math.exp(-dt * 3.7));   // the prototype's 0.06 per 60 Hz frame
     }
     void computeSignals(java.util.List<Eng> eng) {
         java.util.Arrays.fill(signals, 0);
@@ -6767,41 +6831,32 @@ class RegulatorCore {
     double pitch(int arm) { return pitchOf(signals[S_RATIO + arm]); }
     static double pitchOf(double ratio) { if (ratio <= 0.05) return 0; double st = 12 * Math.log(ratio) / Math.log(2); return ((st % 12) + 12) % 12; }
 
-    // ---- the figure (§3.3)
-    /** The sigil at trace position t ∈ [0, 2π): the sum of every engaged motion per axis. Off-integer motions
-     *  roll with tau (the oscilloscope behaviour). Adds the receiver's noise (scaled by `noise`) when asked. */
-    void figurePoint(double t, boolean withNoise, double[] out) {
+    // ---- the figure (§3.3, revised): a pen. The receiver's own cycle takes DRAW_PERIOD seconds of machine time;
+    // every motion oscillates at its ratio times that, so integer ratios retrace one closed figure and a detuned
+    // motion makes the trace precess at a rate proportional to the detune, slowing to a stop as it is tuned in.
+    static final double DRAW_PERIOD = 2.5, DRAW_RATE = 2 * Math.PI / DRAW_PERIOD;
+    /** The pen's position at machine time tauAt. */
+    void pen(double tauAt, double[] out) {
         out[0] = out[1] = out[2] = 0;
         for (Motion[] a : comps) for (int ax = 0; ax < AXES; ax++) {
             Motion c = a[ax];
             if (!c.eng) continue;
-            double d = c.r - Math.round(c.r);
-            out[ax] += c.amp * Math.min(1, c.r / 0.6) * Math.sin(c.r * t + c.ph * Math.PI / 2 + d * tau * 4.4);
-        }
-        if (withNoise && noise > 0) for (int ax = 0; ax < AXES; ax++) {
-            double s = 0;
-            for (double[] z : NZ[ax]) s += Math.sin(z[0] * t + z[1] + z[2] * tau);
-            out[ax] += noise * s / 4;
+            out[ax] += c.amp * Math.min(1, c.r / 0.6) * Math.sin(c.r * DRAW_RATE * tauAt + c.ph * Math.PI / 2);
         }
     }
-    /** One arm's own contribution (for drawing the arm heads). */
-    void armVector(int arm, double t, double[] out) {
+    /** One arm's own contribution to the pen (for drawing the arm heads). */
+    void armPen(int arm, double tauAt, double[] out) {
         out[0] = out[1] = out[2] = 0;
         for (int ax = 0; ax < AXES; ax++) {
             Motion c = comps[arm][ax];
             if (!c.eng) continue;
-            double d = c.r - Math.round(c.r);
-            out[ax] += c.amp * Math.min(1, c.r / 0.6) * Math.sin(c.r * t + c.ph * Math.PI / 2 + d * tau * 4.4);
+            out[ax] += c.amp * Math.min(1, c.r / 0.6) * Math.sin(c.r * DRAW_RATE * tauAt + c.ph * Math.PI / 2);
         }
     }
+    /** The figure's shape at one instant, over one receiver cycle t ∈ [0, 2π) (closed only for integer ratios). */
+    void figurePoint(double t, double[] out) { pen(t / DRAW_RATE, out); }
     /** Per-axis extent of the engaged motions (summed reach), floored at 0.7 like the prototype's stage. */
     double extent() { double m = 0.7; for (int ax = 0; ax < AXES; ax++) { double s = 0; for (Motion[] a : comps) if (a[ax].eng) s += a[ax].amp; m = Math.max(m, s); } return m; }
-    /** The receiver's noise: four jagged sinusoids per axis, fixed so every client draws the same ribbon. */
-    static final double[][][] NZ = new double[AXES][4][];
-    static {
-        java.util.Random r = new java.util.Random(7);
-        for (int ax = 0; ax < AXES; ax++) for (int i = 0; i < 4; i++) NZ[ax][i] = new double[]{9 + r.nextInt(26), r.nextDouble() * 6.28, (r.nextDouble() - 0.5) * 3};
-    }
 
     // ---- the blueprint (§3.6): a damped harmonograph trace of the recipe
     static final int BP_FRONT = 0, BP_TOP = 1, BP_POINTS = 2401;
@@ -6854,7 +6909,7 @@ class RegulatorCore {
         java.util.List<Snap> snap = new java.util.ArrayList<>();
         for (Comp cp : rec.comps)
             for (int a = 0; a < arms; a++)
-                if (load[a] < per && !used[a * 3 + cp.axis]) { used[a * 3 + cp.axis] = true; load[a]++; snap.add(new Snap(a, cp.axis, cp.n, cp.phase, Math.max(0.35, cp.amp * 0.8))); break; }
+                if (load[a] < per && !used[a * 3 + cp.axis]) { used[a * 3 + cp.axis] = true; load[a]++; snap.add(new Snap(a, cp.axis, cp.n, cp.phase, cp.amp)); break; }
         return snap;
     }
     /** Loads motions with ratios jittered by ±jit·(0.5..1) (never below 0.5), every motion held; with phaseErr one

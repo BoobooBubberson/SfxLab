@@ -194,7 +194,8 @@ position) that all sound at once, steered by the machine's signals through
 `bind` lines, with per-param `range` marks that turn listening notes into
 the bind ranges, and signatures in `spells/` that blend in with the score.
 `J` docks the scrubber panel; `U` opens the machine (RegulatorCore with the
-prototype's controls) which drives those signals live. Details and the file format are in
+prototype's controls) which drives those signals live. A layer marked
+`on=accept` fires when the crystal takes a latched motion: the chime. Details and the file format are in
 `docs/HARMONIC-REGULATOR.md` §5.3; the engine side is a per-clip `mod` array
 added to the params through a 30 ms smoother (`Voice.effective`), which
 ordinary timeline clips never use, so old renders stay byte-identical.
