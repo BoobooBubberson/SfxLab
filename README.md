@@ -121,7 +121,9 @@ the machine's signals rather than by time. **H** swaps the timeline for that ben
   `RegulatorCore`, with the pen's trail and the pinned blueprint. The crank only winds
   down; latching within the acceptance window snaps a motion to its integer ratio
   (the `on=accept` chime hook), outside it the motion is held detuned and beats.
-  The prototype's catching crank is there as a toggle. With "drive the bench"
+  Levers down are the motions the trim controls reach and the crank couples to when
+  touched; latch snaps them and lets the crank go; a lever up parks its motion. The
+  prototype's catching crank and the earlier focus model are there as toggles. With "drive the bench"
   on, its signals replace the panel's sliders and every spell's match fires that
   spell's one-shots, so the puzzle is played and the palette answers. **Auto-play**
   works the controls toward the pinned spell along a randomised path, with optional

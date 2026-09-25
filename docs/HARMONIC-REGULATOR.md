@@ -443,9 +443,41 @@ toggle for comparison.
   prototype's roll term and noise term are gone; `figurePoint` still gives
   the shape over one cycle for the degeneracy check.
 
+Two follow-ups from playing it:
+
+- **Trim acts on the focused motion.** With no holding crank, a motion
+  has to be latched before its phase and reach can be judged, so trim no
+  longer needs a driven motion: the phase dial and the reach control act on
+  the focused motion of the selected arm, the last lever pressed there
+  (shift-click or right-click a lever to focus it without changing it),
+  driven or held. The doc's "trim applies to every driven motion" is
+  withdrawn; ganged trim was a convenience of the catching crank.
+- **Each motion runs its own oscillator.** The pen used sin(r·ω·τ)
+  directly, so a nudged ratio jumped the angle by radians and the trace
+  went jagged while cranking. Every motion now accumulates its angle at its
+  current rate (frequency modulation, so the trace bends), and a motion
+  held exactly on an integer eases into alignment with the receiver over
+  about a second, which is what makes the dial's quarters mean the same
+  thing as in the blueprint. `figurePoint` still gives the phase-locked
+  shape for the degeneracy check.
+
+**Coupled levers (the current default, an experiment).** The focus model
+needed a gesture to trim a held motion. The lever now says it: a lever down
+makes its motion *active*, and the trim controls act on every active
+motion; touching the crank couples it to all of them, at the speed of the
+slowest one already turning (a fresh motion still at rest joins at the
+crank's speed instead of dragging the others to zero); latch snaps every
+coupled motion within its window, holds the rest detuned, and lets go of
+the crank without moving a lever. A lever up *parks* its motion, which
+keeps running at its latched speed but ignores trim and crank, and a
+motion parked at rest switches off. The lever positions are then an exact
+readout of what the controls reach. Both models are in the machine
+("coupled levers" toggle) so they can be compared by play.
+
 The auto-player trims first (reach, phase), spins to just above the target
 and latches as friction carries the ratio through the window, which is
-also the human technique.
+also the human technique; under coupled levers it parks each motion after
+accepting it.
 
 ## 7. Open questions
 

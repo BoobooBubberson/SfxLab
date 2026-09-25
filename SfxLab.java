@@ -3639,7 +3639,7 @@ public class SfxLab extends JPanel {
         final JToggleButton autoB = new JToggleButton("▶ auto-play"), pauseB = new JToggleButton("pause");
         final JSlider speedS = new JSlider(5, 40, 10);
         final JCheckBox mistakesB = new JCheckBox("mistakes", true), anyB = new JCheckBox("any spell", false);
-        final JCheckBox classicB = new JCheckBox("classic crank", false);
+        final JCheckBox classicB = new JCheckBox("classic crank", false), couplingB = new JCheckBox("coupled levers", true);
         final JSlider snapS = new JSlider(2, 30, 10);
         final JLabel snapL = new JLabel();
         JFrame frame;
@@ -3659,7 +3659,7 @@ public class SfxLab extends JPanel {
         final JTextArea status = new JTextArea(2, 30);
         final JTextArea vals = new JTextArea(8, 30);
         String flash; long flashUntil;
-        long lastNs; double flashV; int frameNo;
+        long lastNs; double flashV; int frameNo; boolean reachByUser;
         double yaw, pitch = 0.35, dYaw, dPitch, ext = 1;
 
         Machine(SfxLab lab) {
@@ -3699,7 +3699,12 @@ public class SfxLab extends JPanel {
                 axB[i] = new JButton(RegulatorCore.AXIS[i] + "  off");
                 axB[i].setFont(mono);
                 axB[i].setPreferredSize(new Dimension(134, 28));
-                axB[i].addActionListener(e -> { if (!core.axisLever(k)) notify("At tier " + core.target.tier + " each arm can hold " + core.target.motionsPerArm() + " motion" + (core.target.motionsPerArm() > 1 ? "s" : "") + "."); });
+                axB[i].setToolTipText("coupled levers: down = active (trim, crank), up = parked (keeps its speed) or off at rest. Focus model: off → driven → held → driven; shift-click focuses");
+                axB[i].addActionListener(e -> {
+                    if (!core.coupling && (e.getModifiers() & ActionEvent.SHIFT_MASK) != 0) { if (!core.focusAxis(k)) notify("Nothing to trim there: that motion is off."); return; }
+                    if (!core.axisLever(k)) notify("At tier " + core.target.tier + " each arm can hold " + core.target.motionsPerArm() + " motion" + (core.target.motionsPerArm() > 1 ? "s" : "") + ".");
+                });
+                axB[i].addMouseListener(new MouseAdapter() { @Override public void mousePressed(MouseEvent e) { if (SwingUtilities.isRightMouseButton(e)) { if (!core.focusAxis(k)) Machine.this.notify("Nothing to trim there: that motion is off."); } } });
                 axes.add(axB[i]);
             }
             ctl.add(axes);
@@ -3721,14 +3726,18 @@ public class SfxLab extends JPanel {
             snapS.setPreferredSize(new Dimension(110, 20));
             snapS.setToolTipText("acceptance window at ×1 (it narrows as 1/√n): the difficulty scaler");
             snapS.addChangeListener(e -> { core.snapTol = snapS.getValue() / 100.0; snapLabel(); });
-            cm.add(classicB); cm.add(new JLabel("acceptance")); cm.add(snapS); cm.add(snapL);
+            couplingB.setToolTipText("on: a lever down is active (trim reaches it, the crank couples to it when touched); latch snaps and decouples; lever up parks the motion. Off: the focus model (each lever drives / holds its motion; shift-click focuses)");
+            couplingB.addActionListener(e -> { core.coupling = couplingB.isSelected(); trimL.setText(trimText()); });
+            cm.add(classicB); cm.add(couplingB); cm.add(new JLabel("acceptance")); cm.add(snapS); cm.add(snapL);
             snapLabel();
             ctl.add(cm);
-            ctl.add(section("trim — applies to every driven motion"));
+            trimL = section(trimText());
+            ctl.add(trimL);
             JPanel tr = new JPanel(new FlowLayout(FlowLayout.LEFT, 6, 2));
             phaseB.addActionListener(e -> core.phaseStep());
             reach.setPreferredSize(new Dimension(140, 20));
-            reach.addChangeListener(e -> core.setReach(reach.getValue() / 100.0));
+            reach.addChangeListener(e -> { if (reach.getValueIsAdjusting() || reachByUser) core.setReach(reach.getValue() / 100.0); });
+            reach.addMouseListener(new MouseAdapter() { @Override public void mousePressed(MouseEvent e) { reachByUser = true; } @Override public void mouseReleased(MouseEvent e) { reachByUser = false; } });
             tr.add(phaseB); tr.add(new JLabel("reach")); tr.add(reach);
             ctl.add(tr);
             ctl.add(section("research station · shelf"));
@@ -3806,6 +3815,8 @@ public class SfxLab extends JPanel {
                     "Recipe", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE) != JOptionPane.OK_OPTION) return;
             lab.setSpellRecipe(sp, text);
         }
+        JLabel trimL;
+        String trimText() { return core.coupling ? "trim — every lever that is down (active); the crank couples to them when touched, latch snaps them and lets go" : "trim — the focused motion (▸): the last lever pressed on this arm; shift-click a lever to focus it"; }
         void snapLabel() { snapL.setText(String.format(Locale.ROOT, "±%.3f at ×1 · ±%.3f at ×7", core.acceptWindow(1), core.acceptWindow(7))); }
         static JLabel section(String t) { JLabel l = new JLabel(t); l.setForeground(Color.GRAY); l.setBorder(BorderFactory.createEmptyBorder(6, 2, 0, 2)); return l; }
         void open() {
@@ -3813,7 +3824,7 @@ public class SfxLab extends JPanel {
                 frame = new JFrame("Harmonic Regulator — the machine");
                 frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
                 frame.add(this);
-                frame.setSize(1180, 720);
+                frame.setSize(1180, 820);
                 frame.setLocationByPlatform(true);
             }
             frame.setVisible(true); frame.toFront();
@@ -3834,7 +3845,7 @@ public class SfxLab extends JPanel {
             boolean wasOn = core != null && core.powered;
             core = new RegulatorCore(rs);
             core.power(wasOn);
-            core.classic = classicB.isSelected(); core.snapTol = snapS.getValue() / 100.0;
+            core.classic = classicB.isSelected(); core.coupling = couplingB.isSelected(); core.snapTol = snapS.getValue() / 100.0;
             auto.stop(); autoB.setSelected(false);
             for (JToggleButton b : targetB) tgGroup.remove(b);
             targetB.clear(); tg.removeAll();
@@ -3886,13 +3897,20 @@ public class SfxLab extends JPanel {
             RegulatorCore.Motion[] ms = core.comps[core.arm];
             for (int i = 0; i < 3; i++) {
                 RegulatorCore.Motion m = ms[i];
-                axB[i].setText(RegulatorCore.AXIS[i] + "  " + (!m.eng ? "off" : m.drv ? "driven" : String.format(Locale.ROOT, "held ×%.2f", m.r)));
-                axB[i].setForeground(!m.eng ? Color.GRAY : m.drv ? new Color(200, 120, 40) : new Color(230, 190, 120));
+                if (core.coupling) {
+                    axB[i].setText((m.eng && m.act ? "▾" : " ") + RegulatorCore.AXIS[i] + " " + (!m.eng ? "off" : m.act ? (m.drv ? "⟳ " : "") + String.format(Locale.ROOT, "×%.2f", m.r) : String.format(Locale.ROOT, "parked ×%.2f", m.r)));
+                    axB[i].setForeground(!m.eng ? Color.GRAY : m.act ? (m.drv ? new Color(200, 120, 40) : new Color(230, 190, 120)) : new Color(150, 150, 150));
+                } else {
+                    boolean foc = core.focus[core.arm] == i && m.eng;
+                    axB[i].setText((foc ? "▸" : " ") + RegulatorCore.AXIS[i] + " " + (!m.eng ? "off" : m.drv ? "driven" : String.format(Locale.ROOT, "held ×%.2f", m.r)));
+                    axB[i].setForeground(!m.eng ? Color.GRAY : m.drv ? new Color(200, 120, 40) : new Color(230, 190, 120));
+                }
             }
             for (int i = 0; i < 3; i++) if (armB[i].isSelected() != (i == core.arm)) armB[i].setSelected(i == core.arm);
             int d = core.drivenCount();
-            latchB.setEnabled(d > 0); phaseB.setEnabled(d > 0); reach.setEnabled(d > 0);
-            RegulatorCore.Motion fd = core.firstDriven();
+            java.util.List<RegulatorCore.Motion> tr = core.trimmed();
+            RegulatorCore.Motion fd = tr.isEmpty() ? null : tr.get(0);
+            latchB.setEnabled(d > 0); phaseB.setEnabled(fd != null); reach.setEnabled(fd != null);
             if (fd != null && !reach.getValueIsAdjusting()) { int v = (int) Math.round(fd.amp * 100); if (reach.getValue() != v) reach.setValue(v); }
             voiceB.setEnabled(core.targetEval.exact && core.powered);
             readB.setEnabled(!core.voiced().isEmpty());
@@ -3902,6 +3920,7 @@ public class SfxLab extends JPanel {
             else if (System.currentTimeMillis() < flashUntil) m = flash;
             else if (!core.powered) m = "Power the receiver to begin.";
             else if (core.targetEval.exact) m = "The sigil holds. Pull the voice lever to write it to the crystal.";
+            else if (core.coupling && d == 0 && core.activeCount() > 0) m = core.activeCount() + " lever" + (core.activeCount() > 1 ? "s" : "") + " down. Trim them, then scroll the crank to drive them.";
             else if (d > 0 && core.caught == 0) m = "At rest. Spin the crank up to drive the motion, or latch to stop it.";
             else if (d > 0 && core.classic && core.caught > 0) m = "Caught a resonance. Latch to hold it, or nudge on.";
             else if (d > 0 && !core.classic && core.acceptable(core.crankRatio()) > 0) m = "Within reach of ×" + core.acceptable(core.crankRatio()) + ". Latch and the crystal takes it.";
@@ -3967,11 +3986,12 @@ public class SfxLab extends JPanel {
                     if (wrong >= 1) {
                         spinTo(wrong); latchNow();
                         step("that's ×" + wrong + " — listening, then correcting", pause(0.8, 2.2), () -> {}, null, 0);
-                        step("re-driving it", pause(0.2, 0.5), () -> core.axisLever(ax), null, 0);   // held → driven: the crank picks up its ratio
+                        if (!core.coupling) step("re-driving it", pause(0.2, 0.5), () -> core.axisLever(ax), null, 0);   // focus model: held → driven; coupled model: the next scroll couples
                     }
                 }
                 spinTo(n); latchNow();
                 if (rng.nextDouble() < 0.5) step("listening", pause(0.5, 1.5), () -> {}, null, 0);
+                if (core.coupling) step("lever up (parked)", pause(0.2, 0.5), () -> { core.selectArm(arm); if (core.comps[arm][ax].act) core.axisLever(ax); }, null, 0);
             }
             void latchNow() { step("latch", core.classic ? pause(0.4, 1.0) : 0, core::latch, null, 0); }
             /** Spin the crank into resonance n: nudge up past the point friction brings back into the window during the
@@ -4026,7 +4046,7 @@ public class SfxLab extends JPanel {
         class Crank extends JComponent {
             double lastA; long lastT;
             Crank() {
-                setPreferredSize(new Dimension(150, 150));
+                setPreferredSize(new Dimension(150, 150)); setMinimumSize(new Dimension(150, 150));
                 setFocusable(true);
                 MouseAdapter m = new MouseAdapter() {
                     double ang(MouseEvent e) { return Math.atan2(e.getY() - getHeight() / 2.0, e.getX() - getWidth() / 2.0); }
@@ -6595,13 +6615,14 @@ class RegulatorCore {
 
     // ---- machine state
     /** One arm × axis motion. off: !eng. driven: eng && drv (follows the crank and trim). held: eng && !drv. */
-    static final class Motion { boolean eng, drv; double r = 1, amp = DEFAULT_REACH; int ph; }
+    static final class Motion { boolean eng, drv, act; double r = 1, amp = DEFAULT_REACH; int ph; double osc; }   // act: the lever is down (coupled-lever model)   // osc: the motion's own accumulated angle (radians), so a changing ratio bends the trace instead of jumping it
     /** A saved motion (voiced crystals, the copy socket). */
     record Snap(int arm, int axis, double r, int phase, double amp) {}
     static final class Eval { double score; boolean exact; }
 
     final Recipe[] recipes;
     final Motion[][] comps = new Motion[ARMS][AXES];
+    final int[] focus = {-1, -1, -1};   // per arm: the axis the trim controls act on (the last lever pressed there)
     Recipe target;
     int arm;                       // the selected arm the axis levers act on
     boolean powered;
@@ -6612,6 +6633,11 @@ class RegulatorCore {
     /** classic: the prototype's crank, which catches and holds at integer ratios. Default is the free crank: friction
      *  only, and the crystal accepts a motion when it is latched within snapTol/√n of integer n, snapping it there. */
     boolean classic;
+    /** coupling (default): a lever down makes its motion ACTIVE — the trim controls act on every active motion,
+     *  and touching the crank couples it to all of them (at the slowest one already turning). Latch snaps every
+     *  coupled motion and decouples the crank without moving levers; a lever up PARKS its motion (it keeps its
+     *  speed, ignores trim and crank) or switches it off at rest. Off: the focus model (drive / hold per lever). */
+    boolean coupling = true;
     double snapTol = 0.1;          // the acceptance window at ×1 (the difficulty scaler); narrower for higher ratios
     final java.util.Map<String, Eval> eval = new java.util.LinkedHashMap<>();
     Eval targetEval = new Eval();
@@ -6629,7 +6655,7 @@ class RegulatorCore {
         if (recipes.length > 0) target = recipes[0];
     }
     Recipe recipe(String id) { for (Recipe r : recipes) if (r.id.equals(id)) return r; return null; }
-    void resetComps() { for (Motion[] a : comps) for (int i = 0; i < AXES; i++) a[i] = new Motion(); }
+    void resetComps() { for (Motion[] a : comps) for (int i = 0; i < AXES; i++) a[i] = new Motion(); java.util.Arrays.fill(focus, -1); }
     /** Events since the last drain: lock, unlock (the target), discover:<id>, wrong:<id> (another blueprint's
      *  sigil matched), voice, stopped:<arm>:<axis>. */
     java.util.List<String> events() { java.util.List<String> out = new java.util.ArrayList<>(events); events.clear(); return out; }
@@ -6639,13 +6665,25 @@ class RegulatorCore {
     double crankRatio() { return 2 * Math.abs(vel); }
     static double catchWidth(int n) { return CATCH_W / n; }
     /** A scroll notch / button press: dir ±1, step in vel units (NUDGE_*). Sets the slip timer. */
+    /** Coupled-lever model: touching the crank couples it to every active motion, at the slowest one already turning. */
+    void couple() {
+        if (!coupling) return;
+        double slowest = Double.MAX_VALUE; boolean any = false;
+        for (Motion[] a : comps) for (Motion c : a) if (c.eng && c.act) { any = true; if (c.r >= REST_R) slowest = Math.min(slowest, c.r); }
+        if (!any) return;
+        if (slowest < Double.MAX_VALUE) { double sg = Math.signum(vel); if (sg == 0) sg = 1; vel = sg * slowest / 2; }
+        double cr = 2 * Math.abs(vel);
+        for (Motion[] a : comps) for (Motion c : a) if (c.eng && c.act) { c.drv = true; c.r = cr; }
+        caught = -1;
+    }
     void nudge(int dir, double step) {
+        couple();
         double s = Math.signum(vel); if (s == 0) s = 1;
         vel = Math.max(-MAX_VEL, Math.min(MAX_VEL, vel + s * dir * step));
         if (Math.abs(vel) < 0.001) vel = 0;
         slip = SLIP_NUDGE;
     }
-    void dragStart() { drag = true; }
+    void dragStart() { couple(); drag = true; }
     /** While dragging: the measured crank speed in rev/s (the pointer's angular velocity), smoothed in. */
     void dragVelocity(double revPerSec) { if (!drag) return; double v = Math.max(-MAX_VEL, Math.min(MAX_VEL, revPerSec)); vel += (v - vel) * DRAG_SMOOTH; }
     void dragEnd() { drag = false; slip = SLIP_DRAG; }
@@ -6706,14 +6744,28 @@ class RegulatorCore {
     boolean axisLever(int ax) {
         if (target == null) return false;
         Motion c = comps[arm][ax];
+        if (coupling) {
+            if (!c.eng) {   // off → active, at rest; it joins the crank on the next scroll
+                if (engagedCount(arm) >= target.motionsPerArm()) return false;
+                c.eng = true; c.act = true; c.drv = false; c.r = 0; c.ph = 0; c.amp = DEFAULT_REACH; c.osc = 0;
+            } else if (c.act) {   // active → parked (keeps its speed), or off at rest
+                if (c.drv) holdOrStop(c, arm, ax);   // a coupled motion is latched as it goes up
+                c.act = false; c.drv = false;
+                if (c.r < REST_R) { c.eng = false; c.r = 0; events.add("stopped:" + arm + ":" + ax); }
+            } else c.act = true;   // parked → active again
+            return true;
+        }
         int others = drivenCount();
         if (!c.eng) {
-            if (engagedCount(arm) >= target.motionsPerArm()) return false;
-            c.eng = true; c.drv = true; c.ph = 0; c.amp = DEFAULT_REACH;
+            if (engagedCount(arm) >= target.motionsPerArm()) return false;   // refused: the trim focus stays where it was
+            focus[arm] = ax;
+            c.eng = true; c.drv = true; c.ph = 0; c.amp = DEFAULT_REACH; c.osc = 0;
             if (others > 0) c.r = crankRatio(); else { c.r = 0; loadCrank(0); }
         } else if (c.drv) {
-            if (holdOrStop(c, arm, ax)) events.add("stopped:" + arm + ":" + ax);
+            focus[arm] = ax;
+            if (holdOrStop(c, arm, ax)) { events.add("stopped:" + arm + ":" + ax); focus[arm] = -1; }
         } else {
+            focus[arm] = ax;
             c.drv = true;
             if (others > 0) c.r = crankRatio(); else loadCrank(c.r);
         }
@@ -6728,10 +6780,22 @@ class RegulatorCore {
         }
         return stopped;
     }
-    /** The phase dial: every driven motion turns a quarter cycle. */
-    void phaseStep() { for (Motion[] a : comps) for (Motion c : a) if (c.eng && c.drv) c.ph = (c.ph + 1) % 4; }
-    /** The reach control: every driven motion takes this amplitude. */
-    void setReach(double amp) { for (Motion[] a : comps) for (Motion c : a) if (c.eng && c.drv) c.amp = amp; }
+    /** Focus a motion of the selected arm for the trim controls without changing its state. */
+    boolean focusAxis(int ax) { if (ax < 0 || ax >= AXES || !comps[arm][ax].eng) return false; focus[arm] = ax; return true; }
+    /** The motion the trim controls act on: the focused axis of the selected arm (engaged), else null. */
+    Motion focused() { int ax = focus[arm]; return ax >= 0 && comps[arm][ax].eng ? comps[arm][ax] : null; }
+    /** The motions the trim controls act on: every active one (coupled-lever model), else the focused one. */
+    java.util.List<Motion> trimmed() {
+        java.util.List<Motion> out = new java.util.ArrayList<>();
+        if (coupling) { for (Motion[] a : comps) for (Motion c : a) if (c.eng && c.act) out.add(c); }
+        else { Motion c = focused(); if (c != null) out.add(c); }
+        return out;
+    }
+    int activeCount() { int n = 0; for (Motion[] a : comps) for (Motion c : a) if (c.eng && c.act) n++; return n; }
+    /** The phase dial: the trimmed motions turn a quarter cycle. */
+    void phaseStep() { for (Motion c : trimmed()) c.ph = (c.ph + 1) % 4; }
+    /** The reach control: the trimmed motions take this amplitude. */
+    void setReach(double amp) { for (Motion c : trimmed()) c.amp = amp; }
     /** The first driven motion (what the trim controls show), or null. */
     Motion firstDriven() { for (Motion[] a : comps) for (Motion c : a) if (c.eng && c.drv) return c; return null; }
 
@@ -6781,9 +6845,23 @@ class RegulatorCore {
     }
 
     // ---- the frame: physics, evaluation, events, signals
+    /** Coupled-lever model: the crank is coupled to at least one active motion. */
+    boolean coupled() { return drivenCount() > 0; }
     void tick(double dt) {
         tau += dt;
         updateCrank(dt);
+        // every engaged motion runs its own oscillator; one held exactly on an integer eases into alignment with
+        // the receiver (its angle → ratio × receiver angle), which is what makes the dial's quarters meaningful
+        for (Motion[] a : comps) for (Motion c : a) {
+            if (!c.eng) continue;
+            c.osc += c.r * DRAW_RATE * dt;
+            if (!c.drv && c.r == Math.rint(c.r)) {
+                double want = c.r * DRAW_RATE * tau, d = want - c.osc;
+                d -= 2 * Math.PI * Math.rint(d / (2 * Math.PI));
+                c.osc += d * Math.min(1, dt * 4);
+            }
+            if (c.osc > 1e6) c.osc -= 2 * Math.PI * Math.floor(c.osc / (2 * Math.PI));
+        }
         java.util.List<Eng> eng = engaged();
         for (Recipe r : recipes) {
             Eval e = evaluate(r, eng);
@@ -6835,13 +6913,13 @@ class RegulatorCore {
     // every motion oscillates at its ratio times that, so integer ratios retrace one closed figure and a detuned
     // motion makes the trace precess at a rate proportional to the detune, slowing to a stop as it is tuned in.
     static final double DRAW_PERIOD = 2.5, DRAW_RATE = 2 * Math.PI / DRAW_PERIOD;
-    /** The pen's position at machine time tauAt. */
+    /** The pen's position at machine time tauAt (between the last tick and the next, extrapolated at each motion's rate). */
     void pen(double tauAt, double[] out) {
         out[0] = out[1] = out[2] = 0;
         for (Motion[] a : comps) for (int ax = 0; ax < AXES; ax++) {
             Motion c = a[ax];
             if (!c.eng) continue;
-            out[ax] += c.amp * Math.min(1, c.r / 0.6) * Math.sin(c.r * DRAW_RATE * tauAt + c.ph * Math.PI / 2);
+            out[ax] += c.amp * Math.min(1, c.r / 0.6) * Math.sin(c.osc + c.r * DRAW_RATE * (tauAt - tau) + c.ph * Math.PI / 2);
         }
     }
     /** One arm's own contribution to the pen (for drawing the arm heads). */
@@ -6850,11 +6928,19 @@ class RegulatorCore {
         for (int ax = 0; ax < AXES; ax++) {
             Motion c = comps[arm][ax];
             if (!c.eng) continue;
-            out[ax] += c.amp * Math.min(1, c.r / 0.6) * Math.sin(c.r * DRAW_RATE * tauAt + c.ph * Math.PI / 2);
+            out[ax] += c.amp * Math.min(1, c.r / 0.6) * Math.sin(c.osc + c.r * DRAW_RATE * (tauAt - tau) + c.ph * Math.PI / 2);
         }
     }
-    /** The figure's shape at one instant, over one receiver cycle t ∈ [0, 2π) (closed only for integer ratios). */
-    void figurePoint(double t, double[] out) { pen(t / DRAW_RATE, out); }
+    /** The figure's shape as the recipe would draw it: every motion phase-locked to the receiver, over one receiver
+     *  cycle t ∈ [0, 2π). Closed only for integer ratios. */
+    void figurePoint(double t, double[] out) {
+        out[0] = out[1] = out[2] = 0;
+        for (Motion[] a : comps) for (int ax = 0; ax < AXES; ax++) {
+            Motion c = a[ax];
+            if (!c.eng) continue;
+            out[ax] += c.amp * Math.min(1, c.r / 0.6) * Math.sin(c.r * t + c.ph * Math.PI / 2);
+        }
+    }
     /** Per-axis extent of the engaged motions (summed reach), floored at 0.7 like the prototype's stage. */
     double extent() { double m = 0.7; for (int ax = 0; ax < AXES; ax++) { double s = 0; for (Motion[] a : comps) if (a[ax].eng) s += a[ax].amp; m = Math.max(m, s); } return m; }
 
@@ -6921,10 +7007,12 @@ class RegulatorCore {
         for (int i = 0; i < snap.size(); i++) {
             Snap s = snap.get(i);
             Motion c = comps[s.arm][s.axis];
-            c.eng = true; c.drv = false; c.amp = s.amp;
+            c.eng = true; c.drv = false; c.act = false; c.amp = s.amp;
             double d = (rng.nextDouble() < 0.5 ? -1 : 1) * (jit * (0.5 + rng.nextDouble() * 0.5));
             c.r = Math.max(0.5, s.r + d);
             c.ph = i == wrong ? (s.phase + 1) % 4 : s.phase;
+            c.osc = c.r * DRAW_RATE * tau;
+            if (focus[s.arm] < 0) focus[s.arm] = s.axis;
         }
         arm = 0;
     }
