@@ -96,9 +96,12 @@ the machine's signals rather than by time. **H** swaps the timeline for that ben
   tick at the live value.
 - **J** docks the regulator panel: a slider per signal (the scrubber), a **score**
   slider, the signature picker, **lock** / **unlock** buttons, the bind table,
-  the ranges and free notes. The **binds** box switches every bind off so a layer
-  can be auditioned at its saved params (solo it with **P**). While the machine
-  window is open and driving, the sliders follow it and are greyed out.
+  the ranges and free notes. The **binds** box switches every bind and every
+  spell blend off so the whole bench plays as saved. While the machine window is
+  open, powered and driving, the sliders follow it and are greyed out; **P** then
+  solos a layer live through its binds. Cut the machine's power, close it, or
+  untick drive and the signals go back to the panel's own values, and **P** plays
+  the layer exactly as authored.
 - Sounds are organised by **family**: `regulator/<family>/<family>.sfx` is the
   palette that plays through the tuning, `regulator/<family>/spells/<spell>.sfx`
   the roster. Pick the family in the panel. Each spell file is a **signature**, the
@@ -133,7 +136,7 @@ the machine's signals rather than by time. **H** swaps the timeline for that ben
   Levers down are the motions the trim controls reach and the crank couples to when
   touched; latch snaps them and lets the crank go; a lever up parks its motion. The
   prototype's catching crank and the earlier focus model are there as toggles. With "drive the bench"
-  on, its signals replace the panel's sliders and every spell's match fires that
+  on and the receiver powered, its signals replace the panel's sliders and every spell's match fires that
   spell's one-shots, so the puzzle is played and the palette answers. **Auto-play**
   works the controls toward the pinned spell along a randomised path, with optional
   wrong resonances and an "any spell" mode that keeps chaining locks: pause it when

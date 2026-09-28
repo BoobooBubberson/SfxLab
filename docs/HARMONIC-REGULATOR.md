@@ -219,6 +219,9 @@ Formulas marked *proposed* are starting points to tune by ear.
 | `orb.curl` | 0..1 | curvature of the loop being drawn, × extent / 4: a full-size circle 0.25, tight loops → 1, straight runs → 0 |
 | `orb.radius` | 0..1 | the orb's distance from the receiver over the figure's extent |
 | `stir` | 0..1 | 0 with every arm at rest, 1 once any engaged motion turns at ×0.5 or faster, whatever the crank does; 150 ms envelope. `bind stir bed level 0.6 0` is a bed that plays at rest and drops out as soon as the arms move |
+| `tone.root`, `tone.third`, `tone.fifth`, `tone.seventh` | 0..1 | *added 2026-09-26, arm-agnostic:* the reach on each chord tone of the harmonic series (pitch classes 0, 3.86, 7.02, 9.69 st), summed as √reach over every engaged motion whichever arm holds it, weighted by e^(−2·semitones off), clamped (√ so a quarter-reach chord tone still sings at half). A ratio gliding 1 → 2 lights root, third, fifth, seventh, root in turn; at the integers, 2/4/8 are root, 3/6 fifth, 5 third, 7 seventh. The palette binds one voice per tone, so the notes never depend on which arm carries a motion |
+| `stack` | 0..1 | *added 2026-09-26:* engaged motions / 6, clamped: how full the machine is. A headroom hook: `bind stack bed level 0 -0.12 rel` steps the bed back as the chord fills |
+| `fit` | 0..1 | *added 2026-09-26:* the reach hint. Over the pinned recipe's matched components only (not recipe progress, which is the score's), e^(−6·\|reach − target\|) averaged: 1 when every latched motion's reach is on its target, ~0.5 at the edge of `rtol`. Ratio and phase are the score's business; fit isolates reach, so a bind like `bind fit root shimmer 0.3 0` lets a note steady as the reach comes right |
 | events | | `lock`, `unlock`, `discover` (a secret recipe matched), `voice` (crystal written) |
 
 ## 5. The sound split (proposed, to build in SfxLab first)

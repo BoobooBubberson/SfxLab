@@ -21,8 +21,11 @@ archive/
 clips/
 *.bak
 
-# sample library: only the cleared pyretic/ set is tracked (see samples/README.md)
+# sample library: only the cleared sets are tracked (see samples/README.md): pyretic/, and the in-lab
+# gravitic/ and luminal/ synthesis the regulator families are built on
 samples/*
 !samples/README.md
 !samples/CREDITS.md
 !samples/pyretic/
+!samples/gravitic/
+!samples/luminal/

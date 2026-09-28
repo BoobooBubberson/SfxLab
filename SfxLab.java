@@ -1087,7 +1087,13 @@ public class SfxLab extends JPanel {
          *  untouched. */
         double[] effective(Clip c) {
             double[] m = c.mod, p = c.p;
-            if (pe == null || pe.length != p.length) { pe = new double[p.length]; sm = new double[p.length]; }
+            if (pe == null || pe.length != p.length) { pe = new double[p.length]; sm = m.clone(); }   // born where the modulation already is: no glide in from the saved value
+            double lv = p[P_LEVEL] + m[P_LEVEL];
+            if (lv < 1e-4 && p[P_LEVEL] + sm[P_LEVEL] < 1e-4) {   // silent and staying silent (a bench layer waiting its turn): track the targets, skip the rest
+                System.arraycopy(m, 0, sm, 0, m.length);
+                pe[P_LEVEL] = Math.max(0, lv);
+                return pe;
+            }
             boolean[] q = quantised(c.type);
             for (int i = 0; i < p.length; i++) {
                 sm[i] += (m[i] - sm[i]) * MOD_K;
@@ -1126,6 +1132,7 @@ public class SfxLab extends JPanel {
     }
 
     static final double MOD_K = 1 - Math.exp(-1.0 / (0.03 * SR));   // live-param smoother: ~30 ms
+    static final double FADE_S = 0.02;                                // master fade around start / pause / seek (s)
     static final boolean[][] QUANT = new boolean[EXTRAS.length][];
     /** Which params of a type are expensive to move continuously (they rebuild per-partial caches). */
     static boolean[] quantised(int type) {
@@ -2747,15 +2754,17 @@ public class SfxLab extends JPanel {
     static final Path REG_DIR = DIR.resolve("regulator");      // regulator/<family>/<family>.sfx (palette) + spells/<spell>.sfx (signatures with their recipes)
 
     /** The regulator's signal contract. arm{n}.pitch is derived from arm{n}.ratio
-     *  (12·log2 of the ratio folded into one octave), so it has no slider. */
+     *  (12·log2 of the ratio folded into one octave), so it has no slider. tone.* are arm-agnostic: how much reach
+     *  sits on each chord tone of the harmonic series, whichever arm carries it (RegulatorCore.computeSignals). */
     static final String[] SIGNALS = {"arm1.ratio", "arm2.ratio", "arm3.ratio", "arm1.reach", "arm2.reach", "arm3.reach",
                                      "radiance", "consonance", "tension", "drive", "coherence", "score",
-                                     "orb.speed", "orb.accel", "orb.curl", "orb.radius", "stir"};   // orb.*: the pen's kinematics; stir: anything turning at all
-    static final double[] SIG_MAX = {8, 8, 8, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+                                     "orb.speed", "orb.accel", "orb.curl", "orb.radius", "stir",   // orb.*: the pen's kinematics; stir: anything turning at all
+                                     "tone.root", "tone.third", "tone.fifth", "tone.seventh", "stack", "fit"};   // stack: engaged motions / 6; fit: reach agreement with the pinned recipe
+    static final double[] SIG_MAX = {8, 8, 8, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
     static final int SIG_SCORE = 11;
     static final String[] SIGNAL_CHOICES = {"arm1.ratio", "arm1.pitch", "arm1.reach", "arm2.ratio", "arm2.pitch", "arm2.reach",
                                             "arm3.ratio", "arm3.pitch", "arm3.reach", "radiance", "consonance", "tension", "drive", "coherence", "score",
-                                            "orb.speed", "orb.accel", "orb.curl", "orb.radius", "stir"};
+                                            "orb.speed", "orb.accel", "orb.curl", "orb.radius", "stir", "tone.root", "tone.third", "tone.fifth", "tone.seventh", "stack", "fit"};
     static int sigIdx(String name) { for (int i = 0; i < SIGNALS.length; i++) if (SIGNALS[i].equals(name)) return i; return -1; }
 
     static class Bind {
@@ -2926,6 +2935,7 @@ public class SfxLab extends JPanel {
     String benchName;                       // workspace-relative file the bench was opened from / stamped to
     volatile boolean benchPlaying;
     volatile Clip benchSolo;
+    volatile Spell benchSoloSpell;   // set when the soloed layer is a spell's: it plays alone at its target values
     final double[] sigVal = new double[SIGNALS.length];
     /** A spell of the loaded family: its signature (a bench file) and, when the file carries one, its recipe. */
     static class Spell { String id, name; RegulatorCore.Recipe recipe; Bench bench; Path file; volatile double w; }
@@ -2972,7 +2982,22 @@ public class SfxLab extends JPanel {
         }
     }
     BenchPanel bpanel; boolean bpanelOn;    // the docked regulator panel (J); remembered in lab.cfg
-    volatile boolean sigDriven;             // the machine window is writing the signals: the panel's sliders follow, not lead
+    volatile boolean sigDriven;             // the machine (open, powered, driving) is writing the signals: the panel's sliders follow, not lead, and a solo hears the binds
+    double[] sigHold; HashMap<String, Double> scoreHold;   // the panel's own values from before the machine took the signals over
+    /** The machine takes the signals and spell scores (its core writes them every frame while it drives) or gives them
+     *  back: the panel's values from before it took over return, so nothing the machine last wrote keeps blending the
+     *  layers behind the panel's sliders once drive is unticked or the window is closed. */
+    void setSigDriven(boolean on) {
+        if (on == sigDriven) return;
+        if (on) { sigHold = sigVal.clone(); scoreHold = new HashMap<>(spellScore); }
+        else {
+            if (sigHold != null) System.arraycopy(sigHold, 0, sigVal, 0, sigVal.length);
+            if (scoreHold != null) { spellScore.keySet().retainAll(scoreHold.keySet()); spellScore.putAll(scoreHold); }
+            sigHold = null; scoreHold = null;
+        }
+        sigDriven = on; benchGen++;
+        if (bpanel != null) bpanel.pull();
+    }
     volatile boolean bindsOn = true;        // panel toggle: off = hear every layer at its saved params (auditioning)
 
     double signal(String name) {
@@ -2999,13 +3024,19 @@ public class SfxLab extends JPanel {
     }
     static double smoothstep(double a, double b, double x) { double u = Math.max(0, Math.min(1, (x - a) / (b - a))); return u * u * (3 - 2 * u); }
     /** How far the signature has blended in: 0 below score 0.55, 1 at 1. */
-    double blendW() { return smoothstep(0.55, 1.0, sigVal[SIG_SCORE]); }
+    double blendW() { return bindsOn ? smoothstep(0.55, 1.0, sigVal[SIG_SCORE]) : 0; }
 
     /** Audio thread, once per block: the clips that sound now, with each
      *  layer's modulation target computed from the signals, the binds and the
      *  signature. Bound params are absolute targets (the modulation is the
      *  difference from the saved value) unless the bind is `rel`; the blend
      *  then moves everything toward the signature's values by w. */
+    /** A clip's live modulation array, zeroed and ready to fill. */
+    static double[] modOf(Clip c) {
+        double[] m = c.mod;
+        if (m == null || m.length != c.p.length) m = new double[c.p.length]; else Arrays.fill(m, 0);
+        return m;
+    }
     void benchLive(double now, List<Clip> out) {
         // every spell's signature blends in by its weight (its own score through smoothstep(0.55, 1) unless the spell
         // binds `spell blend` to something else); when the weights add past 1 they share
@@ -3013,16 +3044,28 @@ public class SfxLab extends JPanel {
         double sumW = 0;
         for (Spell sp : sps) { sp.w = spellWeight(sp); sumW += sp.w; }
         double norm = sumW > 1 ? 1 / sumW : 1;
-        Clip so = benchSolo;
+        Clip so = benchSolo; Spell soSp = benchSoloSpell;
+        // a solo while the machine drives the signals hears the layer through its binds and the blend, wherever the
+        // machine has them; with the machine off, closed or not driving, a solo is the layer exactly as authored
+        boolean audition = so != null && !sigDriven;
+        // No endless layer ever leaves the mix while it is on the bench: one that isn't heard (muted, not the solo,
+        // a spell's extra at zero weight) stays in `out` with its level driven to 0, so it fades over the engine's
+        // param smoother instead of stopping mid-cycle, and comes back the same way. A silent layer costs nothing.
+        if (so != null && soSp != null) {   // a spell's layer alone, at its target values, with that spell's own binds
+            double[] m = modOf(so);
+            if (bindsOn && !audition) applyBinds(soSp.bench.binds, so, m);
+            so.mod = m;
+            if (so.on == ON_NONE) out.add(so);
+        }
         List<Clip> ls; List<Bind> bs;
         synchronized (lock) { ls = new ArrayList<>(bench.layers); bs = new ArrayList<>(bench.binds); }
         for (Clip c : ls) {
             if (c.on != ON_NONE) continue;                      // one-shots only sound when fired
-            if (so != null ? c != so : c.lmute) continue;
-            double[] m = c.mod;
-            if (m == null || m.length != c.p.length) m = new double[c.p.length]; else Arrays.fill(m, 0);
-            if (bindsOn) applyBinds(bs, c, m);
-            if (sumW > 0) {
+            double[] m = modOf(c);
+            boolean heard = so != null ? c == so : !c.lmute;
+            if (!heard) { m[P_LEVEL] = -c.p[P_LEVEL]; c.mod = m; out.add(c); continue; }
+            if (bindsOn && !audition) applyBinds(bs, c, m);
+            if (sumW > 0 && !audition) {
                 double wl = 0; double[] acc = null;
                 for (Spell sp : sps) {
                     if (sp.w <= 0) continue;
@@ -3039,21 +3082,20 @@ public class SfxLab extends JPanel {
             c.mod = m;
             out.add(c);
         }
-        if (sumW > 0 && so == null)
-            for (Spell sp : sps) {
-                if (sp.w <= 0) continue;
-                for (Clip s : sp.bench.layers) {   // layers only this spell has fade in with its weight
-                    if (s.on != ON_NONE || s.lmute) continue;
-                    boolean inPalette = false;
-                    for (Clip c : ls) if (s.id != null && s.id.equals(c.id)) { inPalette = true; break; }
-                    if (inPalette) continue;
-                    double[] m = s.mod;
-                    if (m == null || m.length != s.p.length) m = new double[s.p.length]; else Arrays.fill(m, 0);
+        for (Spell sp : sps)
+            for (Clip s : sp.bench.layers) {   // layers only this spell has fade in with its weight (and out again at 0)
+                if (s.on != ON_NONE || s == so) continue;
+                boolean inPalette = false;
+                for (Clip c : ls) if (s.id != null && s.id.equals(c.id)) { inPalette = true; break; }
+                if (inPalette) continue;
+                double w = so == null && !s.lmute ? sp.w * norm : 0;
+                double[] m = modOf(s);
+                if (w > 0) {
                     if (bindsOn) applyBinds(sp.bench.binds, s, m);
-                    m[P_LEVEL] = sp.w * norm * (s.p[P_LEVEL] + m[P_LEVEL]) - s.p[P_LEVEL];   // its own binds, then faded in by the blend
-                    s.mod = m;
-                    out.add(s);
-                }
+                    m[P_LEVEL] = w * (s.p[P_LEVEL] + m[P_LEVEL]) - s.p[P_LEVEL];   // its own binds, then faded in by the blend
+                } else m[P_LEVEL] = -s.p[P_LEVEL];
+                s.mod = m;
+                out.add(s);
             }
         for (Clip f; (f = fireQ.poll()) != null; ) { f.start = now; transients.add(f); }
         transients.removeIf(f -> now >= f.end());
@@ -3065,10 +3107,12 @@ public class SfxLab extends JPanel {
     /** A spell's blend rule, if its file binds `spell blend`. */
     Bind blendBind(Spell sp) { for (Bind b : sp.bench.binds) if (SPELL_LAYER.equals(b.layer) && BLEND_PARAM.equals(b.param)) return b; return null; }
     /** How far a spell is blended in: smoothstep over the bound signal's lo..hi (default score.<id> over 0.55..1),
-     *  with the bind's map (steps=1 makes a gate). */
+     *  with the bind's map (steps=1 makes a gate). Nothing while binds are off: that is the audition mode, where every
+     *  layer plays exactly as saved. */
     double spellWeight(Spell sp) {
+        if (!bindsOn) return 0;
         Bind b = blendBind(sp);
-        if (b == null || !bindsOn) return smoothstep(0.55, 1.0, spellScore.getOrDefault(sp.id, 0.0));
+        if (b == null) return smoothstep(0.55, 1.0, spellScore.getOrDefault(sp.id, 0.0));
         double lo = b.auto() ? 0.55 : b.lo, hi = b.auto() ? 1.0 : b.hi;
         double w = smoothstep(Math.min(lo, hi), Math.max(lo, hi), signal(b.sig));
         if (lo > hi) w = 1 - w;
@@ -3098,32 +3142,64 @@ public class SfxLab extends JPanel {
         applyBinds(sp.bench.binds, s, t);
         return t;
     }
-    /** Fires a one-shot layer: a copy, so a layer can overlap itself. Starts the bench if it is stopped. */
-    void fire(Clip c) {
+    /** Solo a layer: a palette layer with the searching mix's binds, or a spell's layer alone at its target values. */
+    void toggleSolo(Clip c, Spell sp) {
+        if (benchSolo == c && benchPlaying) { benchSolo = null; benchSoloSpell = null; toast("solo off"); return; }   // a stopped bench: P plays it again
+        benchSolo = c; benchSoloSpell = sp;
+        if (!benchPlaying) toggleBenchPlay();
+        List<Bind> bs; synchronized (lock) { bs = new ArrayList<>(sp != null ? sp.bench.binds : bench.binds); }
+        toast((sp != null ? "spell " + sp.id + " · " : "") + c.id + " solo, " + (sigDriven ? "live through its binds (the machine drives the signals)" : "as authored" + (sp != null ? " for the spell" : ""))
+              + " (P or the S box clears)" + (sigDriven ? bindNote(bs, c) : ""));
+    }
+    /** Why a soloed layer sounds the way it does: the binds that touch it, each with what its signal holds right now,
+     *  and a warning when they pin its level at 0 (a bound level at a signal that sits at 0 is silence, not a bug). */
+    String bindNote(List<Bind> bs, Clip c) {
+        if (!bindsOn) return "";
+        StringBuilder sb = new StringBuilder();
+        for (Bind b : bs) {
+            if (!(b.layer.equals("*") || b.layer.equals(c.id)) || idxOf(c.type, b.param) < 0) continue;
+            sb.append(sb.length() == 0 ? "   binds: " : ", ").append(b.param).append(" ← ").append(b.sig).append(String.format(Locale.ROOT, " (%.2f)", signal(b.sig)));
+        }
+        if (sb.length() == 0) return "";
+        double[] m = new double[c.p.length];
+        applyBinds(bs, c, m);
+        if (c.p[P_LEVEL] + m[P_LEVEL] < 0.01) sb.append("  — its level is held at 0 right now; cut the machine's power to hear it as authored");
+        return sb.toString();
+    }
+    /** ENTER / the machine's Cut power: the bench stops and rewinds and the solo is dropped, so the next P means "hear this one". */
+    void stopBench() { benchPlaying = false; seekTo = 0; benchSolo = null; benchSoloSpell = null; }
+    /** Fires a one-shot layer: a copy, so a layer can overlap itself. Your own fires (P, the panel's buttons) wake a
+     *  stopped bench where it stands, no rewind. Returns false when the shot was dropped instead. */
+    boolean fire(Clip c) { return fire(c, true); }
+    /** With wake off (the machine's events) a stopped bench stays stopped and the shot is dropped: the machine
+     *  never restarts playback behind your back, and no shots pile up to fire the next time you press SPACE. */
+    boolean fire(Clip c, boolean wake) {
+        if (!benchPlaying) { if (!wake) return false; benchPlaying = true; }
         Clip f = copyClip(c);
         f.id = null; f.on = ON_NONE; f.lmute = false; f.range = null; f.rnote = null;
         if (f.dur >= ENDLESS / 2) f.dur = naturalDur(c);
         fireQ.add(f);
-        if (!benchPlaying) { seekTo = 0; benchPlaying = true; }
+        return true;
     }
     /** The lock / unlock event: every one-shot layer marked for it fires (the bench's own and the picked signature's). */
-    void fireEvent(int on) { fireEvent(on, true); }
+    void fireEvent(int on) { fireEvent(on, true, true); }
     /** The lock / unlock event for the bench's own layers (the palette's, or the spell being edited). */
-    void fireEvent(int on, boolean setScore) {
+    void fireEvent(int on, boolean setScore, boolean wake) {
         int n = 0;
         List<Clip> ls;
         synchronized (lock) { ls = new ArrayList<>(bench.layers); }
-        for (Clip c : ls) if (c.on == on) { fire(c); n++; }
+        for (Clip c : ls) if (c.on == on && fire(c, wake)) n++;
         if (setScore) { if (on == ON_LOCK) setSignal(SIG_SCORE, 1); else if (sigVal[SIG_SCORE] > 0.5) setSignal(SIG_SCORE, 0.5); }
         toast(ON_NAMES[on] + (n > 0 ? ": " + n + " one-shot" + (n > 1 ? "s" : "") + " fired" : " — no bench layer is set to fire on it"));
     }
     /** A spell's own event: its one-shots marked for it fire (unless that spell is the file open on the bench, whose layers fire through fireEvent). */
-    int fireSpell(String id, int on) {
+    int fireSpell(String id, int on) { return fireSpell(id, on, true); }
+    int fireSpell(String id, int on, boolean wake) {
         int n = 0;
         for (Spell sp : spells) {
             if (!sp.id.equals(id)) continue;
-            if (benchName != null && benchName.endsWith("/spells/" + id + ".sfx")) { fireEvent(on, false); continue; }
-            for (Clip c : sp.bench.layers) if (c.on == on) { fire(c); n++; }
+            if (benchName != null && benchName.endsWith("/spells/" + id + ".sfx")) { fireEvent(on, false, wake); continue; }
+            for (Clip c : sp.bench.layers) if (c.on == on && fire(c, wake)) n++;
         }
         return n;
     }
@@ -3164,6 +3240,7 @@ public class SfxLab extends JPanel {
             } catch (IOException e) { toast("spells scan failed: " + e); }
         }
         spells = out;
+        if (benchSoloSpell != null) { benchSolo = null; benchSoloSpell = null; }
         spellScore.keySet().removeIf(k -> out.stream().noneMatch(sp -> sp.id.equals(k)));
         familyGen++; benchGen++;
     }
@@ -3364,7 +3441,7 @@ public class SfxLab extends JPanel {
         bench.notes.clear(); bench.notes.addAll(b.notes);
         bench.palette = b.palette;
         bench.name = b.name; bench.tier = b.tier; bench.secret = b.secret; bench.comps = b.comps; bench.rtol = b.rtol;   // a spell keeps its recipe on the bench
-        benchSolo = null; benchScroll = 0; benchGen++;
+        benchSolo = null; benchSoloSpell = null; benchScroll = 0; benchGen++;
     }
     String relPath(Path f) {
         try { return DIR.relativize(f.toAbsolutePath().normalize()).toString().replace('\\', '/'); }
@@ -3566,7 +3643,7 @@ public class SfxLab extends JPanel {
             Clip c = row.clip(); Spell sp = row.spell();
             boolean spellRow = row.kind() == ROW_SPELL_LAYER;
             int x0 = r.x + (spellRow ? 20 : 0);
-            boolean isSel = c == sel, muted = spellRow ? c.lmute : (c.lmute && benchSolo == null || benchSolo != null && benchSolo != c);
+            boolean isSel = c == sel, muted = benchSolo != null ? benchSolo != c : c.lmute;
             g.setColor(isSel ? new Color(42, 42, 42) : spellRow ? (i % 2 == 0 ? new Color(20, 18, 14) : new Color(26, 23, 18)) : i % 2 == 0 ? new Color(16, 16, 16) : new Color(23, 23, 23));
             g.fillRect(r.x, r.y, r.width, r.height);
             // mute box (and solo, palette rows only)
@@ -3574,7 +3651,7 @@ public class SfxLab extends JPanel {
             if (c.lmute) g.fillRect(x0 + 4, r.y + 5, 14, 14); else g.drawRect(x0 + 4, r.y + 5, 14, 14);
             g.setColor(c.lmute ? Color.WHITE : Color.GRAY);
             g.drawString("M", x0 + 7, r.y + 17);
-            if (!spellRow) {
+            {
                 boolean so = benchSolo == c;
                 g.setColor(so ? new Color(90, 200, 160) : new Color(60, 60, 60));
                 if (so) g.fillRect(x0 + 24, r.y + 5, 14, 14); else g.drawRect(x0 + 24, r.y + 5, 14, 14);
@@ -3642,7 +3719,7 @@ public class SfxLab extends JPanel {
         int x0 = r.x + (sp != null ? 20 : 0);
         if (SwingUtilities.isRightMouseButton(e)) { sel = c; selSpell = sp; if (sp != null) spellLayerMenu(c, sp, mx, my); else layerMenu(c, mx, my); return; }
         if (mx >= x0 + 4 && mx < x0 + 18) { if (sp == null) { pushUndo(""); c.lmute = !c.lmute; markEdit(); } else { pushUndo(""); c.lmute = !c.lmute; markSpellDirty(sp); } return; }
-        if (sp == null && mx >= x0 + 24 && mx < x0 + 38) { benchSolo = benchSolo == c ? null : c; return; }
+        if (mx >= x0 + 24 && mx < x0 + 38) { toggleSolo(c, sp); return; }
         sel = c; selSpell = sp;
         Rectangle lr = levelRect(row);
         if (new Rectangle(lr.x - 2, lr.y - 5, lr.width + 4, lr.height + 10).contains(mx, my)) {
@@ -3690,6 +3767,7 @@ public class SfxLab extends JPanel {
         pushUndo("");
         sp.bench.layers.remove(c);
         if (sel == c) { sel = null; selSpell = null; }
+        if (benchSolo == c) { benchSolo = null; benchSoloSpell = null; }
         markSpellDirty(sp);
     }
     void setLevel(int mx) {
@@ -3797,8 +3875,9 @@ public class SfxLab extends JPanel {
     }
 
     /** The regulator machine: the prototype's control panel and stage around a RegulatorCore.
-     *  While "drive the bench" is on, the core's signals replace the panel's sliders every
-     *  frame and its lock / unlock events fire the bench's one-shots. */
+     *  While "drive the bench" is on and the receiver is powered, the core's signals replace the panel's
+     *  sliders every frame and its lock / unlock events fire the bench's one-shots; unpowered or closed,
+     *  the panel's own values come back and a solo (P) is the authored layer. */
     static class Machine extends JPanel {
         final SfxLab lab;
         RegulatorCore core;
@@ -3845,7 +3924,7 @@ public class SfxLab extends JPanel {
             JPanel pw = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 2));
             power.addActionListener(e -> {
                 core.power(power.isSelected());
-                if (driveB.isSelected() && lab.benchOn) { if (power.isSelected() && !lab.benchPlaying) lab.toggleBenchPlay(); else if (!power.isSelected() && lab.benchPlaying) lab.toggleBenchPlay(); }
+                if (driveB.isSelected() && lab.benchOn) { if (power.isSelected()) { if (!lab.benchPlaying) lab.toggleBenchPlay(); } else lab.stopBench(); }
                 power.setText(power.isSelected() ? "Cut power" : "Power receiver");
             });
             pw.add(power); pw.add(new JLabel("view")); pw.add(viewBox);
@@ -4035,7 +4114,7 @@ public class SfxLab extends JPanel {
             syncTarget();
         }
         void frameTick() {
-            if (frame != null && !frame.isVisible()) { lastNs = 0; if (lab.sigDriven) { lab.sigDriven = false; lab.benchGen++; } return; }   // closed: nothing runs, the panel's sliders are free again
+            if (frame != null && !frame.isVisible()) { lastNs = 0; lab.setSigDriven(false); return; }   // closed: nothing runs, the panel's sliders are free again
             long now = System.nanoTime();
             double dt = lastNs == 0 ? 1 / 60.0 : Math.min(0.05, (now - lastNs) / 1e9);
             lastNs = now;
@@ -4050,23 +4129,23 @@ public class SfxLab extends JPanel {
                 if (auto.on) auto.advance(dt * auto.speed);
                 core.tick(dt);
             }
-            for (RegulatorCore.Recipe r : core.recipes) lab.spellScore.put(r.id, core.eval.get(r.id).score);
             flashV = Math.max(0, flashV - dt * 1.2);
             frameNo++;
-            boolean driving = driveB.isSelected();
-            if (driving != lab.sigDriven) { lab.sigDriven = driving; lab.benchGen++; }
-            if (driving) {
+            boolean driving = driveB.isSelected() && core.powered;   // an unpowered machine writes nothing: the signals are the panel's again
+            lab.setSigDriven(driving);
+            if (driving) {   // only while driving: with drive off the panel's sliders own the scores and signals
+                for (RegulatorCore.Recipe r : core.recipes) lab.spellScore.put(r.id, core.eval.get(r.id).score);
                 for (int i = 0; i < RegulatorCore.SIGNALS.length; i++) { int k = sigIdx(RegulatorCore.SIGNALS[i]); if (k >= 0) lab.sigVal[k] = core.signals[i]; }
                 if (lab.bpanel != null && lab.bpanelOn && frameNo % 3 == 0) lab.bpanel.pull();   // 10 Hz is plenty for twelve sliders
             }
             for (String ev : core.events()) {
-                if (ev.equals("lock")) { if (driving) lab.fireEvent(ON_LOCK, false); }
-                else if (ev.equals("unlock")) { if (driving) lab.fireEvent(ON_UNLOCK, false); }
-                else if (ev.startsWith("match:")) { if (driving) lab.fireSpell(ev.substring(6), ON_LOCK); }
-                else if (ev.startsWith("unmatch:")) { if (driving) lab.fireSpell(ev.substring(8), ON_UNLOCK); }
+                if (ev.equals("lock")) { if (driving) lab.fireEvent(ON_LOCK, false, false); }
+                else if (ev.equals("unlock")) { if (driving) lab.fireEvent(ON_UNLOCK, false, false); }
+                else if (ev.startsWith("match:")) { if (driving) lab.fireSpell(ev.substring(6), ON_LOCK, false); }
+                else if (ev.startsWith("unmatch:")) { if (driving) lab.fireSpell(ev.substring(8), ON_UNLOCK, false); }
                 else if (ev.startsWith("discover:")) notify("Something answered that no blueprint shows: " + core.recipe(ev.substring(9)).name + ".");
                 else if (ev.startsWith("wrong:")) notify("That's the " + core.recipe(ev.substring(6)).name + " sigil. It isn't the one pinned up.");
-                else if (ev.startsWith("accept:")) { if (driving) lab.fireEvent(ON_ACCEPT, false); notify("The crystal takes ×" + ev.substring(ev.lastIndexOf(':') + 1) + ".", 1.8); }
+                else if (ev.startsWith("accept:")) { if (driving) lab.fireEvent(ON_ACCEPT, false, false); notify("The crystal takes ×" + ev.substring(ev.lastIndexOf(':') + 1) + ".", 1.8); }
                 else if (ev.startsWith("hold:")) notify("Held off-resonance. It beats until you re-drive it.", 2.5);
             }
             // panel state
@@ -4153,10 +4232,10 @@ public class SfxLab extends JPanel {
             void planMotion(int arm, int ax, int n, int ph, double reach) {
                 step("arm " + (arm + 1), pause(0.4, 1.0), () -> { core.selectArm(arm); armB[arm].setSelected(true); }, null, 0);
                 step("pull " + RegulatorCore.AXIS[ax], pause(0.3, 0.8), () -> core.axisLever(ax), null, 0);
-                // trim first (it applies to the driven motion whatever its ratio), then spin, then latch at once:
-                // with the free crank there is no holding, so the latch has to land while the ratio is in the window
-                double a = Math.max(0.05, Math.min(1, reach + (rng.nextDouble() - 0.5) * 0.08));
-                step("reach", pause(0.2, 0.6), () -> core.setReach(a), null, 0);
+                // phase first (it applies to the driven motion whatever its ratio), then spin and latch at once (with the
+                // free crank there is no holding, so the latch has to land while the ratio is in the window), and only then
+                // the reach: the player's own technique is to latch on the integer by ear, then work the reach slider while
+                // watching the orb, so the reach is explored — a few wandering settings closing in on the target
                 for (int k = 0; k < ph; k++) step("phase dial", pause(0.3, 0.7), core::phaseStep, null, 0);
                 if (mistakes && rng.nextDouble() < 0.35) {
                     int wrong = n < 7 ? n + 1 : n - 1;
@@ -4167,6 +4246,14 @@ public class SfxLab extends JPanel {
                     }
                 }
                 spinTo(n); latchNow();
+                double a = Math.max(0.05, Math.min(1, reach + (rng.nextDouble() - 0.5) * 0.08));
+                int sweeps = 2 + rng.nextInt(3);
+                for (int k = 0; k < sweeps; k++) {   // wander around the target, closing in: ±0.35, ±0.2, ±0.1 ...
+                    double spread = 0.35 * Math.pow(0.55, k);
+                    double r = Math.max(0.05, Math.min(1, a + (rng.nextBoolean() ? spread : -spread)));
+                    step(String.format(Locale.ROOT, "reach %.2f — watching the orb", r), pause(0.4, 0.9), () -> core.setReach(r), null, 0);
+                }
+                step(String.format(Locale.ROOT, "reach %.2f", a), pause(0.4, 0.9), () -> core.setReach(a), null, 0);
                 if (rng.nextDouble() < 0.5) step("listening", pause(0.5, 1.5), () -> {}, null, 0);
                 if (core.coupling) step("lever up (parked)", pause(0.2, 0.5), () -> { core.selectArm(arm); if (core.comps[arm][ax].act) core.axisLever(ax); }, null, 0);
             }
@@ -4539,13 +4626,14 @@ public class SfxLab extends JPanel {
             famBox.addActionListener(e -> { if (!refreshing) { String f = (String) famBox.getSelectedItem(); if (f != null && !f.equals(lab.family)) lab.loadFamily(f.equals("(none)") ? null : f, true); } });
             sigRow.add(famBox);
             JButton lockB = new JButton("bench lock"), unlockB = new JButton("bench unlock"), rescanB = new JButton("↻");
-            bindsB.setToolTipText("off: every layer plays its saved params, no signal moves anything — for auditioning a layer on its own");
-            bindsB.addActionListener(e -> { lab.bindsOn = bindsB.isSelected(); lab.toast(lab.bindsOn ? "binds on: signals move bound params" : "binds off: layers play as saved (solo / mute to audition)"); });
+            bindsB.setToolTipText("off: every layer plays its saved params — no signal moves anything and no spell blends in — for auditioning a layer on its own");
+            bindsB.addActionListener(e -> { lab.bindsOn = bindsB.isSelected(); lab.toast(lab.bindsOn ? "binds on: signals move bound params, spells blend in by their scores" : "binds off: layers play as saved, no blend (solo / mute to audition)"); });
             lockB.setToolTipText("the lock event for the layers on the bench: score → 1, fires their on=lock one-shots (each spell has its own buttons below)");
             unlockB.setToolTipText("the unlock event for the layers on the bench: fires their on=unlock one-shots");
             lockB.addActionListener(e -> lab.fireEvent(ON_LOCK));
             unlockB.addActionListener(e -> lab.fireEvent(ON_UNLOCK));
             rescanB.addActionListener(e -> { rescanFamilies(); lab.loadSpells(); });
+            for (AbstractButton b : new AbstractButton[]{lockB, unlockB, rescanB, bindsB}) b.setFocusable(false);   // a click here must not take P / SPACE away from the bench
             sigRow.add(lockB); sigRow.add(unlockB); sigRow.add(rescanB); sigRow.add(bindsB);
             top.add(sigRow, gc);
             gc.gridy = 98; gc.gridwidth = 3;
@@ -4598,7 +4686,7 @@ public class SfxLab extends JPanel {
                 if (sl[0].isEnabled() == drv) {
                     for (JSlider s : sl) s.setEnabled(!drv);
                     for (Object[] r : spellRows) ((JSlider) r[1]).setEnabled(!drv);
-                    drivenL.setText(drv ? "signals driven by the machine (U) — untick 'drive the bench' there, or close it, to use these" : " ");
+                    drivenL.setText(drv ? "signals driven by the machine (U) — cut its power, untick 'drive the bench', or close it to use these" : " ");
                 }
                 for (int i = 0; i < 3; i++) label(i);   // ratio rows show the derived pitch
                 label(SIG_SCORE);
@@ -4641,7 +4729,7 @@ public class SfxLab extends JPanel {
                 what.setFont(mono); what.setForeground(sp.recipe == null || prob != null ? new Color(200, 120, 40) : Color.GRAY);
                 what.setToolTipText(prob != null ? "unbuildable: " + prob : sp.name);
                 JButton lk = new JButton("lock"), ul = new JButton("unlock"), rc = new JButton("recipe…");
-                for (JButton b : new JButton[]{lk, ul, rc}) { b.setMargin(new Insets(0, 4, 0, 4)); b.setFont(mono); }
+                for (JButton b : new JButton[]{lk, ul, rc}) { b.setMargin(new Insets(0, 4, 0, 4)); b.setFont(mono); b.setFocusable(false); }
                 rc.addActionListener(e -> lab.recipeDialog(sp, null));
                 lk.addActionListener(e -> { lab.spellScore.put(sp.id, 1.0); s.setValue(1000); int n = lab.fireSpell(sp.id, ON_LOCK); lab.toast(sp.id + " lock: " + n + " one-shot" + (n == 1 ? "" : "s")); });
                 ul.addActionListener(e -> { lab.spellScore.put(sp.id, 0.5); s.setValue(500); int n = lab.fireSpell(sp.id, ON_UNLOCK); lab.toast(sp.id + " unlock: " + n + " one-shot" + (n == 1 ? "" : "s")); });
@@ -5506,11 +5594,17 @@ public class SfxLab extends JPanel {
         Engine eng = new Engine();
         double[] bufL = new double[BLOCK], bufR = new double[BLOCK];
         List<Clip> snap = new ArrayList<>();
+        // Master fade: the output ramps over FADE_S around every start, pause and seek instead of cutting mid-cycle.
+        // A pause keeps rendering until the ramp is down; a seek waits for the ramp to be down before it clears the
+        // voices, then the restart ramps back up. Bench layers are endless, so this is their only attack / release.
+        double gain = 0;
+        final double gStep = 1.0 / (FADE_S * SR);
 
         while (true) {
             boolean bm = benchOn;   // bench: every layer sounds, time never wraps, signals set the modulation targets
             double sk = seekTo;
-            if (sk >= 0) { seekTo = -1; eng.t = sk; eng.voices.clear(); transients.clear(); }
+            boolean seekWait = sk >= 0 && gain > gStep;   // still audible: ramp down first, seek next block
+            if (sk >= 0 && !seekWait) { seekTo = -1; eng.t = sk; eng.voices.clear(); transients.clear(); gain = 0; }
             snap.clear();
             Clip so = null;
             boolean pl;
@@ -5524,9 +5618,12 @@ public class SfxLab extends JPanel {
             eng.voices.keySet().removeIf(c -> !snap.contains(c) || eng.t < c.start || eng.t >= c.end());
             eng.key = keyOff;
 
-            if (pl) eng.renderBlock(snap, so, bm ? null : mute, bm ? null : trackVol, bufL, bufR, BLOCK);
+            double gTarget = pl && !seekWait ? 1 : 0;
+            boolean render = pl || gain > 0;   // a stopped transport keeps rendering only while the fade-out is audible
+            if (render) eng.renderBlock(snap, so, bm ? null : mute, bm ? null : trackVol, bufL, bufR, BLOCK);
             for (int i = 0; i < BLOCK; i++) {
-                double l = pl ? bufL[i] : 0, r = pl ? bufR[i] : 0;
+                gain = gTarget > gain ? Math.min(1, gain + gStep) : Math.max(0, gain - gStep);
+                double l = render ? bufL[i] * gain : 0, r = render ? bufR[i] * gain : 0;
                 scopeL[scopePos] = (float) l; scopeR[scopePos] = (float) r;
                 scopePos = (scopePos + 1) % scopeL.length;
                 // clamp: the limiter keeps this under 0.85, but an unclamped cast would wrap past full scale
@@ -5752,7 +5849,7 @@ public class SfxLab extends JPanel {
         if (benchOn) {   // the bench's own bindings; everything timeline-only is inert here
             switch (kc) {
                 case KeyEvent.VK_SPACE -> toggleBenchPlay();
-                case KeyEvent.VK_ENTER -> { benchPlaying = false; seekTo = 0; }
+                case KeyEvent.VK_ENTER -> stopBench();
                 case KeyEvent.VK_P -> previewSel();
                 case KeyEvent.VK_S -> stampBench(false);
                 case KeyEvent.VK_O -> openBench();
@@ -6015,9 +6112,8 @@ public class SfxLab extends JPanel {
     void previewSel() {
         if (sel == null) { toast(benchOn ? "select a layer first" : "select a clip first"); return; }
         if (benchOn) {
-            if (selSpell != null) { if (sel.on != ON_NONE) { fire(sel); toast(sel.id + " fired"); } else toast("solo is for palette layers; the spell's lock button (panel) brings its targets in"); return; }
-            if (sel.on != ON_NONE) { fire(sel); toast(sel.id + " fired"); }
-            else { benchSolo = benchSolo == sel ? null : sel; if (benchSolo != null && !benchPlaying) toggleBenchPlay(); toast(benchSolo != null ? sel.id + " solo (P again clears)" : "solo off"); }
+            if (sel.on != ON_NONE) { fire(sel); toast(sel.id + " fired"); return; }
+            toggleSolo(sel, selSpell);
             return;
         }
         solo = sel;
@@ -6064,17 +6160,23 @@ public class SfxLab extends JPanel {
                 String nt2 = o.rnote != null ? o.rnote.get(en.getKey()) : null;
                 if (nt2 != null) { if (c.rnote == null) c.rnote = new HashMap<>(); c.rnote.put(ni, nt2); }
             }
-            synchronized (lock) { int at = bench.layers.indexOf(o); if (at >= 0) bench.layers.set(at, c); }
+            java.util.List<Clip> ls = selSpell != null ? selSpell.bench.layers : bench.layers;   // a spell's layer lives in that spell's list
+            synchronized (lock) { int at = ls.indexOf(o); if (at >= 0) ls.set(at, c); }
             if (benchSolo == o) benchSolo = c;
             benchGen++;
         } else synchronized (lock) { clips.set(clips.indexOf(o), c); }
         sel = c;
-        markEdit();
+        if (benchOn && selSpell != null) markSpellDirty(selSpell); else markEdit();
+        String note = "";
+        if (benchOn && selSpell != null) {   // the blend pairs a spell's layer with the palette's by id, and only when the types match
+            Clip pal = bench.byId(c.id);
+            if (pal != null && pal.type != nt) note = "   — the palette's " + c.id + " is a " + TYPE_NAMES[pal.type] + ": this layer won't blend until they match";
+        }
         toast(switch (nt) {
             case CHOIR -> "choir: " + c.file + " — voices/gather/chord/wander/scatter on the panel";
             case PARTIALS -> "partials: " + c.file + " — analyzing; pitch (and the key) move the sines, the residual stays put";
             default -> "back to a sample clip (loop, keep len)";
-        });
+        } + note);
     }
 
     void dupSel() {
@@ -6760,12 +6862,19 @@ class RegulatorCore {
     static final String[] AXIS = {"X", "Y", "Z"};
     static final String[] PHASE = {"0", "¼", "½", "¾"};
 
-    /** The signal contract, in the order of signals[]. arm{n}.pitch is derived (pitch(arm)). */
+    /** The signal contract, in the order of signals[]. arm{n}.pitch is derived (pitch(arm)). tone.* (§4): the reach
+     *  on each chord tone of the harmonic series, from every engaged motion whichever arm holds it, weighted by how
+     *  close the motion's folded pitch is to that tone: a ratio gliding 1 → 2 sings root, third, fifth, seventh, root. */
     static final String[] SIGNALS = {"arm1.ratio", "arm2.ratio", "arm3.ratio", "arm1.reach", "arm2.reach", "arm3.reach",
                                      "radiance", "consonance", "tension", "drive", "coherence", "score",
-                                     "orb.speed", "orb.accel", "orb.curl", "orb.radius", "stir"};
+                                     "orb.speed", "orb.accel", "orb.curl", "orb.radius", "stir",
+                                     "tone.root", "tone.third", "tone.fifth", "tone.seventh", "stack", "fit"};
     static final int S_RATIO = 0, S_REACH = 3, S_RADIANCE = 6, S_CONSONANCE = 7, S_TENSION = 8, S_DRIVE = 9, S_COHERENCE = 10, S_SCORE = 11,
-                     S_ORB_SPEED = 12, S_ORB_ACCEL = 13, S_ORB_CURL = 14, S_ORB_RADIUS = 15, S_STIR = 16;
+                     S_ORB_SPEED = 12, S_ORB_ACCEL = 13, S_ORB_CURL = 14, S_ORB_RADIUS = 15, S_STIR = 16, S_TONE = 17, S_STACK = 21, S_FIT = 22;
+    /** The chord tones' pitch classes in semitones (just ratios 1, 5/4, 3/2, 7/4) and how sharply a motion's pitch must sit on one.
+     *  Each tone signal sums √reach over the motions on that pitch class, so reach is heard but compressed. */
+    static final double[] TONE_ST = {0, 3.8631, 7.0196, 9.6883};
+    static final double TONE_K = 2.0;   // weight e^(−TONE_K·semitones off): half a semitone 0.37, one 0.14, two 0.02
     static final double STIR_SMOOTH = 0.15;   // s: how fast `stir` follows the arms starting or stopping
     static final double ORB_SMOOTH = 0.06;   // s: the orb signals' envelope follows the pen with this lag
 
@@ -6820,7 +6929,7 @@ class RegulatorCore {
     static final class Motion { boolean eng, drv, act; double r = 1, amp = DEFAULT_REACH; int ph; double osc; }   // act: the lever is down (coupled-lever model)   // osc: the motion's own accumulated angle (radians), so a changing ratio bends the trace instead of jumping it
     /** A saved motion (voiced crystals, the copy socket). */
     record Snap(int arm, int axis, double r, int phase, double amp) {}
-    static final class Eval { double score; boolean exact; }
+    static final class Eval { double score; boolean exact; double fit; }   // fit: reach agreement of the matched components, e^(−6·|reach − target|) averaged over the recipe
 
     final Recipe[] recipes;
     final Motion[][] comps = new Motion[ARMS][AXES];
@@ -7014,7 +7123,7 @@ class RegulatorCore {
     static Eval evalOnce(Comp[] comps, java.util.List<Eng> eng) { return evalOnce(comps, eng, DEFAULT_RTOL); }
     static Eval evalOnce(Comp[] comps, java.util.List<Eng> eng, double rtol) {
         boolean[] used = new boolean[eng.size()];
-        double sum = 0; boolean exact = true; int nUsed = 0;
+        double sum = 0, fitSum = 0; boolean exact = true; int nUsed = 0;
         for (Comp t : comps) {
             int best = -1; double bs = 0; boolean bx = false;
             for (int i = 0; i < eng.size(); i++) {
@@ -7025,7 +7134,7 @@ class RegulatorCore {
                 double s = Math.exp(-d * 5) * (e.ph == t.phase ? 1 : 0.5) * (reachOk ? 1 : 0.7);
                 if (s > bs) { bs = s; best = i; bx = d < 1e-6 && e.ph == t.phase && reachOk; }
             }
-            if (best >= 0) { used[best] = true; nUsed++; sum += bs; if (!bx) exact = false; }
+            if (best >= 0) { used[best] = true; nUsed++; sum += bs; if (!bx) exact = false; fitSum += Math.exp(-6 * Math.abs(eng.get(best).amp - t.amp)); }
             else exact = false;
         }
         int extra = eng.size() - nUsed;
@@ -7033,6 +7142,7 @@ class RegulatorCore {
         Eval ev = new Eval();
         ev.score = sum / comps.length * Math.pow(0.6, extra);
         ev.exact = exact;
+        ev.fit = nUsed > 0 ? fitSum / nUsed : 0;   // over the matched components only: reach quality, not recipe progress
         return ev;
     }
     /** The best score over every phase set that traces the recipe's figure (§3.4). */
@@ -7105,6 +7215,16 @@ class RegulatorCore {
         signals[S_DRIVE] = Math.min(1, crankRatio() / MAX_N);
         signals[S_COHERENCE] = eng.isEmpty() ? 0 : coh / eng.size();
         signals[S_SCORE] = targetEval.score;
+        for (int t = 0; t < TONE_ST.length; t++) {
+            double sum = 0;
+            for (Eng e : eng) {
+                double d = Math.abs(pitchOf(e.r) - TONE_ST[t]); d = Math.min(d, 12 - d);   // circular semitone distance
+                sum += Math.sqrt(e.amp) * Math.exp(-TONE_K * d);   // √reach: a quarter-reach chord tone still sings at half
+            }
+            signals[S_TONE + t] = Math.min(1, sum);
+        }
+        signals[S_STACK] = Math.min(1, eng.size() / 6.0);   // how full the machine is: a tier-III recipe's six motions = 1
+        signals[S_FIT] = targetEval.fit;                     // the reach hint: 1 when every matched motion's reach is on the pinned recipe's target
         orbSignals();
     }
     // ---- the orb's kinematics, from the oscillators' derivatives (exact, whatever the frame rate), each an

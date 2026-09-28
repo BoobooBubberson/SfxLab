@@ -9,9 +9,13 @@ wants to find the source.
 | file | author | license | original |
 |---|---|---|---|
 | `pyretic/pyretic_synth_*.ogg` | Ferris (own synthesis, made in-lab) | MIT, with the repo | |
+| `gravitic/*.ogg`, `luminal/*.ogg` | Ferris (own synthesis, made in-lab) | MIT, with the repo | the regulator families' sample sets |
 | `pyretic/fire_loop.ogg` | VanzetPictures on Pixabay | Pixabay Content License | |
 | `pyretic/lava_loop.ogg` | freesound_community on Pixabay | Pixabay Content License | |
 | `pyretic/flamethrower_*.ogg` | alex_jauk on Pixabay | Pixabay Content License | `flamethrower-sound-effect-421402`, cut into turn-on / loop / turn-off |
+| `fire/blazing_fire.ogg` | SoundReality on Pixabay | Pixabay Content License | `soundreality-bliazing-fire-394355.mp3` | |
+
+
 
 ## Adding a recording
 
