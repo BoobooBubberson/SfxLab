@@ -92,7 +92,7 @@ import java.util.List;
  *                                     a rumble that steps aside for the hit
  *                                     reads clearer and the recovery feels
  *                                     like a swell
- *     lfo rate/shape, lfo>pitch/cut/amp   per-clip LFO (sine / triangle /
+ *     lfo rate/shape/pos, lfo>pitch/cut/amp   per-clip LFO (sine / triangle /
  *                                     square / random S&H) — vibrato, sirens,
  *                                     tremolo, filter wobble. Depths default
  *                                     to 0, i.e. off.
@@ -449,6 +449,8 @@ public class SfxLab extends JPanel {
         new PSpec("phaser rate", 0.05, 8, 0.4),
         new PSpec("ph stages", 1, PH_MAX, 4),   // more stages = more notches, thicker swirl
         new PSpec("ph pos", -1, 1, -1),         // < 0: the LFO sweeps; 0..1: the notch is parked / steered here (bind a signal: the orb steers the sweep)
+        new PSpec("lfo pos", -1, 1, -1),        // < 0: the LFO runs at its rate; 0..1: its phase in cycles is parked / steered here
+        new PSpec("flange pos", -1, 1, -1),     // < 0: the comb rides the LFO; 0..1: its delay is parked / steered here (1.2 .. 5 ms)
     };
     static final int N_TAIL = TAIL_SPECS.length;
     /** Index of a tail param for a given type (j = offset within TAIL_SPECS). */
@@ -1074,7 +1076,7 @@ public class SfxLab extends JPanel {
         double[] bph;                                     // tones bank: per-harmonic phases
         final float[] fl1 = new float[FLN], fl2 = new float[FLN]; int fp;   // flanger lines
         final double[] apx = new double[2 * PH_MAX], apy = new double[2 * PH_MAX];   // phaser all-pass states
-        double phFbL, phFbR; double phAng;   // accumulated LFO angle (cycles) for live clips                              // phaser feedback
+        double phFbL, phFbR; double phAng, lfoAng;   // accumulated phaser / clip-LFO angles (cycles) for live clips                              // phaser feedback
         double lo1, b1, lo2, b2;                          // stereo SVF state
         double nextPing;                                  // sparkle spawn clock
         final double[] pf = new double[12], pp = new double[12], pa = new double[12], ppan = new double[12];
@@ -2027,7 +2029,12 @@ public class SfxLab extends JPanel {
                 // hashed from the cycle count + seed so renders stay deterministic
                 double lfo = 0, lfoAmp = p[lb + 3];
                 if (p[lb + 1] != 0 || p[lb + 2] != 0 || lfoAmp != 0 || p[lb + 7] > 0.005) {
-                    double cyc = lt * p[lb];
+                    // the LFO's phase: parked / steered by `lfo pos` when set; else an accumulated angle for live clips (a moving
+                    // rate glides) and the closed form for timeline clips (old renders stay byte-identical)
+                    double lpos = p[lb + 15], cyc;
+                    if (lpos >= 0) cyc = Math.min(1, lpos);
+                    else if (c.mod != null) { v.lfoAng += p[lb] / SR; cyc = v.lfoAng; }
+                    else cyc = lt * p[lb];
                     double frac = cyc - Math.floor(cyc);
                     lfo = switch ((int) Math.round(p[lb + 4])) {
                         case 1 -> 1 - 4 * Math.abs(frac - 0.5);
@@ -2410,7 +2417,8 @@ public class SfxLab extends JPanel {
                 double flMix = p[lb + 7];
                 if (flMix > 0.005) {
                     double flFb = p[lb + 8];
-                    double d = (0.0012 + 0.0038 * (0.5 + 0.5 * lfo)) * SR;   // 1.2 .. 5 ms
+                    double fpos = p[lb + 16];
+                    double d = (0.0012 + 0.0038 * (fpos >= 0 ? Math.min(1, fpos) : 0.5 + 0.5 * lfo)) * SR;   // 1.2 .. 5 ms: `flange pos` parks it, else the LFO
                     double rp = v.fp - d;
                     while (rp < 0) rp += FLN;
                     int i0 = (int) rp;
@@ -5785,7 +5793,7 @@ public class SfxLab extends JPanel {
     Rectangle palRect(int i) { return new Rectangle(12 + i * 70, paletteY(), 66, 24); }
     static final String[] ACTIONS = {"video", "library", "+ lib", "preview", "export", "save"};
     Rectangle actRect(int i) { return new Rectangle(getWidth() - (actions().length - i) * 74 - 12, paletteY(), 68, 24); }
-    static final int SLIDER_ROWS = 15;   // partials has 43 params: three columns of 15
+    static final int SLIDER_ROWS = 16;   // partials has 46 params: three columns of 16
     Rectangle sliderRect(int i) {
         int col = i / SLIDER_ROWS, row = i % SLIDER_ROWS;
         return new Rectangle(14 + col * 310 + 92, panelY() + 30 + row * 22, 150, 13);
@@ -5801,7 +5809,7 @@ public class SfxLab extends JPanel {
     };
 
     SfxLab() {
-        setPreferredSize(new Dimension(1200, 896));   // 15 slider rows + 6 legend lines
+        setPreferredSize(new Dimension(1200, 918));   // 16 slider rows + 6 legend lines
         setBackground(Color.BLACK);
         setFocusable(true);
         loadCombos();
@@ -6441,6 +6449,8 @@ public class SfxLab extends JPanel {
             case "duck from" -> v < 0.5 ? "off" : "track " + (int) Math.round(v);
             case "phaser rate" -> String.format(Locale.ROOT, "%.2f Hz", v);
             case "ph pos" -> v < 0 ? "LFO" : String.format(Locale.ROOT, "%.2f (%.0f Hz)", v, 200 * Math.pow(16, v));
+            case "lfo pos" -> v < 0 ? "free (rate)" : String.format(Locale.ROOT, "%.2f cyc", v);
+            case "flange pos" -> v < 0 ? "LFO" : String.format(Locale.ROOT, "%.2f (%.1f ms)", v, 1.2 + 3.8 * v);
             case "ph stages" -> String.valueOf((int) Math.round(v));
             case "pitch mode" -> v >= 0.5 ? "keep len" : "tape";
             case "speed" -> v < 0.005 ? "freeze" : String.format(Locale.ROOT, "×%.2f", v);

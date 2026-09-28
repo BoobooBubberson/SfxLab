@@ -8,7 +8,7 @@
 bench 1
 root 65.4064
 layer bed aqueous/Aqueous_underwater_rumbling_00001 7 0.0000 5001 level=0.60000 attack=1.20000 release=1.80000 pitch=4.42000 cutoff=0.50000 echo=0.00000 reverb=0.45000 drive=0.10000 loop=1.00000 speed=0.70000 sines=1.00000 residual=0.60000 purity=0.30000 stretch=0.04000 keyed=1 file=aqueous/Aqueous_underwater_rumbling_00001.ogg
-layer surface aqueous/Aqueous_stream_00001 5 0.0000 5002 level=0.00000 attack=1.00000 release=1.50000 pitch=0.00000 cutoff=0.70000 echo=0.25000 reverb=0.45000 drive=0.12000 loop=1.00000 pitch_mode=1.00000 speed=0.60000 flange=0.30000 flange_fb=0.60000 lfo_rate=0.15000 keyed=2 file=aqueous/Aqueous_stream_00001.ogg
+layer surface aqueous/Aqueous_stream_00001 5 0.0000 5002 level=0.00000 attack=1.00000 release=1.50000 pitch=0.00000 cutoff=0.70000 echo=0.25000 reverb=0.45000 drive=0.12000 loop=1.00000 pitch_mode=1.00000 speed=0.60000 flange=0.40000 flange_fb=0.60000 lfo_rate=0.15000 keyed=2 file=aqueous/Aqueous_stream_00001.ogg
 layer root aqueous/Aqueous_stream_00001 5 0.0000 5003 level=0.00000 attack=0.60000 release=1.20000 pitch=-12.00000 filter=1.00000 cutoff=0.34020 resonance=0.93000 echo=0.30000 reverb=0.45000 drive=0.08000 loop=1.00000 keyed=2 file=aqueous/Aqueous_stream_00001.ogg
 layer third aqueous/Aqueous_stream_00001 5 0.0000 5004 level=0.00000 attack=0.60000 release=1.20000 pitch=-12.00000 filter=1.00000 cutoff=0.38200 resonance=0.93000 echo=0.30000 reverb=0.45000 drive=0.08000 loop=1.00000 keyed=2 file=aqueous/Aqueous_stream_00001.ogg
 layer fifth aqueous/Aqueous_stream_00001 5 0.0000 5005 level=0.00000 attack=0.60000 release=1.20000 pitch=-12.00000 filter=1.00000 cutoff=0.41340 resonance=0.93000 echo=0.30000 reverb=0.45000 drive=0.08000 loop=1.00000 keyed=2 file=aqueous/Aqueous_stream_00001.ogg
@@ -20,7 +20,7 @@ layer splash aqueous/Aqueous_splash_00002 5 6.0000 5010 level=0.30000 attack=0.0
 range bed level 0.3 0.6 the rumble as an underwater organ: stretched to 0.7x, inharmonics faded (purity 0.3), a little bell stretch
 range surface level 0 0.35 the stream in slow motion (0.35x .. 0.9x of real time, the pen's speed), flanged, echoing
 range surface speed 0.35 0.9 never real time
-range surface flange 0.1 0.6 the orb's curl
+range surface flange_pos 0 1 the comb's delay, parked by the orb's curl (the mix is fixed at 0.4)
 range root level 0 0.45 the root: the stream slowed an octave (tape) through a bandpass at C4 that rings (resonance 0.9-0.97 from fit), echoing
 range root resonance 0.9 0.97
 range third level 0 0.4 E4
@@ -33,7 +33,7 @@ bind stack bed level 0 -0.12 rel
 bind orb.radius bed cutoff 0.35 0.65
 bind stir surface level 0 0.35
 bind orb.speed surface speed 0.35 0.9
-bind orb.curl surface flange 0.1 0.6
+bind orb.curl surface flange_pos 0 1
 bind orb.radius surface cutoff 0.5 1
 bind tone.root root level 0 0.45
 bind tone.third third level 0 0.4

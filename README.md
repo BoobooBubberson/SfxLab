@@ -79,6 +79,8 @@ key. The short version:
 ## The bench
 
 The timeline crafts one-shots. The Harmonic Regulator (`docs/HARMONIC-REGULATOR.md`)
+  How the families were authored (register plan, chord-tone voices, pacing, the
+  subtraction trick, the measurement loop): `docs/REGULATOR-FAMILIES.md`.
 needs something else: a palette of layers that all sound at once and are steered by
 the machine's signals rather than by time. **H** swaps the timeline for that bench.
 
