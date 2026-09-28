@@ -2789,6 +2789,70 @@ public class SfxLab extends JPanel {
                                             "orb.speed", "orb.accel", "orb.curl", "orb.radius", "stir", "tone.root", "tone.third", "tone.fifth", "tone.seventh", "stack", "fit"};
     static int sigIdx(String name) { for (int i = 0; i < SIGNALS.length; i++) if (SIGNALS[i].equals(name)) return i; return -1; }
 
+    /** How the machine derives a signal (RegulatorCore.computeSignals / orbSignals / evalOnce), for the panel's tooltips.
+     *  "Engaged" = a motion switched on with some reach and a ratio above idle. */
+    static String sigHelp(String sig) {
+        if (sig.startsWith("score.")) return "<b>" + sig + "</b>  0..1 \u2014 how well the machine matches spell " + sig.substring(6) + "'s recipe: each recipe component takes its best "
+                + "engaged motion on the same axis, scored e^(\u22125\u00b7|ratio \u2212 n|), halved on the wrong phase, \u00d70.7 when the reach is off by more than rtol; "
+                + "averaged over the components, then \u00d70.6 per extra motion the recipe has no use for.<br>The spell's signature blends in by smoothstep(0.55, 1) of this, unless a "
+                + "<i>blend</i> row in its table says otherwise.";
+        String arm = sig.length() > 4 && sig.startsWith("arm") ? sig.substring(3, 4) : null;
+        if (arm != null && sig.endsWith(".ratio")) return "<b>" + sig + "</b>  0..8 \u2014 the ratio (turns per receiver cycle) of arm " + arm + "'s engaged motion with the largest reach; 0 with none. "
+                + "Bind <i>" + sig.replace(".ratio", ".pitch") + "</i> instead for the same thing as semitones folded into one octave (12\u00b7log2 ratio, 0..12).";
+        if (arm != null && sig.endsWith(".pitch")) return "<b>" + sig + "</b>  0..12 st \u2014 arm " + arm + "'s ratio as semitones folded into one octave: 12\u00b7log2(arm" + arm + ".ratio) mod 12, so ratios 1, 2, 4, 8 all give 0, 3 and 6 give 7.02, 5 gives 3.86. "
+                + "0 while the arm is silent. No slider: scrub arm" + arm + ".ratio.";
+        if (arm != null && sig.endsWith(".reach")) return "<b>" + sig + "</b>  0..1 \u2014 the summed reach (amplitude) of arm " + arm + "'s engaged motions, clamped.";
+        return switch (sig) {
+            case "radiance" -> "<b>radiance</b>  0..1 \u2014 the total reach of the engaged motions on the Z axis, clamped: the pylons rising = power radiating.";
+            case "consonance" -> "<b>consonance</b>  0..1 \u2014 how simple the ratios between engaged motions are: each pair's ratios rounded to integers and reduced to a:b, scored 2/(a+b), averaged over the pairs. "
+                    + "1:1 and 1:2 score 1 and 0.67, 2:3 0.4, 5:7 0.17. One engaged motion alone counts 1, none 0.";
+            case "tension" -> "<b>tension</b>  0..1 \u2014 the highest engaged ratio / 8.";
+            case "drive" -> "<b>drive</b>  0..1 \u2014 the crank's ratio / 8: how hard the machine is being turned, whatever is engaged.";
+            case "coherence" -> "<b>coherence</b>  0..1 \u2014 how close the engaged ratios sit to whole numbers: e^(\u22128\u00b7|r \u2212 round r|) averaged over them (0 with none). "
+                    + "Dead on = 1, a tenth off = 0.45, a quarter off = 0.14. The figure closes as this rises.";
+            case "score" -> "<b>score</b>  0..1 \u2014 the pinned (target) recipe's match, as for score.&lt;spell&gt;. Above 0.55 the lock mix starts blending in; 1 locks.";
+            case "orb.speed" -> "<b>orb.speed</b>  0..1 \u2014 the pen's speed over the sum of every engaged motion's peak speed, so 1 means every motion pulling the same way at once; 60 ms envelope.";
+            case "orb.accel" -> "<b>orb.accel</b>  0..1 \u2014 the pen's acceleration over the sum of every motion's peak acceleration; 60 ms envelope. Spikes at the turns of the figure.";
+            case "orb.curl" -> "<b>orb.curl</b>  0..1 \u2014 the curvature of the loop the pen is drawing right now, \u00d7 the figure's extent / 4: a full-size circle 0.25, a loop a quarter that size 1, a straight run 0; 60 ms envelope.";
+            case "orb.radius" -> "<b>orb.radius</b>  0..1 \u2014 the orb's distance from the receiver over the figure's extent; 60 ms envelope. Breathes once per receiver cycle for most figures.";
+            case "stir" -> "<b>stir</b>  0..1 \u2014 0 with every arm at rest, 1 once any engaged motion turns at \u00d70.5 or faster, whatever the crank does; 150 ms envelope. "
+                    + "<i>bind stir bed level 0.6 0</i> is a bed that plays at rest and drops out as soon as the arms move.";
+            case "tone.root", "tone.third", "tone.fifth", "tone.seventh" -> "<b>" + sig + "</b>  0..1 \u2014 arm-agnostic: how much reach sits on this chord tone of the harmonic series (root 0, third 3.86, fifth 7.02, seventh 9.69 st). "
+                    + "Every engaged motion's ratio becomes a pitch class; \u221areach \u00b7 e^(\u22122\u00b7semitones off) is summed over them, clamped (\u221a so a quarter-reach tone still sings at half). "
+                    + "At the integers 2/4/8 are root, 3/6 fifth, 5 third, 7 seventh; a ratio gliding 1 \u2192 2 lights root, third, fifth, seventh, root in turn.";
+            case "stack" -> "<b>stack</b>  0..1 \u2014 engaged motions / 6, clamped: how full the machine is (a tier-III recipe's six motions = 1). "
+                    + "A headroom hook: <i>bind stack bed level 0 -0.12 rel</i> steps a bed back as the chord fills.";
+            case "fit" -> "<b>fit</b>  0..1 \u2014 the reach hint: over the pinned recipe's matched components only, e^(\u22126\u00b7|reach \u2212 target|) averaged. 1 when every latched motion's reach is on its target, ~0.5 at the edge of rtol. "
+                    + "Ratio and phase are the score's business; fit isolates reach, so <i>bind fit root shimmer 0.3 0</i> lets a note steady as the reach comes right.";
+            default -> "<b>" + sig + "</b>";
+        };
+    }
+    /** A tooltip that stays up until the mouse leaves the component (the dismiss delay is global, so it is raised only while over it). */
+    static void holdTip(JComponent c) {
+        c.addMouseListener(new MouseAdapter() {
+            int dismiss;
+            public void mouseEntered(MouseEvent e) { dismiss = ToolTipManager.sharedInstance().getDismissDelay(); ToolTipManager.sharedInstance().setDismissDelay(Integer.MAX_VALUE); }
+            public void mouseExited(MouseEvent e) { ToolTipManager.sharedInstance().setDismissDelay(dismiss); }
+        });
+    }
+    /** What the bind tables' columns take, for their header tooltips (BCOLS order). */
+    static String bindColHelp(String col) {
+        return switch (col) {
+            case "#" -> "the row's place in the list: the family file's order, and the number a bound slider shows. Click to sort back into file order.";
+            case "on" -> "off: the row stays in the table but contributes nothing \u2014 for A/B comparison. Written as `off` on the line.";
+            case "signal" -> "what drives the row (hover a row for how the machine derives it). arm{n}.pitch is arm{n}.ratio as semitones in one octave; score.&lt;spell&gt; is that spell's recipe match.";
+            case "layer" -> "the layer id the row moves, or * for every layer on the bench that has the param.";
+            case "param" -> "the param's key as the slider names it (spaces as _). A spell's table also takes <i>blend</i> on the spell's own row: its blend-in curve.";
+            case "lo", "hi" -> "the param's value at signal 0 (lo) and at signal 1 (hi); lo above hi runs it downhill. <i>auto</i> (or blank): the layer's marked range, else the full spec range "
+                    + "(rel: 0 .. the spec's width). Absolute rows replace the slider's saved value; rel rows add to it \u2014 rows on one param are summed.";
+            case "rel" -> "ticked: the row's value is added to the saved slider value (or to an absolute row's value) instead of replacing it. Pitch rows default to rel, in semitones.";
+            case "map" -> "<html>reshapes the value before it lands. Blank: a straight line lo \u2192 hi.<br><b>steps=N</b>: quantised to N steps across lo..hi (steps=1 is a hard gate at the half-way point).<br>"
+                    + "<b>scale=&lt;chord&gt;</b>: the value, taken as semitones, snaps to that chord's nearest degree in any octave \u2014 one of: "
+                    + String.join(", ", CHORD_NAMES).replace(' ', '_') + "<br>(both are written the same way on the bind line).</html>";
+            default -> col;
+        };
+    }
+
     static class Bind {
         String sig, layer, param; double lo, hi; boolean rel;   // lo/hi NaN = auto: the layer's marked range, else the full spec range
         int steps;      // > 0: the value is quantised to this many steps across lo..hi (a sweep becomes a staircase)
@@ -3269,6 +3333,7 @@ public class SfxLab extends JPanel {
         sb.append("<br><br>" + tgt + " = " + String.join(" + ", terms));
         if (nAbs > 1) sb.append("<br><b>" + nAbs + " absolute rows: each subtracts the saved value, so the slider comes back in with a minus sign \u2014 keep one absolute row, make the others rel</b>");
         sb.append("<br>right now: " + fmtNum5(Math.max(ps.min(), Math.min(ps.max(), now))) + (rows.isEmpty() ? "" : "   with " + sig) + "   (clamped to " + fmtNum(ps.min()) + " .. " + fmtNum(ps.max()) + ")");
+        sb.append("<br><br><div width=520>" + sigHelp(b.sig) + "</div>");
         return sb.append("</html>").toString();
     }
     /** A spell's binds applied to one of its layers' targets; null when it has none that touch it. */
@@ -4726,11 +4791,15 @@ public class SfxLab extends JPanel {
                 }
             };
             ToolTipManager.sharedInstance().registerComponent(table);
-            table.addMouseListener(new MouseAdapter() {   // the algebra stays up until the mouse leaves the row (the delay is global, so it is set only while over a table)
-                int dismiss;
-                public void mouseEntered(MouseEvent e) { dismiss = ToolTipManager.sharedInstance().getDismissDelay(); ToolTipManager.sharedInstance().setDismissDelay(Integer.MAX_VALUE); }
-                public void mouseExited(MouseEvent e) { ToolTipManager.sharedInstance().setDismissDelay(dismiss); }
+            table.setTableHeader(new javax.swing.table.JTableHeader(table.getColumnModel()) {
+                public String getToolTipText(MouseEvent e) {   // what each column takes
+                    int c = columnAtPoint(e.getPoint()); if (c < 0) return null;
+                    String h = bindColHelp(BCOLS[table.convertColumnIndexToModel(c)]);
+                    return h.startsWith("<html>") ? h : "<html><div width=420>" + h + "</div></html>";
+                }
             });
+            ToolTipManager.sharedInstance().registerComponent(table.getTableHeader());
+            holdTip(table); holdTip(table.getTableHeader());   // the algebra and the column help stay up until the mouse leaves
             if (sp == null) paletteTable = table;
             table.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
             int[] widths = {24, 26, 84, 74, 74, 46, 46, 28, 64};
@@ -4897,9 +4966,11 @@ public class SfxLab extends JPanel {
                 gc.gridx = 1; gc.weightx = 1;
                 sl[i] = new JSlider(0, 1000, 0);
                 sl[i].addChangeListener(e -> { if (!refreshing) { lab.sigVal[k] = sl[k].getValue() / 1000.0 * SIG_MAX[k]; label(k); } });
+                sl[i].setToolTipText("<html><div width=520>" + sigHelp(SIGNALS[i]) + "<br><i>scrub it by hand here; with the machine driving the bench it follows the machine</i></div></html>"); holdTip(sl[i]);
                 sigGrid.add(sl[i], gc);
                 gc.gridx = 2; gc.weightx = 0;
                 sv[i] = new JLabel(); sv[i].setFont(mono); sv[i].setPreferredSize(new Dimension(190, 16));
+                sv[i].setToolTipText("<html><div width=520>" + sigHelp(SIGNALS[i]) + "</div></html>"); holdTip(sv[i]);
                 sigGrid.add(sv[i], gc);
                 label(i);
             }
@@ -4964,6 +5035,7 @@ public class SfxLab extends JPanel {
             on.setMargin(new Insets(0, 0, 0, 0)); on.setFocusable(false);
             on.setToolTipText("on: binds on " + sig + " move their params · off: they hold still, so the signal's effect can be compared live");
             JLabel nm = new JLabel(sig); nm.setFont(mono);
+            nm.setToolTipText("<html><div width=520>" + sigHelp(sig) + "</div></html>"); holdTip(nm);
             nm.setForeground(on.isSelected() ? UIManager.getColor("Label.foreground") : Color.GRAY);
             on.addActionListener(e -> { if (on.isSelected()) lab.mutedSigs.remove(sig); else lab.mutedSigs.add(sig); nm.setForeground(on.isSelected() ? UIManager.getColor("Label.foreground") : Color.GRAY); lab.benchGen++; });
             p.add(on); p.add(nm);
@@ -4993,6 +5065,7 @@ public class SfxLab extends JPanel {
                 gc.gridx = 1; gc.weightx = 1;
                 JSlider s = new JSlider(0, 1000, (int) Math.round(lab.spellScore.getOrDefault(sp.id, 0.0) * 1000));
                 s.setEnabled(!lab.sigDriven);
+                s.setToolTipText("<html><div width=520>" + sigHelp("score." + sp.id) + "</div></html>"); holdTip(s);
                 s.addChangeListener(e -> { if (!refreshing) lab.spellScore.put(sp.id, s.getValue() / 1000.0); });
                 spellsP.add(s, gc);
                 gc.gridx = 2; gc.weightx = 0;
@@ -5077,6 +5150,12 @@ public class SfxLab extends JPanel {
             p.add(new JLabel("lo (auto = marked range)")); p.add(loF);
             p.add(new JLabel("hi")); p.add(hiF);
             p.add(new JLabel("")); p.add(relC);
+            mapF.setToolTipText(bindColHelp("map"));
+            loF.setToolTipText("<html><div width=420>" + bindColHelp("lo") + "</div></html>"); hiF.setToolTipText(loF.getToolTipText());
+            relC.setToolTipText("<html><div width=420>" + bindColHelp("rel") + "</div></html>");
+            sigC.setToolTipText("<html><div width=420>" + bindColHelp("signal") + "</div></html>");
+            sigC.addActionListener(e -> { Object v = sigC.getSelectedItem(); if (v != null) sigC.setToolTipText("<html><div width=520>" + sigHelp(v.toString()) + "</div></html>"); });
+            for (JComponent f : new JComponent[]{mapF, loF, hiF, relC, sigC}) holdTip(f);
             p.add(new JLabel("map: steps=N or scale=name")); p.add(mapF);
             if (JOptionPane.showConfirmDialog(this, p, sp == null ? "Add bind (palette)" : "Add bind (spell " + sp.id + ")", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE) != JOptionPane.OK_OPTION) return;
             try {
