@@ -658,7 +658,7 @@ public class SfxLab extends JPanel {
             list.addListSelectionListener(e -> { if (!e.getValueIsAdjusting() && autoB.isSelected()) preview(); });
             list.addMouseListener(new MouseAdapter() { @Override public void mouseClicked(MouseEvent e) { if (e.getClickCount() == 2) addSample(); } });
             list.getInputMap().put(KeyStroke.getKeyStroke("ESCAPE"), "back");
-            list.getActionMap().put("back", new AbstractAction() { public void actionPerformed(ActionEvent e) { lab.requestFocusInWindow(); } });
+            list.getActionMap().put("back", new AbstractAction() { public void actionPerformed(ActionEvent e) { if (lab.swapTarget != null) { lab.swapTarget = null; lab.toast("swap cancelled"); } lab.requestFocusInWindow(); } });
             list.getInputMap().put(KeyStroke.getKeyStroke("ENTER"), "add");
             list.getActionMap().put("add", new AbstractAction() { public void actionPerformed(ActionEvent e) { addSample(); } });
             list.getInputMap().put(KeyStroke.getKeyStroke("SPACE"), "play");
@@ -719,6 +719,12 @@ public class SfxLab extends JPanel {
         void addSample() {
             String f = sel();
             if (f == null) return;
+            Clip t = lab.swapTarget;
+            if (t != null) {   // armed from a bench row's menu: this pick replaces that layer's recording
+                lab.swapTarget = null;
+                if (lab.benchOn && lab.bench.layers.contains(t)) { lab.swapSource(t, f); lab.requestFocusInWindow(); return; }
+                lab.toast("the layer to swap is gone; " + f + " added instead");
+            }
             lab.pushUndo("");
             Clip c = lab.addSampleClip(f, lab.selTrack, lab.playPos);
             if (c != null) { lab.toast(f + " on track " + (lab.selTrack + 1)); lab.requestFocusInWindow(); }
@@ -3547,6 +3553,36 @@ public class SfxLab extends JPanel {
         for (Bind b : bench.binds) if (b.layer.equals(c.id)) b.layer = id;
         c.id = id; benchGen++; markEdit();
     }
+    /** A layer the sample browser's next pick swaps into (armed from the row menu); null = the browser adds as usual. */
+    Clip swapTarget;
+    /** The layer plays samples/<f> from now on, keeping its id, type, saved values, ranges, notes and binds. A spell's copy of
+     *  the layer (same id and type, same old file) follows, so the spell blends the same recording. Partials re-analyse. */
+    void swapSource(Clip c, String f) {
+        if (c.type != SAMPLE && c.type != CHOIR && c.type != PARTIALS) { toast(c.id + " is a " + TYPE_NAMES[c.type] + " layer: no recording to swap"); return; }
+        if (f.equals(c.file)) { toast(c.id + " already plays " + f); return; }
+        float[][] smp = sample(f);
+        if (smp[0].length <= 1) { toast("couldn't decode " + f); return; }
+        pushUndo("");
+        String old = c.file, name = f.replaceFirst("\\.[^.]+$", "");
+        ArrayList<Spell> followed = new ArrayList<>();
+        synchronized (lock) {
+            c.file = f; c.name = name; c.pa = null; c.paFloor = Long.MIN_VALUE; c.paRetry = 0;
+            for (Spell sp : spells) {
+                Clip sc = sp.bench.byId(c.id);
+                if (sc == null || sc == c || sc.type != c.type || !Objects.equals(sc.file, old)) continue;
+                sc.file = f; sc.name = name; sc.pa = null; sc.paFloor = Long.MIN_VALUE; sc.paRetry = 0;
+                followed.add(sp);
+            }
+        }
+        for (Spell sp : followed) markSpellDirty(sp);
+        if (c.type == PARTIALS) partials(c, false);
+        benchGen++; markEdit();
+        double dur = smp[0].length / (double) SR;
+        toast(String.format(Locale.ROOT, "%s now plays %s (%.2fs), was %s \u2014 id, values and binds kept%s%s%s", c.id, f, dur, old,
+                c.on != ON_NONE ? String.format(Locale.ROOT, "; one-shot length stays %.2fs", c.dur) : "",
+                (c.keyed & KEY_PITCH) != 0 ? "; R retunes it to the root" : "",
+                followed.isEmpty() ? "" : "; followed in spell " + followed.stream().map(sp -> sp.id).collect(java.util.stream.Collectors.joining(", "))));
+    }
     void setRange(Clip c, int pi, double lo, double hi) {
         pushUndo("");
         if (c.range == null) c.range = new HashMap<>();
@@ -4018,6 +4054,15 @@ public class SfxLab extends JPanel {
         m.addSeparator();
         m.add(item("duplicate  (D)", () -> { sel = c; dupSel(); }));
         m.add(item("copy to the timeline at the playhead", () -> layerToTimeline(c)));
+        if (c.type == SAMPLE || c.type == CHOIR || c.type == PARTIALS) {
+            String pick = browserOn && browser != null ? browser.sel() : null;
+            if (pick != null && !pick.equals(c.file)) m.add(item("swap source with " + pick + "  (the browser's pick)", () -> swapSource(c, pick)));
+            m.add(item("swap source\u2026  (then dbl-click / ENTER a sample in the browser)", () -> {
+                swapTarget = c;
+                showBrowser(true);
+                toast("pick a recording for " + c.id + " in the browser: dbl-click / ENTER swaps it in, keeping the id, values and binds (ESC cancels)");
+            }));
+        }
         if (!spells.isEmpty()) {
             JMenu add = new JMenu("add to a spell at these values");
             for (Spell sp : spells) add.add(item(sp.id + (sp.bench.byId(c.id) != null ? "  (replace)" : ""), () -> addLayerToSpell(c, sp)));
@@ -4235,7 +4280,7 @@ public class SfxLab extends JPanel {
             pauseB.addActionListener(e -> auto.paused = pauseB.isSelected());
             speedS.setPreferredSize(new Dimension(90, 20)); speedS.setToolTipText("speed ×0.5 .. ×4");
             speedS.addChangeListener(e -> auto.speed = speedS.getValue() / 10.0);
-            mistakesB.setToolTipText("catch the wrong resonance first now and then, and listen before correcting");
+            mistakesB.setToolTipText("meander now and then: catch the wrong resonance first, or spin past the target and back off — brief, and always ending on the integer before the next motion");
             anyB.setToolTipText("after each lock, pin a random spell of the family and go for that one");
             mistakesB.addActionListener(e -> auto.mistakes = mistakesB.isSelected());
             anyB.addActionListener(e -> auto.anySpell = anyB.isSelected());
@@ -4423,7 +4468,8 @@ public class SfxLab extends JPanel {
             void start() { on = true; paused = false; plan.clear(); cur = null; core.resetComps(); planTarget(); }
             void stop() { on = false; plan.clear(); cur = null; doing = ""; }
             double pause(double a, double b) { return a + rng.nextDouble() * (b - a); }
-            void step(String what, double delay, Runnable act, java.util.function.BooleanSupplier until, double timeout) { plan.add(new Object[]{what, delay, act, until, timeout}); }
+            Object[] mk(String what, double delay, Runnable act, java.util.function.BooleanSupplier until, double timeout) { return new Object[]{what, delay, act, until, timeout}; }
+            void step(String what, double delay, Runnable act, java.util.function.BooleanSupplier until, double timeout) { plan.add(mk(what, delay, act, until, timeout)); }
             void planTarget() {
                 if (anySpell) {
                     ArrayList<RegulatorCore.Recipe> rs = new ArrayList<>();
@@ -4449,15 +4495,22 @@ public class SfxLab extends JPanel {
                 // the reach: the player's own technique is to latch on the integer by ear, then work the reach slider while
                 // watching the orb, so the reach is explored — a few wandering settings closing in on the target
                 for (int k = 0; k < ph; k++) step("phase dial", pause(0.3, 0.7), core::phaseStep, null, 0);
-                if (mistakes && rng.nextDouble() < 0.35) {
+                // mistakes are brief and end on an integer: a player meanders, but hunts the resonance down before moving on,
+                // so the machine never sits detuned for long (that is what makes the bench sound out of tune)
+                double dice = mistakes ? rng.nextDouble() : 1;
+                if (dice < 0.3) {
                     int wrong = n < 7 ? n + 1 : n - 1;
                     if (wrong >= 1) {
-                        spinTo(wrong); latchNow();
+                        spinTo(wrong); latchNow(wrong);
                         step("that's ×" + wrong + " — listening, then correcting", pause(0.8, 2.2), () -> {}, null, 0);
                         if (!core.coupling) step("re-driving it", pause(0.2, 0.5), () -> core.axisLever(ax), null, 0);   // focus model: held → driven; coupled model: the next scroll couples
                     }
+                } else if (dice < 0.55 && !core.classic) {   // overshoot (or stop short), hear it, then close in
+                    double miss = (rng.nextBoolean() ? 1 : -1) * pause(0.25, 0.45), aim = Math.max(0.6, Math.min(RegulatorCore.MAX_N, n + miss));
+                    plan.add(spinStep(String.format(Locale.ROOT, "spinning past ×%d", n), aim, () -> Math.abs(core.crankRatio() - aim) < 0.05, 4));
+                    step(miss > 0 ? "past it — backing off" : "not there yet", pause(0.2, 0.5), () -> {}, null, 0);
                 }
-                spinTo(n); latchNow();
+                spinTo(n); latchNow(n);
                 double a = Math.max(0.05, Math.min(1, reach + (rng.nextDouble() - 0.5) * 0.08));
                 int sweeps = 2 + rng.nextInt(3);
                 for (int k = 0; k < sweeps; k++) {   // wander around the target, closing in: ±0.35, ±0.2, ±0.1 ...
@@ -4469,26 +4522,42 @@ public class SfxLab extends JPanel {
                 if (rng.nextDouble() < 0.5) step("listening", pause(0.5, 1.5), () -> {}, null, 0);
                 if (core.coupling) step("lever up (parked)", pause(0.2, 0.5), () -> { core.selectArm(arm); if (core.comps[arm][ax].act) core.axisLever(ax); }, null, 0);
             }
-            void latchNow() { step("latch", core.classic ? pause(0.4, 1.0) : 0, core::latch, null, 0); }
-            /** Spin the crank into resonance n: nudge up past the point friction brings back into the window during the
-             *  slip, then let it coast in; from above, nudge down to that point. Keeps trying until it catches. */
-            void spinTo(int n) {
-                if (!core.classic) {   // free crank: bring the ratio just above n and let friction carry it into the window; latch follows at once
+            /** Latch on integer n. If the spin didn't get there (it timed out), a player would not hold a sour ratio: spin again,
+             *  up to twice, before settling for whatever it is. */
+            void latchNow(int n) { plan.add(latchStep(n, 0)); }
+            Object[] latchStep(int n, int retry) {
+                return mk("latch", core.classic ? pause(0.4, 1.0) : 0, () -> {
+                    boolean there = core.classic ? core.caught == n : core.acceptable(core.crankRatio()) == n;
+                    if (!there && retry < 2) { plan.addFirst(latchStep(n, retry + 1)); plan.addFirst(spinStep(n)); return; }
+                    core.latch();
+                }, null, 0);
+            }
+            void spinTo(int n) { plan.add(spinStep(n)); }
+            /** Free crank: scroll the ratio to `aim`. Far off, wheel notches; close, a few fine notches per tick — enough to beat
+             *  the friction that pulls a fast crank back between notches (at ×7 it takes 0.6 ratio/s, more than one fine notch per
+             *  frame gave), closing in geometrically without overshoot. Above the aim, friction does most of the work. */
+            Object[] spinStep(String what, double aim, java.util.function.BooleanSupplier until, double timeout) {
+                return mk(what, 0.02, () -> {
+                    double r = core.crankRatio(), gap = aim - r;
+                    double loss = r * RegulatorCore.FRICTION * 0.02 / Math.max(0.1, speed);   // what friction takes back before the next notch
+                    if (gap > 0.5) core.nudge(1, RegulatorCore.NUDGE_WHEEL);
+                    else if (gap > 0.003) core.nudge(1, RegulatorCore.NUDGE_FINE * Math.min(5, Math.max(1, (int) Math.ceil((0.6 * gap + loss) / 0.02))));
+                    else if (gap < -0.5) core.nudge(-1, RegulatorCore.NUDGE_WHEEL);
+                    else if (-gap > loss + 0.003) core.nudge(-1, RegulatorCore.NUDGE_FINE * Math.min(5, Math.max(1, (int) Math.ceil((0.6 * -gap - loss) / 0.02))));
+                }, until, timeout);
+            }
+            /** Spin the crank into resonance n. Free crank: land a hair above n (friction eases it onto n during the latch frame)
+             *  inside the acceptance window. Classic crank: nudge up past the point friction brings back into the window during
+             *  the slip, then let it coast in; from above, nudge down to that point. Keeps trying until it catches. */
+            Object[] spinStep(int n) {
+                if (!core.classic) {
                     double win = core.acceptWindow(n);
-                    step("spinning to ×" + n, 0.02, () -> {
-                        double r = core.crankRatio();
-                        if (r > n + 0.12) core.nudge(-1, RegulatorCore.NUDGE_WHEEL);
-                        else if (r > n + win * 0.5) core.nudge(-1, RegulatorCore.NUDGE_FINE);
-                        else if (r < n - 0.12) core.nudge(1, RegulatorCore.NUDGE_WHEEL);
-                        else if (r < n + win * 0.3) core.nudge(1, RegulatorCore.NUDGE_FINE);
-                    }, () -> Math.abs(core.crankRatio() - n) <= win * 0.6, 40);
-                    return;
+                    return spinStep("spinning to ×" + n, n + 0.35 * win, () -> Math.abs(core.crankRatio() - n) <= win * 0.6, 10);
                 }
-                // classic crank: a release point from which the slip's friction lands the crank inside n's window, and it catches
                 double over = n * Math.exp(RegulatorCore.FRICTION * RegulatorCore.SLIP_NUDGE) + RegulatorCore.catchWidth(n) * 0.4;
                 double w = RegulatorCore.catchWidth(n);
                 double[] st = {0, 0};   // {released (1/0), machine time since release}
-                step("spinning to ×" + n, 0.02, () -> {
+                return mk("spinning to ×" + n, 0.02, () -> {
                     double r = core.crankRatio();
                     if (core.caught == n) return;
                     if (st[0] == 1) {   // hands off: let it coast in. Re-spin if it caught elsewhere or fell through the window
@@ -4502,7 +4571,7 @@ public class SfxLab extends JPanel {
                     else if (r > over + 0.1) core.nudge(-1, RegulatorCore.NUDGE_WHEEL);
                     else if (r > over + 0.03) core.nudge(-1, RegulatorCore.NUDGE_FINE);
                     else st[0] = 1;
-                }, () -> core.caught == n, 40);
+                }, () -> core.caught == n, 15);
             }
             void advance(double dt) {
                 if (cur == null) { cur = plan.poll(); if (cur == null) { on = false; doing = ""; return; } sinceAct = 0; elapsed = 0; doing = (String) cur[0]; }
@@ -4513,8 +4582,19 @@ public class SfxLab extends JPanel {
                     if (sinceAct >= delay) { ((Runnable) cur[2]).run(); cur = null; }
                     return;
                 }
-                if (until.getAsBoolean() || elapsed > (Double) cur[4]) { cur = null; return; }
-                if (sinceAct >= delay) { sinceAct = 0; ((Runnable) cur[2]).run(); }
+                if (until.getAsBoolean() || elapsed > (Double) cur[4]) { cur = null; followUp(); return; }
+                for (int k = 0; sinceAct >= delay && k < 8; k++) {   // the 20 ms cadence held at a 33 ms frame: catch up, and stop as soon as it is there
+                    sinceAct -= delay; ((Runnable) cur[2]).run();
+                    if (until.getAsBoolean()) { cur = null; followUp(); return; }
+                }
+            }
+            /** A zero-delay step after a repeating one runs in the same frame it finished, before any machine time passes: the free
+             *  crank's latch lands where the spin left the ratio, not a frame of friction later (more than a narrow window at ×7). */
+            void followUp() {
+                Object[] nx = plan.peek();
+                if (nx == null || (Double) nx[1] != 0 || nx[3] != null) return;
+                plan.poll(); doing = (String) nx[0];
+                ((Runnable) nx[2]).run();
             }
         }
 
@@ -7090,7 +7170,7 @@ public class SfxLab extends JPanel {
         g.setColor(new Color(110, 110, 110));
         g.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));   // 7 px/char: ~165 chars fit at 1200 wide
         if (benchOn) {
-            g.drawString("mouse  click row: select · M / S boxes: mute / solo · level bar: drag · r-click row: id, endless / one-shot, fire, remove · dbl-click row: rename id", 14, h - 74);
+            g.drawString("mouse  click row: select · M / S boxes: mute / solo · level bar: drag · r-click row: id, endless / one-shot, fire, swap source, remove · dbl-click row: rename id", 14, h - 74);
             g.drawString("       slider: drag · wheel: fine · r-click slider: type value, mark the range that sounds good, note, bind a signal · wheel over rows: scroll", 14, h - 61);
             g.drawString("keys   1-9 0 add a synth layer · W import recording · A sample browser (adds land here) · DEL remove · D dup · up/down select · C sample/choir/partials", 14, h - 48);
             g.drawString("       SPACE play bench · ENTER stop · P solo / fire · T key-track · R tune to root · shift+R degree · ctrl+R root · < > key ±1 st · U the machine", 14, h - 35);
@@ -7372,6 +7452,8 @@ class RegulatorCore {
         vel = Math.max(-MAX_VEL, Math.min(MAX_VEL, vel + s * dir * step));
         if (Math.abs(vel) < 0.001) vel = 0;
         slip = SLIP_NUDGE;
+        double cr = crankRatio();   // the driven motions follow at once, so a latch in the same frame sees the notch (tick repeats this)
+        for (Motion[] a : comps) for (Motion c : a) if (c.eng && c.drv) c.r = cr;
     }
     void dragStart() { couple(); drag = true; }
     /** While dragging: the measured crank speed in rev/s (the pointer's angular velocity), smoothed in. */

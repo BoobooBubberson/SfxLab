@@ -497,7 +497,14 @@ readout of what the controls reach. Both models are in the machine
 The auto-player trims first (reach, phase), spins to just above the target
 and latches as friction carries the ratio through the window, which is
 also the human technique; under coupled levers it parks each motion after
-accepting it.
+accepting it. With the free crank it scrolls a few fine notches per tick
+near the target, enough to beat the friction that pulls a fast crank back
+between notches (0.6 ratio/s at ×7: one notch a frame lost that race and
+×7 never landed), and latches in the frame the ratio enters the window.
+A latch that finds the ratio outside the window spins again rather than
+holding a sour motion. Its mistakes are brief and end on an integer: the
+wrong resonance first, or an overshoot backed off — never a held detune,
+which is what makes the bench sound out of tune.
 
 ## 7. Open questions
 
