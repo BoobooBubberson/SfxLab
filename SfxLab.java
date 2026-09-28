@@ -80,7 +80,7 @@ import java.util.List;
  *                                     mixed back in, swept by the clip's LFO:
  *                                     sine = jet whoosh, random = arc jitter;
  *                                     feedback sharpens it metallic)
- *     phaser, phaser rate, ph stages  a chain of all-pass stages swept by their
+ *     phaser, phaser rate, ph stages, ph pos  a chain of all-pass stages swept by their
  *                                     own slow LFO and mixed with the dry signal:
  *                                     a few moving notches — the swirl on
  *                                     magic, jets, and anything "alive" (the
@@ -448,6 +448,7 @@ public class SfxLab extends JPanel {
         new PSpec("phaser", 0, 1, 0),         // wet mix of the swept all-pass chain
         new PSpec("phaser rate", 0.05, 8, 0.4),
         new PSpec("ph stages", 1, PH_MAX, 4),   // more stages = more notches, thicker swirl
+        new PSpec("ph pos", -1, 1, -1),         // < 0: the LFO sweeps; 0..1: the notch is parked / steered here (bind a signal: the orb steers the sweep)
     };
     static final int N_TAIL = TAIL_SPECS.length;
     /** Index of a tail param for a given type (j = offset within TAIL_SPECS). */
@@ -1073,7 +1074,7 @@ public class SfxLab extends JPanel {
         double[] bph;                                     // tones bank: per-harmonic phases
         final float[] fl1 = new float[FLN], fl2 = new float[FLN]; int fp;   // flanger lines
         final double[] apx = new double[2 * PH_MAX], apy = new double[2 * PH_MAX];   // phaser all-pass states
-        double phFbL, phFbR;                              // phaser feedback
+        double phFbL, phFbR; double phAng;   // accumulated LFO angle (cycles) for live clips                              // phaser feedback
         double lo1, b1, lo2, b2;                          // stereo SVF state
         double nextPing;                                  // sparkle spawn clock
         final double[] pf = new double[12], pp = new double[12], pa = new double[12], ppan = new double[12];
@@ -2430,7 +2431,13 @@ public class SfxLab extends JPanel {
                 // little feedback gives the notches a resonant, vocal edge.
                 double phMix = p[lb + 11];
                 if (phMix > 0.005) {
-                    double sw = 0.5 + 0.5 * Math.sin(2 * Math.PI * lt * p[lb + 12]);
+                    // the sweep position: steered directly by `ph pos` when it is set (a bound signal moves the notches, smoothed
+                    // like every live param); else the LFO — an accumulated angle for live clips so a moving rate glides, the
+                    // closed form for plain timeline clips so old renders stay byte-identical
+                    double pos = p[lb + 14], sw;
+                    if (pos >= 0) sw = Math.min(1, pos);
+                    else if (c.mod != null) { v.phAng += p[lb + 12] / SR; sw = 0.5 + 0.5 * Math.sin(2 * Math.PI * v.phAng); }
+                    else sw = 0.5 + 0.5 * Math.sin(2 * Math.PI * lt * p[lb + 12]);
                     double fc = 200 * Math.pow(16, sw);
                     double tn = Math.tan(Math.PI * fc / SR);
                     double a = (tn - 1) / (tn + 1);
@@ -6433,6 +6440,7 @@ public class SfxLab extends JPanel {
             case "loop" -> v >= 0.5 ? "on" : "off";
             case "duck from" -> v < 0.5 ? "off" : "track " + (int) Math.round(v);
             case "phaser rate" -> String.format(Locale.ROOT, "%.2f Hz", v);
+            case "ph pos" -> v < 0 ? "LFO" : String.format(Locale.ROOT, "%.2f (%.0f Hz)", v, 200 * Math.pow(16, v));
             case "ph stages" -> String.valueOf((int) Math.round(v));
             case "pitch mode" -> v >= 0.5 ? "keep len" : "tape";
             case "speed" -> v < 0.005 ? "freeze" : String.format(Locale.ROOT, "×%.2f", v);

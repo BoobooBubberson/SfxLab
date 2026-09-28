@@ -1,0 +1,54 @@
+# SfxLab bench v1: layer id name type dur seed key=value... (dur 0 = endless) · range id param lo hi [note] · bind signal id|* param [lo hi] [rel] [steps=N | scale=<chord>]
+# aqueous_mystic — the aqueous plan bent away from the real thing. Same recordings, same subtraction (four bandpasses at the chord
+# tones, levels from tone.*), but nothing plays at the speed it was recorded: the surface runs at a third to nine tenths of real
+# time (keep-len, the pen's speed), the note copies are slowed an octave in tape mode (big slow drops), the rumble is stretched
+# and cleaned of its inharmonics (an underwater organ). The filters ring harder (resonance 0.9-0.97) and the notes echo. The
+# droplets (the stream's partials, always gathered onto the chord, shimmering) grow with the machine and FREEZE as the ratios
+# come in tune: at coherence 1 the water stands still (spectral freeze). Reverbs wide, echo on the drips.
+bench 1
+root 65.4064
+layer bed aqueous/Aqueous_underwater_rumbling_00001 7 0.0000 5001 level=0.60000 attack=1.20000 release=1.80000 pitch=4.42000 cutoff=0.50000 echo=0.00000 reverb=0.45000 drive=0.10000 loop=1.00000 speed=0.70000 sines=1.00000 residual=0.60000 purity=0.30000 stretch=0.04000 keyed=1 file=aqueous/Aqueous_underwater_rumbling_00001.ogg
+layer surface aqueous/Aqueous_stream_00001 5 0.0000 5002 level=0.00000 attack=1.00000 release=1.50000 pitch=0.00000 cutoff=0.70000 echo=0.25000 reverb=0.45000 drive=0.12000 loop=1.00000 pitch_mode=1.00000 speed=0.60000 flange=0.30000 flange_fb=0.60000 lfo_rate=0.15000 keyed=2 file=aqueous/Aqueous_stream_00001.ogg
+layer root aqueous/Aqueous_stream_00001 5 0.0000 5003 level=0.00000 attack=0.60000 release=1.20000 pitch=-12.00000 filter=1.00000 cutoff=0.34020 resonance=0.93000 echo=0.30000 reverb=0.45000 drive=0.08000 loop=1.00000 keyed=2 file=aqueous/Aqueous_stream_00001.ogg
+layer third aqueous/Aqueous_stream_00001 5 0.0000 5004 level=0.00000 attack=0.60000 release=1.20000 pitch=-12.00000 filter=1.00000 cutoff=0.38200 resonance=0.93000 echo=0.30000 reverb=0.45000 drive=0.08000 loop=1.00000 keyed=2 file=aqueous/Aqueous_stream_00001.ogg
+layer fifth aqueous/Aqueous_stream_00001 5 0.0000 5005 level=0.00000 attack=0.60000 release=1.20000 pitch=-12.00000 filter=1.00000 cutoff=0.41340 resonance=0.93000 echo=0.30000 reverb=0.45000 drive=0.08000 loop=1.00000 keyed=2 file=aqueous/Aqueous_stream_00001.ogg
+layer seventh aqueous/Aqueous_stream_00001 5 0.0000 5006 level=0.00000 attack=0.60000 release=1.20000 pitch=-12.00000 filter=1.00000 cutoff=0.44480 resonance=0.93000 echo=0.30000 reverb=0.45000 drive=0.08000 loop=1.00000 keyed=2 file=aqueous/Aqueous_stream_00001.ogg
+layer droplets aqueous/Aqueous_stream_00001 7 0.0000 5007 level=0.00000 attack=1.50000 release=2.50000 pitch=0.00000 cutoff=1.00000 echo=0.20000 reverb=0.80000 loop=1.00000 speed=1.00000 sines=1.00000 residual=0.00000 gather=1.00000 chord=2.00000 shimmer=0.30000 root_shift=-5.00000 keyed=1 file=aqueous/Aqueous_stream_00001.ogg
+layer thud aqueous/Aqueous_impact_splash_00001 5 5.0000 5008 level=0.30000 attack=0.00500 release=0.30000 pitch=-5.00000 cutoff=0.70000 reverb=0.60000 keyed=2 on=lock file=aqueous/Aqueous_impact_splash_00001.ogg
+layer drip aqueous/Aqueous_drip_00001 5 3.0000 5009 level=0.40000 attack=0.00200 release=0.20000 pitch=0.07000 cutoff=1.00000 echo=0.50000 reverb=0.50000 keyed=1 on=accept file=aqueous/Aqueous_drip_00001.ogg
+layer splash aqueous/Aqueous_splash_00002 5 6.0000 5010 level=0.30000 attack=0.00500 release=0.30000 pitch=-7.00000 cutoff=0.70000 reverb=0.60000 keyed=2 on=unlock file=aqueous/Aqueous_splash_00002.ogg
+range bed level 0.3 0.6 the rumble as an underwater organ: stretched to 0.7x, inharmonics faded (purity 0.3), a little bell stretch
+range surface level 0 0.35 the stream in slow motion (0.35x .. 0.9x of real time, the pen's speed), flanged, echoing
+range surface speed 0.35 0.9 never real time
+range surface flange 0.1 0.6 the orb's curl
+range root level 0 0.45 the root: the stream slowed an octave (tape) through a bandpass at C4 that rings (resonance 0.9-0.97 from fit), echoing
+range root resonance 0.9 0.97
+range third level 0 0.4 E4
+range fifth level 0 0.4 G4
+range seventh level 0 0.3 Bb4
+range droplets level 0 1 the droplets, always gathered onto the chord, shimmering: grow with the machine
+range droplets speed 0.05 1 time itself: real at coherence 0, all but frozen (spectral freeze) at coherence 1
+bind stir bed level 0.6 0.4
+bind stack bed level 0 -0.12 rel
+bind orb.radius bed cutoff 0.35 0.65
+bind stir surface level 0 0.35
+bind orb.speed surface speed 0.35 0.9
+bind orb.curl surface flange 0.1 0.6
+bind orb.radius surface cutoff 0.5 1
+bind tone.root root level 0 0.45
+bind tone.third third level 0 0.4
+bind tone.fifth fifth level 0 0.4
+bind tone.seventh seventh level 0 0.3
+bind fit root resonance 0.9 0.97
+bind fit third resonance 0.9 0.97
+bind fit fifth resonance 0.9 0.97
+bind fit seventh resonance 0.9 0.97
+bind orb.accel root drive 0.08 0.2
+bind orb.accel fifth drive 0.08 0.2
+bind stack droplets level 0 1
+bind coherence droplets speed 1 0.05
+bind radiance droplets reverb 0.6 0.95
+note aqueous_mystic (draft, 2026-09-27): the aqueous v1 plan with time bent. Compare with aqueous in the family picker; the spells are copies
+note of aqueous's (same layer ids), so a spell file can be shared or diverged later. Levers used, in order of how far they take it from
+note the recording: droplets speed (freeze with coherence) > note copies an octave down in tape mode > surface keep-len slow motion +
+note flange > bed purity/stretch/0.7x > resonance 0.9-0.97 > echo on the notes and the drip > reverbs. All of it is authoring, no new samples.

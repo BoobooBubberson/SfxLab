@@ -5,13 +5,13 @@
 # near 5 the third, near 7 the seventh, and a ratio gliding between integers walks through them. The cloud is the chord that
 # forms: it grows with the number of motions (stack), stays a soft cluster while the ratios are detuned and gathers once every
 # engaged ratio is an integer (coherence). The orb colours everything: its swing opens the voices' low-pass, its curl makes
-# the fifth shimmer and the third phase, its speed phases the root. fit (the reach hint) steadies the notes: a wrong reach
+# the fifth shimmer and steers the third's phaser notches, its speed steers the root's. fit (the reach hint) steadies the notes: a wrong reach
 # leaves the root and third wobbling, the right one lets them ring clean.
 bench 1
 root 65.4064
 layer bed pyretic/pyretic_synth_00001_loop 7 0.0000 1001 level=0.35000 attack=0.30000 release=0.60000 pitch=-5.17941 cutoff=1.00000 echo=0.00000 reverb=0.00000 drive=0.00000 loop=1.00000 sines=1.00000 residual=1.00000 keyed=1 file=pyretic/pyretic_synth_00001_loop.ogg
-layer third pyretic/pyretic_synth_00008_loop 7 0.0000 1002 level=0.00000 attack=0.25000 release=0.50000 pitch=-8.55300 cutoff=1.00000 reverb=0.30000 loop=1.00000 sines=1.00000 residual=0.40000 keyed=1 file=pyretic/pyretic_synth_00008_loop.ogg
-layer root pyretic/pyretic_synth_00012 7 0.0000 1003 level=0.00000 attack=0.30000 release=0.60000 pitch=19.03000 cutoff=0.80000 reverb=0.30000 loop=1.00000 sines=1.00000 residual=0.20000 keyed=1 file=pyretic/pyretic_synth_00012.ogg
+layer third pyretic/pyretic_synth_00008_loop 7 0.0000 1002 level=0.00000 attack=0.25000 release=0.50000 pitch=-8.55300 cutoff=1.00000 reverb=0.30000 loop=1.00000 sines=1.00000 residual=0.40000 keyed=1 file=pyretic/pyretic_synth_00008_loop.ogg phaser=1.00000
+layer root pyretic/pyretic_synth_00012 7 0.0000 1003 level=0.00000 attack=0.30000 release=0.60000 pitch=19.03000 cutoff=0.80000 reverb=0.30000 loop=1.00000 sines=1.00000 residual=0.20000 keyed=1 file=pyretic/pyretic_synth_00012.ogg phaser=1.00000
 layer fifth tones 1 0.0000 1004 level=0.00000 attack=0.30000 release=0.60000 pitch=22.02000 cutoff=0.70000 reverb=0.35000 timbre=2.00000 bank=0.40000 tilt=-0.30000 keyed=1
 layer seventh tones 1 0.0000 1009 level=0.00000 attack=0.35000 release=0.70000 pitch=24.68800 cutoff=0.60000 reverb=0.40000 timbre=1.00000 bank=0.50000 tilt=-0.50000 keyed=1
 layer cloud cloud 0 0.0000 1005 level=0.00000 attack=0.80000 release=1.20000 pitch=3.00000 cutoff=0.70000 reverb=0.40000 voices=5.00000 gather=0.50000 drift=0.20000 timbre=0.50000 chord=2.00000 sub=0.00000 keyed=1
@@ -45,14 +45,14 @@ bind orb.radius third cutoff 0.3 1
 bind orb.radius fifth cutoff 0.35 0.9
 bind orb.radius seventh cutoff 0.3 0.8
 bind orb.curl fifth bank_shimmer 0 0.6
-bind orb.curl third phaser 0 0.7
-bind orb.speed root phaser 0 0.6
+bind orb.curl third ph_pos 0 1
+bind orb.speed root ph_pos 0 1
 bind score fire level 0 0.5
 note v3 register plan. Below C3 there is only the bed (synth1 at C2). The notes are chord tones, not arms: root = synth12 at
 note C4, third = synth8 at E4, fifth = a sine-plus-bank tone at G4, seventh = a darker tone at Bb4. Each is brought in by its
 note tone.* signal (the reach sitting on that pitch class, from any arm), so the mix is arm-agnostic like the tuning itself.
 note cloud: level with stack (one motion = a whisper, six = the chord), gather with coherence (detuned = soft cluster,
 note integers = chord), reverb with radiance (Z). The orb's radius opens every voice's low-pass (wide swing = bright, tight
-note = dark), its curl shimmers the fifth and phases the third, its speed phases the root. fit steadies the root and third.
+note = dark), its curl shimmers the fifth and steers the third's phaser, its speed steers the root's (ph pos: the orb parks the notches). fit steadies the root and third.
 note fire: the pinned spell's score is its level (the near-miss flicker). Textures per spell live in the spell files, low-passed.
 note Spells do not set the voices; they set the bed, the cloud's chord, their textures and one-shots.

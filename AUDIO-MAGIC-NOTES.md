@@ -281,3 +281,20 @@ be made, but these sliders should generally not become major levers as
 audio-magic mechanics. With gather at 1, chords can start to peak through,
 but the cloud preset remains the best option for producing full chords if/when 
 they are desired.
+
+  ┌──────────┬──────────────────────────┬─────────────────────────────┬─────────────────────┬────────────┐
+  │  family  │        notes live        │     what makes the note     │        time         │   space    │
+  ├──────────┼──────────────────────────┼─────────────────────────────┼─────────────────────┼────────────┤
+  │ pyretic  │ C3–C4                    │ partials of synth loops     │ steady              │ dry-ish    │
+  ├──────────┼──────────────────────────┼─────────────────────────────┼─────────────────────┼────────────┤
+  │ gravitic │ C1 sub + lifted voices   │ sub throbs, lifted          │ slow throb          │ wide       │
+  ├──────────┼──────────────────────────┼─────────────────────────────┼─────────────────────┼────────────┤
+  │ luminal  │ bass under high textures │ pure sines, vocal           │ drifting            │ drenched   │
+  ├──────────┼──────────────────────────┼─────────────────────────────┼─────────────────────┼────────────┤
+  │ aqueous  │ mid                      │ resonant filtering of noise │ bubbling            │ underwater │
+  ├──────────┼──────────────────────────┼─────────────────────────────┼─────────────────────┼────────────┤
+  │ organic  │ mid-high                 │ plucks, breath, chirps      │ attacks, random     │ close, dry │
+  ├──────────┼──────────────────────────┼─────────────────────────────┼─────────────────────┼────────────┤
+  │ mechanic │ root hum                 │ motor harmonics, clicks     │ ticking, crank-rate │ room       │
+  └──────────┴──────────────────────────┴─────────────────────────────┴─────────────────────┴────────────┘
+
