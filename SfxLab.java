@@ -3208,16 +3208,68 @@ public class SfxLab extends JPanel {
             if (!(b.layer.equals("*") || b.layer.equals(c.id)) || !bindLive(b)) continue;
             int pi = idxOf(c.type, b.param);
             if (pi < 0) continue;
-            double lo = b.lo, hi = b.hi;
-            if (b.auto()) {
-                double[] r = c.range != null ? c.range.get(pi) : null;
-                PSpec s = spec(c.type, pi);
-                lo = r != null ? r[0] : b.rel ? 0 : s.min();
-                hi = r != null ? r[1] : b.rel ? s.max() - s.min() : s.max();
-            }
-            double v = b.map(lo + (hi - lo) * signalNorm(b.sig), lo, hi);
-            m[pi] += b.rel ? v : v - c.p[pi];
+            m[pi] += bindTerm(b, c, pi);
         }
+    }
+    /** A bind's lo..hi on a layer: as written, or for auto the marked range, else the spec range (rel: 0 .. the spec's width). */
+    double[] bindRange(Bind b, Clip c, int pi) {
+        if (!b.auto()) return new double[]{b.lo, b.hi};
+        double[] r = c.range != null ? c.range.get(pi) : null;
+        PSpec s = spec(c.type, pi);
+        return new double[]{r != null ? r[0] : b.rel ? 0 : s.min(), r != null ? r[1] : b.rel ? s.max() - s.min() : s.max()};
+    }
+    /** What one bind adds to a param's modulation right now: rel adds its mapped value, absolute the difference from the saved value. */
+    double bindTerm(Bind b, Clip c, int pi) {
+        double[] lh = bindRange(b, c, pi);
+        double v = b.map(lh[0] + (lh[1] - lh[0]) * signalNorm(b.sig), lh[0], lh[1]);
+        return b.rel ? v : v - c.p[pi];
+    }
+    /** `lo + w·sig` with the zeros dropped, for the bind tooltips. */
+    static String bindExpr(double lo, double hi, String sig) {
+        String w = fmtNum5(hi - lo);
+        if (w.startsWith("-")) w = "(" + w.replace("-", "\u2212") + ")";
+        String t = w.equals("0") ? "" : w.equals("1") ? sig : w + "\u00b7" + sig;
+        if (lo == 0) return t.isEmpty() ? "0" : t;
+        return fmtNum5(lo) + (t.isEmpty() ? "" : " + " + t);
+    }
+    /** The algebra behind a bind row, for the table's tooltip: this row's term, then the whole sum on its param
+     *  (rows added; one absolute row replaces the saved value, rel rows ride on top) and the value that gives right now. */
+    String bindTip(Bench target, Bind b) {
+        Clip c = b.layer.equals("*") ? (sel != null && sel.id != null ? target.byId(sel.id) : null) : target.byId(b.layer);
+        if (c == null && b.layer.equals("*")) for (Clip l : target.layers) if (idxOf(l.type, b.param) >= 0) { c = l; break; }
+        if (c == null) return "<html>no layer " + b.layer + " on this bench</html>";
+        int pi = idxOf(c.type, b.param);
+        if (pi < 0) return "<html>" + c.id + " has no param " + b.param + "</html>";
+        double[] lh = bindRange(b, c, pi);
+        String saved = fmtNum5(c.p[pi]), tgt = c.id + "." + b.param;
+        StringBuilder sb = new StringBuilder("<html><b>row " + (target.binds.indexOf(b) + 1) + "</b>   " + tgt + (b.layer.equals("*") ? "   (every layer; the numbers here are " + c.id + "'s)" : "") + "<br>");
+        sb.append(b.rel ? "adds   " + bindExpr(lh[0], lh[1], b.sig) + "   on top of the saved " + saved + " (or of an absolute row's value)"
+                        : "sets   " + bindExpr(lh[0], lh[1], b.sig) + "   \u2192 " + fmtNum5(lh[0]) + " at " + b.sig + " 0, " + fmtNum5(lh[1]) + " at " + b.sig + " 1; the saved " + saved + " drops out");
+        if (b.auto()) sb.append("<br>lo / hi auto: " + (c.range != null && c.range.get(pi) != null ? "the marked range" : b.rel ? "0 .. the spec's width" : "the spec range"));
+        if (b.steps > 0) sb.append("<br>then snapped to " + b.steps + " steps");
+        if (b.scale != null) sb.append("<br>then snapped to the " + b.scale.replace('_', ' ') + " scale");
+        if (!bindLive(b)) sb.append("<br><i>off" + (b.mute ? "" : " (its signal is muted)") + ": contributes nothing</i>");
+        // the sum on this param: every live row that touches it
+        ArrayList<Bind> rows = new ArrayList<>();
+        for (Bind o : target.binds) if ((o.layer.equals("*") || o.layer.equals(c.id)) && o.param.equals(b.param) && bindLive(o)) rows.add(o);
+        int nAbs = 0; for (Bind o : rows) if (!o.rel) nAbs++;
+        ArrayList<String> terms = new ArrayList<>();
+        if (nAbs != 1) terms.add(saved);   // one absolute row cancels the saved value and leads instead
+        StringBuilder sig = new StringBuilder();
+        double now = c.p[pi];
+        for (Bind o : rows) {
+            double[] r = bindRange(o, c, pi);
+            String e = bindExpr(r[0], r[1], o.sig) + " <font color=#808080>[" + (target.binds.indexOf(o) + 1) + "]</font>";
+            if (o.rel) terms.add(e); else if (nAbs > 1) terms.add("(" + e + " \u2212 " + saved + ")"); else terms.add(0, e);
+            now += bindTerm(o, c, pi);
+            if (sig.length() > 0) sig.append(", ");
+            sig.append(o.sig).append(' ').append(fmtNum5(signal(o.sig)));
+        }
+        PSpec ps = spec(c.type, pi);
+        sb.append("<br><br>" + tgt + " = " + String.join(" + ", terms));
+        if (nAbs > 1) sb.append("<br><b>" + nAbs + " absolute rows: each subtracts the saved value, so the slider comes back in with a minus sign \u2014 keep one absolute row, make the others rel</b>");
+        sb.append("<br>right now: " + fmtNum5(Math.max(ps.min(), Math.min(ps.max(), now))) + (rows.isEmpty() ? "" : "   with " + sig) + "   (clamped to " + fmtNum(ps.min()) + " .. " + fmtNum(ps.max()) + ")");
+        return sb.append("</html>").toString();
     }
     /** A spell's binds applied to one of its layers' targets; null when it has none that touch it. */
     double[] spellBindMod(Spell sp, Clip s) {
@@ -3464,9 +3516,17 @@ public class SfxLab extends JPanel {
     List<Bind> bindsOn(Clip c, int pi) {
         ArrayList<Bind> out = new ArrayList<>();
         String k = key(c.type, pi);
-        Bench src = selSpell != null && c != null && selSpell.bench.layers.contains(c) ? selSpell.bench : bench;
-        for (Bind b : src.binds) if (b.param.equals(k) && (b.layer.equals("*") || b.layer.equals(c.id))) out.add(b);
+        for (Bind b : bindSrc(c).binds) if (b.param.equals(k) && (b.layer.equals("*") || b.layer.equals(c.id))) out.add(b);
         return out;
+    }
+    /** The table a layer's binds live in: the spell's for a spell's own layer, else the palette's. */
+    Bench bindSrc(Clip c) { return selSpell != null && c != null && selSpell.bench.layers.contains(c) ? selSpell.bench : bench; }
+    /** The rows of the bind table driving a param, as the panel numbers them: "3", "2,5", a * after a row that binds every layer. */
+    String bindRows(Clip c, int pi) {
+        List<Bind> all = bindSrc(c).binds;
+        StringBuilder sb = new StringBuilder();
+        for (Bind b : bindsOn(c, pi)) { if (sb.length() > 0) sb.append(','); sb.append(all.indexOf(b) + 1); if (b.layer.equals("*")) sb.append('*'); }
+        return sb.toString();
     }
     /** shift+H: the selected timeline clip joins the bench. Loops become beds; anything else a lock one-shot. */
     void sendSelToBench() {
@@ -4606,38 +4666,39 @@ public class SfxLab extends JPanel {
             public int getRowCount() { return target.binds.size(); }
             public int getColumnCount() { return BCOLS.length; }
             public String getColumnName(int c) { return BCOLS[c]; }
-            public Class<?> getColumnClass(int c) { return c == 0 || c == 6 ? Boolean.class : String.class; }
-            public boolean isCellEditable(int r, int c) { return true; }
+            public Class<?> getColumnClass(int c) { return c == 0 ? Integer.class : c == 1 || c == 7 ? Boolean.class : String.class; }
+            public boolean isCellEditable(int r, int c) { return c != 0; }
             public Object getValueAt(int r, int c) {
-                if (r >= target.binds.size()) return c == 0 || c == 6 ? Boolean.FALSE : "";
+                if (r >= target.binds.size()) return c == 0 ? 0 : c == 1 || c == 7 ? Boolean.FALSE : "";
                 Bind b = target.binds.get(r);
                 return switch (c) {
-                    case 0 -> !b.mute;
-                    case 1 -> b.sig; case 2 -> b.layer; case 3 -> b.param;
-                    case 4 -> b.auto() ? "auto" : fmtNum5(b.lo); case 5 -> b.auto() ? "auto" : fmtNum5(b.hi);
-                    case 7 -> b.map();
+                    case 0 -> r + 1;
+                    case 1 -> !b.mute;
+                    case 2 -> b.sig; case 3 -> b.layer; case 4 -> b.param;
+                    case 5 -> b.auto() ? "auto" : fmtNum5(b.lo); case 6 -> b.auto() ? "auto" : fmtNum5(b.hi);
+                    case 8 -> b.map();
                     default -> b.rel;
                 };
             }
             public void setValueAt(Object v, int r, int c) {
-                if (r >= target.binds.size()) return;
+                if (r >= target.binds.size() || c == 0) return;
                 Bind b = target.binds.get(r);
                 lab.pushUndo("");
                 try {
                     switch (c) {
-                        case 0 -> b.mute = !Boolean.TRUE.equals(v);
-                        case 1 -> b.sig = v.toString().trim();
-                        case 2 -> b.layer = v.toString().trim();
-                        case 3 -> b.param = v.toString().trim().replace(' ', '_');
-                        case 4, 5 -> {
+                        case 1 -> b.mute = !Boolean.TRUE.equals(v);
+                        case 2 -> b.sig = v.toString().trim();
+                        case 3 -> b.layer = v.toString().trim();
+                        case 4 -> b.param = v.toString().trim().replace(' ', '_');
+                        case 5, 6 -> {
                             String t = v.toString().trim().toLowerCase(Locale.ROOT);
                             if (t.isEmpty() || t.equals("auto")) { b.lo = Double.NaN; b.hi = Double.NaN; }
                             else {
                                 if (b.auto()) { Clip lc = target.byId(b.layer); int pi = lc != null ? idxOf(lc.type, b.param) : -1; PSpec ps = pi >= 0 ? spec(lc.type, pi) : new PSpec("", 0, 1, 0); b.lo = ps.min(); b.hi = ps.max(); }
-                                if (c == 4) b.lo = Double.parseDouble(t); else b.hi = Double.parseDouble(t);
+                                if (c == 5) b.lo = Double.parseDouble(t); else b.hi = Double.parseDouble(t);
                             }
                         }
-                        case 7 -> { if (!b.setMap(v.toString())) lab.toast("map: steps=N or scale=<chord name: " + String.join(", ", CHORD_NAMES).replace(' ', '_') + ">"); }
+                        case 8 -> { if (!b.setMap(v.toString())) lab.toast("map: steps=N or scale=<chord name: " + String.join(", ", CHORD_NAMES).replace(' ', '_') + ">"); }
                         default -> b.rel = Boolean.TRUE.equals(v);
                     }
                 } catch (NumberFormatException ex) { lab.toast("couldn't parse \"" + v + "\""); }
@@ -4657,10 +4718,22 @@ public class SfxLab extends JPanel {
         JPanel bindSection(String title, Bench target, Spell sp) {
             BindModel model = new BindModel(target, sp);
             bindModels.add(model);
-            JTable table = new JTable(model);
+            JTable table = new JTable(model) {
+                public String getToolTipText(MouseEvent e) {   // the row's algebra: its term, the sum on its param, the value right now
+                    int r = rowAtPoint(e.getPoint()); if (r < 0) return null;
+                    int mr = convertRowIndexToModel(r);
+                    return mr < target.binds.size() ? lab.bindTip(target, target.binds.get(mr)) : null;
+                }
+            };
+            ToolTipManager.sharedInstance().registerComponent(table);
+            table.addMouseListener(new MouseAdapter() {   // the algebra stays up until the mouse leaves the row (the delay is global, so it is set only while over a table)
+                int dismiss;
+                public void mouseEntered(MouseEvent e) { dismiss = ToolTipManager.sharedInstance().getDismissDelay(); ToolTipManager.sharedInstance().setDismissDelay(Integer.MAX_VALUE); }
+                public void mouseExited(MouseEvent e) { ToolTipManager.sharedInstance().setDismissDelay(dismiss); }
+            });
             if (sp == null) paletteTable = table;
             table.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
-            int[] widths = {26, 84, 74, 74, 46, 46, 28, 64};
+            int[] widths = {24, 26, 84, 74, 74, 46, 46, 28, 64};
             for (int i = 0; i < widths.length; i++) table.getColumnModel().getColumn(i).setPreferredWidth(widths[i]);
             table.setRowSorter(model.sorter);   // click a header to sort; the filter box above the tables narrows the rows
             model.sorter.setRowFilter(rowFilter());
@@ -4701,7 +4774,7 @@ public class SfxLab extends JPanel {
             return sec;
         }
         boolean refreshing; int seenGen = -1;
-        static final String[] BCOLS = {"on", "signal", "layer", "param", "lo", "hi", "rel", "map"};
+        static final String[] BCOLS = {"#", "on", "signal", "layer", "param", "lo", "hi", "rel", "map"};   // #: the row's place in the list (the family file's order; bound sliders show it)
         final JTextField filterF = new JTextField(10);
         final JCheckBox selOnlyC = new JCheckBox("selected layer");
         Clip filterSel;   // the layer the filter last followed
@@ -6883,7 +6956,25 @@ public class SfxLab extends JPanel {
                     }
                     List<Bind> lb = bindsOn(live, i);
                     boolean bound = lb.stream().anyMatch(this::bindLive);
-                    if (!lb.isEmpty()) { g.setColor(bound ? new Color(120, 200, 255) : new Color(90, 90, 90)); g.fillOval(r.x - 9, r.y + 4, 5, 5); }   // grey: every bind on it is switched off
+                    if (!lb.isEmpty()) {
+                        Color bc = bound ? new Color(120, 200, 255) : new Color(90, 90, 90);   // grey: every bind on it is switched off
+                        g.setColor(bc); g.fillOval(r.x - 9, r.y + 4, 5, 5);
+                        // the bind table's row numbers, at the left end of the bar: black over the fill, the dot's colour past it
+                        String rs = bindRows(live, i);
+                        Font pf = g.getFont();
+                        g.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 10));
+                        int fx0 = r.x + 1 + (int) (u * (r.width - 2));
+                        Shape sc0 = g.getClip();
+                        g.clipRect(r.x, r.y - 2, fx0 - r.x, r.height + 4);
+                        g.setColor(Color.BLACK);
+                        g.drawString(rs, r.x + 3, r.y + 10);
+                        g.setClip(sc0);
+                        g.clipRect(fx0, r.y - 2, r.x + r.width - fx0, r.height + 4);
+                        g.setColor(bc);
+                        g.drawString(rs, r.x + 3, r.y + 10);
+                        g.setClip(sc0);
+                        g.setFont(pf);
+                    }
                     if ((bound || selSpell != null) && smod != null && benchPlaying && i < smod.length) {
                         {
                             double ue = Math.max(0, Math.min(1, (live.p[i] + smod[i] - s.min()) / (s.max() - s.min())));
