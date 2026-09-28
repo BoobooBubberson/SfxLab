@@ -3,7 +3,7 @@ import java.util.*;
 
 /** Headless bench render (an authoring aid: measure a palette instead of guessing).
  *    javac -d /tmp/bench SfxLab.java tools/bench/BenchRender.java
- *    java -Djava.awt.headless=true -cp /tmp/bench BenchRender regulator/pyretic/pyretic.sfx pyretic tools/bench/firebolt.txt renders/bench/out.wav --layers
+ *    java -Djava.awt.headless=true -cp /tmp/bench BenchRender regulator/pyretic.sfx pyretic tools/bench/firebolt.txt renders/bench/out.wav --layers
  *  Prints, per second: RMS, peak, % of blocks the master limiter was squashing (sat), energy share in five bands,
  *  the live signals and scores, and (with --layers) each layer's contribution in dB (full mix minus the mix without it).
  *  Rough targets that read as "clear" rather than "mud": sat 0, no band over ~60 %, the notes within ~6 dB of the bed.
@@ -26,8 +26,7 @@ public class BenchRender {
         SfxLab lab = new SfxLab();
         lab.benchOn = true;
         lab.family = family;
-        lab.loadBenchFile(pal);
-        lab.loadSpells();
+        lab.loadFamily(family);   // regulator/<family>.sfx: the palette and its spells (pal names the same file)
         lab.sigDriven = true; lab.benchPlaying = true; lab.bindsOn = true;
         long t0 = System.currentTimeMillis();
         for (SfxLab.Clip c : lab.bench.layers) if (c.type == SfxLab.PARTIALS && c.file != null) SfxLab.partials(c, true);

@@ -48,8 +48,8 @@ java SfxLab.java --forge projects/pyretic_synth.sfx --name pyretic --root C2
 | path | what |
 |---|---|
 | `SfxLab.java` | the lab; the doc comment at the top is the full manual and key map |
-| `projects/` | named `.sfx` projects (S stamps here, O opens from here); `examples/` are the notes' recipes; `pyretic_regulator.sfx` is the regulator palette |
-| `spells/` | spell signatures for the regulator: the palette's layers at their lock values, one bench file per spell |
+| `projects/` | named `.sfx` projects (S stamps here, O opens from here); `examples/` are the notes' recipes |
+| `regulator/` | one file per regulator family, `<family>.sfx`: the palette that plays through the tuning, then a `spell <id>` section per spell (recipe, lock values, binds) |
 | `docs/` | the Harmonic Regulator design handover and its web prototype (the spec for the machine) |
 | `samples/` | recordings; only `pyretic/` is tracked, see `samples/README.md` |
 | `library.sfx` | the clip library (B banks a clip, Q browses) |
@@ -97,22 +97,28 @@ the machine's signals rather than by time. **H** swaps the timeline for that ben
   listening notes become the machine's data. Bound params show a dot and a white
   tick at the live value.
 - **J** docks the regulator panel: a slider per signal (the scrubber), a **score**
-  slider, the signature picker, **lock** / **unlock** buttons, the bind table,
-  the ranges and free notes. The **binds** box switches every bind and every
+  slider, the family picker, **lock** / **unlock** buttons and the bind tables. Every
+  bind and every signal has an **on** box: off keeps the row but holds it still, so a
+  signal's effect is compared live instead of deleted and retyped (`off` on the bind
+  line). A filter box narrows the tables by signal, layer or param, or to the selected
+  layer; column headers sort; **copy** / **paste…** (ctrl+C / ctrl+V) carry bind lines
+  between tables, onto another layer, or into another family. The signal sliders and
+  the spell rows fold so the tables get the height. The **binds** box switches every bind and every
   spell blend off so the whole bench plays as saved. While the machine window is
   open, powered and driving, the sliders follow it and are greyed out; **P** then
   solos a layer live through its binds. Cut the machine's power, close it, or
   untick drive and the signals go back to the panel's own values, and **P** plays
   the layer exactly as authored.
-- Sounds are organised by **family**: `regulator/<family>/<family>.sfx` is the
-  palette that plays through the tuning, `regulator/<family>/spells/<spell>.sfx`
-  the roster. Pick the family in the panel. Each spell file is a **signature**, the
+- Sounds are organised by **family**, one file each: `regulator/<family>.sfx` is the
+  palette that plays through the tuning, followed by a `spell <id>` section per spell,
+  the roster. Pick the family in the panel; it autosaves as you work, palette and
+  spells alike. Each spell is a **signature**, the
   same layers at their lock values plus its one-shots, and carries its recipe
   (`recipe tier=1 X3p1r0.7 Y2p0`: axis, integer ratio, phase in quarter turns, reach
   target; `rtol=` sets the reach tolerance), which is what the machine and, later, the mod score.
   Edit it with the spell's `recipe…` button in the panel, or design the sigil on the
-  machine's arms and press `→ recipe` to write it to the pinned spell; a new spell
-  saved with the `signature` button asks for its recipe, prefilled from the machine.
+  machine's arms and press `→ recipe` to write it to the pinned spell; the `new spell`
+  button asks for an id and a recipe, prefilled from the machine.
   Both warn when a sigil retraces itself into an open line.
 - Every spell blends in by its own score signal (`score.<id>`, a slider per spell in
   the panel, with lock and unlock buttons), above 0.55. The panel stacks a bind table
@@ -125,11 +131,11 @@ the machine's signals rather than by time. **H** swaps the timeline for that ben
 - The bench view lists the palette's layers and then every spell of the family as a
   foldable group of its own layers: each row shows the spell's target level with a
   white tick where the blend sits right now, and selecting a row edits that spell's
-  target values in the panel (saved to the spell's file, undo covers it). A palette
-  row's menu pushes the layer into a spell at its current values.
-- **S** stamps the bench as the family's palette; the `signature` button saves it as
-  a spell of the family; the workspace autosaves to `bench.sfx`. `regulator/pyretic/`
-  is the worked example, with a hand-off variant of the palette beside it.
+  target values in the panel (undo covers it). A palette row's menu pushes the layer
+  into a spell at its current values; a spell header's menu deletes the spell.
+- A bench with no family is a scratch bench that autosaves to `bench.sfx`; **S** saves
+  it as a family, or forks the loaded family under a new name. **N** starts a fresh
+  scratch bench and leaves the family on disk. `regulator/pyretic.sfx` is the worked example.
 - **U** opens the machine: the regulator itself (crank, arms, motion levers, latch,
   phase and reach, the research setpoint, the voice lever, the copy socket) around
   `RegulatorCore`, with the pen's trail and the pinned blueprint. The crank only winds

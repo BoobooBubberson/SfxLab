@@ -182,16 +182,23 @@ import java.util.List;
  * score) drive layer params through BINDS: `bind tension synth1 drive` moves
  * synth1's drive over its marked range as tension goes 0..1; `rel` binds add
  * to the layer's own value (pitch). Right-click a slider to mark the RANGE
- * that sounded good (with a note), or to bind a signal to it. A SIGNATURE is
- * a bench file in spells/ holding the same layer ids at their lock values
- * (plus one-shots): as score rises past 0.55 every shared param blends from
- * its searching value to the signature's, and layers only the signature has
- * fade in. Bound params are smoothed (~30 ms) so signals never zipper. The
- * regulator panel (J) docks the signal sliders (the scrubber), the signature
- * picker with lock / unlock buttons, the bind table, the ranges and free
- * notes. The bench autosaves to bench.sfx; S stamps it to projects/ as a
- * palette, the `signature` button to spells/. shift+H sends a timeline clip
- * over as a layer; a layer's menu copies it back.
+ * that sounded good (with a note), or to bind a signal to it. A SPELL is a
+ * `spell <id>` section of the family file holding the same layer ids at
+ * their lock values (plus one-shots): as its score rises past 0.55 every
+ * shared param blends from its searching value to the spell's, and layers
+ * only the spell has fade in. Bound params are smoothed (~30 ms) so signals
+ * never zipper. The regulator panel (J) docks the signal sliders (the
+ * scrubber), the family picker, a score slider per spell with lock / unlock
+ * buttons, and the bind tables: a table per bench (the palette's, then one
+ * per spell) with an `on` box per bind and one per signal, so a bind or a
+ * whole signal can be switched off and compared live instead of deleted
+ * (`off` on the bind line); a filter box, sortable columns, and ctrl+C /
+ * ctrl+V to carry bind lines between tables, layers and families. The
+ * signal sliders and the spell rows fold. A FAMILY is one file, regulator/<family>.sfx:
+ * the palette, then one section per spell. The loaded family autosaves as
+ * you work (palette and spells alike); a scratch bench autosaves to
+ * bench.sfx and S saves it as a family. The `new spell` button adds a spell.
+ * shift+H sends a timeline clip over as a layer; a layer's menu copies it back.
  *
  * MARKERS: K drops a named marker at the playhead (shift+K removes the
  * nearest; right-click one in the ruler to delete). Clip drags snap to
@@ -232,9 +239,9 @@ import java.util.List;
  *
  * FILE FORMATS: .sfx is the lab's editable source (the workspace autosaves
  * to project.sfx; S stamps named copies); exported .wav is what the mod
- * consumes. Bench files (palettes in projects/, signatures in spells/) use
- * the same line style with `layer`, `range`, `bind`, `palette` and `note`
- * lines, which the timeline parser skips. parseProject/renderWav are static and headless, so the mod's
+ * consumes. Family files (regulator/<family>.sfx) use the same line style
+ * with `layer`, `range`, `bind`, `note` and `spell` lines, which the
+ * timeline parser skips. parseProject/renderWav are static and headless, so the mod's
  * build can also batch-render .sfx files via --render, or embed this class
  * and synthesize at runtime.
  *   DEL         delete clip     D duplicate       arrows nudge / change track
@@ -2688,7 +2695,7 @@ public class SfxLab extends JPanel {
 
     void toast(String s) { msg = s; msgAt = System.currentTimeMillis(); }
     void markEdit() {
-        if (benchOn) { if (selSpell != null && sel != null && selSpell.bench.layers.contains(sel)) dirtySpells.add(selSpell); else benchDirty = true; }
+        if (benchOn) benchDirty = true;
         else dirty = true;
         lastEditAt = System.currentTimeMillis();
     }
@@ -2766,7 +2773,7 @@ public class SfxLab extends JPanel {
     static final String[] ON_NAMES = {"none", "lock", "unlock", "accept"};   // accept: the crystal took a latched motion (the chime)
     static final double ENDLESS = 1e9;   // dur of a layer that loops for ever
     static final Path BENCH_FILE = DIR.resolve("bench.sfx");   // the bench autosaves here, like project.sfx
-    static final Path REG_DIR = DIR.resolve("regulator");      // regulator/<family>/<family>.sfx (palette) + spells/<spell>.sfx (signatures with their recipes)
+    static final Path REG_DIR = DIR.resolve("regulator");      // regulator/<family>.sfx: the palette, then one `spell <id>` section per spell (its recipe, lock values, binds)
 
     /** The regulator's signal contract. arm{n}.pitch is derived from arm{n}.ratio
      *  (12·log2 of the ratio folded into one octave), so it has no slider. tone.* are arm-agnostic: how much reach
@@ -2786,6 +2793,7 @@ public class SfxLab extends JPanel {
         String sig, layer, param; double lo, hi; boolean rel;   // lo/hi NaN = auto: the layer's marked range, else the full spec range
         int steps;      // > 0: the value is quantised to this many steps across lo..hi (a sweep becomes a staircase)
         String scale;   // a chord name (CHORD_NAMES, spaces as _): the value, in semitones, snaps to that scale's nearest degree
+        boolean mute;   // switched off (kept in the table for A/B comparison); `off` on the line, which older readers ignore
         Bind(String sig, String layer, String param, double lo, double hi, boolean rel) { this.sig = sig; this.layer = layer; this.param = param; this.lo = lo; this.hi = hi; this.rel = rel; }
         boolean auto() { return Double.isNaN(lo) || Double.isNaN(hi); }
         String map() { return steps > 0 ? "steps=" + steps : scale != null ? "scale=" + scale : ""; }
@@ -2813,7 +2821,7 @@ public class SfxLab extends JPanel {
             }
             return v;
         }
-        String line() { return "bind " + sig + " " + layer + " " + param + (auto() ? "" : " " + fmtNum5(lo) + " " + fmtNum5(hi)) + (rel ? " rel" : "") + (map().isEmpty() ? "" : " " + map()); }
+        String line() { return "bind " + sig + " " + layer + " " + param + (auto() ? "" : " " + fmtNum5(lo) + " " + fmtNum5(hi)) + (rel ? " rel" : "") + (map().isEmpty() ? "" : " " + map()) + (mute ? " off" : ""); }
     }
     /** A chord's pitch classes in semitones (0..12), from its just ratios; null for an unknown name. */
     static final HashMap<String, double[]> SCALES = new HashMap<>();
@@ -2839,6 +2847,7 @@ public class SfxLab extends JPanel {
         final ArrayList<Clip> layers = new ArrayList<>();
         final ArrayList<Bind> binds = new ArrayList<>();
         final ArrayList<String> notes = new ArrayList<>();
+        final ArrayList<String> comments = new ArrayList<>();   // hand-written `#` lines, kept through every save (the header line excepted)
         String palette;            // (older signature files) the palette they were authored against; the folder says it now
         String name;               // spell files: the display name
         int tier; boolean secret; RegulatorCore.Comp[] comps;   // spell files: the recipe (null when the file has none)
@@ -2851,7 +2860,8 @@ public class SfxLab extends JPanel {
         Bench b = new Bench();
         for (String line : lines) {
             String[] t = line.trim().split("\\s+");
-            if (t.length == 0 || t[0].isEmpty() || t[0].startsWith("#")) continue;
+            if (t.length == 0 || t[0].isEmpty()) continue;
+            if (t[0].startsWith("#")) { if (!line.trim().startsWith("# SfxLab ")) b.comments.add(line.trim()); continue; }
             switch (t[0]) {
                 case "root" -> { if (t.length > 1) b.root = Double.parseDouble(t[1]); }
                 case "palette" -> { if (t.length > 1) b.palette = t[1]; }
@@ -2897,6 +2907,7 @@ public class SfxLab extends JPanel {
                     int nums = 0;
                     for (int i = 4; i < t.length; i++) {
                         if (t[i].equals("rel")) bd.rel = true;
+                        else if (t[i].equals("off")) bd.mute = true;
                         else if (t[i].contains("=")) bd.setMap(t[i]);
                         else { try { double v = Double.parseDouble(t[i]); if (nums == 0) bd.lo = v; else if (nums == 1) bd.hi = v; nums++; } catch (NumberFormatException ignored) {} }
                     }
@@ -2909,10 +2920,16 @@ public class SfxLab extends JPanel {
         return b;
     }
 
-    static String benchText(Bench b, double rootHz) {
-        StringBuilder sb = new StringBuilder("# SfxLab bench v1: layer id name type dur seed key=value... (dur 0 = endless) · range id param lo hi [note] · bind signal id|* param [lo hi] [rel]\n");
-        sb.append("bench 1\n");
-        sb.append(String.format(Locale.ROOT, "root %.4f%n", rootHz));
+    static String benchText(Bench b, double rootHz) { return benchText(b, rootHz, false); }
+    /** A bench's lines; as a `section` (a spell inside a family file) without the header, `bench` and `root` lines. */
+    static String benchText(Bench b, double rootHz, boolean section) {
+        StringBuilder sb = new StringBuilder();
+        if (!section) {
+            sb.append("# SfxLab family v2: layer id name type dur seed key=value... (dur 0 = endless) · range id param lo hi [note] · bind signal id|* param [lo hi] [rel] [steps=N | scale=<chord>] · note text · then `spell <id>` sections: name, recipe, the spell's layers at their lock values, its binds and notes\n");
+            sb.append("bench 1\n");
+            sb.append(String.format(Locale.ROOT, "root %.4f%n", rootHz));
+        }
+        for (String c : b.comments) sb.append(c).append('\n');
         if (b.name != null) sb.append("name ").append(b.name).append('\n');
         if (b.comps != null) sb.append(recipeLine(b)).append('\n');
         for (Clip c : b.layers) sb.append(layerLine(c));
@@ -2928,6 +2945,65 @@ public class SfxLab extends JPanel {
         for (Bind bd : b.binds) sb.append(bd.line()).append('\n');
         for (String n : b.notes) sb.append("note ").append(n).append('\n');
         return sb.toString();
+    }
+    /** A family file: the palette, then each spell as a `spell <id>` section (name, recipe, layers, binds, notes). */
+    record Family(Bench palette, java.util.List<Spell> spells) {}
+    static Family parseFamily(List<String> lines) {
+        Bench pal = null; ArrayList<Spell> sps = new ArrayList<>();
+        ArrayList<String> cur = new ArrayList<>(); String id = null;
+        for (int i = 0; i <= lines.size(); i++) {
+            String line = i < lines.size() ? lines.get(i) : null, t = line != null ? line.trim() : null;
+            if (line == null || t.startsWith("spell ")) {
+                Bench b = parseBench(cur);
+                if (id == null) pal = b; else sps.add(makeSpell(id, b));
+                cur = new ArrayList<>();
+                if (line != null) id = t.substring(6).trim();
+            } else cur.add(line);
+        }
+        return new Family(pal, sps);
+    }
+    static Spell makeSpell(String id, Bench b) {
+        Spell sp = new Spell();
+        sp.id = id; sp.bench = b;
+        if (b.name == null) b.name = id.replace('_', ' ');
+        sp.name = b.name;
+        if (b.comps != null && b.comps.length > 0) { sp.recipe = new RegulatorCore.Recipe(id, sp.name, b.tier, "", b.secret, b.comps); sp.recipe.rtol = b.rtol; }
+        return sp;
+    }
+    static String familyText(Bench pal, java.util.List<Spell> sps, double rootHz) {
+        StringBuilder sb = new StringBuilder(benchText(pal, rootHz, false));
+        for (Spell sp : sps) sb.append("\nspell ").append(sp.id).append('\n').append(benchText(sp.bench, rootHz, true));
+        return sb.toString();
+    }
+    /** One-time: a family kept the old way, regulator/<f>/<f>.sfx plus spells/*.sfx, becomes the single regulator/<f>.sfx
+     *  (the old files go once the new one re-reads with the same spells and layers). */
+    static void migrateFamilies() {
+        if (!Files.isDirectory(REG_DIR)) return;
+        try (var st = Files.list(REG_DIR)) {
+            for (Path d : st.filter(Files::isDirectory).toList()) {
+                String n = d.getFileName().toString();
+                Path pal = d.resolve(n + ".sfx"), out = REG_DIR.resolve(n + ".sfx");
+                if (!Files.exists(pal) || Files.exists(out)) continue;
+                try {
+                    Bench b = parseBench(Files.readAllLines(pal));
+                    ArrayList<Spell> sps = new ArrayList<>(); ArrayList<Path> used = new ArrayList<>(List.of(pal));
+                    if (Files.isDirectory(d.resolve("spells"))) try (var ss = Files.list(d.resolve("spells"))) {
+                        for (Path p : ss.filter(f -> f.getFileName().toString().endsWith(".sfx")).sorted().toList()) {
+                            sps.add(makeSpell(p.getFileName().toString().replaceFirst("\\.sfx$", ""), parseBench(Files.readAllLines(p))));
+                            used.add(p);
+                        }
+                    }
+                    String text = familyText(b, sps, b.root);
+                    Family chk = parseFamily(Arrays.asList(text.split("\n")));
+                    if (chk.spells().size() != sps.size() || chk.palette().layers.size() != b.layers.size()) throw new IOException("re-read mismatch");
+                    for (int i = 0; i < sps.size(); i++) if (chk.spells().get(i).bench.layers.size() != sps.get(i).bench.layers.size()) throw new IOException("re-read mismatch in spell " + sps.get(i).id);
+                    Files.writeString(out, text);
+                    for (Path p : used) Files.delete(p);
+                    try { Files.deleteIfExists(d.resolve("spells")); Files.delete(d); } catch (IOException ignored) {}   // only if nothing else is in there
+                    System.err.println("migrated family " + n + ": " + used.size() + " files → regulator/" + n + ".sfx");
+                } catch (Exception e) { System.err.println("family " + n + " not migrated: " + e); }
+            }
+        } catch (IOException ignored) {}
     }
     static String recipeLine(Bench b) {
         StringBuilder sb = new StringBuilder("recipe tier=" + b.tier + (b.secret ? " secret=1" : "") + (b.rtol != RegulatorCore.DEFAULT_RTOL ? " rtol=" + fmtNum5(b.rtol) : ""));
@@ -2953,8 +3029,8 @@ public class SfxLab extends JPanel {
     volatile Spell benchSoloSpell;   // set when the soloed layer is a spell's: it plays alone at its target values
     final double[] sigVal = new double[SIGNALS.length];
     /** A spell of the loaded family: its signature (a bench file) and, when the file carries one, its recipe. */
-    static class Spell { String id, name; RegulatorCore.Recipe recipe; Bench bench; Path file; volatile double w; }
-    volatile String family;                                  // the loaded family (regulator/<family>/), remembered in lab.cfg
+    static class Spell { String id, name; RegulatorCore.Recipe recipe; Bench bench; volatile double w; }
+    volatile String family;                                  // the loaded family (regulator/<family>.sfx), remembered in lab.cfg
     volatile java.util.List<Spell> spells = new ArrayList<>();
     int familyGen;                                           // bumped when the family or its spells change (the panel and machine rebuild)
     final java.util.concurrent.ConcurrentHashMap<String, Double> spellScore = new java.util.concurrent.ConcurrentHashMap<>();   // score.<id>: each spell's own match
@@ -2962,11 +3038,10 @@ public class SfxLab extends JPanel {
     final ArrayList<Clip> transients = new ArrayList<>();   // one-shots in flight (audio thread only)
     boolean benchDirty;
     int benchScroll, benchGen;              // benchGen: bumped on structural changes so the panel knows to rebuild its lists
-    /** A bench undo snapshot: the bench's text plus every spell's text (spell layers are edited in the same view). */
-    static class BenchSnap { String text; final HashMap<String, String> spells = new HashMap<>(); }
+    /** A bench undo snapshot: the family text (palette and spells: spell layers are edited in the same view) and which family. */
+    static class BenchSnap { String family, text; }
     final ArrayDeque<BenchSnap> bUndo = new ArrayDeque<>(), bRedo = new ArrayDeque<>();
     BenchSnap pendingBench;
-    final HashSet<Spell> dirtySpells = new HashSet<>();   // spells edited on the bench, written back by the autosave timer
     final HashSet<String> collapsed = new HashSet<>();     // spell groups folded in the bench view
     Spell selSpell;                                        // the spell whose layer is selected (null: a palette layer)
     static final int ROW_LAYER = 0, ROW_SPELL = 1, ROW_SPELL_LAYER = 2;
@@ -2977,26 +3052,17 @@ public class SfxLab extends JPanel {
         ArrayList<BenchRow> out = new ArrayList<>();
         for (Clip c : bench.layers) out.add(new BenchRow(ROW_LAYER, c, null));
         for (Spell sp : spells) {
-            if (benchName != null && benchName.endsWith("/spells/" + sp.id + ".sfx")) continue;
             out.add(new BenchRow(ROW_SPELL, null, sp));
             if (!collapsed.contains(sp.id)) for (Clip c : sp.bench.layers) out.add(new BenchRow(ROW_SPELL_LAYER, c, sp));
         }
         return out;
     }
-    BenchSnap benchSnap() {
-        BenchSnap b = new BenchSnap();
-        b.text = benchText(bench, rootHz);
-        for (Spell sp : spells) b.spells.put(sp.id, benchText(sp.bench, rootHz));
-        return b;
-    }
-    void markSpellDirty(Spell sp) { if (sp != null) { dirtySpells.add(sp); benchGen++; lastEditAt = System.currentTimeMillis(); } }
-    void saveDirtySpells() {
-        for (Spell sp : new ArrayList<>(dirtySpells)) {
-            try { Files.writeString(sp.file, benchText(sp.bench, rootHz)); dirtySpells.remove(sp); }
-            catch (Exception e) { toast("spell save failed: " + e); }
-        }
-    }
+    BenchSnap benchSnap() { BenchSnap b = new BenchSnap(); b.family = family; b.text = familyText(); return b; }
+    String familyText() { return familyText(bench, spells, rootHz); }
+    /** A spell changed: the family autosaves (spells live in its file). */
+    void markSpellDirty(Spell sp) { benchDirty = true; benchGen++; lastEditAt = System.currentTimeMillis(); }
     BenchPanel bpanel; boolean bpanelOn;    // the docked regulator panel (J); remembered in lab.cfg
+    String panelFold = "";                  // the panel's folded sections ("signals", "spells"), remembered in lab.cfg
     volatile boolean sigDriven;             // the machine (open, powered, driving) is writing the signals: the panel's sliders follow, not lead, and a solo hears the binds
     double[] sigHold; HashMap<String, Double> scoreHold;   // the panel's own values from before the machine took the signals over
     /** The machine takes the signals and spell scores (its core writes them every frame while it drives) or gives them
@@ -3014,6 +3080,9 @@ public class SfxLab extends JPanel {
         if (bpanel != null) bpanel.pull();
     }
     volatile boolean bindsOn = true;        // panel toggle: off = hear every layer at its saved params (auditioning)
+    final java.util.Set<String> mutedSigs = java.util.concurrent.ConcurrentHashMap.newKeySet();   // signals switched off in the panel (session only): their binds hold still, for A/B while playing
+    /** Whether a bind moves anything right now: not switched off itself, and its signal not muted in the panel. */
+    boolean bindLive(Bind b) { return !b.mute && !mutedSigs.contains(b.sig); }
 
     double signal(String name) {
         int i = sigIdx(name);
@@ -3120,7 +3189,7 @@ public class SfxLab extends JPanel {
     /** The reserved layer id and param a spell binds to set its own blend curve. */
     static final String SPELL_LAYER = "spell", BLEND_PARAM = "blend";
     /** A spell's blend rule, if its file binds `spell blend`. */
-    Bind blendBind(Spell sp) { for (Bind b : sp.bench.binds) if (SPELL_LAYER.equals(b.layer) && BLEND_PARAM.equals(b.param)) return b; return null; }
+    Bind blendBind(Spell sp) { for (Bind b : sp.bench.binds) if (SPELL_LAYER.equals(b.layer) && BLEND_PARAM.equals(b.param) && bindLive(b)) return b; return null; }
     /** How far a spell is blended in: smoothstep over the bound signal's lo..hi (default score.<id> over 0.55..1),
      *  with the bind's map (steps=1 makes a gate). Nothing while binds are off: that is the audition mode, where every
      *  layer plays exactly as saved. */
@@ -3136,7 +3205,7 @@ public class SfxLab extends JPanel {
     /** Adds a bind list's modulation of clip c into m (absolute binds as the difference from the saved value). */
     void applyBinds(List<Bind> bs, Clip c, double[] m) {
         for (Bind b : bs) {
-            if (!(b.layer.equals("*") || b.layer.equals(c.id))) continue;
+            if (!(b.layer.equals("*") || b.layer.equals(c.id)) || !bindLive(b)) continue;
             int pi = idxOf(c.type, b.param);
             if (pi < 0) continue;
             double lo = b.lo, hi = b.hi;
@@ -3207,53 +3276,47 @@ public class SfxLab extends JPanel {
         if (setScore) { if (on == ON_LOCK) setSignal(SIG_SCORE, 1); else if (sigVal[SIG_SCORE] > 0.5) setSignal(SIG_SCORE, 0.5); }
         toast(ON_NAMES[on] + (n > 0 ? ": " + n + " one-shot" + (n > 1 ? "s" : "") + " fired" : " — no bench layer is set to fire on it"));
     }
-    /** A spell's own event: its one-shots marked for it fire (unless that spell is the file open on the bench, whose layers fire through fireEvent). */
+    /** A spell's own event: its one-shots marked for it fire. */
     int fireSpell(String id, int on) { return fireSpell(id, on, true); }
     int fireSpell(String id, int on, boolean wake) {
         int n = 0;
-        for (Spell sp : spells) {
-            if (!sp.id.equals(id)) continue;
-            if (benchName != null && benchName.endsWith("/spells/" + id + ".sfx")) { fireEvent(on, false, wake); continue; }
-            for (Clip c : sp.bench.layers) if (c.on == on && fire(c, wake)) n++;
-        }
+        for (Spell sp : spells) if (sp.id.equals(id)) for (Clip c : sp.bench.layers) if (c.on == on && fire(c, wake)) n++;
         return n;
     }
 
-    // ---- families: regulator/<family>/<family>.sfx is the palette, regulator/<family>/spells/*.sfx the roster
+    // ---- families: regulator/<family>.sfx holds the palette and, as `spell <id>` sections, the roster; the loaded one autosaves
     static java.util.List<String> familyNames() {
         ArrayList<String> out = new ArrayList<>();
         try (var st = Files.list(REG_DIR)) {
-            st.filter(Files::isDirectory).map(p -> p.getFileName().toString()).filter(n -> Files.exists(REG_DIR.resolve(n).resolve(n + ".sfx"))).sorted().forEach(out::add);
+            st.filter(p -> Files.isRegularFile(p) && p.getFileName().toString().endsWith(".sfx")).map(p -> p.getFileName().toString().replaceFirst("\\.sfx$", "")).sorted().forEach(out::add);
         } catch (IOException ignored) {}
         return out;
     }
-    Path familyDir() { return family != null ? REG_DIR.resolve(family) : null; }
-    /** Loads a family: its palette onto the bench (optional) and its spells beside it. */
-    void loadFamily(String name, boolean withPalette) {
-        if (name == null || name.isEmpty()) { family = null; spells = new ArrayList<>(); spellScore.clear(); familyGen++; benchGen++; saveCfg(); return; }
-        family = name;
-        if (withPalette) loadBenchFile(REG_DIR.resolve(name).resolve(name + ".sfx"));
-        loadSpells();
+    static Path familyFile(String name) { return REG_DIR.resolve(name + ".sfx"); }
+    /** The family a file is, when it sits in regulator/ as <family>.sfx; else null. */
+    static String familyOf(Path f) {
+        Path p = f.toAbsolutePath().normalize().getParent(); String n = f.getFileName().toString();
+        return p != null && p.equals(REG_DIR.toAbsolutePath().normalize()) && n.endsWith(".sfx") ? n.substring(0, n.length() - 4) : null;
+    }
+    /** Loads a family onto the bench: its palette and its spells. null detaches: the bench stays, spells go, autosave returns to bench.sfx. */
+    void loadFamily(String name) {
+        if (name == null || name.isEmpty()) { family = null; setSpells(new ArrayList<>()); benchName = null; markEdit(); saveCfg(); return; }
+        Path f = familyFile(name);
+        try {
+            Family fm = parseFamily(Files.readAllLines(f));
+            pushBenchUndo("");
+            benchPlaying = false;
+            family = name;
+            installBench(fm.palette());
+            if (benchOn && fm.palette().root > 0) rootHz = fm.palette().root;
+            sel = null; selSpell = null;
+            setSpells(fm.spells());
+            benchName = relPath(f); benchDirty = false;
+            toast("opened " + relPath(f) + " (" + bench.layers.size() + " layers, " + bench.binds.size() + " binds, " + spells.size() + " spell" + (spells.size() == 1 ? "" : "s") + ") — it autosaves as you work");
+        } catch (Exception e) { toast("family " + name + " failed: " + e); }
         saveCfg();
     }
-    void loadSpells() {
-        ArrayList<Spell> out = new ArrayList<>();
-        Path dir = familyDir();
-        if (dir != null && Files.isDirectory(dir.resolve("spells"))) {
-            try (var st = Files.list(dir.resolve("spells"))) {
-                for (Path p : st.filter(f -> f.getFileName().toString().endsWith(".sfx")).sorted().toList()) {
-                    try {
-                        Bench b = parseBench(Files.readAllLines(p));
-                        Spell sp = new Spell();
-                        sp.id = p.getFileName().toString().replaceFirst("\\.sfx$", "");
-                        sp.name = b.name != null ? b.name : sp.id.replace('_', ' ');
-                        sp.bench = b; sp.file = p;
-                        if (b.comps != null && b.comps.length > 0) { sp.recipe = new RegulatorCore.Recipe(sp.id, sp.name, b.tier, "", b.secret, b.comps); sp.recipe.rtol = b.rtol; }
-                        out.add(sp);
-                    } catch (Exception e) { toast("spell " + p.getFileName() + " failed: " + e); }
-                }
-            } catch (IOException e) { toast("spells scan failed: " + e); }
-        }
+    void setSpells(java.util.List<Spell> out) {
         spells = out;
         if (benchSoloSpell != null) { benchSolo = null; benchSoloSpell = null; }
         spellScore.keySet().removeIf(k -> out.stream().noneMatch(sp -> sp.id.equals(k)));
@@ -3287,24 +3350,18 @@ public class SfxLab extends JPanel {
         Bench b = parseBench(List.of("recipe " + text.trim().replaceFirst("^recipe\\s+", "")));
         return b.comps != null && b.comps.length > 0 ? b : null;
     }
-    /** Writes a spell's recipe (and keeps everything else in its file), then reloads the roster. */
+    /** Sets a spell's recipe; the family autosaves and the machine re-reads the roster. */
     boolean setSpellRecipe(Spell sp, String text) {
         Bench r = parseRecipe(text);
         if (r == null) { toast("recipe: tier=N [secret=1] then motions like X3p1 or Y5p2@0.35 (axis, integer ratio, phase in quarters, blueprint amplitude)"); return false; }
-        try {
-            ArrayList<String> lines = new ArrayList<>(Files.readAllLines(sp.file));
-            lines.removeIf(l -> l.trim().startsWith("recipe "));
-            int at = 0;
-            for (int i = 0; i < lines.size(); i++) if (lines.get(i).trim().startsWith("name ")) { at = i + 1; break; } else if (!lines.get(i).trim().startsWith("#") && at == 0) { at = i; break; }
-            lines.add(at, recipeLine(r));
-            Files.write(sp.file, lines);
-            if (benchName != null && benchName.endsWith("/spells/" + sp.id + ".sfx")) { bench.comps = r.comps; bench.tier = r.tier; bench.secret = r.secret; bench.rtol = r.rtol; }
-            loadSpells();
-            RegulatorCore.Recipe rc = spell(sp.id).recipe;
-            String prob = recipeProblem(r);
-            toast(sp.id + " recipe: " + recipeLine(r).substring(7) + (prob != null ? "   — WARNING, unbuildable: " + prob : rc != null && RegulatorCore.degenerate(rc) ? "   — WARNING: this trace retraces itself into an open line (reads poorly as a sigil)" : ""));
-            return true;
-        } catch (Exception e) { toast("recipe save failed: " + e); return false; }
+        pushUndo("");
+        Bench b = sp.bench;
+        b.comps = r.comps; b.tier = r.tier; b.secret = r.secret; b.rtol = r.rtol;
+        sp.recipe = new RegulatorCore.Recipe(sp.id, sp.name, b.tier, "", b.secret, b.comps); sp.recipe.rtol = b.rtol;
+        markSpellDirty(sp); familyGen++;
+        String prob = recipeProblem(r);
+        toast(sp.id + " recipe: " + recipeLine(r).substring(7) + (prob != null ? "   — WARNING, unbuildable: " + prob : RegulatorCore.degenerate(sp.recipe) ? "   — WARNING: this trace retraces itself into an open line (reads poorly as a sigil)" : ""));
+        return true;
     }
     void recipeDialog(Spell sp, String prefill) {
         String in = (String) JOptionPane.showInputDialog(this,
@@ -3439,13 +3496,14 @@ public class SfxLab extends JPanel {
         toast(c.id + " copied to the timeline at the playhead (H shows it)");
     }
 
-    // ---- bench files
+    // ---- bench files: the loaded family autosaves to regulator/<family>.sfx, a scratch bench to bench.sfx
     void saveBench(boolean quiet) {
         try {
-            Files.createDirectories(DIR);
-            Files.writeString(BENCH_FILE, benchText(bench, rootHz));
+            Path f = family != null ? familyFile(family) : BENCH_FILE;
+            Files.createDirectories(f.getParent());
+            Files.writeString(f, family != null ? familyText() : benchText(bench, rootHz));
             benchDirty = false;
-            if (!quiet) toast("bench autosaved — S stamps it to a named palette");
+            if (!quiet) toast("saved " + relPath(f));
         } catch (Exception e) { toast("bench save failed: " + e); }
     }
     void installBench(Bench b) {
@@ -3454,90 +3512,108 @@ public class SfxLab extends JPanel {
             bench.binds.clear(); bench.binds.addAll(b.binds);
         }
         bench.notes.clear(); bench.notes.addAll(b.notes);
+        bench.comments.clear(); bench.comments.addAll(b.comments);
         bench.palette = b.palette;
-        bench.name = b.name; bench.tier = b.tier; bench.secret = b.secret; bench.comps = b.comps; bench.rtol = b.rtol;   // a spell keeps its recipe on the bench
+        bench.name = null; bench.comps = null;   // the palette carries no recipe: spells do
         benchSolo = null; benchSoloSpell = null; benchScroll = 0; benchGen++;
     }
     String relPath(Path f) {
         try { return DIR.relativize(f.toAbsolutePath().normalize()).toString().replace('\\', '/'); }
         catch (Exception e) { return f.toString(); }
     }
+    /** A scratch bench from any bench file (a family file from elsewhere keeps its spells): no family, autosaves to bench.sfx. */
     void loadBenchFile(Path f) {
         try {
-            Bench b = parseBench(Files.readAllLines(f));
+            Family fm = parseFamily(Files.readAllLines(f));
             pushBenchUndo("");
             benchPlaying = false;
-            installBench(b);
-            rootHz = b.root > 0 ? b.root : ROOT_DEFAULT;
-            sel = null;
-            if (!f.equals(BENCH_FILE)) benchName = relPath(f);
-            markEdit();
-            toast("opened " + f.getFileName() + " (" + b.layers.size() + " layers, " + b.binds.size() + " binds)" + (b.palette != null ? " — a signature of " + b.palette : ""));
+            family = null;
+            installBench(fm.palette());
+            rootHz = fm.palette().root > 0 ? fm.palette().root : ROOT_DEFAULT;
+            sel = null; selSpell = null;
+            setSpells(fm.spells());
+            benchName = f.equals(BENCH_FILE) ? null : relPath(f);
+            markEdit(); saveCfg();
+            toast("opened " + f.getFileName() + " as a scratch bench (" + bench.layers.size() + " layers, " + bench.binds.size() + " binds" + (spells.isEmpty() ? "" : ", " + spells.size() + " spells") + ") — S saves it as a family");
         } catch (Exception e) { toast("open failed: " + e); }
     }
     void openBench() {
-        JFileChooser fc = new JFileChooser((familyDir() != null ? familyDir() : Files.isDirectory(REG_DIR) ? REG_DIR : PROJECTS_DIR).toFile());
-        fc.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("bench files: a family's palette or one of its spells", "sfx"));
+        JFileChooser fc = new JFileChooser((Files.isDirectory(REG_DIR) ? REG_DIR : PROJECTS_DIR).toFile());
+        fc.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("bench files: a family (regulator/<family>.sfx) or a scratch bench", "sfx"));
         if (fc.showOpenDialog(this) != JFileChooser.APPROVE_OPTION) return;
         Path f = fc.getSelectedFile().toPath().toAbsolutePath().normalize();
-        // a file inside regulator/<family>/ loads that family's spells beside it
-        Path d = f.getParent();
-        if (d != null && d.getFileName().toString().equals("spells")) d = d.getParent();
-        if (d != null && d.getParent() != null && d.getParent().equals(REG_DIR.toAbsolutePath().normalize()) && Files.exists(d.resolve(d.getFileName() + ".sfx"))) {
-            String fam = d.getFileName().toString();
-            loadBenchFile(f);
-            if (!fam.equals(family)) { family = fam; loadSpells(); saveCfg(); } else loadSpells();
-        } else loadBenchFile(f);
+        String fam = familyOf(f);
+        if (fam != null) loadFamily(fam); else loadBenchFile(f);
     }
-    /** S on the bench: stamp it as a palette (the family's folder, else projects/) or, from the action bar, as a
-     *  spell signature in the family's spells/. A spell keeps its name and recipe lines unless the bench carries its own. */
-    void stampBench(boolean signature) {
-        if (!signature && benchName != null && benchName.contains("/spells/") && family != null) signature = true;   // S on an open spell saves the spell, not a palette copy
-        if (signature && family == null) { toast("pick a family in the regulator panel (J) first — spells live in regulator/<family>/spells/"); return; }
-        Path dir = signature ? familyDir().resolve("spells") : family != null ? familyDir() : PROJECTS_DIR;
-        String def = benchName != null ? Paths.get(benchName).getFileName().toString().replaceFirst("\\.sfx$", "") : family != null && !signature ? family : "";
+    /** S on the bench: the bench and its spells become the family regulator/<name>.sfx. The loaded family autosaves already,
+     *  so this names a scratch bench, or forks the family under a new name. */
+    void saveFamilyAs() {
         String name = (String) JOptionPane.showInputDialog(this,
-                signature ? "Save the layers as a spell signature (regulator/" + family + "/spells/):\nA new spell gets its recipe from a `recipe` line you add to the file, e.g. recipe tier=1 X3p1 Y2p0"
-                          : "Save the bench as a palette (" + relPath(dir) + "/):",
-                "Save", JOptionPane.PLAIN_MESSAGE, null, null, def);
+                "Save the bench and its spells as a family (regulator/<name>.sfx):" + (family != null ? "\nThe loaded family autosaves as you work; a new name forks it." : ""),
+                "Save family", JOptionPane.PLAIN_MESSAGE, null, null, family != null ? family : "");
         if (name == null) return;
-        name = name.trim();
+        name = name.trim().replaceFirst("\\.sfx$", "").replaceAll("[^A-Za-z0-9_-]+", "_");
         if (name.isEmpty()) return;
-        if (!name.toLowerCase(Locale.ROOT).endsWith(".sfx")) name += ".sfx";
-        Path f = dir.resolve(name);
-        String rel = relPath(f);
-        if (Files.exists(f) && !rel.equals(benchName) && JOptionPane.showConfirmDialog(this,
-                name + " exists — overwrite?", "Save", JOptionPane.OK_CANCEL_OPTION) != JOptionPane.OK_OPTION)
+        Path f = familyFile(name);
+        if (Files.exists(f) && !name.equals(family) && JOptionPane.showConfirmDialog(this,
+                "family " + name + " exists — overwrite it?", "Save family", JOptionPane.OK_CANCEL_OPTION) != JOptionPane.OK_OPTION)
             return;
         try {
-            Files.createDirectories(dir);
-            bench.palette = null;
-            if (signature) {
-                String id = name.replaceFirst("\\.sfx$", "");
-                Bench old = spell(id) != null ? spell(id).bench : Files.exists(f) ? parseBench(Files.readAllLines(f)) : null;   // never lose a spell's name or recipe on re-save
-                if (old != null) { if (bench.name == null) bench.name = old.name; if (bench.comps == null) { bench.comps = old.comps; bench.tier = old.tier; bench.secret = old.secret; bench.rtol = old.rtol; } }
-                if (bench.comps == null) {   // a new spell: its recipe, prefilled from the machine's sigil when one is on the arms
-                    String pre = machine != null && machine.frame != null && machine.frame.isVisible() ? machine.currentSigil() : "tier=1 ";
-                    String in = (String) JOptionPane.showInputDialog(this, "Recipe of the new spell " + id + " (tier=N [secret=1] [rtol=0.1], then motions like X3p1r0.7 Y2p0; leave empty to add it later):",
-                            "Recipe", JOptionPane.PLAIN_MESSAGE, null, null, pre);
-                    Bench r = parseRecipe(in);
-                    if (r != null) { bench.comps = r.comps; bench.tier = r.tier; bench.secret = r.secret; bench.rtol = r.rtol; }
-                }
-                if (bench.name == null) bench.name = id.replace('_', ' ');
-            } else { bench.name = null; bench.comps = null; }
-            Files.writeString(f, benchText(bench, rootHz));
-            benchName = rel; benchGen++;
-            if (signature) loadSpells();
-            toast("saved " + rel + (signature ? "  — every spell blends in by its own score.<id>; the machine scores them all" : ""));
+            Files.createDirectories(REG_DIR);
+            family = name;
+            Files.writeString(f, familyText());
+            benchName = relPath(f); benchDirty = false; familyGen++; benchGen++;
+            saveCfg();
+            toast("saved " + relPath(f) + " — it autosaves from here on");
         } catch (Exception e) { toast("save failed: " + e); }
     }
+    /** The `new spell` button: a spell joins the loaded family with its recipe (prefilled from the machine's sigil when one is
+     *  on the arms) and, if asked, every palette layer at its current values as the lock targets. */
+    void newSpell() {
+        if (family == null) { toast("save the bench as a family first (S) — spells live in the family file"); return; }
+        String pre = machine != null && machine.frame != null && machine.frame.isVisible() ? machine.currentSigil() : "tier=1 ";
+        JTextField idF = new JTextField("", 14), rcF = new JTextField(pre, 28);
+        JCheckBox allC = new JCheckBox("start with every palette layer at its current values", false);
+        JPanel p = new JPanel(new GridLayout(0, 2, 4, 4));
+        p.add(new JLabel("id (e.g. fire_bolt)")); p.add(idF);
+        p.add(new JLabel("recipe: tier=N [secret=1] [rtol=0.1] X3p1r0.7 Y2p0 …")); p.add(rcF);
+        p.add(new JLabel("")); p.add(allC);
+        if (JOptionPane.showConfirmDialog(this, p, "New spell of " + family, JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE) != JOptionPane.OK_OPTION) return;
+        String id = idF.getText().trim().replaceAll("[^A-Za-z0-9_-]+", "_").toLowerCase(Locale.ROOT);
+        if (id.isEmpty()) { toast("a spell needs an id"); return; }
+        if (spell(id) != null) { toast("spell " + id + " exists — its recipe… button edits the recipe"); return; }
+        Bench r = parseRecipe(rcF.getText());
+        pushUndo("");
+        Bench b = new Bench();
+        if (r != null) { b.comps = r.comps; b.tier = r.tier; b.secret = r.secret; b.rtol = r.rtol; }
+        if (allC.isSelected()) for (Clip c : bench.layers) { Clip n = copyClip(c); n.lmute = false; n.range = null; n.rnote = null; b.layers.add(n); }
+        Spell sp = makeSpell(id, b);
+        ArrayList<Spell> out = new ArrayList<>(spells); out.add(sp); setSpells(out);
+        markSpellDirty(sp);
+        String prob = recipeProblem(b);
+        toast("spell " + id + " added to " + family
+                + (sp.recipe == null ? " — no recipe yet, so the machine cannot score it (recipe… sets one)" : prob != null ? "   — WARNING, unbuildable: " + prob : RegulatorCore.degenerate(sp.recipe) ? "   — WARNING: this trace retraces itself into an open line" : "")
+                + "; a palette row's menu pushes layers into it");
+    }
+    void deleteSpell(Spell sp) {
+        if (JOptionPane.showConfirmDialog(this, "Delete spell " + sp.id + " from " + family + "? (ctrl+Z undoes)", "Delete spell", JOptionPane.OK_CANCEL_OPTION) != JOptionPane.OK_OPTION) return;
+        pushUndo("");
+        ArrayList<Spell> out = new ArrayList<>(spells); out.remove(sp); setSpells(out);
+        if (selSpell == sp) { sel = null; selSpell = null; }
+        collapsed.remove(sp.id);
+        markSpellDirty(sp);
+        toast("spell " + sp.id + " deleted");
+    }
+    /** N: a fresh scratch bench. The loaded family is left as it is on disk; the panel brings it back. */
     void clearBench() {
         pushBenchUndo("");
         benchPlaying = false;
+        String was = family;
+        family = null; setSpells(new ArrayList<>());
         installBench(new Bench());
-        sel = null; benchName = null;
-        markEdit();
-        toast("bench cleared (ctrl+Z undoes)");
+        sel = null; selSpell = null; benchName = null;
+        markEdit(); saveCfg();
+        toast("scratch bench" + (was != null ? " — family " + was + " is untouched, pick it in the panel to come back" : "") + " (ctrl+Z undoes)");
     }
 
     // ---- bench undo (whole-bench text snapshots; pushUndo / commitPending route here in bench mode)
@@ -3550,20 +3626,15 @@ public class SfxLab extends JPanel {
         bRedo.clear();
     }
     void restoreBench(BenchSnap snap) {
-        Bench b = parseBench(Arrays.asList(snap.text.split("\n")));
-        String selId = sel != null ? sel.id : null; Spell selSp = selSpell;
-        installBench(b);
-        for (Spell sp : spells) {
-            String t = snap.spells.get(sp.id);
-            if (t == null || t.equals(benchText(sp.bench, rootHz))) continue;
-            Bench nb = parseBench(Arrays.asList(t.split("\n")));
-            for (Clip c : nb.layers) if (c.on == ON_NONE) c.dur = ENDLESS;
-            sp.bench = nb;
-            if (nb.comps != null && nb.comps.length > 0) { sp.recipe = new RegulatorCore.Recipe(sp.id, sp.name, nb.tier, "", nb.secret, nb.comps); sp.recipe.rtol = nb.rtol; }
-            dirtySpells.add(sp);
-        }
-        sel = selSp != null ? selSp.bench.byId(selId) : bench.byId(selId);
-        markEdit();
+        Family fm = parseFamily(Arrays.asList(snap.text.split("\n")));
+        String selId = sel != null ? sel.id : null, selSp = selSpell != null ? selSpell.id : null;
+        family = snap.family;
+        installBench(fm.palette());
+        setSpells(fm.spells());
+        Spell sp = selSp != null ? spell(selSp) : null;
+        selSpell = sp; sel = sp != null ? sp.bench.byId(selId) : bench.byId(selId);
+        if (sel == null) selSpell = null;
+        markEdit(); saveCfg();
     }
     void benchUndo() {
         if (bUndo.isEmpty()) { toast("nothing to undo"); return; }
@@ -3583,7 +3654,7 @@ public class SfxLab extends JPanel {
     void grabUndo() { if (benchOn) pendingBench = benchSnap(); else pendingSnap = snapshot(); }
 
     // ---- bench UI: the layer rows take the timeline's place
-    static final String[] BENCH_ACTIONS = {"open", "save as", "signature", "panel", "browser", "timeline"};
+    static final String[] BENCH_ACTIONS = {"open", "save as", "new spell", "panel", "browser", "timeline"};
     String[] actions() { return benchOn ? BENCH_ACTIONS : ACTIONS; }
     int benchRowH() { return 26; }
     int benchRowsY() { return rulerY() + 26; }
@@ -3623,10 +3694,9 @@ public class SfxLab extends JPanel {
         g.setColor(new Color(245, 235, 215));
         int n = bench.layers.size();
         java.util.List<BenchRow> rows = benchRows();
-        g.drawString(String.format(Locale.ROOT, "BENCH  %s   %d layer%s   %s   score %.2f → blend %.0f%%   family %s%s",
-                benchName != null ? benchName : "(unsaved bench)", n, n == 1 ? "" : "s", benchPlaying ? "▶" : "‖",
-                sigVal[SIG_SCORE], 100 * blendW(), family != null ? family + " (" + spells.size() + " spell" + (spells.size() == 1 ? "" : "s") + ")" : "none",
-                bench.comps != null ? "   (a spell: " + recipeLine(bench) + ")" : ""), tlX() - 40, y0 + 14);
+        g.drawString(String.format(Locale.ROOT, "BENCH  %s   %d layer%s   %s   score %.2f → blend %.0f%%   family %s",
+                benchName != null ? benchName + (benchDirty ? " *" : "") : "(scratch bench)", n, n == 1 ? "" : "s", benchPlaying ? "▶" : "‖",
+                sigVal[SIG_SCORE], 100 * blendW(), family != null ? family + " (" + spells.size() + " spell" + (spells.size() == 1 ? "" : "s") + ", autosaves)" : "none — S saves the bench as one"), tlX() - 40, y0 + 14);
         g.setColor(new Color(60, 60, 60));
         g.drawLine(8, y0 + 20, w - 12, y0 + 20);
         g.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
@@ -3652,7 +3722,7 @@ public class SfxLab extends JPanel {
                 g.setColor(new Color(170, 150, 110));
                 g.drawString(String.format(Locale.ROOT, "%-22s score %.2f → blend %3.0f%%   %d layer%s%s%s", sp.name.length() > 22 ? sp.name.substring(0, 21) + "…" : sp.name,
                         spellScore.getOrDefault(sp.id, 0.0), 100 * sp.w, sp.bench.layers.size(), sp.bench.layers.size() == 1 ? "" : "s",
-                        sp.recipe == null ? "   no recipe" : "", dirtySpells.contains(sp) ? "   (unsaved)" : "") + (blendBind(sp) != null ? "   blend: " + blendBind(sp).sig + " " + (blendBind(sp).auto() ? "0.55..1" : fmtNum5(blendBind(sp).lo) + ".." + fmtNum5(blendBind(sp).hi)) + (blendBind(sp).map().isEmpty() ? "" : " " + blendBind(sp).map()) : ""), r.x + 8 + 27 * 7, r.y + 17);
+                        sp.recipe == null ? "   no recipe" : "", "") + (blendBind(sp) != null ? "   blend: " + blendBind(sp).sig + " " + (blendBind(sp).auto() ? "0.55..1" : fmtNum5(blendBind(sp).lo) + ".." + fmtNum5(blendBind(sp).hi)) + (blendBind(sp).map().isEmpty() ? "" : " " + blendBind(sp).map()) : ""), r.x + 8 + 27 * 7, r.y + 17);
                 continue;
             }
             Clip c = row.clip(); Spell sp = row.spell();
@@ -3752,6 +3822,8 @@ public class SfxLab extends JPanel {
         JMenu add = new JMenu("add a palette layer at its current values");
         for (Clip pc : bench.layers) add.add(item(pc.id + (sp.bench.byId(pc.id) != null ? "  (replace)" : ""), () -> addLayerToSpell(pc, sp)));
         m.add(add);
+        m.addSeparator();
+        m.add(item("delete spell " + sp.id + "…", () -> deleteSpell(sp)));
         m.show(this, mx, my);
     }
     /** Copies a palette layer into a spell as its target values (replacing the spell's layer of that id). */
@@ -4522,29 +4594,28 @@ public class SfxLab extends JPanel {
         int seenFamily = -1;
         final JCheckBox bindsB = new JCheckBox("binds", true);
         final JLabel drivenL = new JLabel(" ");
-        final DefaultListModel<String> rangeModel = new DefaultListModel<>();
-        final ArrayList<Object[]> rangeRows = new ArrayList<>();   // {Clip, Integer}
-        final JList<String> rangeList = new JList<>(rangeModel);
         JPanel bindsBox, spellBindsBox;
         JTable paletteTable;
         final ArrayList<BindModel> bindModels = new ArrayList<>();
         /** One table's model: the binds of a bench (the palette's, or a spell's, whose edits mark that spell dirty). */
         class BindModel extends javax.swing.table.AbstractTableModel {
             final Bench target; final Spell sp;
-            BindModel(Bench target, Spell sp) { this.target = target; this.sp = sp; }
+            final javax.swing.table.TableRowSorter<BindModel> sorter;
+            BindModel(Bench target, Spell sp) { this.target = target; this.sp = sp; sorter = new javax.swing.table.TableRowSorter<>(this); }   // after target: the sorter reads the row count at once
             void edited() { if (sp == null) lab.markEdit(); else lab.markSpellDirty(sp); }
             public int getRowCount() { return target.binds.size(); }
             public int getColumnCount() { return BCOLS.length; }
             public String getColumnName(int c) { return BCOLS[c]; }
-            public Class<?> getColumnClass(int c) { return c == 5 ? Boolean.class : String.class; }
+            public Class<?> getColumnClass(int c) { return c == 0 || c == 6 ? Boolean.class : String.class; }
             public boolean isCellEditable(int r, int c) { return true; }
             public Object getValueAt(int r, int c) {
-                if (r >= target.binds.size()) return "";
+                if (r >= target.binds.size()) return c == 0 || c == 6 ? Boolean.FALSE : "";
                 Bind b = target.binds.get(r);
                 return switch (c) {
-                    case 0 -> b.sig; case 1 -> b.layer; case 2 -> b.param;
-                    case 3 -> b.auto() ? "auto" : fmtNum5(b.lo); case 4 -> b.auto() ? "auto" : fmtNum5(b.hi);
-                    case 6 -> b.map();
+                    case 0 -> !b.mute;
+                    case 1 -> b.sig; case 2 -> b.layer; case 3 -> b.param;
+                    case 4 -> b.auto() ? "auto" : fmtNum5(b.lo); case 5 -> b.auto() ? "auto" : fmtNum5(b.hi);
+                    case 7 -> b.map();
                     default -> b.rel;
                 };
             }
@@ -4554,18 +4625,19 @@ public class SfxLab extends JPanel {
                 lab.pushUndo("");
                 try {
                     switch (c) {
-                        case 0 -> b.sig = v.toString().trim();
-                        case 1 -> b.layer = v.toString().trim();
-                        case 2 -> b.param = v.toString().trim().replace(' ', '_');
-                        case 3, 4 -> {
+                        case 0 -> b.mute = !Boolean.TRUE.equals(v);
+                        case 1 -> b.sig = v.toString().trim();
+                        case 2 -> b.layer = v.toString().trim();
+                        case 3 -> b.param = v.toString().trim().replace(' ', '_');
+                        case 4, 5 -> {
                             String t = v.toString().trim().toLowerCase(Locale.ROOT);
                             if (t.isEmpty() || t.equals("auto")) { b.lo = Double.NaN; b.hi = Double.NaN; }
                             else {
                                 if (b.auto()) { Clip lc = target.byId(b.layer); int pi = lc != null ? idxOf(lc.type, b.param) : -1; PSpec ps = pi >= 0 ? spec(lc.type, pi) : new PSpec("", 0, 1, 0); b.lo = ps.min(); b.hi = ps.max(); }
-                                if (c == 3) b.lo = Double.parseDouble(t); else b.hi = Double.parseDouble(t);
+                                if (c == 4) b.lo = Double.parseDouble(t); else b.hi = Double.parseDouble(t);
                             }
                         }
-                        case 6 -> { if (!b.setMap(v.toString())) lab.toast("map: steps=N or scale=<chord name: " + String.join(", ", CHORD_NAMES).replace(' ', '_') + ">"); }
+                        case 7 -> { if (!b.setMap(v.toString())) lab.toast("map: steps=N or scale=<chord name: " + String.join(", ", CHORD_NAMES).replace(' ', '_') + ">"); }
                         default -> b.rel = Boolean.TRUE.equals(v);
                     }
                 } catch (NumberFormatException ex) { lab.toast("couldn't parse \"" + v + "\""); }
@@ -4588,10 +4660,16 @@ public class SfxLab extends JPanel {
             JTable table = new JTable(model);
             if (sp == null) paletteTable = table;
             table.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
-            int[] widths = {84, 74, 74, 46, 46, 28, 64};
+            int[] widths = {26, 84, 74, 74, 46, 46, 28, 64};
             for (int i = 0; i < widths.length; i++) table.getColumnModel().getColumn(i).setPreferredWidth(widths[i]);
+            table.setRowSorter(model.sorter);   // click a header to sort; the filter box above the tables narrows the rows
+            model.sorter.setRowFilter(rowFilter());
             table.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke("ESCAPE"), "back");
             table.getActionMap().put("back", new AbstractAction() { public void actionPerformed(ActionEvent e) { lab.requestFocusInWindow(); } });
+            table.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.CTRL_DOWN_MASK), "copyBinds");
+            table.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke(KeyEvent.VK_V, InputEvent.CTRL_DOWN_MASK), "pasteBinds");
+            table.getActionMap().put("copyBinds", new AbstractAction() { public void actionPerformed(ActionEvent e) { copyBinds(table, model); } });
+            table.getActionMap().put("pasteBinds", new AbstractAction() { public void actionPerformed(ActionEvent e) { pasteBinds(target, sp); } });
             JPanel sec = new JPanel(new BorderLayout(2, 2));
             sec.setBorder(BorderFactory.createEmptyBorder(6, 0, 2, 0));
             JLabel head = new JLabel(title);
@@ -4602,31 +4680,90 @@ public class SfxLab extends JPanel {
             body.add(table, BorderLayout.CENTER);
             sec.add(body, BorderLayout.CENTER);
             JPanel bb = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 0));
-            JButton addB = new JButton("+ bind…"), remB = new JButton("− remove");
-            addB.setMargin(new Insets(0, 4, 0, 4)); remB.setMargin(new Insets(0, 4, 0, 4));
+            JButton addB = new JButton("+ bind…"), remB = new JButton("− remove"), copyB = new JButton("copy"), pasteB = new JButton("paste…");
+            for (JButton b : new JButton[]{addB, remB, copyB, pasteB}) b.setMargin(new Insets(0, 4, 0, 4));
+            copyB.setToolTipText("the selected rows (none: the whole table) as bind lines on the clipboard (ctrl+C) — paste into another table, family or text editor");
+            pasteB.setToolTipText("bind lines from the clipboard into this table, retargeted to a layer if you like (ctrl+V)");
             addB.addActionListener(e -> addBindDialog(target, sp));
             remB.addActionListener(e -> {
-                int[] rows = table.getSelectedRows();
                 ArrayList<Bind> del = new ArrayList<>();
-                for (int r : rows) if (r < target.binds.size()) del.add(target.binds.get(r));
+                for (int r : table.getSelectedRows()) { int mr = table.convertRowIndexToModel(r); if (mr < target.binds.size()) del.add(target.binds.get(mr)); }
                 if (del.isEmpty()) return;
                 lab.pushUndo("");
                 synchronized (lab.lock) { target.binds.removeAll(del); }
                 model.edited(); lab.benchGen++;
             });
-            bb.add(addB); bb.add(remB);
+            copyB.addActionListener(e -> copyBinds(table, model));
+            pasteB.addActionListener(e -> pasteBinds(target, sp));
+            bb.add(addB); bb.add(remB); bb.add(copyB); bb.add(pasteB);
             sec.add(bb, BorderLayout.SOUTH);
             sec.setMaximumSize(new Dimension(Integer.MAX_VALUE, sec.getPreferredSize().height + 400));
             return sec;
         }
-        final JTextArea notes = new JTextArea(4, 20);
         boolean refreshing; int seenGen = -1;
-        static final String[] BCOLS = {"signal", "layer", "param", "lo", "hi", "rel", "map"};
+        static final String[] BCOLS = {"on", "signal", "layer", "param", "lo", "hi", "rel", "map"};
+        final JTextField filterF = new JTextField(10);
+        final JCheckBox selOnlyC = new JCheckBox("selected layer");
+        Clip filterSel;   // the layer the filter last followed
+        /** The rows to show: matching the filter text (signal, layer or param) and, if ticked, the selected layer's. */
+        RowFilter<BindModel, Integer> rowFilter() {
+            return new RowFilter<>() {
+                public boolean include(Entry<? extends BindModel, ? extends Integer> e) {
+                    List<Bind> bs = e.getModel().target.binds;
+                    int r = e.getIdentifier();
+                    if (r >= bs.size()) return true;
+                    Bind b = bs.get(r);
+                    String q = filterF.getText().trim().toLowerCase(Locale.ROOT);
+                    if (selOnlyC.isSelected() && lab.sel != null && lab.sel.id != null && !(b.layer.equals("*") || b.layer.equals(lab.sel.id))) return false;
+                    return q.isEmpty() || b.sig.toLowerCase(Locale.ROOT).contains(q) || b.layer.toLowerCase(Locale.ROOT).contains(q) || b.param.toLowerCase(Locale.ROOT).contains(q);
+                }
+            };
+        }
+        void refilter() { for (BindModel m : bindModels) m.sorter.setRowFilter(rowFilter()); }
+        /** The selected rows (none: every row) as bind lines on the clipboard. */
+        void copyBinds(JTable table, BindModel model) {
+            StringBuilder sb = new StringBuilder(); int n = 0;
+            int[] rows = table.getSelectedRows();
+            if (rows.length == 0) rows = java.util.stream.IntStream.range(0, table.getRowCount()).toArray();
+            for (int r : rows) { int mr = table.convertRowIndexToModel(r); if (mr < model.target.binds.size()) { sb.append(model.target.binds.get(mr).line()).append('\n'); n++; } }
+            if (n == 0) { lab.toast("no binds to copy"); return; }
+            Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new java.awt.datatransfer.StringSelection(sb.toString()), null);
+            lab.toast(n + " bind line" + (n == 1 ? "" : "s") + " copied — paste… into another table (or a family file)");
+        }
+        /** Bind lines from the clipboard join a table, all retargeted to one layer if asked (a sample swap, a transfer between families). */
+        void pasteBinds(Bench target, Spell sp) {
+            String text;
+            try { text = (String) Toolkit.getDefaultToolkit().getSystemClipboard().getData(java.awt.datatransfer.DataFlavor.stringFlavor); }
+            catch (Exception e) { lab.toast("clipboard has no text"); return; }
+            List<Bind> in = parseBench(Arrays.asList(text.split("\n"))).binds;
+            if (in.isEmpty()) { lab.toast("clipboard has no bind lines (bind <signal> <layer> <param> …)"); return; }
+            List<Clip> ls; synchronized (lab.lock) { ls = new ArrayList<>(target.layers); }
+            JComboBox<String> layC = new JComboBox<>();
+            layC.addItem("as written");
+            layC.addItem("*");
+            for (Clip c : ls) layC.addItem(c.id);
+            if (lab.sel != null && lab.sel.id != null && target.byId(lab.sel.id) != null) layC.setSelectedItem(lab.sel.id);
+            JPanel p = new JPanel(new BorderLayout(4, 4));
+            StringBuilder pv = new StringBuilder("<html>");
+            for (int i = 0; i < Math.min(8, in.size()); i++) pv.append(in.get(i).line().substring(5)).append("<br>");
+            if (in.size() > 8) pv.append("… ").append(in.size() - 8).append(" more");
+            p.add(new JLabel(pv.append("</html>").toString()), BorderLayout.NORTH);
+            JPanel row = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 0));
+            row.add(new JLabel("layer for all of them:")); row.add(layC);
+            p.add(row, BorderLayout.SOUTH);
+            if (JOptionPane.showConfirmDialog(this, p, "Paste " + in.size() + " bind" + (in.size() == 1 ? "" : "s") + (sp == null ? " into the palette" : " into spell " + sp.id), JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE) != JOptionPane.OK_OPTION) return;
+            String lay = (String) layC.getSelectedItem();
+            lab.pushUndo("");
+            synchronized (lab.lock) { for (Bind b : in) { if (!"as written".equals(lay)) b.layer = lay; target.binds.add(b); } }
+            lab.benchGen++;
+            if (sp == null) lab.markEdit(); else lab.markSpellDirty(sp);
+            lab.toast(in.size() + " bind" + (in.size() == 1 ? "" : "s") + " pasted" + ("as written".equals(lay) ? "" : " onto " + lay));
+        }
 
         BenchPanel(SfxLab lab) {
             this.lab = lab;
             setLayout(new BorderLayout(4, 4));
-            setPreferredSize(new Dimension(473, 100));
+            setPreferredSize(new Dimension(600, 100));   // wide enough for the signal readouts and a spell's recipe line
             setBackground(Color.BLACK);
             Font mono = new Font(Font.MONOSPACED, Font.PLAIN, 12);
 
@@ -4637,8 +4774,8 @@ public class SfxLab extends JPanel {
             JPanel sigRow = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 0));
             sigRow.add(new JLabel("family"));
             famBox.setFont(mono);
-            famBox.setToolTipText("regulator/<family>/: loads the palette onto the bench and the family's spells beside it");
-            famBox.addActionListener(e -> { if (!refreshing) { String f = (String) famBox.getSelectedItem(); if (f != null && !f.equals(lab.family)) lab.loadFamily(f.equals("(none)") ? null : f, true); } });
+            famBox.setToolTipText("regulator/<family>.sfx: the palette and its spells, loaded onto the bench and autosaved as you work");
+            famBox.addActionListener(e -> { if (!refreshing) { String f = (String) famBox.getSelectedItem(); if (f != null && !f.equals(lab.family)) lab.loadFamily(f.equals("(none)") ? null : f); } });
             sigRow.add(famBox);
             JButton lockB = new JButton("bench lock"), unlockB = new JButton("bench unlock"), rescanB = new JButton("↻");
             bindsB.setToolTipText("off: every layer plays its saved params — no signal moves anything and no spell blends in — for auditioning a layer on its own");
@@ -4647,10 +4784,32 @@ public class SfxLab extends JPanel {
             unlockB.setToolTipText("the unlock event for the layers on the bench: fires their on=unlock one-shots");
             lockB.addActionListener(e -> lab.fireEvent(ON_LOCK));
             unlockB.addActionListener(e -> lab.fireEvent(ON_UNLOCK));
-            rescanB.addActionListener(e -> { rescanFamilies(); lab.loadSpells(); });
+            rescanB.setToolTipText("rescan regulator/ and reload the family from disk");
+            rescanB.addActionListener(e -> { rescanFamilies(); if (lab.family != null) lab.loadFamily(lab.family); });
             for (AbstractButton b : new AbstractButton[]{lockB, unlockB, rescanB, bindsB}) b.setFocusable(false);   // a click here must not take P / SPACE away from the bench
             sigRow.add(lockB); sigRow.add(unlockB); sigRow.add(rescanB); sigRow.add(bindsB);
             top.add(sigRow, gc);
+            // fold buttons: the signal sliders and the spell rows each fold away so the bind tables get the height
+            gc.gridy = 1;
+            JPanel foldRow = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 0));
+            JPanel sigGrid = new JPanel(new GridBagLayout());
+            JToggleButton sigT = new JToggleButton("signals", !lab.panelFold.contains("signals")), spT = new JToggleButton("spells", !lab.panelFold.contains("spells"));
+            for (JToggleButton t : new JToggleButton[]{sigT, spT}) { t.setMargin(new Insets(0, 4, 0, 4)); t.setFocusable(false); t.setFont(mono); }
+            sigT.setToolTipText("show / fold the signal sliders (the scrubber)");
+            spT.setToolTipText("show / fold the spells' score sliders and buttons");
+            Runnable fold = () -> {
+                sigGrid.setVisible(sigT.isSelected()); spellsP.setVisible(spT.isSelected());
+                sigT.setText((sigT.isSelected() ? "▾ " : "▸ ") + "signals"); spT.setText((spT.isSelected() ? "▾ " : "▸ ") + "spells");
+                lab.panelFold = (sigT.isSelected() ? "" : "signals,") + (spT.isSelected() ? "" : "spells");
+                top.revalidate(); top.repaint();
+            };
+            sigT.addActionListener(e -> { fold.run(); lab.saveCfg(); }); spT.addActionListener(e -> { fold.run(); lab.saveCfg(); });
+            foldRow.add(sigT); foldRow.add(spT);
+            JLabel muteHint = new JLabel("box off: its binds hold still (A/B)"); muteHint.setForeground(Color.GRAY);
+            foldRow.add(muteHint);
+            top.add(foldRow, gc);
+            gc.gridy = 2;
+            top.add(sigGrid, gc);
             gc.gridy = 98; gc.gridwidth = 3;
             top.add(spellsP, gc);
             gc.gridy = 99;
@@ -4661,29 +4820,46 @@ public class SfxLab extends JPanel {
                 final int k = i;
                 gc.gridy = i + 1;
                 gc.gridx = 0; gc.weightx = 0;
-                JLabel nm = new JLabel(SIGNALS[i]); nm.setFont(mono);
-                top.add(nm, gc);
+                sigGrid.add(sigLabel(SIGNALS[i], mono), gc);
                 gc.gridx = 1; gc.weightx = 1;
                 sl[i] = new JSlider(0, 1000, 0);
                 sl[i].addChangeListener(e -> { if (!refreshing) { lab.sigVal[k] = sl[k].getValue() / 1000.0 * SIG_MAX[k]; label(k); } });
-                top.add(sl[i], gc);
+                sigGrid.add(sl[i], gc);
                 gc.gridx = 2; gc.weightx = 0;
-                sv[i] = new JLabel(); sv[i].setFont(mono); sv[i].setPreferredSize(new Dimension(150, 16));
-                top.add(sv[i], gc);
+                sv[i] = new JLabel(); sv[i].setFont(mono); sv[i].setPreferredSize(new Dimension(190, 16));
+                sigGrid.add(sv[i], gc);
                 label(i);
             }
+            fold.run();
             add(top, BorderLayout.NORTH);
 
             // binds: the palette's table (the searching mix), then one table per spell (its lock mix), stacked
             bindsBox = new VBox(); bindsBox.setLayout(new BoxLayout(bindsBox, BoxLayout.Y_AXIS));
-            bindsBox.setToolTipText("signal → layer.param over lo..hi (auto = the marked range) · map: steps=N or scale=penta");
+            bindsBox.setToolTipText("signal → layer.param over lo..hi (auto = the marked range) · map: steps=N or scale=penta · on: off keeps the row but stops it moving anything");
+            JPanel filterRow = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 0));
+            filterRow.add(new JLabel("filter"));
+            filterF.setFont(mono);
+            filterF.setToolTipText("show only binds whose signal, layer or param contains this (e.g. orb, cutoff, seventh)");
+            filterF.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+                public void insertUpdate(javax.swing.event.DocumentEvent e) { refilter(); }
+                public void removeUpdate(javax.swing.event.DocumentEvent e) { refilter(); }
+                public void changedUpdate(javax.swing.event.DocumentEvent e) { refilter(); }
+            });
+            filterF.getInputMap(JComponent.WHEN_FOCUSED).put(KeyStroke.getKeyStroke("ESCAPE"), "back");
+            filterF.getActionMap().put("back", new AbstractAction() { public void actionPerformed(ActionEvent e) { lab.requestFocusInWindow(); } });
+            selOnlyC.setFocusable(false);
+            selOnlyC.setToolTipText("show only the binds on the layer selected on the bench (and the * ones)");
+            selOnlyC.addActionListener(e -> refilter());
+            filterRow.add(filterF); filterRow.add(selOnlyC);
+            filterRow.setMaximumSize(new Dimension(Integer.MAX_VALUE, 26));
+            bindsBox.add(filterRow);
             bindsBox.add(bindSection("palette binds — the searching mix", lab.bench, null));
             spellBindsBox = new JPanel(); spellBindsBox.setLayout(new BoxLayout(spellBindsBox, BoxLayout.Y_AXIS));
             bindsBox.add(spellBindsBox);
             bindsBox.add(Box.createVerticalGlue());
             JScrollPane bsp = new JScrollPane(bindsBox); bsp.getVerticalScrollBar().setUnitIncrement(16);
             add(bsp, BorderLayout.CENTER);
-            add(new JLabel("  ESC: back to the bench · bound sliders show a white tick at the live value · ranges: right-click a slider"), BorderLayout.SOUTH);
+            add(new JLabel("  ESC: back to the bench · click a column header to sort · ctrl+C / ctrl+V copy and paste bind lines · white tick: the live value"), BorderLayout.SOUTH);
             for (JComponent c : new JComponent[]{famBox}) {
                 c.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke("ESCAPE"), "back");
                 c.getActionMap().put("back", new AbstractAction() { public void actionPerformed(ActionEvent e) { lab.requestFocusInWindow(); } });
@@ -4705,7 +4881,20 @@ public class SfxLab extends JPanel {
                 }
                 for (int i = 0; i < 3; i++) label(i);   // ratio rows show the derived pitch
                 label(SIG_SCORE);
+                if (selOnlyC.isSelected() && lab.sel != filterSel) { filterSel = lab.sel; refilter(); }
             }).start();
+        }
+        /** A signal's name with its on / off box: off holds every bind on that signal still (session only, not saved). */
+        JPanel sigLabel(String sig, Font mono) {
+            JPanel p = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+            JCheckBox on = new JCheckBox("", !lab.mutedSigs.contains(sig));
+            on.setMargin(new Insets(0, 0, 0, 0)); on.setFocusable(false);
+            on.setToolTipText("on: binds on " + sig + " move their params · off: they hold still, so the signal's effect can be compared live");
+            JLabel nm = new JLabel(sig); nm.setFont(mono);
+            nm.setForeground(on.isSelected() ? UIManager.getColor("Label.foreground") : Color.GRAY);
+            on.addActionListener(e -> { if (on.isSelected()) lab.mutedSigs.remove(sig); else lab.mutedSigs.add(sig); nm.setForeground(on.isSelected() ? UIManager.getColor("Label.foreground") : Color.GRAY); lab.benchGen++; });
+            p.add(on); p.add(nm);
+            return p;
         }
         void label(int i) {
             double v = lab.sigVal[i];
@@ -4727,22 +4916,22 @@ public class SfxLab extends JPanel {
                 // row 1: score.<id>  [slider]  value · row 2: what it is, and its buttons
                 gc.gridy = row++; gc.gridwidth = 1;
                 gc.gridx = 0; gc.weightx = 0;
-                JLabel nm = new JLabel("score." + sp.id); nm.setFont(mono);
-                spellsP.add(nm, gc);
+                spellsP.add(sigLabel("score." + sp.id, mono), gc);
                 gc.gridx = 1; gc.weightx = 1;
                 JSlider s = new JSlider(0, 1000, (int) Math.round(lab.spellScore.getOrDefault(sp.id, 0.0) * 1000));
                 s.setEnabled(!lab.sigDriven);
                 s.addChangeListener(e -> { if (!refreshing) lab.spellScore.put(sp.id, s.getValue() / 1000.0); });
                 spellsP.add(s, gc);
                 gc.gridx = 2; gc.weightx = 0;
-                JLabel v = new JLabel(); v.setFont(mono); v.setPreferredSize(new Dimension(150, 16));
+                JLabel v = new JLabel(); v.setFont(mono); v.setPreferredSize(new Dimension(190, 16));
                 spellsP.add(v, gc);
                 gc.gridy = row++; gc.gridx = 0; gc.gridwidth = 3;
                 JPanel under = new JPanel(new FlowLayout(FlowLayout.LEFT, 3, 0));
                 String prob = sp.recipe != null ? recipeProblem(sp.bench) : null;
-                JLabel what = new JLabel(sp.recipe == null ? "no recipe — the machine cannot score it" : "tier " + sp.recipe.tier + (sp.recipe.secret ? " secret" : "") + "  " + recipeText(sp.bench).replaceFirst("^tier=\\d( secret=1)? ", "") + (prob != null ? "  ⚠" : ""));
+                String full = sp.recipe == null ? "no recipe — the machine cannot score it" : "tier " + sp.recipe.tier + (sp.recipe.secret ? " secret" : "") + "  " + recipeText(sp.bench).replaceFirst("^tier=\\d( secret=1)? ", "") + (prob != null ? "  ⚠" : "");
+                JLabel what = new JLabel(full.length() > 40 ? full.substring(0, 39) + "…" : full);   // a tier-III recipe is long: the tooltip has all of it, so the row never widens the panel
                 what.setFont(mono); what.setForeground(sp.recipe == null || prob != null ? new Color(200, 120, 40) : Color.GRAY);
-                what.setToolTipText(prob != null ? "unbuildable: " + prob : sp.name);
+                what.setToolTipText(sp.name + " · " + full + (prob != null ? " · unbuildable: " + prob : ""));
                 JButton lk = new JButton("lock"), ul = new JButton("unlock"), rc = new JButton("recipe…");
                 for (JButton b : new JButton[]{lk, ul, rc}) { b.setMargin(new Insets(0, 4, 0, 4)); b.setFont(mono); b.setFocusable(false); }
                 rc.addActionListener(e -> lab.recipeDialog(sp, null));
@@ -4752,7 +4941,7 @@ public class SfxLab extends JPanel {
                 spellsP.add(under, gc);
                 spellRows.add(new Object[]{sp, s, v});
             }
-            if (lab.spells.isEmpty()) { gc.gridy = 0; gc.gridx = 0; gc.gridwidth = 3; JLabel l = new JLabel(lab.family == null ? "no family loaded — pick one above (regulator/<family>/)" : "no spells in regulator/" + lab.family + "/spells/"); l.setForeground(Color.GRAY); spellsP.add(l, gc); }
+            if (lab.spells.isEmpty()) { gc.gridy = 0; gc.gridx = 0; gc.gridwidth = 3; JLabel l = new JLabel(lab.family == null ? "no family loaded — pick one above, or S saves the bench as a new one" : "no spells in " + lab.family + " yet — the new spell button adds one"); l.setForeground(Color.GRAY); spellsP.add(l, gc); }
             spellsP.revalidate(); spellsP.repaint();
             if (spellBindsBox != null) {
                 bindModels.removeIf(m -> m.sp != null);
@@ -4780,18 +4969,7 @@ public class SfxLab extends JPanel {
         void refresh() {
             refreshing = true;
             seenGen = lab.benchGen;
-            for (BindModel m : bindModels) m.fireTableDataChanged();
-            rangeModel.clear(); rangeRows.clear();
-            List<Clip> ls;
-            synchronized (lab.lock) { ls = new ArrayList<>(lab.bench.layers); }
-            for (Clip c : ls)
-                if (c.range != null)
-                    for (int pi : new TreeSet<>(c.range.keySet())) {
-                        double[] r = c.range.get(pi);
-                        String nt = c.rnote != null ? c.rnote.get(pi) : null;
-                        rangeModel.addElement(String.format(Locale.ROOT, "%s.%s  %s .. %s%s", c.id, spec(c.type, pi).name(), fmtNum5(r[0]), fmtNum5(r[1]), nt != null ? "   " + nt : ""));
-                        rangeRows.add(new Object[]{c, pi});
-                    }
+            for (BindModel m : bindModels) { m.fireTableDataChanged(); m.sorter.setRowFilter(rowFilter()); }
             if (lab.family != null && !lab.family.equals(famBox.getSelectedItem())) rescanFamilies();
             refreshing = false;
         }
@@ -5323,6 +5501,7 @@ public class SfxLab extends JPanel {
                     case "bpanel" -> bpanelOn = v.equals("1");
                     case "bench_name" -> benchName = v.isEmpty() ? null : v;
                     case "family" -> family = v.isEmpty() ? null : v;
+                    case "bpanel_fold" -> panelFold = v;
                     case "export_ogg" -> expOgg = v.equals("1");
                     case "export_mono" -> expMono = v.equals("1");
                     case "export_norm" -> expNorm = v.equals("1");
@@ -5334,9 +5513,9 @@ public class SfxLab extends JPanel {
     void saveCfg() {
         try {
             Files.createDirectories(DIR);
-            Files.writeString(CFG_FILE, String.format("export_dir=%s%nexport_ogg=%d%nexport_mono=%d%nexport_norm=%d%nexport_trim=%d%nforge_mirror=%s%nbrowser=%d%nbench=%d%nbpanel=%d%nbench_name=%s%nfamily=%s%n",
+            Files.writeString(CFG_FILE, String.format("export_dir=%s%nexport_ogg=%d%nexport_mono=%d%nexport_norm=%d%nexport_trim=%d%nforge_mirror=%s%nbrowser=%d%nbench=%d%nbpanel=%d%nbench_name=%s%nfamily=%s%nbpanel_fold=%s%n",
                     exportDir, expOgg ? 1 : 0, expMono ? 1 : 0, expNorm ? 1 : 0, expTrim ? 1 : 0, forgeMirror, browserOn ? 1 : 0,
-                    benchOn ? 1 : 0, bpanelOn ? 1 : 0, benchName != null ? benchName : "", family != null ? family : ""));
+                    benchOn ? 1 : 0, bpanelOn ? 1 : 0, benchName != null ? benchName : "", family != null ? family : "", panelFold));
         } catch (IOException e) { toast("cfg save failed: " + e); }
     }
 
@@ -5828,12 +6007,16 @@ public class SfxLab extends JPanel {
             toast("project load failed — starting empty");
         }
         try {
-            if (Files.exists(BENCH_FILE)) {
-                Bench b = parseBench(Files.readAllLines(BENCH_FILE));
-                installBench(b);
-                if (benchOn && b.root > 0) rootHz = b.root;
+            migrateFamilies();
+            if (family != null && Files.exists(familyFile(family))) loadFamily(family);   // the family file is the working state
+            else {
+                family = null;
+                if (Files.exists(BENCH_FILE)) {
+                    Family fm = parseFamily(Files.readAllLines(BENCH_FILE));
+                    installBench(fm.palette()); setSpells(fm.spells());
+                    if (benchOn && fm.palette().root > 0) rootHz = fm.palette().root;
+                }
             }
-            if (family != null) loadSpells();   // the working palette is the autosave; the family's spells load beside it
         } catch (Exception e) {
             System.err.println("bench load failed: " + e);
             toast("bench load failed — starting with an empty bench");
@@ -5847,7 +6030,6 @@ public class SfxLab extends JPanel {
         new javax.swing.Timer(33, ev -> {
             if (dirty && System.currentTimeMillis() - lastEditAt > 1200 && !Boolean.getBoolean("sfxlab.noautosave")) saveProject(true);   // -Dsfxlab.noautosave=true: headless tests must not touch project.sfx
             if (benchDirty && System.currentTimeMillis() - lastEditAt > 1200 && !Boolean.getBoolean("sfxlab.noautosave")) saveBench(true);
-            if (!dirtySpells.isEmpty() && System.currentTimeMillis() - lastEditAt > 1200 && !Boolean.getBoolean("sfxlab.noautosave")) saveDirtySpells();
             repaint();
             if (monitor != null && monitor.isVisible()) monitor.repaint();
         }).start();
@@ -5866,7 +6048,7 @@ public class SfxLab extends JPanel {
                 case KeyEvent.VK_SPACE -> toggleBenchPlay();
                 case KeyEvent.VK_ENTER -> stopBench();
                 case KeyEvent.VK_P -> previewSel();
-                case KeyEvent.VK_S -> stampBench(false);
+                case KeyEvent.VK_S -> saveFamilyAs();
                 case KeyEvent.VK_O -> openBench();
                 case KeyEvent.VK_N -> clearBench();
                 case KeyEvent.VK_DELETE, KeyEvent.VK_BACK_SPACE -> deleteSel();
@@ -5941,8 +6123,8 @@ public class SfxLab extends JPanel {
                     if (actRect(i).contains(mx, my)) {
                         if (benchOn) switch (i) {
                             case 0 -> openBench();
-                            case 1 -> stampBench(false);
-                            case 2 -> stampBench(true);
+                            case 1 -> saveFamilyAs();
+                            case 2 -> newSpell();
                             case 3 -> toggleBenchPanel();
                             case 4 -> toggleBrowser();
                             case 5 -> toggleBench();
@@ -6699,8 +6881,9 @@ public class SfxLab extends JPanel {
                         g.drawLine(x0, r.y + r.height - 1, x0, r.y + r.height + 3);
                         g.drawLine(x1, r.y + r.height - 1, x1, r.y + r.height + 3);
                     }
-                    boolean bound = !bindsOn(live, i).isEmpty();
-                    if (bound) { g.setColor(new Color(120, 200, 255)); g.fillOval(r.x - 9, r.y + 4, 5, 5); }
+                    List<Bind> lb = bindsOn(live, i);
+                    boolean bound = lb.stream().anyMatch(this::bindLive);
+                    if (!lb.isEmpty()) { g.setColor(bound ? new Color(120, 200, 255) : new Color(90, 90, 90)); g.fillOval(r.x - 9, r.y + 4, 5, 5); }   // grey: every bind on it is switched off
                     if ((bound || selSpell != null) && smod != null && benchPlaying && i < smod.length) {
                         {
                             double ue = Math.max(0, Math.min(1, (live.p[i] + smod[i] - s.min()) / (s.max() - s.min())));
@@ -6710,11 +6893,19 @@ public class SfxLab extends JPanel {
                         }
                     }
                 }
-                // value lives inside the bar so long readouts can't collide
-                // with the next column's label
+                // value lives inside the bar so long readouts can't collide with the next column's label;
+                // drawn in two clipped passes so the part over the fill is black and the rest stays light
                 String vs = fmtVal(sel, i);
-                g.setColor(u * (r.width - 2) > r.width - g.getFontMetrics().stringWidth(vs) - 8 ? Color.BLACK : Color.LIGHT_GRAY);   // black only once the fill is under the text
-                g.drawString(vs, r.x + r.width - g.getFontMetrics().stringWidth(vs) - 4, r.y + 11);
+                int vx = r.x + r.width - g.getFontMetrics().stringWidth(vs) - 4, fx = r.x + 1 + (int) (u * (r.width - 2));
+                Shape sc = g.getClip();
+                g.clipRect(r.x, r.y - 2, fx - r.x, r.height + 4);
+                g.setColor(Color.BLACK);
+                g.drawString(vs, vx, r.y + 11);
+                g.setClip(sc);
+                g.clipRect(fx, r.y - 2, r.x + r.width - fx + 4, r.height + 4);
+                g.setColor(Color.LIGHT_GRAY);
+                g.drawString(vs, vx, r.y + 11);
+                g.setClip(sc);
             }
         } else {
             g.setColor(Color.GRAY);
@@ -6734,7 +6925,7 @@ public class SfxLab extends JPanel {
             g.drawString("keys   1-9 0 add a synth layer · W import recording · A sample browser (adds land here) · DEL remove · D dup · up/down select · C sample/choir/partials", 14, h - 48);
             g.drawString("       SPACE play bench · ENTER stop · P solo / fire · T key-track · R tune to root · shift+R degree · ctrl+R root · < > key ±1 st · U the machine", 14, h - 35);
             g.drawString("       J regulator panel: signal sliders, signature picker, lock / unlock events, binds, ranges, notes · signals move bound params live (white tick)", 14, h - 22);
-            g.drawString("       S save as palette · signature button: save as spells/<spell>.sfx · O open · N clear · H timeline (shift+H sends a clip here) · ctrl+Z undo", 14, h - 9);
+            g.drawString("       family autosaves · S save as family (regulator/<name>.sfx) · new spell button · O open · N scratch bench · H timeline (shift+H sends a clip) · ctrl+Z undo", 14, h - 9);
             return;
         }
         g.drawString("mouse  drag clip: move (up/down = track) · left edge: trim · right edge: resize · shift-drag: invert snap · track #: mute · bar under #: volume · ruler: scrub", 14, h - 74);

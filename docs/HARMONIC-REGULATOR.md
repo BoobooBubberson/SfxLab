@@ -300,11 +300,12 @@ line style, which the timeline parser skips:
 ```
 layer <id> <name> <type> <dur> <seed> key=value... [on=lock|unlock] [mute=1]   dur 0 = endless
 range <id> <param> <lo> <hi> [note]      the span that sounded good (authoring notes; default bind range)
-recipe tier=N [secret=1] [rtol=0.1] X3p1r0.7 ...   (spell files) axis, ratio, phase in quarters, reach target
-bind <signal> <id|*> <param> [lo hi] [rel] [steps=N | scale=<chord>]   no range = the marked range, else the spec range;
+bind <signal> <id|*> <param> [lo hi] [rel] [steps=N | scale=<chord>] [off]   no range = the marked range, else the spec range; off = kept but inert;
                                          steps quantises the sweep, scale snaps a semitone value to a chord's degrees
-palette projects/x.sfx                   (signature files) the palette they were authored against
 note <free text>
+spell <id>                               starts a spell section (2026-09-28: spells live in the family file, see below)
+name <display name>                      (spell sections)
+recipe tier=N [secret=1] [rtol=0.1] X3p1r0.7 ...   (spell sections) axis, ratio, phase in quarters, reach target
 ```
 
 - Binds target absolute knob positions (the modulation is the difference from
@@ -317,7 +318,7 @@ note <free text>
 - Bound params go through a 30 ms one-pole smoother in the engine; the
   harmonic controls (which rebuild per-partial caches) are stepped at 1/100 of
   their range so a glide costs a few rebuilds rather than one per sample.
-- A signature is a bench file in `spells/` with the same ids at their lock
+- A signature (a spell section) holds the same ids at their lock
   values; shared params blend by `w = smoothstep(0.55, 1, score)`, signature-only
   layers fade in by `w`, one-shots marked `on=lock` / `on=unlock` fire on the
   events (the `lock` / `unlock` buttons in the panel, later the core). A
@@ -332,9 +333,13 @@ note <free text>
   torch_lance and the secret will_o_wisp as first signatures to tune by ear.
   Old projects render byte-identical.
 
-**Families and rosters (as built later the same day).** A family is a folder,
-`regulator/<family>/`, holding its palette `<family>.sfx` and `spells/*.sfx`.
-Each spell file carries `name` and `recipe tier=N [secret=1] X3p1 Y2p0 ...`
+**Families and rosters (as built later the same day; one file per family since
+2026-09-28).** A family is one file, `regulator/<family>.sfx`: the palette's
+lines, then a `spell <id>` section per spell holding that spell's layers at
+their lock values, its binds and notes. The loaded family autosaves as it is
+edited, palette and spells alike, so there is no separate stamp step; a bench
+with no family autosaves to `bench.sfx` until S names it. Each spell section
+carries `name` and `recipe tier=N [secret=1] X3p1 Y2p0 ...`
 lines (axis, integer ratio, phase in quarters, optional `@amp` for the
 blueprint), so the roster is data: the bench, the machine and the mod read
 one source, and the prototype's hard-coded list is only the fallback. Every
