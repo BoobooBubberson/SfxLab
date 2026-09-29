@@ -202,9 +202,11 @@ import static sfxlab.runtime.BenchMixer.*;
  * (`off` on the bind line); a filter box, sortable columns, and ctrl+C /
  * ctrl+V to carry bind lines between tables, layers and families. The
  * signal sliders and the spell rows fold. A FAMILY is one file, regulator/<family>.sfx:
- * the palette, then one section per spell. The loaded family autosaves as
- * you work (palette and spells alike); a scratch bench autosaves to
- * bench.sfx and S saves it as a family. The `new spell` button adds a spell.
+ * the palette, then one section per spell. Edits to the loaded family
+ * autosave to its working copy, regulator/.working/<family>.sfx, which
+ * reopens with the family until S saves it into the family file (shift+S
+ * saves as a new family, shift+O reverts to the saved file); a scratch
+ * bench autosaves to bench.sfx and S saves it as a family. The `new spell` button adds a spell.
  * shift+H sends a timeline clip over as a layer; a layer's menu copies it back.
  *
  * MARKERS: K drops a named marker at the playhead (shift+K removes the
@@ -1279,6 +1281,10 @@ public class SfxLab extends JPanel {
     // =====================================================================
     static final Path BENCH_FILE = DIR.resolve("bench.sfx");   // the bench autosaves here, like project.sfx
     static final Path REG_DIR = DIR.resolve("regulator");      // regulator/<family>.sfx: the palette, then one `spell <id>` section per spell (its recipe, lock values, binds)
+    static final Path WORKING_DIR = REG_DIR.resolve(".working"); // regulator/.working/<family>.sfx: a loaded family's autosaved working copy (git-ignored); S writes the family file
+    static Path workingFile(String fam) { return WORKING_DIR.resolve(fam + ".sfx"); }
+    String savedText;               // the loaded family as its file holds it (familyText's form), to tell unsaved edits apart
+    volatile boolean unsaved;       // the working copy differs from the family file: the header says so, S saves, shift+O reverts
 
 
     /** How the machine derives a signal (RegulatorCore.computeSignals / orbSignals / evalOnce), for the panel's tooltips.
@@ -1407,7 +1413,7 @@ public class SfxLab extends JPanel {
     }
     BenchSnap benchSnap() { BenchSnap b = new BenchSnap(); b.family = family; b.text = familyText(); return b; }
     String familyText() { return SfxFormat.familyText(bench, mix.spells, rootHz); }
-    /** A spell changed: the family autosaves (spells live in its file). */
+    /** A spell changed: the working copy autosaves (spells live in the family's file). */
     void markSpellDirty(Spell sp) { benchDirty = true; benchGen++; lastEditAt = System.currentTimeMillis(); }
     BenchPanel bpanel; boolean bpanelOn;    // the docked regulator panel (J); remembered in lab.cfg
     String panelFold = "";                  // the panel's folded sections ("signals", "spells"), remembered in lab.cfg
@@ -1555,7 +1561,7 @@ public class SfxLab extends JPanel {
         return n;
     }
 
-    // ---- families: regulator/<family>.sfx holds the palette and, as `spell <id>` sections, the roster; the loaded one autosaves
+    // ---- families: regulator/<family>.sfx holds the palette and, as `spell <id>` sections, the roster; the loaded one's edits autosave to its working copy until S
     static java.util.List<String> familyNames() {
         ArrayList<String> out = new ArrayList<>();
         try (var st = Files.list(REG_DIR)) {
@@ -1569,9 +1575,12 @@ public class SfxLab extends JPanel {
         Path p = f.toAbsolutePath().normalize().getParent(); String n = f.getFileName().toString();
         return p != null && p.equals(REG_DIR.toAbsolutePath().normalize()) && n.endsWith(".sfx") ? n.substring(0, n.length() - 4) : null;
     }
-    /** Loads a family onto the bench: its palette and its spells. null detaches: the bench stays, spells go, autosave returns to bench.sfx. */
-    void loadFamily(String name) {
-        if (name == null || name.isEmpty()) { family = null; setSpells(new ArrayList<>()); benchName = null; markEdit(); saveCfg(); return; }
+    /** Loads a family onto the bench: its palette and its spells, from its file, or from its working copy when that holds
+     *  unsaved edits (they survive switching families and restarts). null detaches: the bench stays, spells go, autosave
+     *  returns to bench.sfx. */
+    void loadFamily(String name) { loadFamily(name, true); }
+    void loadFamily(String name, boolean restore) {
+        if (name == null || name.isEmpty()) { family = null; unsaved = false; savedText = null; setSpells(new ArrayList<>()); benchName = null; markEdit(); saveCfg(); return; }
         Path f = familyFile(name);
         try {
             Family fm = parseFamily(Files.readAllLines(f));
@@ -1583,9 +1592,44 @@ public class SfxLab extends JPanel {
             sel = null; selSpell = null;
             setSpells(fm.spells());
             benchName = relPath(f); benchDirty = false;
-            toast("opened " + relPath(f) + " (" + bench.layers.size() + " layers, " + bench.binds.size() + " binds, " + mix.spells.size() + " spell" + (mix.spells.size() == 1 ? "" : "s") + ") — it autosaves as you work");
+            savedText = familyText(); unsaved = false;
+            Path w = workingFile(name);
+            if (restore && Files.exists(w)) {
+                Family wf = parseFamily(Files.readAllLines(w));
+                double wRoot = benchOn && wf.palette().root > 0 ? wf.palette().root : rootHz;
+                if (!SfxFormat.familyText(wf.palette(), wf.spells(), wRoot).equals(savedText)) {
+                    installBench(wf.palette()); rootHz = wRoot; setSpells(wf.spells());
+                    unsaved = true;
+                    toast("opened " + name + " with its unsaved edits (" + bench.layers.size() + " layers, " + mix.spells.size() + " spells) — S saves them to " + relPath(f) + ", shift+O reverts to the saved file");
+                    saveCfg();
+                    return;
+                }
+            }
+            toast("opened " + relPath(f) + " (" + bench.layers.size() + " layers, " + bench.binds.size() + " binds, " + mix.spells.size() + " spell" + (mix.spells.size() == 1 ? "" : "s") + ") — edits autosave to a working copy, S saves the family");
         } catch (Exception e) { toast("family " + name + " failed: " + e); }
         saveCfg();
+    }
+    /** S with a family loaded: the working state becomes the family file. */
+    void saveFamily() {
+        if (family == null) { saveFamilyAs(); return; }
+        try {
+            String txt = familyText();
+            Files.createDirectories(REG_DIR);
+            Files.writeString(familyFile(family), txt);
+            savedText = txt; unsaved = false; benchDirty = false;
+            Files.deleteIfExists(workingFile(family));
+            toast("saved " + relPath(familyFile(family)));
+        } catch (Exception e) { toast("save failed: " + e); }
+    }
+    /** shift+O: drop the unsaved edits and reload the family file (undo can still bring them back this session). */
+    void revertFamily() {
+        if (family == null) { toast("no family loaded"); return; }
+        if (!unsaved && !benchDirty) { toast(family + " has no unsaved edits"); return; }
+        if (!java.awt.GraphicsEnvironment.isHeadless() && JOptionPane.showConfirmDialog(this, "Drop the unsaved edits to " + family + " and reload " + relPath(familyFile(family)) + "?",
+                "Revert family", JOptionPane.OK_CANCEL_OPTION) != JOptionPane.OK_OPTION) return;
+        try { Files.deleteIfExists(workingFile(family)); } catch (IOException ignored) {}
+        loadFamily(family, false);
+        toast("reverted " + family + " to " + relPath(familyFile(family)) + " (ctrl+Z brings the edits back)");
     }
     void setSpells(java.util.List<Spell> out) {
         mix.spells = out;
@@ -1639,7 +1683,7 @@ public class SfxLab extends JPanel {
         Bench b = parseBench(List.of("recipe " + text.trim().replaceFirst("^recipe\\s+", "")));
         return b.comps != null && b.comps.length > 0 ? b : null;
     }
-    /** Sets a spell's recipe; the family autosaves and the machine re-reads the roster. */
+    /** Sets a spell's recipe; the working copy autosaves and the machine re-reads the roster. */
     boolean setSpellRecipe(Spell sp, String text) {
         Bench r = parseRecipe(text);
         if (r == null) { toast("recipe: tier=N [secret=1] then motions like X3p1 or Y5p2@0.35 (axis, integer ratio, phase in quarters, blueprint amplitude)"); return false; }
@@ -1814,14 +1858,19 @@ public class SfxLab extends JPanel {
         toast(c.id + " copied to the timeline at the playhead (H shows it)");
     }
 
-    // ---- bench files: the loaded family autosaves to regulator/<family>.sfx, a scratch bench to bench.sfx
+    // ---- bench files: the autosave keeps a loaded family's working copy in regulator/.working/ (S writes the family
+    // file), and a scratch bench in bench.sfx
     void saveBench(boolean quiet) {
         try {
-            Path f = family != null ? familyFile(family) : BENCH_FILE;
-            Files.createDirectories(f.getParent());
-            Files.writeString(f, family != null ? familyText() : benchText(bench, rootHz));
+            if (family != null) {
+                String txt = familyText();
+                unsaved = !txt.equals(savedText);
+                Path w = workingFile(family);
+                if (unsaved) { Files.createDirectories(WORKING_DIR); Files.writeString(w, txt); }
+                else Files.deleteIfExists(w);   // edited back to the saved state
+            } else Files.writeString(BENCH_FILE, benchText(bench, rootHz));
             benchDirty = false;
-            if (!quiet) toast("saved " + relPath(f));
+            if (!quiet) toast(family != null ? "working copy saved (S writes " + relPath(familyFile(family)) + ")" : "saved " + relPath(BENCH_FILE));
         } catch (Exception e) { toast("bench save failed: " + e); }
     }
     void installBench(Bench b) {
@@ -1863,11 +1912,11 @@ public class SfxLab extends JPanel {
         String fam = familyOf(f);
         if (fam != null) loadFamily(fam); else loadBenchFile(f);
     }
-    /** S on the bench: the bench and its spells become the family regulator/<name>.sfx. The loaded family autosaves already,
-     *  so this names a scratch bench, or forks the family under a new name. */
+    /** shift+S on the bench (S with no family): the bench and its spells become the family regulator/<name>.sfx, naming a
+     *  scratch bench or forking the loaded family under a new name. */
     void saveFamilyAs() {
         String name = (String) JOptionPane.showInputDialog(this,
-                "Save the bench and its spells as a family (regulator/<name>.sfx):" + (family != null ? "\nThe loaded family autosaves as you work; a new name forks it." : ""),
+                "Save the bench and its spells as a family (regulator/<name>.sfx):" + (family != null ? "\nA new name forks " + family + " (its own file stays as last saved)." : ""),
                 "Save family", JOptionPane.PLAIN_MESSAGE, null, null, family != null ? family : "");
         if (name == null) return;
         name = name.trim().replaceFirst("\\.sfx$", "").replaceAll("[^A-Za-z0-9_-]+", "_");
@@ -1878,11 +1927,16 @@ public class SfxLab extends JPanel {
             return;
         try {
             Files.createDirectories(REG_DIR);
+            String old = family;
             family = name;
-            Files.writeString(f, familyText());
+            String txt = familyText();
+            Files.writeString(f, txt);
+            savedText = txt; unsaved = false;
+            if (old != null) Files.deleteIfExists(workingFile(old));   // its edits went into the new family
+            Files.deleteIfExists(workingFile(name));
             benchName = relPath(f); benchDirty = false; familyGen++; benchGen++;
             saveCfg();
-            toast("saved " + relPath(f) + " — it autosaves from here on");
+            toast("saved " + relPath(f) + " — edits autosave to a working copy, S saves again");
         } catch (Exception e) { toast("save failed: " + e); }
     }
     /** The `new spell` button: a spell joins the loaded family with its recipe (prefilled from the machine's sigil when one is
@@ -3184,7 +3238,7 @@ public class SfxLab extends JPanel {
             JPanel sigRow = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 0));
             sigRow.add(new JLabel("family"));
             famBox.setFont(mono);
-            famBox.setToolTipText("regulator/<family>.sfx: the palette and its spells, loaded onto the bench and autosaved as you work");
+            famBox.setToolTipText("regulator/<family>.sfx: the palette and its spells, loaded onto the bench; edits autosave to a working copy (regulator/.working/) until S saves the family");
             famBox.addActionListener(e -> { if (!refreshing) { String f = (String) famBox.getSelectedItem(); if (f != null && !f.equals(lab.family)) lab.loadFamily(f.equals("(none)") ? null : f); } });
             sigRow.add(famBox);
             JButton lockB = new JButton("bench lock"), unlockB = new JButton("bench unlock"), rescanB = new JButton("↻");
@@ -4425,8 +4479,8 @@ public class SfxLab extends JPanel {
                 case KeyEvent.VK_SPACE -> toggleBenchPlay();
                 case KeyEvent.VK_ENTER -> stopBench();
                 case KeyEvent.VK_P -> previewSel();
-                case KeyEvent.VK_S -> saveFamilyAs();
-                case KeyEvent.VK_O -> openBench();
+                case KeyEvent.VK_S -> { if (e.isShiftDown()) saveFamilyAs(); else saveFamily(); }
+                case KeyEvent.VK_O -> { if (e.isShiftDown()) revertFamily(); else openBench(); }
                 case KeyEvent.VK_N -> clearBench();
                 case KeyEvent.VK_DELETE, KeyEvent.VK_BACK_SPACE -> deleteSel();
                 case KeyEvent.VK_D -> dupSel();
@@ -5047,7 +5101,7 @@ public class SfxLab extends JPanel {
 
         // ---- top bar
         g.setColor(new Color(90, 255, 190));
-        g.drawString(benchOn ? "SynthLab SFX · bench (H: timeline)" : "SynthLab SFX · workspace" + (lastStampName != null ? " (" + lastStampName + ")" : ""), 14, 24);
+        g.drawString(benchOn ? "SynthLab SFX · bench (H: timeline)" + (family != null ? " · " + family + (unsaved || benchDirty ? "*  unsaved: S saves, shift+O reverts" : "") : "") : "SynthLab SFX · workspace" + (lastStampName != null ? " (" + lastStampName + ")" : ""), 14, 24);
         g.setColor(Color.GRAY);
         VideoRef vid = video;
         String tp = benchOn
@@ -5321,7 +5375,7 @@ public class SfxLab extends JPanel {
             g.drawString("keys   1-9 0 add a synth layer · W import recording · A sample browser (adds land here) · DEL remove · D dup · up/down select · C sample/choir/partials", 14, h - 48);
             g.drawString("       SPACE play bench · ENTER stop · P solo / fire · T key-track · R tune to root · shift+R degree · ctrl+R root · < > key ±1 st · U the machine · shift+M mono", 14, h - 35);
             g.drawString("       J regulator panel: signal sliders, signature picker, lock / unlock events, binds, ranges, notes · signals move bound params live (white tick)", 14, h - 22);
-            g.drawString("       family autosaves · S save as family (regulator/<name>.sfx) · new spell button · O open · N scratch bench · H timeline (shift+H sends a clip) · ctrl+Z undo", 14, h - 9);
+            g.drawString("       edits autosave to a working copy · S save family · shift+S save as · shift+O revert · O open · N scratch bench · H timeline (shift+H sends a clip) · ctrl+Z undo", 14, h - 9);
             return;
         }
         g.drawString("mouse  drag clip: move (up/down = track) · left edge: trim · right edge: resize · shift-drag: invert snap · track #: mute · bar under #: volume · ruler: scrub", 14, h - 74);

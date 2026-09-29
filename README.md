@@ -60,7 +60,7 @@ Headless, without the GUI:
 | `legacy/` | `SynthLab.java`, the original spellcasting playground, and its presets |
 | `lab.cfg.example` | template for the git-ignored `lab.cfg` |
 | `forge/`, `renders/`, `video-cache/`, `samples/.decoded/` | outputs and caches, git-ignored |
-| `bench.sfx` | the bench's autosave (git-ignored), like `project.sfx` for the timeline |
+| `bench.sfx`, `regulator/.working/` | the bench's autosaves (git-ignored): a scratch bench, and each family's unsaved edits |
 
 ## Working in the lab
 
@@ -113,8 +113,10 @@ the machine's signals rather than by time. **H** swaps the timeline for that ben
   the layer exactly as authored.
 - Sounds are organised by **family**, one file each: `regulator/<family>.sfx` is the
   palette that plays through the tuning, followed by a `spell <id>` section per spell,
-  the roster. Pick the family in the panel; it autosaves as you work, palette and
-  spells alike. Each spell is a **signature**, the
+  the roster. Pick the family in the panel. Edits autosave to the family's working copy
+  (`regulator/.working/<family>.sfx`), which reopens with it, so unsaved work survives
+  switching families and restarts; **S** saves the family file, **shift+O** reverts to it
+  (the header marks a family with unsaved edits `*`). Each spell is a **signature**, the
   same layers at their lock values plus its one-shots, and carries its recipe
   (`recipe tier=1 X3p1r0.7 Y2p0`: axis, integer ratio, phase in quarter turns, reach
   target; `rtol=` sets the reach tolerance), which is what the machine and, later, the mod score.
@@ -136,7 +138,7 @@ the machine's signals rather than by time. **H** swaps the timeline for that ben
   target values in the panel (undo covers it). A palette row's menu pushes the layer
   into a spell at its current values; a spell header's menu deletes the spell.
 - A bench with no family is a scratch bench that autosaves to `bench.sfx`; **S** saves
-  it as a family, or forks the loaded family under a new name. **N** starts a fresh
+  it as a family. **shift+S** forks the loaded family under a new name. **N** starts a fresh
   scratch bench and leaves the family on disk. `regulator/pyretic.sfx` is the worked example.
 - **U** opens the machine: the regulator itself (crank, arms, motion levers, latch,
   phase and reach, the research setpoint, the voice lever, the copy socket) around

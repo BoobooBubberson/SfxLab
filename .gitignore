@@ -3,6 +3,7 @@ lab.cfg
 # the workspace autosaves; S stamps named copies into projects/ (and spells/ for signatures)
 project.sfx
 bench.sfx
+regulator/.working/
 
 # caches, rebuilt on demand
 samples/.decoded/

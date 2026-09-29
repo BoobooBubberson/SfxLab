@@ -355,9 +355,11 @@ recipe tier=N [secret=1] [rtol=0.1] X3p1r0.7 ...   (spell sections) axis, ratio,
 **Families and rosters (as built later the same day; one file per family since
 2026-09-28).** A family is one file, `regulator/<family>.sfx`: the palette's
 lines, then a `spell <id>` section per spell holding that spell's layers at
-their lock values, its binds and notes. The loaded family autosaves as it is
-edited, palette and spells alike, so there is no separate stamp step; a bench
-with no family autosaves to `bench.sfx` until S names it. Each spell section
+their lock values, its binds and notes. Edits to the loaded family autosave
+to its working copy, `regulator/.working/<family>.sfx` (git-ignored), which
+reopens with the family; S writes the family file, shift+S forks it under a
+new name, shift+O reverts to the saved file. A bench with no family autosaves
+to `bench.sfx` until S names it. Each spell section
 carries `name` and `recipe tier=N [secret=1] X3p1 Y2p0 ...`
 lines (axis, integer ratio, phase in quarters, optional `@amp` for the
 blueprint), so the roster is data: the bench, the machine and the mod read

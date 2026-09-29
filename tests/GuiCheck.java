@@ -72,6 +72,23 @@ public class GuiCheck {
         check("undo brings back a removed spell", lab.mix.spells.size() == n);
         check("the family text is unchanged by all of it", lab.familyText().equals(disk));
 
+        // edits go to the family's working copy; only S writes the family file
+        Path famFile = SfxLab.familyFile("pyretic"), work = SfxLab.workingFile("pyretic");
+        Clip ed = lab.bench.layers.get(0);
+        double before = ed.p[Sfx.P_LEVEL], edited = before > 0.5 ? before - 0.25 : before + 0.25;
+        ed.p[Sfx.P_LEVEL] = edited; lab.markEdit(); lab.saveBench(true);
+        check("an edit autosaves to the working copy and leaves the family file alone",
+              Files.exists(work) && lab.unsaved && Files.readString(famFile).equals(disk));
+        lab.loadFamily("pyretic");
+        check("reopening the family brings its unsaved edit back", lab.unsaved && lab.bench.layers.get(0).p[Sfx.P_LEVEL] == edited);
+        lab.revertFamily();
+        check("shift+O reverts to the saved file and drops the working copy", !lab.unsaved && !Files.exists(work) && lab.bench.layers.get(0).p[Sfx.P_LEVEL] == before);
+        lab.bench.layers.get(0).p[Sfx.P_LEVEL] = edited; lab.markEdit(); lab.saveBench(true);
+        lab.saveFamily();
+        check("S writes the family file and clears the working copy", !lab.unsaved && !Files.exists(work) && !Files.readString(famFile).equals(disk)
+              && SfxFormat.parseFamily(Files.readAllLines(famFile)).palette().layers.get(0).p[Sfx.P_LEVEL] == edited);
+        Files.writeString(famFile, disk); lab.loadFamily("pyretic", false);   // the workspace's copy as it was
+
         // shift+M: the mono audition (the game's one positional source), remembered in lab.cfg (the test workspace's)
         boolean mono0 = lab.monoOut;
         java.awt.event.KeyEvent sm = new java.awt.event.KeyEvent(lab, java.awt.event.KeyEvent.KEY_PRESSED, 0, java.awt.event.KeyEvent.SHIFT_DOWN_MASK, java.awt.event.KeyEvent.VK_M, 'M');
