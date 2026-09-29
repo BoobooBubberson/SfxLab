@@ -494,6 +494,35 @@ motion parked at rest switches off. The lever positions are then an exact
 readout of what the controls reach. Both models are in the machine
 ("coupled levers" toggle) so they can be compared by play.
 
+**Brake and wells (2026-09-28, the third model, a toggle).** Two sources
+of tedium in the free crank: the last mile was a counting task (fine
+notches against a friction that grows with the ratio, so ×7 was a fight
+that ×2 was not), and the acceptance window narrowed with √n on top of
+it. Higher ratios already carry their difficulty in the figure; they
+should not carry it in the crank. A first cut kept a small flat friction
+and wide wells that pulled the crank in; played, it needed no timing at
+all (scroll past and wait) and the wells found the integers for you. So:
+
+- **No friction.** The crank keeps the speed it is left at; a detuned
+  crank stays detuned, and the rolling figure is a stable thing to read.
+- **The wheel is the only way up** and its notches vary by ±30 %, so
+  counting notches is no substitute for watching the figure.
+- **The brake is the only way down** (hold B, or the button): 0.4 ratio/s
+  at a tap, biting up to 4× after a 1.2 s hold, so a long descent is a
+  hold and the last tenth is a few taps. Taking the brake couples the
+  active motions like any touch on the crank.
+- **The well acts only on release, only inside the acceptance window:**
+  let go within it and the crystal eases the crank onto the integer over
+  ~0.6 s; let go outside and it sits where it is, beating. The window is
+  the difficulty slider (constant across ratios), so how close the player
+  must get by eye and ear is a setting, not a formula.
+- The dial does not warm on approach (that was a guide); it warms once
+  the crystal has taken the integer, as confirmation.
+
+The auto-player uses the technique (scroll past, hold, taps near, let go
+inside the window) and locks every roster recipe at every speed and at a
+window of 0.03.
+
 The auto-player trims first (reach, phase), spins to just above the target
 and latches as friction carries the ratio through the window, which is
 also the human technique; under coupled levers it parks each motion after

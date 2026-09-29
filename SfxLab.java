@@ -4145,7 +4145,8 @@ public class SfxLab extends JPanel {
         final JToggleButton autoB = new JToggleButton("▶ auto-play"), pauseB = new JToggleButton("pause");
         final JSlider speedS = new JSlider(5, 40, 10);
         final JCheckBox mistakesB = new JCheckBox("mistakes", true), anyB = new JCheckBox("any spell", false);
-        final JCheckBox classicB = new JCheckBox("classic crank", false), couplingB = new JCheckBox("coupled levers", true);
+        final JCheckBox classicB = new JCheckBox("classic crank", false), couplingB = new JCheckBox("coupled levers", true), wellsB = new JCheckBox("brake & wells", false);
+        final JButton brakeB = new JButton("brake");
         final JSlider snapS = new JSlider(2, 30, 10);
         final JLabel snapL = new JLabel();
         JFrame frame;
@@ -4214,27 +4215,35 @@ public class SfxLab extends JPanel {
                 axes.add(axB[i]);
             }
             ctl.add(axes);
-            ctl.add(section("crank — drag or wheel (shift: fine); latch near an integer and the crystal takes it"));
+            ctl.add(section("crank — drag or wheel (shift: fine); latch near an integer and the crystal takes it · brake & wells: hold B / brake"));
             JPanel ck = new JPanel(new FlowLayout(FlowLayout.LEFT, 6, 2));
             ck.add(crank);
-            JPanel nb = new JPanel(new GridLayout(3, 1, 2, 2));
+            JPanel nb = new JPanel(new GridLayout(4, 1, 2, 2));
             JButton up = new JButton("+"), dn = new JButton("−");
             up.addActionListener(e -> core.nudge(1, RegulatorCore.NUDGE_BUTTON));
             dn.addActionListener(e -> core.nudge(-1, RegulatorCore.NUDGE_BUTTON));
             latchB.addActionListener(e -> { int d = core.drivenCount(); if (d == 0) return; int caught = core.caught; int st = core.latch();
                 notify(st == d ? "Stopped. Those motions are at rest." : caught >= 0 ? "Held at resonance." : "Held off-resonance. It will drift."); });
-            nb.add(up); nb.add(dn); nb.add(latchB);
+            nb.add(up); nb.add(dn); nb.add(brakeB); nb.add(latchB);
             ck.add(nb);
             ctl.add(ck);
             JPanel cm = new JPanel(new FlowLayout(FlowLayout.LEFT, 6, 0));
             classicB.setToolTipText("the prototype's crank: it catches and holds at integer ratios. Off: friction only, and a latch within the acceptance window snaps the motion to the integer");
-            classicB.addActionListener(e -> core.classic = classicB.isSelected());
+            classicB.addActionListener(e -> { core.classic = classicB.isSelected(); if (core.classic) { wellsB.setSelected(false); core.wells = false; } snapLabel(); });
+            wellsB.setToolTipText("<html><div width=420>the third crank: no friction — it keeps the speed it is left at, so a detuned crank stays detuned and readable. The wheel is the only way up (its notches vary a little), the brake the only way down "
+                    + "(button, or B on the crank: taps for small steps, a hold bites harder). Let go inside the acceptance window of an integer and the crystal eases the crank onto it; let go outside and it sits where it is. "
+                    + "The window is the same at every ratio.</div></html>");
+            wellsB.addActionListener(e -> { core.wells = wellsB.isSelected(); if (core.wells) { classicB.setSelected(false); core.classic = false; } snapLabel(); });
+            holdTip(wellsB);
+            brakeB.setToolTipText("hold: the crank winds down fast (brake & wells model); B on the crank does the same");
+            brakeB.setFocusable(false);
+            brakeB.getModel().addChangeListener(e -> core.setBrake(brakeB.getModel().isPressed()));
             snapS.setPreferredSize(new Dimension(110, 20));
-            snapS.setToolTipText("acceptance window at ×1 (it narrows as 1/√n): the difficulty scaler");
+            snapS.setToolTipText("acceptance window at ×1 (it narrows as 1/√n; constant at every ratio under brake & wells): the difficulty scaler");
             snapS.addChangeListener(e -> { core.snapTol = snapS.getValue() / 100.0; snapLabel(); });
             couplingB.setToolTipText("on: a lever down is active (trim reaches it, the crank couples to it when touched); latch snaps and decouples; lever up parks the motion. Off: the focus model (each lever drives / holds its motion; shift-click focuses)");
             couplingB.addActionListener(e -> { core.coupling = couplingB.isSelected(); trimL.setText(trimText()); });
-            cm.add(classicB); cm.add(couplingB); cm.add(new JLabel("acceptance")); cm.add(snapS); cm.add(snapL);
+            cm.add(classicB); cm.add(wellsB); cm.add(couplingB); cm.add(new JLabel("acceptance")); cm.add(snapS); cm.add(snapL);
             snapLabel();
             ctl.add(cm);
             trimL = section(trimText());
@@ -4353,7 +4362,7 @@ public class SfxLab extends JPanel {
             boolean wasOn = core != null && core.powered;
             core = new RegulatorCore(rs);
             core.power(wasOn);
-            core.classic = classicB.isSelected(); core.coupling = couplingB.isSelected(); core.snapTol = snapS.getValue() / 100.0;
+            core.classic = classicB.isSelected(); core.wells = wellsB.isSelected(); core.coupling = couplingB.isSelected(); core.snapTol = snapS.getValue() / 100.0;
             auto.stop(); autoB.setSelected(false);
             for (JToggleButton b : targetB) tgGroup.remove(b);
             targetB.clear(); tg.removeAll();
@@ -4443,7 +4452,8 @@ public class SfxLab extends JPanel {
             else m = " ";
             if (!status.getText().equals(m)) status.setText(m);
             if (valsB.isSelected() && frameNo % 4 == 0) {
-                StringBuilder sb = new StringBuilder(String.format(Locale.ROOT, "crank ×%.3f%s%n", core.crankRatio(), core.caught >= 0 ? "  caught " + core.caught : ""));
+                StringBuilder sb = new StringBuilder(String.format(Locale.ROOT, "crank ×%.3f%s%s%s%n", core.crankRatio(), core.caught >= 0 ? "  caught " + core.caught : "",
+                        core.wellDepth() > 0 ? "  taken ×" + Math.round(core.crankRatio()) : "", core.brake ? "  BRAKE" : ""));
                 for (RegulatorCore.Eng e : core.engaged()) sb.append(String.format(Locale.ROOT, "arm%d %s  ×%.3f  φ%s  reach %.2f%n", e.arm() + 1, RegulatorCore.AXIS[e.axis()], e.r(), RegulatorCore.PHASE[e.ph()], e.amp()));
                 sb.append('\n');
                 for (RegulatorCore.Recipe r : core.recipes) sb.append(String.format(Locale.ROOT, "%-14s %.3f%s%n", r.name, core.eval.get(r.id).score, core.eval.get(r.id).exact ? "  ✓" : ""));
@@ -4539,6 +4549,11 @@ public class SfxLab extends JPanel {
             Object[] spinStep(String what, double aim, java.util.function.BooleanSupplier until, double timeout) {
                 return mk(what, 0.02, () -> {
                     double r = core.crankRatio(), gap = aim - r;
+                    if (core.wells && !core.classic) {   // no friction: notches up, the brake down
+                        if (gap > 0.01) { core.setBrake(false); core.nudge(1, gap > 0.3 ? RegulatorCore.NUDGE_WHEEL : RegulatorCore.NUDGE_FINE); }
+                        else core.setBrake(gap < -0.01);
+                        return;
+                    }
                     double loss = r * RegulatorCore.FRICTION * 0.02 / Math.max(0.1, speed);   // what friction takes back before the next notch
                     if (gap > 0.5) core.nudge(1, RegulatorCore.NUDGE_WHEEL);
                     else if (gap > 0.003) core.nudge(1, RegulatorCore.NUDGE_FINE * Math.min(5, Math.max(1, (int) Math.ceil((0.6 * gap + loss) / 0.02))));
@@ -4550,6 +4565,20 @@ public class SfxLab extends JPanel {
              *  inside the acceptance window. Classic crank: nudge up past the point friction brings back into the window during
              *  the slip, then let it coast in; from above, nudge down to that point. Keeps trying until it catches. */
             Object[] spinStep(int n) {
+                if (core.wells && !core.classic) {   // spin past, brake down (a hold from far, taps near), let go inside the window: the crystal finishes
+                    double[] st = {0, 0};   // {0 spinning up / 1 braking / 2 settling, tap phase}
+                    double w = core.acceptWindow(n), rim = n + w;
+                    return mk("spinning to ×" + n, 0.02, () -> {
+                        double r = core.crankRatio();
+                        if (st[0] == 0) {
+                            if (r < rim + 0.15) core.nudge(1, RegulatorCore.NUDGE_WHEEL);
+                            else { st[0] = 1; core.setBrake(true); }                       // the brake couples, like a scroll
+                        } else if (st[0] == 1) {
+                            if (r <= n + w * 0.4) { core.setBrake(false); st[0] = 2; }
+                            else if (r < n + 0.6) { st[1]++; core.setBrake(st[1] % 3 != 0); }   // near: tap, so the bite stays gentle
+                        } else if (r < n - w) st[0] = 0;   // let go too late: round again
+                    }, () -> !core.brake && Math.abs(core.crankRatio() - n) < 0.005, 15);
+                }
                 if (!core.classic) {
                     double win = core.acceptWindow(n);
                     return spinStep("spinning to ×" + n, n + 0.35 * win, () -> Math.abs(core.crankRatio() - n) <= win * 0.6, 10);
@@ -4582,10 +4611,10 @@ public class SfxLab extends JPanel {
                     if (sinceAct >= delay) { ((Runnable) cur[2]).run(); cur = null; }
                     return;
                 }
-                if (until.getAsBoolean() || elapsed > (Double) cur[4]) { cur = null; followUp(); return; }
+                if (until.getAsBoolean() || elapsed > (Double) cur[4]) { core.setBrake(false); cur = null; followUp(); return; }
                 for (int k = 0; sinceAct >= delay && k < 8; k++) {   // the 20 ms cadence held at a 33 ms frame: catch up, and stop as soon as it is there
                     sinceAct -= delay; ((Runnable) cur[2]).run();
-                    if (until.getAsBoolean()) { cur = null; followUp(); return; }
+                    if (until.getAsBoolean()) { core.setBrake(false); cur = null; followUp(); return; }
                 }
             }
             /** A zero-delay step after a repeating one runs in the same frame it finished, before any machine time passes: the free
@@ -4622,15 +4651,17 @@ public class SfxLab extends JPanel {
                     int k = e.getKeyCode();
                     if (k == KeyEvent.VK_UP || k == KeyEvent.VK_RIGHT) core.nudge(1, e.isShiftDown() ? RegulatorCore.NUDGE_FINE : RegulatorCore.NUDGE_WHEEL);
                     if (k == KeyEvent.VK_DOWN || k == KeyEvent.VK_LEFT) core.nudge(-1, e.isShiftDown() ? RegulatorCore.NUDGE_FINE : RegulatorCore.NUDGE_WHEEL);
-                } });
+                    if (k == KeyEvent.VK_B) core.setBrake(true);
+                } @Override public void keyReleased(KeyEvent e) { if (e.getKeyCode() == KeyEvent.VK_B) core.setBrake(false); } });
             }
             @Override protected void paintComponent(Graphics g0) {
                 Graphics2D g = (Graphics2D) g0;
                 g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
                 int w = getWidth(), h = getHeight(), cx = w / 2, cy = h / 2, r = Math.min(w, h) / 2 - 8;
                 g.setColor(new Color(20, 14, 10)); g.fillOval(cx - r, cy - r, 2 * r, 2 * r);
-                g.setColor(core.classic && core.caught > 0 ? new Color(255, 194, 122) : new Color(184, 140, 78));
-                g.setStroke(new BasicStroke(5)); g.drawOval(cx - r, cy - r, 2 * r, 2 * r);
+                double wd = core.wellDepth();   // wells model: the ring warms as the crank sinks into a well
+                g.setColor(core.classic && core.caught > 0 ? new Color(255, 194, 122) : wd > 0 ? new Color(184 + (int) (71 * wd), 140 + (int) (54 * wd), 78 + (int) (44 * wd)) : new Color(184, 140, 78));
+                g.setStroke(new BasicStroke(core.brake ? 8 : 5)); g.drawOval(cx - r, cy - r, 2 * r, 2 * r);
                 double a = Math.toRadians(core.ang - 90);
                 int hx = cx + (int) (Math.cos(a) * (r - 14)), hy = cy + (int) (Math.sin(a) * (r - 14));
                 g.setStroke(new BasicStroke(4)); g.drawLine(cx, cy, hx, hy);
@@ -7314,6 +7345,13 @@ class RegulatorCore {
     static final double BRAKE = 0.16;           // extra linear brake below ratio 1, in vel units (0.32 ratio/s)
     static final double SLIP_NUDGE = 0.5, SLIP_DRAG = 0.15, DRAG_SMOOTH = 0.35;
     static final double NUDGE_WHEEL = 0.05, NUDGE_FINE = 0.01, NUDGE_BUTTON = 0.125;   // vel steps: ratio ±0.1, ±0.02, ±0.25
+    // brake-and-wells model (wells = true), in ratio units, none of it scaling with the ratio: a high resonance is a
+    // harder figure to read, not a heavier crank. No friction: the crank keeps the speed it is left at, a detuned crank
+    // stays detuned and readable. The wheel is the only way up, the brake the only way down.
+    static final double BRAKE_RATE = 0.4;    // ratio/s at a tap; a hold bites harder (BRAKE_BITE × after BRAKE_RAMP s) for a long descent
+    static final double BRAKE_BITE = 4, BRAKE_RAMP = 1.2;
+    static final double WELL_TAU = 0.6;      // s: released inside the acceptance window, the crystal eases the crank onto the integer at this time constant
+    static final double NOTCH_JITTER = 0.3;  // a wheel notch varies by ±30 %: counting notches is no substitute for watching the figure
     static final double ENGAGE_AMP = 0.04, ENGAGE_R = 0.05;
     static final double SETPOINT_JITTER = 0.2, SOCKET_JITTER = 0.035;
     static final double DEFAULT_REACH = 1.0;   // a pulled lever starts at full reach: recipes target 1 unless they say otherwise
@@ -7408,7 +7446,13 @@ class RegulatorCore {
      *  coupled motion and decouples the crank without moving levers; a lever up PARKS its motion (it keeps its
      *  speed, ignores trim and crank) or switches it off at rest. Off: the focus model (drive / hold per lever). */
     boolean coupling = true;
-    double snapTol = 0.1;          // the acceptance window at ×1 (the difficulty scaler); narrower for higher ratios
+    /** wells: the third crank model. No friction; the brake (progressive) is the only way down; released inside the
+     *  acceptance window of an integer, the crystal eases the crank onto it (the well) — released outside, it sits detuned.
+     *  The technique is spin past, brake, let go as the figure's roll stops. The window is constant across ratios.
+     *  Classic wins if both are set. */
+    boolean wells, brake; double brakeHeld;   // brakeHeld: seconds the brake has been on, for the progressive bite
+    final java.util.Random notchRng = new java.util.Random(11);
+    double snapTol = 0.1;          // the acceptance window at ×1 (the difficulty scaler); narrower for higher ratios (constant under wells)
     final java.util.Map<String, Eval> eval = new java.util.LinkedHashMap<>();
     Eval targetEval = new Eval();
     final double[] signals = new double[SIGNALS.length];
@@ -7447,6 +7491,10 @@ class RegulatorCore {
         caught = -1;
     }
     void nudge(int dir, double step) {
+        if (wells && !classic) {
+            if (dir < 0) return;   // the wheel only goes up: the brake is the way down
+            step *= 1 + (notchRng.nextDouble() * 2 - 1) * NOTCH_JITTER;   // an imprecise notch: look and listen, don't count
+        }
         couple();
         double s = Math.signum(vel); if (s == 0) s = 1;
         vel = Math.max(-MAX_VEL, Math.min(MAX_VEL, vel + s * dir * step));
@@ -7456,13 +7504,21 @@ class RegulatorCore {
         for (Motion[] a : comps) for (Motion c : a) if (c.eng && c.drv) c.r = cr;
     }
     void dragStart() { couple(); drag = true; }
+    /** The brake (wells model): taking hold of it couples the active motions, as any touch on the crank does. */
+    void setBrake(boolean on) { if (on && !brake) { couple(); brakeHeld = 0; } brake = on; }
     /** While dragging: the measured crank speed in rev/s (the pointer's angular velocity), smoothed in. */
     void dragVelocity(double revPerSec) { if (!drag) return; double v = Math.max(-MAX_VEL, Math.min(MAX_VEL, revPerSec)); vel += (v - vel) * DRAG_SMOOTH; }
     void dragEnd() { drag = false; slip = SLIP_DRAG; }
     /** Loads a held motion's ratio into the crank (held → driven with no others driven). */
     void loadCrank(double r) { vel = r / 2; slip = 0; int n = (int) Math.round(r); caught = classic && Math.abs(r - n) < 1e-6 ? n : -1; }
     /** Free crank: how close to integer n a latched ratio must be for the crystal to take it. */
-    double acceptWindow(int n) { return snapTol / Math.sqrt(n); }
+    double acceptWindow(int n) { return wells && !classic ? snapTol : snapTol / Math.sqrt(n); }
+    /** Wells model: 1 once the crystal has taken the crank onto an integer (released, settled), else 0 — a confirmation, not a guide. */
+    double wellDepth() {
+        if (!wells || classic || brake || slip > 0) return 0;
+        double r = crankRatio(); int n = (int) Math.round(r);
+        return n >= 1 && n <= MAX_N && Math.abs(r - n) < 1e-3 ? 1 : 0;
+    }
     /** Free crank: the integer this ratio would be accepted as on latch, or -1. */
     int acceptable(double r) { int n = (int) Math.round(r); return n >= 1 && n <= MAX_N && Math.abs(r - n) <= acceptWindow(n) ? n : -1; }
     void updateCrank(double dt) {
@@ -7479,6 +7535,19 @@ class RegulatorCore {
                 vel += (tv - vel) * Math.min(1, dt * CATCH_RATE);
                 if (Math.abs(vel - tv) < 2e-4) vel = tv;
                 caught = n;
+            } else if (wells && !classic) {
+                caught = -1;
+                double dr = 0, d = r - n, w = n >= 1 && n <= MAX_N ? acceptWindow(n) : 0;   // change in ratio this tick; the window around the nearest integer
+                boolean inWin = w > 0 && Math.abs(d) <= w;
+                if (brake) { brakeHeld += dt; dr -= BRAKE_RATE * (1 + (BRAKE_BITE - 1) * Math.min(1, brakeHeld / BRAKE_RAMP)) * dt; }
+                else {
+                    brakeHeld = 0;
+                    if (slip <= 0 && inWin) dr -= d * Math.min(1, dt / WELL_TAU);   // let go inside the window: the crystal eases it onto the integer
+                    if (r < 1 - w && slip <= 0) dr -= 2 * BRAKE * dt;               // the dead zone under the first resonance: rest is still a catch point
+                }
+                double nr = Math.max(0, r + dr);
+                if (!brake && slip <= 0 && inWin && Math.abs(nr - n) < 5e-4) nr = n;   // settled: exactly on it
+                vel = sg * nr / 2;
             } else {
                 caught = -1;
                 vel *= Math.exp(-FRICTION * dt);
