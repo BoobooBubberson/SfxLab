@@ -12,7 +12,9 @@ import static sfxlab.runtime.SfxFormat.*;
  *  PCM), the mod one that reads its resources. A failed load caches as silence. */
 public final class Samples {
     private Samples() {}
-    /** Decodes a named recording to {left, right} floats at Sfx.SR. */
+    /** Decodes a named recording to {left, right} floats at Sfx.SR. A mono recording arrives on both channels at 1/√2
+     *  (a constant-power centre pan, what the lab's ffmpeg upmix has always given): every family was balanced that way,
+     *  so a host decoding mono itself must scale it the same, or those layers play 3 dB hot. */
     public interface Loader { float[][] load(String name) throws Exception; }
     public static volatile Loader loader = name -> { throw new IOException("no sample loader installed"); };
     public static final java.util.concurrent.ConcurrentHashMap<String, float[][]> SAMPLES = new java.util.concurrent.ConcurrentHashMap<>();

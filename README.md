@@ -43,7 +43,18 @@ Headless, without the GUI:
 
 # promote a sound or project into a tuned key-set (residual, sines, one file per key)
 ./sfxlab --forge projects/pyretic_synth.sfx --name pyretic --root C2
+
+# bake what the mod ships for the families (default: all) into forge/baked/
+./sfxlab --bake [pyretic gravitic ...] [--out dir] [--quality 5]
 ```
+
+The bake writes every partials analysis the families play as a compact pair (the tracks
+quantised far below hearing and deflated, `.ptk`, beside the residual as a mono ogg,
+`.res.ogg`), copies the recordings their sample and choir clips play, and lists what
+each family needs in `manifest.txt`. All six families come to about 27 MB of partials
+and 5 MB of recordings, from 400 MB of raw analyses; rendered from the bake they measure
+within 0.01 to 0.07 dB per band of the exact renders (0.7 dB where grains time-stretch a
+residual). `tools/bench/BenchRender --baked forge/baked` renders a family from a bake.
 
 ## Layout
 

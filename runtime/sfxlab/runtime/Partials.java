@@ -73,6 +73,67 @@ public class Partials {
         return pa;
     }
 
+    // ---- the baked form, for shipping: the tracks, quantised far below hearing and deflated (a .ptk file), beside the residual as ordinary audio (a mono
+    // ogg the host decodes, as it decodes any recording). The residual is noise, breath and crackle, so lossy coding
+    // costs nothing audible, and it is ~85 % of an analysis stored raw.
+    static final int BAKED_MAGIC = 0x50544B32;   // "PTK2"
+    /** Writes the tracks and header, then closes out; resLen is the residual's length in samples, resGain what its audio was divided by. */
+    public static void writeBaked(OutputStream out, Partials pa, int resLen, float resGain) throws IOException {
+        DataOutputStream o = new DataOutputStream(new BufferedOutputStream(new java.util.zip.DeflaterOutputStream(out, new java.util.zip.Deflater(9)), 1 << 16));
+        o.writeInt(BAKED_MAGIC); o.writeInt(1);
+        o.writeInt(pa.nFrames); o.writeInt(pa.nTracks); o.writeDouble(pa.f0); o.writeDouble(pa.share);
+        o.writeInt(resLen); o.writeFloat(resGain);
+        o.writeInt(pa.tracks.length);
+        for (PTrack t : pa.tracks) {   // frequencies as 0.1-cent steps from the track's median, amplitudes as 0.01 dB, each delta-coded
+            o.writeInt(t.start); o.writeInt(t.len); o.writeFloat(t.fmed); o.writeFloat(t.ratio); o.writeInt(t.harm);
+            short prev = 0;
+            for (float x : t.freq) { short c = (short) centsQ(x, t.fmed); o.writeShort((short) (c - prev)); prev = c; }
+            prev = 0;
+            for (float x : t.amp) { short q = ampQ(x); o.writeShort((short) (q - prev)); prev = q; }   // 16-bit wraparound: every step exact
+        }
+        o.close();   // finishes the deflate stream (and closes out)
+    }
+    /** Reads a .ptk; residual is its .res.ogg decoded at Sfx.SR as the plain mono signal it was encoded as (not through
+     *  the Samples.Loader contract's centre pan), trimmed or padded to the baked length and scaled back by the baked gain.
+     *  The residual plays on both channels. */
+    public static Partials readBaked(InputStream ptk, float[] residual) throws IOException {
+        DataInputStream in = new DataInputStream(new BufferedInputStream(new java.util.zip.InflaterInputStream(ptk), 1 << 16));
+        if (in.readInt() != BAKED_MAGIC || in.readInt() != 1) throw new IOException("not a baked partials file");
+        Partials pa = new Partials();
+        pa.nFrames = in.readInt(); pa.nTracks = in.readInt(); pa.f0 = in.readDouble(); pa.share = in.readDouble();
+        int n = in.readInt(); float g = in.readFloat();
+        float[] m = new float[n];
+        int have = Math.min(n, residual.length);
+        for (int i = 0; i < have; i++) m[i] = residual[i] * g;
+        pa.res = new float[][]{m, m};
+        int nt = in.readInt();
+        pa.tracks = new PTrack[nt];
+        List<List<Integer>> act = new ArrayList<>();
+        for (int f = 0; f < pa.nFrames; f++) act.add(new ArrayList<>());
+        for (int k = 0; k < nt; k++) {
+            PTrack t = new PTrack();
+            t.start = in.readInt(); t.len = in.readInt(); t.fmed = in.readFloat(); t.ratio = in.readFloat(); t.harm = in.readInt();
+            t.freq = new float[t.len]; short c = 0;
+            for (int i = 0; i < t.len; i++) { c = (short) (c + in.readShort()); t.freq[i] = (float) (t.fmed * Math.pow(2, c / 12000.0)); }
+            t.amp = new float[t.len]; short q = 0;
+            for (int i = 0; i < t.len; i++) { q = (short) (q + in.readShort()); t.amp[i] = q == Short.MIN_VALUE ? 0 : (float) Math.pow(10, q / 2000.0); }
+            pa.tracks[k] = t;
+            for (int f = Math.max(0, t.start); f < Math.min(pa.nFrames, t.start + t.len); f++) act.get(f).add(k);
+        }
+        pa.active = new int[pa.nFrames][];
+        for (int f = 0; f < pa.nFrames; f++) pa.active[f] = act.get(f).stream().mapToInt(Integer::intValue).toArray();
+        return pa;
+    }
+    /** A frequency as tenths of a cent from the track's median (±27 semitones; tracks move ≤ 6 % a frame). */
+    static int centsQ(float f, float fmed) { return f <= 0 || fmed <= 0 ? 0 : (int) Math.max(-32000, Math.min(32000, Math.round(12000 * Math.log(f / fmed) / Math.log(2)))); }
+    /** An amplitude in hundredths of a dB; Short.MIN_VALUE is silence (the fade frame at each end). */
+    static short ampQ(float a) { return a <= 0 ? Short.MIN_VALUE : (short) Math.max(-32000, Math.min(32000, Math.round(2000 * Math.log10(a)))); }
+    /** The file stem a baked analysis goes by: the recording's path under samples/ with / as __, then the thresholds. */
+    public static String bakedName(String file, double floorDb, double minLenMs) {
+        return file.replaceFirst("\\.[^./]+$", "").replace("/", "__").replace("\\", "__").replaceAll("[^A-Za-z0-9_.-]", "_")
+               + ".f" + Math.round(floorDb) + "m" + Math.round(minLenMs);
+    }
+
     /** The analysis, or null while a worker computes it (sync = block instead). */
     public static Partials partials(String file, double fl, double ml, boolean sync) {
         String k = partKey(file, fl, ml);

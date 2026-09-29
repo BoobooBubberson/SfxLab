@@ -287,6 +287,14 @@ these are backward compatible with existing files and older builds.
 - **CPU in the mod.** Several partials banks plus cloud or choir voices at
   once should be measured early. The forge's baked per-key files are the
   fallback if runtime resynthesis is too heavy.
+- **What ships** (2026-09-28): `./sfxlab --bake` stages every partials analysis
+  the families play as a tracks file (`.ptk`, `Partials.readBaked`) and a mono
+  residual ogg, plus the recordings, with a manifest per family: about 32 MB
+  for the six. The mod loads the bake; it never analyses at runtime.
+- **Mono recordings play at 1/√2 per channel.** Every recording the families
+  use is mono, and the lab's decoder has always centre-panned mono at −3 dB,
+  so the families are balanced for it. The mod's loader must do the same
+  (`Samples.Loader`), or every layer plays 3 dB hot.
 
   *Measured 2026-09-28* (Ryzen 7 3700X, one render thread as a game sound
   thread gets: `java -XX:ActiveProcessorCount=1 … BenchRender … --warm`, the

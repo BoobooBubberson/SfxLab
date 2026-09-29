@@ -10,7 +10,8 @@ import sfxlab.runtime.*;
  *  the live signals and scores, and (with --layers) each layer's contribution in dB (full mix minus the mix without it).
  *  Rough targets that read as "clear" rather than "mud": sat 0, no band over ~60 %, the notes within ~6 dB of the bed.
  *  Drives a RegulatorCore through a scripted approach and renders the bench through SfxLab's own benchLive + Engine.
- *  usage: BenchRender <palette.sfx> <family> <script> <out.wav> [--layers] [--warm] [--lazy] [--prime]   (--warm: time a second, JIT-warm pass; --lazy: analyses load when
+ *  usage: BenchRender <palette.sfx> <family> <script> <out.wav> [--layers] [--warm] [--lazy] [--prime] [--baked <dir>]   (--baked: read the analyses from a bake;
+ *  --warm: time a second, JIT-warm pass; --lazy: analyses load when
  *  their layer first sounds; --prime: Engine.prime the family first, as the GUI does;
  *  run with java -XX:ActiveProcessorCount=1 for the one-thread cost a game sound thread pays)
  *  script lines (times absolute, seconds):
@@ -35,6 +36,19 @@ public class BenchRender {
         lab.loadFamily(family);   // regulator/<family>.sfx: the palette and its spells (pal names the same file)
         lab.mix.driven = true; lab.benchPlaying = true; lab.mix.bindsOn = true;
         long t0 = System.currentTimeMillis();
+        int bi = Arrays.asList(args).indexOf("--baked");
+        if (bi >= 0) {   // every analysis from a bake (./sfxlab --bake), as the mod loads them
+            Path bd = Paths.get(args[bi + 1]).toAbsolutePath();
+            Partials.source = (file, fl, ml) -> {
+                String stem = Partials.bakedName(file, fl, ml);
+                try (InputStream in = Files.newInputStream(bd.resolve("partials").resolve(stem + ".ptk"))) {
+                    float[][] d = SfxLab.decodeSample(bd.resolve("partials").resolve(stem + ".res.ogg").toString());
+                    float[] mono = new float[d[0].length];   // the lab's decoder centre-pans mono at 1/√2: undo it, readBaked wants the plain signal
+                    for (int i = 0; i < mono.length; i++) mono[i] = (float) ((d[0][i] + d[1][i]) * 0.5 * Math.sqrt(2));
+                    return Partials.readBaked(in, mono);
+                } catch (Exception e) { throw new RuntimeException("baked " + stem + ": " + e, e); }
+            };
+        }
         boolean lazy = Arrays.asList(args).contains("--lazy");   // as the GUI once did: each analysis loads when its layer first sounds
         if (!lazy) {
             for (Clip c : lab.bench.layers) if (c.type == Sfx.PARTIALS && c.file != null) Partials.partials(c, true);

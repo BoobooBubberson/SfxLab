@@ -266,6 +266,7 @@ import static sfxlab.runtime.BenchMixer.*;
  *       is the workspace (samples/, projects/, forge/, renders/, lab.cfg live in it).
  *       $SFXLAB_DIR overrides that; ~/synthlab is the fallback when run elsewhere.
  * Headless render:  ./sfxlab --render [project.sfx] [out.wav|out.ogg] [--mono] [--normalize] [--no-trim] [--key N]
+ * Headless bake:    ./sfxlab --bake [family ...] [--out dir] [--quality 0-10]   what the mod ships: forge/baked/
  * Headless forge:   ./sfxlab --forge <sound.ogg|project.sfx> [--name n] [--root C2] [--register nearest|0|1|2] [--keys 0,2,4,...] [--wav] [--stereo]
  */
 public class SfxLab extends JPanel {
@@ -1082,6 +1083,66 @@ public class SfxLab extends JPanel {
         int r = (int) (HEAT[i][0] + (HEAT[i + 1][0] - HEAT[i][0]) * f), g = (int) (HEAT[i][1] + (HEAT[i + 1][1] - HEAT[i][1]) * f), b = (int) (HEAT[i][2] + (HEAT[i + 1][2] - HEAT[i][2]) * f);
         return (r << 16) | (g << 8) | b;
     }
+    // ---- BAKE: what the mod ships for a set of families, staged in forge/baked/ (git-ignored), never touching the sources:
+    //   partials/<stem>.ptk, <stem>.res.ogg   each partials analysis the families play (Partials.writeBaked: the tracks,
+    //                                          deflated, and the residual as a mono ogg; stem = Partials.bakedName)
+    //   samples/<file>                         the recordings their sample and choir clips play, as they are
+    //   manifest.txt                           per family: `family <id>`, then `partials <file> <floor> <min len> <stem>`
+    //                                          and `sample <file>` lines
+    static final Path BAKE_DIR = FORGE_DIR.resolve("baked");
+    static void bake(List<String> fams, Path out, int quality, java.util.function.Consumer<String> log) throws Exception {
+        Files.createDirectories(out.resolve("partials"));
+        StringBuilder man = new StringBuilder("# SfxLab bake: what each family plays at runtime (sfxlab.runtime.Partials.readBaked reads the partials)\n");
+        Set<String> done = new HashSet<>();
+        long rawBytes = 0, bakedBytes = 0, sampleBytes = 0;
+        for (String fam : fams) {
+            Family fm = parseFamily(Files.readAllLines(familyFile(fam)));
+            List<Clip> all = new ArrayList<>(fm.palette().layers);
+            for (Spell sp : fm.spells()) all.addAll(sp.bench.layers);
+            TreeSet<String> lines = new TreeSet<>();
+            for (Clip c : all) {
+                if (c.file == null) continue;
+                if (c.type == PARTIALS) {
+                    double fl = paFloor(c), ml = paMinLen(c);
+                    String stem = Partials.bakedName(c.file, fl, ml);
+                    lines.add("partials " + c.file + " " + Math.round(fl) + " " + Math.round(ml) + " " + stem);
+                    if (!done.add("p:" + stem)) continue;
+                    Partials pa = partials(c.file, fl, ml, true);
+                    int n = pa.res[0].length;
+                    float[] m = new float[n]; float peak = 0;
+                    for (int i = 0; i < n; i++) { m[i] = 0.5f * (pa.res[0][i] + pa.res[1][i]); peak = Math.max(peak, Math.abs(m[i])); }
+                    float g = peak > 0.99f ? peak / 0.99f : 1f;   // keep the encoder's input inside full scale; readBaked scales back
+                    Path raw = Files.createTempFile("sfxlab-res", ".f32");
+                    try (DataOutputStream o = new DataOutputStream(new BufferedOutputStream(Files.newOutputStream(raw), 1 << 16))) {
+                        for (float x : m) o.writeInt(Integer.reverseBytes(Float.floatToIntBits(x / g)));   // f32le
+                    }
+                    Path ogg = out.resolve("partials").resolve(stem + ".res.ogg"), ptk = out.resolve("partials").resolve(stem + ".ptk");
+                    run("ffmpeg", "-v", "error", "-y", "-f", "f32le", "-ar", String.valueOf(SR), "-ac", "1", "-i", raw.toString(),
+                        "-c:a", "libvorbis", "-q:a", String.valueOf(quality), ogg.toString());
+                    Files.delete(raw);
+                    try (OutputStream o = Files.newOutputStream(ptk)) { Partials.writeBaked(o, pa, n, g); }   // m is (L + R) / 2 of the residual as the engine plays it
+                    long cached = 8L * n + 20L * pa.tracks.length; for (PTrack t : pa.tracks) cached += 8L * t.len;
+                    rawBytes += cached; bakedBytes += Files.size(ogg) + Files.size(ptk);
+                    log.accept(String.format(Locale.ROOT, "  %-58s %6.1f MB -> %5.1f MB (%d tracks, %.1f s)", stem, cached / 1e6,
+                                             (Files.size(ogg) + Files.size(ptk)) / 1e6, pa.tracks.length, n / (double) SR));
+                } else if (c.type == SAMPLE || c.type == CHOIR) {
+                    lines.add("sample " + c.file);
+                    if (!done.add("s:" + c.file)) continue;
+                    Path dst = out.resolve("samples").resolve(c.file);
+                    Files.createDirectories(dst.getParent());
+                    Files.copy(samplePath(c.file), dst, StandardCopyOption.REPLACE_EXISTING);
+                    sampleBytes += Files.size(dst);
+                }
+            }
+            man.append("family ").append(fam).append('\n');
+            for (String l : lines) man.append(l).append('\n');
+            log.accept("family " + fam + ": " + lines.stream().filter(l -> l.startsWith("partials")).count() + " partials layers' analyses, "
+                       + lines.stream().filter(l -> l.startsWith("sample")).count() + " recordings");
+        }
+        Files.writeString(out.resolve("manifest.txt"), man.toString());
+        log.accept(String.format(Locale.ROOT, "baked into %s: partials %.1f MB (%.1f MB as analysed), recordings %.1f MB", out, bakedBytes / 1e6, rawBytes / 1e6, sampleBytes / 1e6));
+    }
+
     static String opt(List<String> a, String k, String def) {
         int i = a.indexOf(k);
         if (i < 0 || i + 1 >= a.size()) return def;
@@ -5442,6 +5503,14 @@ public class SfxLab extends JPanel {
             double peak = renderFile(cs, tv, mu, outw, outw.toString().toLowerCase(Locale.ROOT).endsWith(".ogg"), mono, norm, trim, key);
             System.out.printf(Locale.ROOT, "rendered %d clips, %.2fs -> %s (peak %.3f%s)%n",
                     cs.size(), timelineEnd(cs) + 1.5, outw, peak, key != 0 ? String.format(Locale.ROOT, ", key %+.2f st", key) : "");
+            return;
+        }
+        if (args.length > 0 && args[0].equals("--bake")) {
+            List<String> a = new ArrayList<>(Arrays.asList(args).subList(1, args.length));
+            Path out = Paths.get(opt(a, "--out", BAKE_DIR.toString()));
+            int q = Integer.parseInt(opt(a, "--quality", "5"));
+            List<String> fams = a.isEmpty() ? familyNames() : a;
+            bake(fams, out, q, System.out::println);
             return;
         }
         if (args.length > 0 && args[0].equals("--forge")) {
