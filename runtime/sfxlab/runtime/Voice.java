@@ -26,6 +26,7 @@ public class Voice {
     public double[] coff; public double[][] cgpos; public int[][] cgage; public boolean[] cgFirst;   // choir: per-voice read offset + grains
     public double[] pph;                                     // partials: per-track oscillator phases
     public double[] hg, hf, hsh, hsr;                        // harmonic controls: cached gain / freq multiplier, shimmer phase / rate per partial
+    public int[] hgen; public int gen = 1; public double hroot; public Partials hpa;   // partials: which cache generation each track's hg / hf entry holds, and what it was built from
     public double cOdd = Double.NaN, cTilt, cPur, cStr, cGat, cShift, cTol; public int cChord = -1;   // the params those caches were built for
     public double[] bph;                                     // tones bank: per-harmonic phases
     public final float[] fl1 = new float[FLN], fl2 = new float[FLN]; public int fp;   // flanger lines

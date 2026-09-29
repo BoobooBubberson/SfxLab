@@ -1592,6 +1592,24 @@ public class SfxLab extends JPanel {
         if (mix.soloSpell != null) { mix.solo = null; mix.soloSpell = null; }
         spellScore.keySet().removeIf(k -> out.stream().noneMatch(sp -> sp.id.equals(k)));
         familyGen++; benchGen++;
+        primeFamily();
+    }
+    /** Families primed this session (Engine.prime: analyses and recordings loaded, the JIT warmed on every layer's path). */
+    final Set<String> primed = java.util.concurrent.ConcurrentHashMap.newKeySet();
+    /** Once per family per session, in the background: pay every layer's first-use cost before the first lock does,
+     *  which otherwise stalls the audio thread (the stutter as a spell first locks on). */
+    void primeFamily() {
+        String f = family;
+        if (f == null || Boolean.getBoolean("sfxlab.noprime") || !primed.add(f)) return;
+        ArrayList<Clip> all;
+        synchronized (lock) { all = new ArrayList<>(bench.layers); }
+        for (Spell sp : mix.spells) all.addAll(sp.bench.layers);
+        Thread t = new Thread(() -> {
+            try { Engine.prime(all, 0.5); }
+            catch (Exception e) { System.err.println("priming " + f + " failed: " + e); }
+        }, "prime-" + f);
+        t.setDaemon(true); t.setPriority(Thread.NORM_PRIORITY - 1);
+        t.start();
     }
     /** The family's recipes for the machine (spells with a recipe line); the prototype's roster when there are none. */
     RegulatorCore.Recipe[] familyRecipes() {

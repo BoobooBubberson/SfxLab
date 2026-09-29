@@ -138,6 +138,34 @@ public class Engine {
         }
     }
     public double[] ts; public double[][] cbuf; public boolean[][] cact;
+
+    /** Pays a set of clips' first-use costs before anyone hears them: loads their partials analyses and recordings, and
+     *  renders a copy of each through the live-modulation path for `seconds` in a throwaway engine, alone and then all
+     *  together, audible, then faded to silence, then back (a layer going quiet takes its own branch, and a branch
+     *  the JIT has never seen costs a recompile the first time it is taken), so every clip type's path is compiled. Blocking and CPU-heavy for a moment:
+     *  call it off the audio thread when a family loads. Without it the first lock of a session stalls the audio thread
+     *  while each path runs interpreted, and each analysis loads only when its layer first sounds. */
+    static void primeLevel(Clip c, int i, int n) { c.mod[P_LEVEL] = i >= n / 2 && i < 3 * n / 4 ? -c.p[P_LEVEL] : 0; }   // audible, silent for a quarter, audible
+    public static void prime(java.util.Collection<Clip> clips, double seconds) {
+        ArrayList<Clip> cs = new ArrayList<>();
+        for (Clip src : clips) {
+            if (src.type == PARTIALS && src.file != null) Partials.partials(src, true);
+            if (sampled(src)) Samples.sample(src.file);
+            Clip c = copyClip(src);
+            c.start = 0; c.dur = seconds; c.id = null; c.on = ON_NONE; c.lmute = false;
+            if (c.p[P_LEVEL] < 0.01) c.p[P_LEVEL] = 0.5;
+            c.mod = new double[c.p.length];
+            cs.add(c);
+        }
+        int n = (int) (seconds * SR);
+        double[] l = new double[BLOCK], r = new double[BLOCK];
+        for (Clip c : cs) {   // one at a time: the sequential path
+            Engine e = new Engine();
+            for (int i = 0; i < n; i += BLOCK) { primeLevel(c, i, n); e.renderBlock(List.of(c), null, null, null, l, r, Math.min(BLOCK, n - i)); }
+        }
+        Engine e = new Engine();   // all together: the parallel path
+        for (int i = 0; i < n; i += BLOCK) { for (Clip c : cs) primeLevel(c, i, n); e.renderBlock(cs, null, null, null, l, r, Math.min(BLOCK, n - i)); }
+    }
     public static final int POOL_N = Math.max(1, Math.min(8, Runtime.getRuntime().availableProcessors()));
     public static final java.util.concurrent.ExecutorService POOL = java.util.concurrent.Executors.newFixedThreadPool(POOL_N, r -> {
         Thread th = new Thread(r, "engine-worker"); th.setDaemon(true); th.setPriority(Thread.MAX_PRIORITY - 1); return th; });
@@ -431,21 +459,18 @@ public class Engine {
                                 v.pph = new double[nt];
                                 for (int k = 0; k < nt; k++) v.pph[k] = v.rng.nextDouble() * 2 * Math.PI;
                             }
-                            // harmonic controls: per-track gain and frequency multipliers,
-                            // rebuilt only when a control moves (neutral values give exactly 1.0)
+                            // harmonic controls: per-track gain and frequency multipliers, invalidated when a control moves (or
+                            // the analysis changes) and recomputed per track only when that track next sounds: a dense layer has
+                            // thousands of tracks but a few hundred active, and a gliding control used to rebuild them all up to a
+                            // dozen times a block. Same values, same moment of use, so the output is unchanged (neutral = 1.0)
                             boolean ch = harmChanged(v, p[NCOMMON + PA_ODD], p[NCOMMON + PA_TILT], p[NCOMMON + PA_PURITY],
                                                      p[NCOMMON + PA_STRETCH], p[NCOMMON + PA_GATHER], chordIdx(p[NCOMMON + PA_CHORD]),
                                                      p[NCOMMON + PA_ROOT], p[NCOMMON + PA_HTOL] * 0.01);
-                            if (v.hg == null || v.hg.length != nt || ch) {
-                                if (v.hg == null || v.hg.length != nt) { v.hg = new double[nt]; v.hf = new double[nt]; }
-                                double root = partialsRoot(pa, v.cShift);   // classification root: the estimate, shifted
-                                for (int k = 0; k < nt; k++) {
-                                    PTrack tr = pa.tracks[k];
-                                    double r = root > 0 ? tr.fmed / root : 0;
-                                    int h = harmNum(r, v.cTol);
-                                    v.hg[k] = harmGain(r, h, v.cOdd, v.cTilt, v.cPur);
-                                    v.hf[k] = harmFreq(r, v.cStr, v.cGat, v.cChord);
-                                }
+                            if (v.hg == null || v.hg.length != nt || ch || v.hpa != pa) {
+                                if (v.hg == null || v.hg.length != nt) { v.hg = new double[nt]; v.hf = new double[nt]; v.hgen = new int[nt]; }
+                                v.hpa = pa;
+                                v.hroot = partialsRoot(pa, v.cShift);   // classification root: the estimate, shifted
+                                v.gen++;                                // every track's entry is stale now
                             }
                             double shim = p[NCOMMON + PA_SHIM];
                             if (shim > 0 && (v.hsh == null || v.hsh.length != nt)) {
@@ -459,6 +484,13 @@ public class Engine {
                                 if (tp < 0 || tp > tr.len - 1) continue;
                                 int i = Math.min((int) tp, tr.len - 2);
                                 double q = tp - i;
+                                if (v.hgen[k] != v.gen) {
+                                    double r = v.hroot > 0 ? tr.fmed / v.hroot : 0;
+                                    int h = harmNum(r, v.cTol);
+                                    v.hg[k] = harmGain(r, h, v.cOdd, v.cTilt, v.cPur);
+                                    v.hf[k] = harmFreq(r, v.cStr, v.cGat, v.cChord);
+                                    v.hgen[k] = v.gen;
+                                }
                                 double mult = ratio * v.hf[k];
                                 if (shim > 0) { v.hsh[k] += v.hsr[k] / SR; mult *= 1 + shim * 0.012 * Math.sin(2 * Math.PI * v.hsh[k]); }
                                 double f = (tr.freq[i] * (1 - q) + tr.freq[i + 1] * q) * mult;

@@ -10,7 +10,8 @@ import sfxlab.runtime.*;
  *  the live signals and scores, and (with --layers) each layer's contribution in dB (full mix minus the mix without it).
  *  Rough targets that read as "clear" rather than "mud": sat 0, no band over ~60 %, the notes within ~6 dB of the bed.
  *  Drives a RegulatorCore through a scripted approach and renders the bench through SfxLab's own benchLive + Engine.
- *  usage: BenchRender <palette.sfx> <family> <script> <out.wav> [--layers] [--warm]   (--warm: time a second, JIT-warm pass;
+ *  usage: BenchRender <palette.sfx> <family> <script> <out.wav> [--layers] [--warm] [--lazy] [--prime]   (--warm: time a second, JIT-warm pass; --lazy: analyses load when
+ *  their layer first sounds; --prime: Engine.prime the family first, as the GUI does;
  *  run with java -XX:ActiveProcessorCount=1 for the one-thread cost a game sound thread pays)
  *  script lines (times absolute, seconds):
  *    @t pin <spellId>              the machine's target
@@ -21,7 +22,8 @@ import sfxlab.runtime.*;
  *    @t end */
 public class BenchRender {
     record Ev(double t, String[] a) {}
-    static final double[] COST = new double[600];   // seconds of work per second of audio (the full mix)
+    static final double[] COST = new double[600];
+    static final double[] SLOW = new double[2];   // the slowest block of the full mix (s) and when it came   // seconds of work per second of audio (the full mix)
     public static void main(String[] args) throws Exception {
         System.setProperty("java.awt.headless", "true");
         System.setProperty("sfxlab.noautosave", "true");
@@ -33,8 +35,11 @@ public class BenchRender {
         lab.loadFamily(family);   // regulator/<family>.sfx: the palette and its spells (pal names the same file)
         lab.mix.driven = true; lab.benchPlaying = true; lab.mix.bindsOn = true;
         long t0 = System.currentTimeMillis();
-        for (Clip c : lab.bench.layers) if (c.type == Sfx.PARTIALS && c.file != null) Partials.partials(c, true);
-        for (Spell sp : lab.mix.spells) for (Clip c : sp.bench.layers) if (c.type == Sfx.PARTIALS && c.file != null) Partials.partials(c, true);
+        boolean lazy = Arrays.asList(args).contains("--lazy");   // as the GUI once did: each analysis loads when its layer first sounds
+        if (!lazy) {
+            for (Clip c : lab.bench.layers) if (c.type == Sfx.PARTIALS && c.file != null) Partials.partials(c, true);
+            for (Spell sp : lab.mix.spells) for (Clip c : sp.bench.layers) if (c.type == Sfx.PARTIALS && c.file != null) Partials.partials(c, true);
+        }
         System.err.printf(Locale.ROOT, "partials analysed / loaded in %.1f s%n", (System.currentTimeMillis() - t0) / 1000.0);
         List<Ev> evs = new ArrayList<>();
         double endT = 20;
@@ -49,17 +54,24 @@ public class BenchRender {
         for (Clip c : lab.bench.layers) ids.add(c.id);
         for (Spell sp : lab.mix.spells) for (Clip c : sp.bench.layers) if (c.on == Sfx.ON_NONE && !ids.contains(c.id)) ids.add(c.id + "@" + sp.id);
         // full mix, then optionally each endless layer alone (live, through its binds)
+        if (Arrays.asList(args).contains("--prime")) {   // as the GUI does on loading a family
+            long p0 = System.nanoTime();
+            ArrayList<Clip> all = new ArrayList<>(lab.bench.layers);
+            for (Spell sp : lab.mix.spells) all.addAll(sp.bench.layers);
+            Engine.prime(all, 0.5);
+            System.err.printf(Locale.ROOT, "primed %d clips in %.1f s%n", all.size(), (System.nanoTime() - p0) / 1e9);
+        }
         if (Arrays.asList(args).contains("--warm")) {   // for timing: one pass first, so the JIT has compiled the engine before the measured one
             PrintStream so = System.out; System.setOut(new PrintStream(OutputStream.nullOutputStream()));
             render(lab, evs, endT, null, null, true);
-            System.setOut(so); Arrays.fill(COST, 0);
+            System.setOut(so); Arrays.fill(COST, 0); Arrays.fill(SLOW, 0);
         }
         long r0 = System.nanoTime();
         double[][] mix = render(lab, evs, endT, null, null, true);
         double took = (System.nanoTime() - r0) / 1e9, len = mix[0].length / (double) Sfx.SR;
         int worst = 0; for (int k = 1; k < Math.min(COST.length, (int) len); k++) if (COST[k] > COST[worst]) worst = k;
-        System.err.printf(Locale.ROOT, "rendered %.1f s of audio in %.2f s: %.3f of realtime on %d render thread%s; worst second %.3f (at %d s)%n", len, took, took / len,
-                          Engine.POOL_N, Engine.POOL_N == 1 ? "" : "s", COST[worst], worst);
+        System.err.printf(Locale.ROOT, "rendered %.1f s of audio in %.2f s: %.3f of realtime on %d render thread%s; worst second %.3f (at %d s); slowest block %.1f ms (at %.2f s; a block is %.1f ms, the live buffer ~70)%n", len, took, took / len,
+                          Engine.POOL_N, Engine.POOL_N == 1 ? "" : "s", COST[worst], worst, SLOW[0] * 1000, SLOW[1], Sfx.BLOCK * 1000.0 / Sfx.SR);
         writeWav(out, mix);
         int win = Sfx.SR;   // 1 s windows
         int nw = mix[0].length / win;
@@ -160,7 +172,10 @@ public class BenchRender {
             eng.voices.keySet().removeIf(c -> !snap.contains(c) || eng.t < c.start || eng.t >= c.end());
             int n = Math.min(Sfx.BLOCK, total - i);
             eng.renderBlock(snap, null, null, null, bl, br, n);
-            if (log && (int) now < COST.length) COST[(int) now] += (System.nanoTime() - b0) / 1e9;
+            double bt = (System.nanoTime() - b0) / 1e9;
+            if (log && (int) now < COST.length) COST[(int) now] += bt;
+            if (log && now >= 2 && bt > SLOW[0]) { SLOW[0] = bt; SLOW[1] = now; }   // past start-up (the JIT's first compiles)
+            if (log && now >= 2 && bt > 0.010) System.err.printf(Locale.ROOT, "  slow block %.1f ms at %.2f s [uptime %.3f s]%n", bt * 1000, now, java.lang.management.ManagementFactory.getRuntimeMXBean().getUptime() / 1000.0);
             for (int k = 0; k < n; k++) { mix[0][i + k] = bl[k]; mix[1][i + k] = br[k]; }
             int w = (int) now;
             if (log) {
