@@ -19,5 +19,7 @@ browser=1
 bench=0
 bpanel=0
 bench_name=
-# the family (regulator/<family>/) whose spells load beside the bench
+# the family (regulator/<family>.sfx) the bench opens on
 family=
+# hear the mix in mono, as the game plays it (shift+M toggles)
+mono_out=0

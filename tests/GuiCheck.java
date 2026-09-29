@@ -72,6 +72,14 @@ public class GuiCheck {
         check("undo brings back a removed spell", lab.mix.spells.size() == n);
         check("the family text is unchanged by all of it", lab.familyText().equals(disk));
 
+        // shift+M: the mono audition (the game's one positional source), remembered in lab.cfg (the test workspace's)
+        boolean mono0 = lab.monoOut;
+        java.awt.event.KeyEvent sm = new java.awt.event.KeyEvent(lab, java.awt.event.KeyEvent.KEY_PRESSED, 0, java.awt.event.KeyEvent.SHIFT_DOWN_MASK, java.awt.event.KeyEvent.VK_M, 'M');
+        lab.handleKey(sm);
+        boolean saved = Files.readString(SfxLab.CFG_FILE).contains("mono_out=" + (lab.monoOut ? 1 : 0));
+        check("shift+M toggles the mono audition and remembers it", lab.monoOut != mono0 && saved);
+        lab.handleKey(sm);
+
         // the machine: power, drive the bench, lock, freeze, voice
         SfxLab.Machine mc = new SfxLab.Machine(lab);
         mc.setSize(1180, 720); mc.addNotify(); layoutAll(mc); layoutAll(mc);

@@ -229,6 +229,7 @@ import static sfxlab.runtime.BenchMixer.*;
  *               options. The folder and options are remembered in
  *               lab.cfg — point it at the mod's sounds dir once
  *   V / M       attach a video / toggle the monitor window
+ *   shift+M     hear the mix in mono, as the game plays it (one positional source)
  *   [ ]         step the playhead one video frame (50 ms without a video)
  *   K           add a marker at the playhead (shift+K removes the nearest)
  *   W           import a sample file (wav/aiff, or mp3/ogg/video via ffmpeg)
@@ -1111,6 +1112,7 @@ public class SfxLab extends JPanel {
     String forgeMirror = "";        // the mod's sounds folder the forge panel browses; empty until picked (folder… button)
     Path mirrorRoot() { return DIR.resolve(forgeMirror); }
     boolean expOgg = false, expMono = false, expNorm = false, expTrim = true;
+    volatile boolean monoOut;   // shift+M: hear the mix as the game plays it, one mono source ((L + R) / 2, the export's downmix); remembered in lab.cfg
 
     // ---- transport (UI writes, audio reads)
     volatile boolean playing = false;
@@ -3906,6 +3908,7 @@ public class SfxLab extends JPanel {
                     case "export_mono" -> expMono = v.equals("1");
                     case "export_norm" -> expNorm = v.equals("1");
                     case "export_trim" -> expTrim = v.equals("1");
+                    case "mono_out" -> monoOut = v.equals("1");
                 }
             }
         } catch (Exception e) { System.err.println("cfg load failed: " + e); }
@@ -3913,9 +3916,9 @@ public class SfxLab extends JPanel {
     void saveCfg() {
         try {
             Files.createDirectories(DIR);
-            Files.writeString(CFG_FILE, String.format("export_dir=%s%nexport_ogg=%d%nexport_mono=%d%nexport_norm=%d%nexport_trim=%d%nforge_mirror=%s%nbrowser=%d%nbench=%d%nbpanel=%d%nbench_name=%s%nfamily=%s%nbpanel_fold=%s%n",
+            Files.writeString(CFG_FILE, String.format("export_dir=%s%nexport_ogg=%d%nexport_mono=%d%nexport_norm=%d%nexport_trim=%d%nforge_mirror=%s%nbrowser=%d%nbench=%d%nbpanel=%d%nbench_name=%s%nfamily=%s%nbpanel_fold=%s%nmono_out=%d%n",
                     exportDir, expOgg ? 1 : 0, expMono ? 1 : 0, expNorm ? 1 : 0, expTrim ? 1 : 0, forgeMirror, browserOn ? 1 : 0,
-                    benchOn ? 1 : 0, bpanelOn ? 1 : 0, benchName != null ? benchName : "", family != null ? family : "", panelFold));
+                    benchOn ? 1 : 0, bpanelOn ? 1 : 0, benchName != null ? benchName : "", family != null ? family : "", panelFold, monoOut ? 1 : 0));
         } catch (IOException e) { toast("cfg save failed: " + e); }
     }
 
@@ -4172,6 +4175,7 @@ public class SfxLab extends JPanel {
             for (int i = 0; i < BLOCK; i++) {
                 gain = gTarget > gain ? Math.min(1, gain + gStep) : Math.max(0, gain - gStep);
                 double l = render ? bufL[i] * gain : 0, r = render ? bufR[i] * gain : 0;
+                if (monoOut) { double m = (l + r) * 0.5; l = m; r = m; }   // the game's positional sources are mono
                 scopeL[scopePos] = (float) l; scopeR[scopePos] = (float) r;
                 scopePos = (scopePos + 1) % scopeL.length;
                 // clamp: the limiter keeps this under 0.85, but an unclamped cast would wrap past full scale
@@ -4397,6 +4401,7 @@ public class SfxLab extends JPanel {
         if (kc == KeyEvent.VK_H) { if (e.isShiftDown()) sendSelToBench(); else toggleBench(); return; }
         if (kc == KeyEvent.VK_J) { toggleBenchPanel(); return; }
         if (kc == KeyEvent.VK_U) { showMachine(); return; }
+        if (kc == KeyEvent.VK_M && e.isShiftDown()) { monoOut = !monoOut; saveCfg(); toast(monoOut ? "mono: the mix as the game plays it (one positional source)" : "stereo"); repaint(); return; }
         if (benchOn) {   // the bench's own bindings; everything timeline-only is inert here
             switch (kc) {
                 case KeyEvent.VK_SPACE -> toggleBenchPlay();
@@ -5035,6 +5040,7 @@ public class SfxLab extends JPanel {
                 playPos, end, playing ? "▶ " : "‖ ", loopOn ? "loop " : "", snapOn ? "snap " : "",
                 "root " + noteName(rootHz) + "   " + (keyOff != 0 ? String.format(Locale.ROOT, "KEY %+.0f (%s)  ", keyOff, noteName(rootHz * Math.pow(2, keyOff / 12))) : ""),
                 combos.isEmpty() ? "" : "combo " + (comboIdx < 0 ? "-" : String.valueOf(comboIdx + 1)) + "/" + combos.size());
+        if (monoOut) tp = "MONO   " + tp;
         boolean clipping = System.currentTimeMillis() - clipAt < 1000, xrun = System.currentTimeMillis() - xrunAt < 1000;
         if (xrun) { tp = "XRUN — audio dropped out (buffer ran dry)   " + tp; g.setColor(new Color(255, 160, 60)); }
         if (clipping) { tp = "SAT — mix over 0 dB, the limiter is squashing it   " + tp; g.setColor(new Color(255, 80, 80)); }
@@ -5295,7 +5301,7 @@ public class SfxLab extends JPanel {
             g.drawString("mouse  click row: select · M / S boxes: mute / solo · level bar: drag · r-click row: id, endless / one-shot, fire, swap source, remove · dbl-click row: rename id", 14, h - 74);
             g.drawString("       slider: drag · wheel: fine · r-click slider: type value, mark the range that sounds good, note, bind a signal · wheel over rows: scroll", 14, h - 61);
             g.drawString("keys   1-9 0 add a synth layer · W import recording · A sample browser (adds land here) · DEL remove · D dup · up/down select · C sample/choir/partials", 14, h - 48);
-            g.drawString("       SPACE play bench · ENTER stop · P solo / fire · T key-track · R tune to root · shift+R degree · ctrl+R root · < > key ±1 st · U the machine", 14, h - 35);
+            g.drawString("       SPACE play bench · ENTER stop · P solo / fire · T key-track · R tune to root · shift+R degree · ctrl+R root · < > key ±1 st · U the machine · shift+M mono", 14, h - 35);
             g.drawString("       J regulator panel: signal sliders, signature picker, lock / unlock events, binds, ranges, notes · signals move bound params live (white tick)", 14, h - 22);
             g.drawString("       family autosaves · S save as family (regulator/<name>.sfx) · new spell button · O open · N scratch bench · H timeline (shift+H sends a clip) · ctrl+Z undo", 14, h - 9);
             return;
@@ -5303,7 +5309,7 @@ public class SfxLab extends JPanel {
         g.drawString("mouse  drag clip: move (up/down = track) · left edge: trim · right edge: resize · shift-drag: invert snap · track #: mute · bar under #: volume · ruler: scrub", 14, h - 74);
         g.drawString("       r-click marker: delete · ctrl-drag video: slide · wheel: scroll · ctrl+wheel: zoom · slider: drag · r-click: type value · wheel on slider: fine (shift: finer)", 14, h - 61);
         g.drawString("keys   1-9 0 palette at playhead · X split · D dup · DEL · arrows: nudge 10ms (shift 100) / track · C sample/choir/partials · T key-track · G snap · + - zoom", 14, h - 48);
-        g.drawString("       SPACE play · ENTER rewind · L loop · P solo · K mark (shift+K unmark) · [ ] frame · V video · M monitor · < > key ±1 st (? resets)", 14, h - 35);
+        g.drawString("       SPACE play · ENTER rewind · L loop · P solo · K mark (shift+K unmark) · [ ] frame · V video · M monitor · shift+M mono · < > key ±1 st (? resets)", 14, h - 35);
         g.drawString("       R tune to root · shift+R tune to a degree · ctrl+R set root · , . pick combo · I insert combo · B bank clip · Q library · W import sample", 14, h - 22);
         g.drawString("       A sample browser · F forge (promote sounds for the mod) · E export · S save as · O open · N clear · ctrl+Z undo · ctrl+Y redo", 14, h - 9);
     }
