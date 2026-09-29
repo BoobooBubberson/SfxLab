@@ -143,7 +143,7 @@ read (path saved in `lab.cfg` as `forge_mirror`, `folder…` changes it).
 | `<name>.sounds.json`      | fragment in the mod's flat style: `"spell_<name>_k07": {"sounds": ["bubbys_world:spells/<name>/<name>_k07"]}` |
 | `<name>.png`              | spectrogram + tracks                                         |
 
-Headless: `java SfxLab.java --forge sound.ogg [--name n] [--root C2]
+Headless: `./sfxlab --forge sound.ogg [--name n] [--root C2]
 [--register nearest|0|1|2] [--keys 0,2,4,...] [--wav] [--stereo]
 [--ns bubbys_world] [--event-prefix spell_] [--path-prefix spells/]`.
 A `.sfx` project is rendered first and promoted the same way. ~2.5 s for

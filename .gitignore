@@ -9,6 +9,7 @@ samples/.decoded/
 video-cache/
 forge/.badges-*.txt
 tools/__pycache__/
+.build/
 *.pyc
 
 # outputs

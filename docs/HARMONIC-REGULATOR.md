@@ -360,9 +360,9 @@ its score, e.g. `bind score.firebolt cloud level 0 0.5`.
 
 ### 5.4 Step 2 as built: `RegulatorCore` and the machine window (2026-09-24)
 
-`RegulatorCore` is a second top-level class in `SfxLab.java` (Java 21's
-single-file launcher cannot load a second source file; the mod copies the
-class verbatim). It has no Swing or Minecraft in it and ports sections 3.1
+`RegulatorCore` was built as a second top-level class in `SfxLab.java`; since
+2026-09-28 it lives in the shared runtime (`runtime/sfxlab/runtime/`) that the
+mod builds from the same sources. It has no Swing or Minecraft in it and ports sections 3.1
 to 3.4, the setpoint / copy socket / voicing, the blueprint trace and the
 signal contract, with the prototype's constants. Its API: `setTarget`,
 `power`, `selectArm`, `axisLever`, `latch`, `phaseStep`, `setReach`,

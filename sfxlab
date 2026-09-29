@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# Runs SfxLab. The shared runtime (runtime/, the engine, live mix and RegulatorCore the mod also uses) is compiled into
+# .build/runtime.jar whenever one of its sources is newer than the jar, then SfxLab.java runs in source mode against it.
+# Every argument passes through: ./sfxlab, ./sfxlab --render ..., ./sfxlab --forge ...
+set -euo pipefail
+here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+jar="$here/.build/runtime.jar"
+if [ ! -f "$jar" ] || [ -n "$(find "$here/runtime" -name '*.java' -newer "$jar" -print -quit)" ]; then
+    rm -rf "$here/.build/classes"
+    mkdir -p "$here/.build/classes"
+    javac -encoding UTF-8 -d "$here/.build/classes" $(find "$here/runtime" -name '*.java')
+    jar cf "$jar.tmp" -C "$here/.build/classes" .
+    mv "$jar.tmp" "$jar"
+fi
+exec java -cp "$jar" "$here/SfxLab.java" "$@"

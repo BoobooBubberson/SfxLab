@@ -8,6 +8,13 @@ import java.io.*;
 import java.nio.file.*;
 import java.util.*;
 import java.util.List;
+import sfxlab.runtime.*;
+import sfxlab.runtime.Clip;   // over javax.sound.sampled.Clip
+import static sfxlab.runtime.Sfx.*;
+import static sfxlab.runtime.Samples.*;
+import static sfxlab.runtime.Partials.*;
+import static sfxlab.runtime.SfxFormat.*;
+import static sfxlab.runtime.BenchMixer.*;
 
 /**
  * SfxLab — SynthLab reworked into a timeline sound-effect workbench.
@@ -251,17 +258,15 @@ import java.util.List;
  *   , / .       browse combos.txt entries   I  insert combo as clips
  *   ctrl+wheel  zoom            wheel scroll
  *
- * Run:  java SfxLab.java        from the checkout — the folder holding SfxLab.java
+ * Run:  ./sfxlab                from the checkout (it compiles runtime/ into .build/runtime.jar when a source
+ *       there changed, then runs this file against it). The folder holding SfxLab.java
  *       is the workspace (samples/, projects/, forge/, renders/, lab.cfg live in it).
  *       $SFXLAB_DIR overrides that; ~/synthlab is the fallback when run elsewhere.
- * Headless render:  java SfxLab.java --render [project.sfx] [out.wav|out.ogg] [--mono] [--normalize] [--no-trim] [--key N]
- * Headless forge:   java SfxLab.java --forge <sound.ogg|project.sfx> [--name n] [--root C2] [--register nearest|0|1|2] [--keys 0,2,4,...] [--wav] [--stereo]
+ * Headless render:  ./sfxlab --render [project.sfx] [out.wav|out.ogg] [--mono] [--normalize] [--no-trim] [--key N]
+ * Headless forge:   ./sfxlab --forge <sound.ogg|project.sfx> [--name n] [--root C2] [--register nearest|0|1|2] [--keys 0,2,4,...] [--wav] [--stereo]
  */
 public class SfxLab extends JPanel {
 
-    static final int SR = 44100, BLOCK = 256;
-    static final int PH_MAX = 12;   // phaser all-pass stage limit (each pair of stages adds a notch)
-    static final int TRACKS = 6, NV = 14;
     /** The workspace: $SFXLAB_DIR if set; else the current directory when it is
      *  a checkout (SfxLab.java or lab.cfg beside it); else ~/synthlab. samples/,
      *  projects/, forge/, renders/ and lab.cfg all live inside it. */
@@ -278,274 +283,6 @@ public class SfxLab extends JPanel {
     static final Path COMBO_FILE = DIR.resolve("combos.txt");
     static final Path LIB_FILE = DIR.resolve("library.sfx");
 
-    // =====================================================================
-    // Wavetables (unchanged from SynthLab): 0 gritty gnarl, 1 saw, 2 sine
-    // =====================================================================
-    static final int WT = 2048;
-    static final float[][] TABLES = new float[3][WT + 1];
-    static {
-        Random r = new Random(42);
-        for (int i = 0; i < WT; i++) {
-            double ph = 2 * Math.PI * i / WT;
-            TABLES[2][i] = (float) Math.sin(ph);
-            double saw = 0;
-            for (int n = 1; n <= 12; n++) saw += Math.sin(n * ph) / n;
-            TABLES[1][i] = (float) saw;
-        }
-        double[] amp = new double[17], off = new double[17];
-        for (int n = 1; n <= 16; n++) { amp[n] = (r.nextDouble() * 0.8 + 0.2) / n; off[n] = r.nextDouble() * 2 * Math.PI; }
-        for (int i = 0; i < WT; i++) {
-            double ph = 2 * Math.PI * i / WT, v = 0;
-            for (int n = 1; n <= 16; n++) v += amp[n] * Math.sin(n * ph + off[n]);
-            TABLES[0][i] = (float) v;
-        }
-        for (float[] t : TABLES) {
-            float peak = 0;
-            for (int i = 0; i < WT; i++) peak = Math.max(peak, Math.abs(t[i]));
-            for (int i = 0; i < WT; i++) t[i] /= peak;
-            t[WT] = t[0];
-        }
-    }
-
-    /** Wavetable lookup: phase 0..1, pos in table units 0..2. Linear interp both ways. */
-    static double osc(double phase, double pos) {
-        int ti = Math.min((int) pos, TABLES.length - 2);
-        double tf = pos - ti;
-        double idx = phase * WT;
-        int i0 = (int) idx;
-        double f = idx - i0;
-        double a = TABLES[ti][i0] * (1 - f) + TABLES[ti][i0 + 1] * f;
-        double b = TABLES[ti + 1][i0] * (1 - f) + TABLES[ti + 1][i0 + 1] * f;
-        return a * (1 - tf) + b * tf;
-    }
-
-    // Chord tables: just-intonation ratios per voice slot (root = 1). The
-    // cloud tables spread over several octaves; the first three are the
-    // originals and new chords are appended so old files keep their index.
-    //   unison     no chord, only the per-voice detune — a pure thickener
-    //   sus4       1 4/3 3/2: open, medieval, stone-and-bell
-    //   minor      1 6/5 3/2
-    //   harm 7     1 5/4 3/2 7/4: the natural-overtone seventh — locked-in, organ-like
-    //   overtones  1 2 3 4 5 …: one resonating object
-    //   major 7    1 5/4 3/2 15/8: shimmery, floating
-    //   penta      1 9/8 5/4 3/2 5/3: never wrong at any gather
-    //   augment    1 5/4 25/16: uncanny, no resolution
-    //   harm 11    1 11/8 13/8: the upper overtones nobody tunes to — alien, not harsh
-    //   tritone    1 45/32 2: beats against everything — the corrupt state
-    static final double[][] CHORDS = {
-        {0.5, 0.5, 1, 1, 1, 2, 2, 2, 4, 4, 4, 8, 8, 16},                       // octaves
-        {0.5, 0.75, 1, 1, 1.5, 2, 2, 3, 3, 4, 4, 6, 8, 12},                    // power
-        {0.5, 1, 1, 1.25, 1.5, 2, 2, 2.5, 3, 4, 4, 5, 6, 8},                   // major
-        {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},                            // unison
-        {0.5, 1, 1, 4 / 3.0, 1.5, 2, 2, 8 / 3.0, 3, 4, 4, 16 / 3.0, 6, 8},     // sus4
-        {0.5, 1, 1, 1.2, 1.5, 2, 2, 2.4, 3, 4, 4, 4.8, 6, 8},                  // minor
-        {0.5, 1, 1, 1.25, 1.5, 1.75, 2, 2.5, 3, 3.5, 4, 5, 6, 7},              // harm 7
-        {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14},                       // overtones
-        {0.5, 1, 1, 1.25, 1.5, 1.875, 2, 2.5, 3, 3.75, 4, 5, 6, 7.5},          // major 7
-        {0.5, 1, 1.125, 1.25, 1.5, 5 / 3.0, 2, 2.25, 2.5, 3, 10 / 3.0, 4, 5, 6},   // penta
-        {0.5, 1, 1, 1.25, 1.5625, 2, 2, 2.5, 3.125, 4, 4, 5, 6.25, 8},         // augment
-        {0.5, 1, 1, 1.375, 1.625, 2, 2, 2.75, 3.25, 4, 4, 5.5, 6.5, 8},        // harm 11
-        {0.5, 1, 1, 1.40625, 2, 2, 2.8125, 4, 4, 5.625, 8, 8, 11.25, 16},      // tritone
-    };
-    static final String[] CHORD_NAMES = {"octaves", "power", "major", "unison", "sus4", "minor", "harm 7",
-                                         "overtones", "major 7", "penta", "augment", "harm 11", "tritone"};
-    static final int NCHORD = CHORDS.length;
-    static final double[][] CHORD_LOGS = new double[NCHORD][NV];
-    static {
-        for (int c = 0; c < NCHORD; c++)
-            for (int v = 0; v < NV; v++) CHORD_LOGS[c][v] = Math.log(CHORDS[c][v]);
-    }
-    // choir chord slots: the same chords, but every ratio kept within an
-    // octave of the source (a recording shifted further stops sounding like
-    // itself). Slot order matters — the first voices are the loudest, so the
-    // root leads and the colour tones follow.
-    static final double[][] CHOIR_CHORDS = {
-        {1, 1, 2, 0.5, 1, 1, 2, 0.5, 1, 1, 2, 0.5, 1, 1},                                    // octaves
-        {1, 1.5, 1, 0.75, 1.5, 2, 1, 1.5, 0.5, 1, 0.75, 1.5, 2, 1},                          // power
-        {1, 1.25, 1.5, 1, 0.75, 1.25, 1.5, 2, 1, 0.625, 1.25, 1.5, 0.5, 1},                  // major
-        {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},                                          // unison
-        {1, 4 / 3.0, 1.5, 1, 2 / 3.0, 4 / 3.0, 1.5, 2, 1, 0.75, 4 / 3.0, 1.5, 0.5, 1},        // sus4
-        {1, 1.2, 1.5, 1, 0.75, 1.2, 1.5, 2, 1, 0.6, 1.2, 1.5, 0.5, 1},                       // minor
-        {1, 1.5, 1.25, 1.75, 1, 0.75, 1.5, 1.25, 2, 0.875, 1.75, 1, 0.5, 1.5},               // harm 7
-        {1, 1.5, 1.25, 1.75, 1.125, 1.375, 1.625, 2, 1, 1.5, 0.5, 1.25, 0.75, 1},            // overtones (folded)
-        {1, 1.25, 1.5, 1.875, 1, 0.75, 1.25, 1.5, 0.9375, 2, 1, 0.625, 1.5, 0.5},            // major 7
-        {1, 1.5, 1.25, 1.125, 5 / 3.0, 1, 0.75, 1.5, 1.25, 2, 0.5625, 0.625, 1, 0.5},        // penta
-        {1, 1.25, 1.5625, 1, 0.78125, 1.25, 1.5625, 2, 1, 0.625, 1.25, 1.5625, 0.5, 1},      // augment
-        {1, 1.375, 1.625, 1, 0.6875, 1.375, 1.625, 2, 1, 0.8125, 1.375, 1.625, 0.5, 1},      // harm 11
-        {1, 1.40625, 1, 2, 0.703125, 1.40625, 1, 0.5, 1.40625, 2, 1, 0.703125, 1.40625, 1},  // tritone
-    };
-    static final double[][] CHOIR_LOGS = new double[NCHORD][NV];
-    static {
-        for (int c = 0; c < NCHORD; c++)
-            for (int v = 0; v < NV; v++) CHOIR_LOGS[c][v] = Math.log(CHOIR_CHORDS[c][v]);
-    }
-    static int chordIdx(double v) { return (int) Math.max(0, Math.min(NCHORD - 1, Math.round(v))); }
-    static final double[] PENTA = {1, 9.0 / 8, 5.0 / 4, 3.0 / 2, 5.0 / 3};
-    static final double W_LO = Math.log(0.35), W_HI = Math.log(12);
-
-    // =====================================================================
-    // Parameter model: every clip carries COMMON params + its type's extras.
-    // The UI, serialization, and DSP all read from the same specs.
-    // =====================================================================
-    record PSpec(String name, double min, double max, double def) {}
-
-    static final int P_LEVEL = 0, P_ATT = 1, P_REL = 2, P_PITCH = 3, P_PSWP = 4, P_CUT = 5,
-                     P_CSWP = 6, P_RES = 7, P_MODE = 8, P_PAN = 9, P_PANSWP = 10, P_ECHO = 11,
-                     P_DRIVE = 12, NCOMMON = 13;
-    static final PSpec[] COMMON = {
-        new PSpec("level",      0,   1,   0.8),
-        new PSpec("attack",     0,   2,   0.02),
-        new PSpec("release",    0,   3,   0.25),
-        new PSpec("pitch",    -36,  54,   0),
-        new PSpec("pitch swp",-60,  60,   0),
-        new PSpec("cutoff",     0,   1,   1),
-        new PSpec("cutoff swp",-1,   1,   0),
-        new PSpec("resonance",  0,   1,   0),
-        new PSpec("filter",     0,   2,   0),      // LP / BP / HP
-        new PSpec("pan",       -1,   1,   0),
-        new PSpec("pan swp",   -2,   2,   0),
-        new PSpec("echo",       0,   1,   0),
-        new PSpec("drive",      0,   1,   0),   // added post-v2: exists by name only
-    };
-
-    static final int CLOUD = 0, TONE = 1, NOISE = 2, SPARKLE = 3, PLUCK = 4, SAMPLE = 5, CHOIR = 6, PARTIALS = 7;
-    // KEY: a global transposition in semitones (GUI: < > keys; --render --key N)
-    // applied non-destructively at render time to every clip that opts in.
-    // Pitch-keyed clips move their `pitch` (sweeps and LFO ride on top, so a
-    // zap still lands on the key); filter-keyed clips move `cutoff` by the same
-    // ratio, so a resonant bandpass on a recorded whoosh sings the key. Synth
-    // clips default to both, recordings to filter only (their pitch is usually
-    // the recording's own). Zero key is bit-exact with the old renderer.
-    static final int KEY_OFF = 0, KEY_PITCH = 1, KEY_FILTER = 2, KEY_BOTH = 3;
-    static final String[] KEY_NAMES = {"off", "pitch", "filter", "pitch+filter"};
-    static final double KEY_U = Math.log(2) / Math.log(250) / 12;   // cutoff units per semitone (fc = 40·250^u)
-    static int defaultKeyed(int type) { return type == SAMPLE || type == CHOIR ? KEY_FILTER : KEY_BOTH; }
-    static final String[] TYPE_NAMES = {"cloud", "tones", "noise", "sparkle", "pluck", "sample", "choir", "partials"};
-    // choir extras (offsets from NCOMMON). 13 common + 9 + 14 tail = 36: exactly three slider columns.
-    static final int CH_START = 0, CH_SPEED = 1, CH_VOICES = 2, CH_GATHER = 3, CH_DRIFT = 4, CH_CHORD = 5,
-                     CH_WANDER = 6, CH_SCATTER = 7, CH_GSWP = 8;
-    // partials extras (offsets from NCOMMON); start/speed sit where choir's do
-    static final int PA_START = 0, PA_SPEED = 1, PA_SINES = 2, PA_RESID = 3, PA_FLOOR = 4, PA_MINLEN = 5, PA_LOOP = 6,
-                     PA_ODD = 7, PA_TILT = 8, PA_PURITY = 9, PA_STRETCH = 10, PA_GATHER = 11, PA_CHORD = 12, PA_SHIM = 13,
-                     PA_ROOT = 14, PA_HTOL = 15;
-    // tones bank extras (offsets from NCOMMON) and its size
-    static final int TB_BANK = 6, TB_ODD = 7, TB_TILT = 8, TB_STRETCH = 9, TB_GATHER = 10, TB_CHORD = 11, TB_SHIM = 12, TB_HARM = 24;
-    /** Clips that read a recording: sample and choir. */
-    static boolean sampled(Clip c) { return (c.type == SAMPLE || c.type == CHOIR || c.type == PARTIALS) && c.file != null; }
-    static int startIdx(int type) { return type == CHOIR || type == PARTIALS ? NCOMMON + CH_START : NCOMMON + 1; }
-    static int speedIdx(int type) { return type == CHOIR || type == PARTIALS ? NCOMMON + CH_SPEED : NCOMMON + 3; }
-    static boolean looping(Clip c) { return c.type == CHOIR || c.p[c.type == PARTIALS ? NCOMMON + PA_LOOP : NCOMMON] >= 0.5; }
-    static boolean keepLen(Clip c) { return c.type == CHOIR || c.type == PARTIALS || c.p[NCOMMON + 2] >= 0.5; }
-    // Every clip ends with this shared tail block (appended after the type
-    // extras so older project files still parse positionally — missing values
-    // get defaults). Access it as the LAST N_TAIL params of any clip; new
-    // shared params get APPENDED here to keep old files loading.
-    static final PSpec[] TAIL_SPECS = {
-        new PSpec("lfo rate", 0.1, 20, 4),
-        new PSpec("lfo>pitch", 0, 12, 0),
-        new PSpec("lfo>cut", 0, 0.5, 0),
-        new PSpec("lfo>amp", 0, 1, 0),
-        new PSpec("lfo shape", 0, 3, 0),   // sine, tri, square, random S&H
-        new PSpec("env curve", -1, 1, 0),  // linear .. percussive / swelling
-        new PSpec("reverb", 0, 1, 0),      // send into the shared room
-        new PSpec("flange", 0, 1, 0),      // swept-comb mix; sweep rides the clip LFO
-        new PSpec("flange fb", -0.95, 0.95, 0.5),
-        new PSpec("duck", 0, 1, 0),           // sidechain depth: level dips when `duck from` is loud
-        new PSpec("duck from", 0, TRACKS, 0), // key track (1-based); 0 = off
-        new PSpec("phaser", 0, 1, 0),         // wet mix of the swept all-pass chain
-        new PSpec("phaser rate", 0.05, 8, 0.4),
-        new PSpec("ph stages", 1, PH_MAX, 4),   // more stages = more notches, thicker swirl
-        new PSpec("ph pos", -1, 1, -1),         // < 0: the LFO sweeps; 0..1: the notch is parked / steered here (bind a signal: the orb steers the sweep)
-        new PSpec("lfo pos", -1, 1, -1),        // < 0: the LFO runs at its rate; 0..1: its phase in cycles is parked / steered here
-        new PSpec("flange pos", -1, 1, -1),     // < 0: the comb rides the LFO; 0..1: its delay is parked / steered here (1.2 .. 5 ms)
-    };
-    static final int N_TAIL = TAIL_SPECS.length;
-    /** Index of a tail param for a given type (j = offset within TAIL_SPECS). */
-    static int tailIdx(int type, int j) { return nParams(type) - N_TAIL + j; }
-    static PSpec[] withLfo(PSpec... a) {
-        PSpec[] r = Arrays.copyOf(a, a.length + N_TAIL);
-        System.arraycopy(TAIL_SPECS, 0, r, a.length, N_TAIL);
-        return r;
-    }
-    static final PSpec[][] EXTRAS = {
-        // gather swp is appended last so older project files still parse positionally
-        withLfo(new PSpec("voices", 1, 14, 10), new PSpec("gather", 0, 1, 0.85), new PSpec("drift", 0, 1, 0.25),
-                new PSpec("timbre", 0, 2, 0.6), new PSpec("chord", 0, NCHORD - 1, 1), new PSpec("sub", 0, 1, 0.3),
-                new PSpec("gather swp", -1, 1, 0)),
-        withLfo(new PSpec("interval", -24, 24, 12), new PSpec("timbre", 0, 2, 2),
-                new PSpec("detune", 0, 1, 0),       new PSpec("shimmer", 0, 1, 0),
-                new PSpec("fm ratio", 0.25, 8, 2),  new PSpec("fm depth", 0, 8, 0),
-                // additive harmonic bank (TB_HARM harmonics of the base pitch) with the
-                // same harmonic controls as a partials clip; `bank` 0 = off (old sound)
-                new PSpec("bank", 0, 1, 0), new PSpec("odd/even", -1, 1, 0), new PSpec("tilt", -1, 1, 0),
-                new PSpec("stretch", -0.3, 0.3, 0), new PSpec("gather", 0, 1, 0), new PSpec("chord", 0, NCHORD - 1, 1),
-                new PSpec("bank shimmer", 0, 1, 0)),
-        withLfo(new PSpec("color", 0, 1, 0)),
-        withLfo(new PSpec("density", 2, 40, 14), new PSpec("ping decay", 0.02, 0.4, 0.09),
-                new PSpec("spread", 0, 1, 0.8),  new PSpec("range", 0, 2, 1),
-                new PSpec("fm ratio", 0.25, 8, 2), new PSpec("fm depth", 0, 8, 0)),
-        withLfo(new PSpec("damp", 0, 1, 0.5), new PSpec("sustain", 0, 1, 0.7),
-                new PSpec("pick", 0, 1, 0.8), new PSpec("interval", -12, 12, 0)),
-        withLfo(new PSpec("loop", 0, 1, 0), new PSpec("start", 0, 1, 0),
-                new PSpec("pitch mode", 0, 1, 0),   // 0 tape (pitch = speed), 1 keep len (granular)
-                new PSpec("speed", 0, 3, 1)),        // keep len: time-stretch (0 freezes); tape: extra rate
-        withLfo(new PSpec("start", 0, 1, 0), new PSpec("speed", 0, 3, 1),
-                new PSpec("voices", 1, 14, 8), new PSpec("gather", 0, 1, 0.85), new PSpec("drift", 0, 1, 0.2),
-                new PSpec("chord", 0, NCHORD - 1, 1), new PSpec("wander", 0, 24, 7),   // ± semitones the ungathered voices roam
-                new PSpec("scatter", 0, 1, 0.3),                              // read-position spread, as a fraction of the recording
-                new PSpec("gather swp", -1, 1, 0)),
-        withLfo(new PSpec("start", 0, 1, 0), new PSpec("speed", 0, 3, 1),   // keep-len time (0 freezes: partials hold, residual grain-freezes)
-                new PSpec("sines", 0, 2, 1), new PSpec("residual", 0, 2, 1),   // the two halves of the model, mixed separately
-                new PSpec("floor", 6, 42, 14),      // dB a peak must rise above the frame's median to count as a partial
-                new PSpec("min len", 20, 200, 46),  // ms a partial must persist; shorter = noise, stays in the residual
-                new PSpec("loop", 0, 1, 0),
-                // harmonic controls (shared with the tones bank, see harmGain / harmFreq)
-                new PSpec("odd/even", -1, 1, 0),     // <0 fades the even harmonics (hollow), >0 fades the odd ones above the fundamental
-                new PSpec("tilt", -1, 1, 0),         // gain ∝ ratio^tilt: dark .. bright
-                new PSpec("purity", 0, 2, 1),        // gain of the partials that are NOT on the harmonic series: 0 clean, 2 alien
-                new PSpec("stretch", -0.3, 0.3, 0),  // harmonic h lands at h^(1+stretch): bells / metal
-                new PSpec("gather", 0, 1, 0),        // pull every partial toward the nearest tone of `chord` (any octave)
-                new PSpec("chord", 0, NCHORD - 1, 1),
-                new PSpec("shimmer", 0, 1, 0),       // slow random detune per partial, up to ~±20 cents
-                new PSpec("root shift", -36, 36, 0), // semitones added to the estimated fundamental before classifying (fix octave errors)
-                new PSpec("harm tol", 1, 10, 3)),    // % a partial may miss an integer ratio and still count as a harmonic
-    };
-    static int nParams(int type) { return NCOMMON + EXTRAS[type].length; }
-    static PSpec spec(int type, int i) { return i < NCOMMON ? COMMON[i] : EXTRAS[type][i - NCOMMON]; }
-    static String key(int type, int i) { return spec(type, i).name().replace(' ', '_'); }
-    static int idxOf(int type, String key) {
-        for (int i = 0; i < nParams(type); i++) if (key(type, i).equals(key)) return i;
-        return -1;
-    }
-
-    // Frozen positional layout of pre-v2 project files (v2 saves key=value
-    // pairs instead). New params never go in here — they only exist by name.
-    static final String[] LEGACY_COMMON = {"level", "attack", "release", "pitch", "pitch_swp", "cutoff",
-                                           "cutoff_swp", "resonance", "filter", "pan", "pan_swp", "echo"};
-    static final String[][] LEGACY_EXTRA = {
-        {"voices", "gather", "drift", "timbre", "chord", "sub", "gather_swp"},
-        {"interval", "timbre", "detune", "shimmer"},
-        {},
-        {"density", "ping_decay", "spread", "range"},
-        {},   // pluck is post-v2: named params only
-        {},   // sample too
-        {},   // choir too
-        {},   // partials too
-    };
-    static final String[] LEGACY_TAIL = {"lfo_rate", "lfo>pitch", "lfo>cut", "lfo>amp", "lfo_shape", "env_curve"};
-    static String legacyName(int type, int i) {
-        if (i < LEGACY_COMMON.length) return LEGACY_COMMON[i];
-        i -= LEGACY_COMMON.length;
-        if (i < LEGACY_EXTRA[type].length) return LEGACY_EXTRA[type][i];
-        i -= LEGACY_EXTRA[type].length;
-        return i < LEGACY_TAIL.length ? LEGACY_TAIL[i] : null;
-    }
-    static boolean discrete(int type, int i) {
-        String n = spec(type, i).name();
-        return n.equals("filter") || n.equals("chord") || n.equals("voices") || n.equals("range")
-            || n.equals("lfo shape") || n.equals("loop") || n.equals("pitch mode") || n.equals("duck from")
-            || n.equals("ph stages") || n.equals("floor") || n.equals("min len") || n.equals("root shift");
-    }
 
     /** Per-file analysis badges {f0, sines share, seconds} for a folder, computed
      *  on one low-priority thread (analysis only — nothing is kept in PARTS, so
@@ -1018,28 +755,6 @@ public class SfxLab extends JPanel {
         }
     }
 
-    static class Clip {
-        String name; int type, track; double start, dur; long seed; double[] p;
-        String file;   // SAMPLE clips: filename inside samples/
-        boolean vlink; // moves with the video (its own audio track, by default)
-        int keyed;     // which of this clip's params follow the global key (KEY_* bits)
-        Partials pa; long paFloor = Long.MIN_VALUE, paMin; int paRetry;   // PARTIALS: analysis cached for the current floor / min len
-        // ---- bench (regulator palette) state; null / 0 on ordinary timeline clips
-        String id;                 // stable handle for binds and signature blending
-        int on;                    // ON_NONE = endless layer; ON_LOCK / ON_UNLOCK = one-shot fired by that event
-        boolean lmute;             // layer muted on the bench
-        volatile double[] mod;     // live modulation, added to p by the engine (smoothed); written by the audio thread
-        HashMap<Integer, double[]> range;   // param index -> {lo, hi}: the span that sounded good (authoring notes, default bind range)
-        HashMap<Integer, String> rnote;     // param index -> free note
-        Clip(String name, int type, int track, double start, double dur, long seed) {
-            this.name = name; this.type = type; this.track = track;
-            this.start = start; this.dur = dur; this.seed = seed;
-            keyed = defaultKeyed(type);
-            p = new double[nParams(type)];
-            for (int i = 0; i < p.length; i++) p[i] = spec(type, i).def();
-        }
-        double end() { return start + dur; }
-    }
 
     // ---- palette: presets built from the primitives above. The old gestures
     // live here now — as starting points, not hardcoded behavior.
@@ -1067,111 +782,11 @@ public class SfxLab extends JPanel {
         return c;
     }
 
-    // =====================================================================
-    // Engine: renders any clip list sample by sample. The realtime loop and
-    // the offline exporter each own one, so exporting never glitches playback.
-    // Per-clip Random is seeded from the clip, so renders are reproducible.
-    // =====================================================================
-    static class Voice {
-        final Random rng;
-        double[] ph, wander, det, vpan;                   // cloud
-        double phSub, ph1, ph2, ph3, ph4, j;              // sub / tones / shimmer walk
-        double phM1, phM2;                                // tones FM modulator phases
-        double nl1, nl2;                                  // noise color filter state
-        float[] ks, ks2; int kp; double ex, dcp;          // Karplus-Strong string state
-        double sp = -1;                                   // sampler source position (init on first render)
-        final double[] gpos = new double[2]; final int[] gage = new int[2];   // keep-len grains
-        boolean gFirst; double[] gref;                    // first-grain flag, alignment scratch
-        double[] coff; double[][] cgpos; int[][] cgage; boolean[] cgFirst;   // choir: per-voice read offset + grains
-        double[] pph;                                     // partials: per-track oscillator phases
-        double[] hg, hf, hsh, hsr;                        // harmonic controls: cached gain / freq multiplier, shimmer phase / rate per partial
-        double cOdd = Double.NaN, cTilt, cPur, cStr, cGat, cShift, cTol; int cChord = -1;   // the params those caches were built for
-        double[] bph;                                     // tones bank: per-harmonic phases
-        final float[] fl1 = new float[FLN], fl2 = new float[FLN]; int fp;   // flanger lines
-        final double[] apx = new double[2 * PH_MAX], apy = new double[2 * PH_MAX];   // phaser all-pass states
-        double phFbL, phFbR; double phAng, lfoAng;   // accumulated phaser / clip-LFO angles (cycles) for live clips                              // phaser feedback
-        double lo1, b1, lo2, b2;                          // stereo SVF state
-        double nextPing;                                  // sparkle spawn clock
-        final double[] pf = new double[12], pp = new double[12], pa = new double[12], ppan = new double[12];
-        final double[] pm = new double[12];               // sparkle per-ping FM phases
-        double[] pe, sm;                                  // bench: effective params (p + smoothed mod) and the smoother state
-        /** The params the engine reads this sample: the clip's own plus its live
-         *  modulation through a one-pole smoother (~30 ms), clamped to each spec.
-         *  Params that rebuild per-partial caches when they move (the harmonic
-         *  controls) are quantised so a glide costs a few rebuilds, not one per
-         *  sample. Clips without modulation never come here, so old renders are
-         *  untouched. */
-        double[] effective(Clip c) {
-            double[] m = c.mod, p = c.p;
-            if (pe == null || pe.length != p.length) { pe = new double[p.length]; sm = m.clone(); }   // born where the modulation already is: no glide in from the saved value
-            double lv = p[P_LEVEL] + m[P_LEVEL];
-            if (lv < 1e-4 && p[P_LEVEL] + sm[P_LEVEL] < 1e-4) {   // silent and staying silent (a bench layer waiting its turn): track the targets, skip the rest
-                System.arraycopy(m, 0, sm, 0, m.length);
-                pe[P_LEVEL] = Math.max(0, lv);
-                return pe;
-            }
-            boolean[] q = quantised(c.type);
-            for (int i = 0; i < p.length; i++) {
-                sm[i] += (m[i] - sm[i]) * MOD_K;
-                PSpec s = spec(c.type, i);
-                double v = p[i] + sm[i];
-                if (q[i]) v = p[i] + Math.rint(sm[i] / (s.max() - s.min()) * 100) * (s.max() - s.min()) / 100;
-                pe[i] = v < s.min() ? s.min() : v > s.max() ? s.max() : v;
-            }
-            return pe;
-        }
-        Voice(Clip c) {
-            rng = new Random(c.seed);
-            if (c.type == PLUCK) { ks = new float[KSN]; ks2 = new float[KSN]; }
-            if (c.type == SAMPLE || c.type == CHOIR || c.type == PARTIALS) gref = new double[GK];
-            if (c.type == CHOIR) {
-                coff = new double[NV]; cgpos = new double[NV][2]; cgage = new int[NV][2]; cgFirst = new boolean[NV];
-                wander = new double[NV]; det = new double[NV]; vpan = new double[NV];
-                double R = c.p[NCOMMON + CH_WANDER] * Math.log(2) / 12;
-                for (int v = 0; v < NV; v++) {
-                    coff[v] = rng.nextDouble();                      // scaled by scatter × length at render time
-                    wander[v] = (rng.nextDouble() * 2 - 1) * R;
-                    det[v] = (rng.nextDouble() * 2 - 1) * 0.006;
-                    vpan[v] = Math.sin(v * 2.399963);
-                }
-            }
-            if (c.type == CLOUD) {
-                ph = new double[NV]; wander = new double[NV]; det = new double[NV]; vpan = new double[NV];
-                for (int v = 0; v < NV; v++) {
-                    ph[v] = rng.nextDouble();
-                    wander[v] = W_LO + rng.nextDouble() * (W_HI - W_LO);
-                    det[v] = (rng.nextDouble() * 2 - 1) * 0.006;
-                    vpan[v] = Math.sin(v * 2.399963);
-                }
-            }
-        }
-    }
 
-    static final double MOD_K = 1 - Math.exp(-1.0 / (0.03 * SR));   // live-param smoother: ~30 ms
-    static final double FADE_S = 0.02;                                // master fade around start / pause / seek (s)
-    static final boolean[][] QUANT = new boolean[EXTRAS.length][];
-    /** Which params of a type are expensive to move continuously (they rebuild per-partial caches). */
-    static boolean[] quantised(int type) {
-        boolean[] q = QUANT[type];
-        if (q == null) {
-            q = new boolean[nParams(type)];
-            for (int i = 0; i < q.length; i++) {
-                String n = spec(type, i).name();
-                q[i] = n.equals("odd/even") || n.equals("tilt") || n.equals("purity") || n.equals("stretch")
-                    || n.equals("gather") && type != CLOUD && type != CHOIR || n.equals("root shift") || n.equals("harm tol");
-            }
-            QUANT[type] = q;
-        }
-        return q;
-    }
-    static double wrap01(double x) { x = x % 1; return x < 0 ? x + 1 : x; }
-    static final int KSN = 4096;   // string delay-line size; floors pitch at ~11 Hz
-    static final int FLN = 256;    // flanger delay-line size (max ~5.8 ms)
 
     // ---- sample store: files from samples/, decoded once to
     // stereo floats at engine rate. A failed load caches as silence.
     static final Path SAMPLE_DIR = DIR.resolve("samples");
-    static final java.util.concurrent.ConcurrentHashMap<String, float[][]> SAMPLES = new java.util.concurrent.ConcurrentHashMap<>();
     static final java.util.concurrent.ConcurrentHashMap<String, Path> SAMPLE_PATHS = new java.util.concurrent.ConcurrentHashMap<>();
 
     /** samples/<name> — or, when that file has since been sorted into another
@@ -1194,34 +809,33 @@ public class SfxLab extends JPanel {
         });
     }
 
-    static float[][] sample(String name) {
-        return SAMPLES.computeIfAbsent(name, nm -> {
-            try {
-                AudioInputStream in = AudioSystem.getAudioInputStream(decodedPath(samplePath(nm)).toFile());
-                AudioFormat f = in.getFormat();
-                AudioFormat target = new AudioFormat(f.getSampleRate(), 16, 2, true, false);
-                byte[] data = AudioSystem.getAudioInputStream(target, in).readAllBytes();
-                int frames = data.length / 4;
-                double ratio = f.getSampleRate() / (double) SR;
-                int outN = Math.max(1, (int) (frames / ratio));
-                float[][] out = new float[2][outN];
-                for (int i = 0; i < outN; i++) {
-                    double sp = i * ratio;
-                    int j = Math.min(frames - 1, (int) sp);
-                    int j2 = Math.min(frames - 1, j + 1);
-                    double fr = sp - (int) sp;
-                    for (int ch = 0; ch < 2; ch++) {
-                        double a = ((short) ((data[j * 4 + ch * 2] & 0xff) | (data[j * 4 + ch * 2 + 1] << 8))) / 32768.0;
-                        double b = ((short) ((data[j2 * 4 + ch * 2] & 0xff) | (data[j2 * 4 + ch * 2 + 1] << 8))) / 32768.0;
-                        out[ch][i] = (float) (a * (1 - fr) + b * fr);
-                    }
-                }
-                return out;
-            } catch (Exception e) {
-                System.err.println("sample load failed: " + nm + " — " + e);
-                return new float[2][1];
+    /** The GUI's sample loader (installed into sfxlab.runtime.Samples): samples/<name>, decoded by javax.sound
+     *  (ffmpeg first for anything but PCM), linearly resampled to the engine rate. */
+    static float[][] decodeSample(String nm) throws Exception {
+        AudioInputStream in = AudioSystem.getAudioInputStream(decodedPath(samplePath(nm)).toFile());
+        AudioFormat f = in.getFormat();
+        AudioFormat target = new AudioFormat(f.getSampleRate(), 16, 2, true, false);
+        byte[] data = AudioSystem.getAudioInputStream(target, in).readAllBytes();
+        int frames = data.length / 4;
+        double ratio = f.getSampleRate() / (double) SR;
+        int outN = Math.max(1, (int) (frames / ratio));
+        float[][] out = new float[2][outN];
+        for (int i = 0; i < outN; i++) {
+            double sp = i * ratio;
+            int j = Math.min(frames - 1, (int) sp);
+            int j2 = Math.min(frames - 1, j + 1);
+            double fr = sp - (int) sp;
+            for (int ch = 0; ch < 2; ch++) {
+                double a = ((short) ((data[j * 4 + ch * 2] & 0xff) | (data[j * 4 + ch * 2 + 1] << 8))) / 32768.0;
+                double b = ((short) ((data[j2 * 4 + ch * 2] & 0xff) | (data[j2 * 4 + ch * 2 + 1] << 8))) / 32768.0;
+                out[ch][i] = (float) (a * (1 - fr) + b * fr);
             }
-        });
+        }
+        return out;
+    }
+    static {
+        Samples.loader = SfxLab::decodeSample;
+        Partials.source = SfxLab::analyzeCached;
     }
 
     static boolean isPcmName(String nm) {
@@ -1273,30 +887,6 @@ public class SfxLab extends JPanel {
         });
     }
 
-    /** Linear-interpolated sample read. One-shot callers keep pos < n-1;
-     *  the wrap on the second tap is for loops. */
-    // ---- partials: a sines + residual model of a recording (spectral modeling
-    // synthesis, Serra & Smith). Every stable sinusoid is tracked through a
-    // 2048/256 Hann STFT; the tracked peaks are notched out of the spectrogram
-    // to leave the residual (noise, breath, crackle); an oscillator bank replays
-    // the partials at any transposition over the untouched residual. Same
-    // algorithm and constants as tools/partials.py. Analysis runs once per
-    // (file, floor, min len) on a worker thread — synchronously for --render —
-    // and is cached for the session.
-    static final int PA_N = 2048, PA_HOP = 256, PA_MAXPK = 40, PA_GAP = 3;
-    static final double PA_FMIN = 40, PA_FMAX = 12000, PA_TOL = 0.06, PA_RANGE = 60;
-    static class PTrack { int start, len; float[] freq, amp; float fmed, ratio; int harm; }   // start = first frame - 1: one fade frame each end; ratio = median freq / f0, harm = harmonic number (0 = inharmonic)
-    static class Partials { int nFrames, nTracks; float[][] res; PTrack[] tracks; int[][] active; double f0, share; }   // f0: fundamental estimate (0 = none); share: sines / (sines + residual) energy
-    static final java.util.concurrent.ConcurrentHashMap<String, Partials> PARTS = new java.util.concurrent.ConcurrentHashMap<>();
-    static final Set<String> PARTS_PENDING = java.util.concurrent.ConcurrentHashMap.newKeySet();
-    // Any recording-based clip can be analysed (sample / choir clips use the
-    // default thresholds) — that is where their pitch estimate comes from.
-    static double paFloor(Clip c) { return c.type == PARTIALS ? Math.round(c.p[NCOMMON + PA_FLOOR]) : 14; }
-    static double paMinLen(Clip c) { return c.type == PARTIALS ? Math.round(c.p[NCOMMON + PA_MINLEN]) : 46; }
-    static String partKey(String file, double fl, double ml) { return file + "|" + Math.round(fl) + "|" + Math.round(ml); }
-    static String partKey(Clip c) { return partKey(c.file, paFloor(c), paMinLen(c)); }
-    static Partials partials(Clip c, boolean sync) { return partials(c.file, paFloor(c), paMinLen(c), sync); }
-    /** The analysis, or null while a worker computes it (sync = block instead). */
     // Analyses are kept on disk (forge/.parts/, git-ignored), keyed by file, thresholds, size and mtime:
     // a 20 s recording takes ~2 s to analyse and ~7 MB to store, and a palette has half a dozen of them.
     static final Path PARTS_DIR = DIR.resolve("forge").resolve(".parts");
@@ -1315,357 +905,14 @@ public class SfxLab extends JPanel {
         if (cp != null) { try { savePartials(cp, pa); } catch (Exception e) { System.err.println("partials cache write failed: " + e); } }
         return pa;
     }
-    static final int PARTS_MAGIC = 0x50415254;
     static void savePartials(Path cp, Partials pa) throws IOException {
         Files.createDirectories(cp.getParent());
         Path tmp = cp.resolveSibling(cp.getFileName() + ".tmp");
-        try (DataOutputStream o = new DataOutputStream(new BufferedOutputStream(Files.newOutputStream(tmp), 1 << 16))) {
-            o.writeInt(PARTS_MAGIC); o.writeInt(1);
-            o.writeInt(pa.nFrames); o.writeInt(pa.nTracks); o.writeDouble(pa.f0); o.writeDouble(pa.share);
-            o.writeInt(pa.res[0].length);
-            for (int ch = 0; ch < 2; ch++) for (float x : pa.res[ch]) o.writeFloat(x);
-            o.writeInt(pa.tracks.length);
-            for (PTrack t : pa.tracks) {
-                o.writeInt(t.start); o.writeInt(t.len); o.writeFloat(t.fmed); o.writeFloat(t.ratio); o.writeInt(t.harm);
-                o.writeInt(t.freq.length); for (float x : t.freq) o.writeFloat(x);
-                o.writeInt(t.amp.length); for (float x : t.amp) o.writeFloat(x);
-            }
-        }
+        try (DataOutputStream o = new DataOutputStream(new BufferedOutputStream(Files.newOutputStream(tmp), 1 << 16))) { Partials.write(o, pa); }
         Files.move(tmp, cp, StandardCopyOption.REPLACE_EXISTING);
     }
     static Partials loadPartials(Path cp) throws IOException {
-        try (DataInputStream in = new DataInputStream(new BufferedInputStream(Files.newInputStream(cp), 1 << 16))) {
-            if (in.readInt() != PARTS_MAGIC || in.readInt() != 1) throw new IOException("not a partials cache");
-            Partials pa = new Partials();
-            pa.nFrames = in.readInt(); pa.nTracks = in.readInt(); pa.f0 = in.readDouble(); pa.share = in.readDouble();
-            int n = in.readInt();
-            pa.res = new float[2][n];
-            for (int ch = 0; ch < 2; ch++) for (int i = 0; i < n; i++) pa.res[ch][i] = in.readFloat();
-            int nt = in.readInt();
-            pa.tracks = new PTrack[nt];
-            List<List<Integer>> act = new ArrayList<>();
-            for (int f = 0; f < pa.nFrames; f++) act.add(new ArrayList<>());
-            for (int k = 0; k < nt; k++) {
-                PTrack t = new PTrack();
-                t.start = in.readInt(); t.len = in.readInt(); t.fmed = in.readFloat(); t.ratio = in.readFloat(); t.harm = in.readInt();
-                t.freq = new float[in.readInt()]; for (int i = 0; i < t.freq.length; i++) t.freq[i] = in.readFloat();
-                t.amp = new float[in.readInt()]; for (int i = 0; i < t.amp.length; i++) t.amp[i] = in.readFloat();
-                pa.tracks[k] = t;
-                for (int f = Math.max(0, t.start); f < Math.min(pa.nFrames, t.start + t.len); f++) act.get(f).add(k);
-            }
-            pa.active = new int[pa.nFrames][];
-            for (int f = 0; f < pa.nFrames; f++) pa.active[f] = act.get(f).stream().mapToInt(Integer::intValue).toArray();
-            return pa;
-        }
-    }
-    static Partials partials(String file, double fl, double ml, boolean sync) {
-        String k = partKey(file, fl, ml);
-        Partials pa = PARTS.get(k);
-        if (pa != null) return pa;
-        if (sync) { pa = analyzeCached(file, fl, ml); PARTS.put(k, pa); return pa; }
-        if (PARTS_PENDING.add(k)) {
-            // one analysis at a time, newest request first: dragging a slider on a
-            // 20 s clip used to launch a thread per value (25 analyses at once,
-            // each allocating tens of MB) — that starved the audio thread
-            PARTS_QUEUE.addFirst(new String[]{k, file, String.valueOf(fl), String.valueOf(ml)});
-            startPartsWorker();
-        }
-        return null;
-    }
-    static void startPartsWorker() {
-        synchronized (PARTS_QUEUE) {
-            if (partsWorker != null) return;
-            partsWorker = new Thread(() -> {
-                String[] job;
-                while ((job = PARTS_QUEUE.pollFirst()) != null) {
-                    try { PARTS.put(job[0], analyzeCached(job[1], Double.parseDouble(job[2]), Double.parseDouble(job[3]))); }
-                    catch (Exception e) { e.printStackTrace(); }
-                    finally { PARTS_PENDING.remove(job[0]); }
-                }
-                synchronized (PARTS_QUEUE) { partsWorker = null; }
-                if (!PARTS_QUEUE.isEmpty()) startPartsWorker();   // a request slipped in as we were exiting
-            }, "partials");
-            partsWorker.setDaemon(true);
-            partsWorker.setPriority(Thread.MIN_PRIORITY);
-            partsWorker.start();
-        }
-    }
-    static final java.util.concurrent.ConcurrentLinkedDeque<String[]> PARTS_QUEUE = new java.util.concurrent.ConcurrentLinkedDeque<>();
-    static Thread partsWorker;
-    static Partials analyzePartials(String file, double floorDb, double minLenMs) {
-        float[][] smp = sample(file);
-        int n = smp[0].length, half = PA_N / 2, nFrames = n / PA_HOP + 1;
-        double[] win = new double[PA_N];
-        for (int i = 0; i < PA_N; i++) win[i] = 0.5 - 0.5 * Math.cos(2 * Math.PI * i / PA_N);
-        double[] re = new double[PA_N], im = new double[PA_N];
-        // pass 1: mono magnitude spectra, frames centred on i·hop
-        float[][] mag = new float[nFrames][half + 1];
-        double gmax = 0;
-        for (int f = 0; f < nFrames; f++) {
-            int o = f * PA_HOP - half;
-            for (int i = 0; i < PA_N; i++) {
-                int j = o + i;
-                re[i] = j >= 0 && j < n ? 0.5 * (smp[0][j] + smp[1][j]) * win[i] : 0;
-                im[i] = 0;
-            }
-            fft(re, im, false);
-            for (int b = 0; b <= half; b++) { float m = (float) Math.hypot(re[b], im[b]); mag[f][b] = m; if (m > gmax) gmax = m; }
-        }
-        double absFloor = 20 * Math.log10(gmax + 1e-12) - PA_RANGE;
-        // interpolated peaks per frame, loud first, capped: a peak must rise
-        // `floor` dB over the frame's median and sit within PA_RANGE of the loudest
-        // bin in the file, so quiet tails don't sprout tracks out of the noise floor
-        List<List<double[]>> frames = new ArrayList<>(nFrames);   // {bin, freq, amp}
-        int lo = (int) (PA_FMIN * PA_N / SR), hi = (int) (PA_FMAX * PA_N / SR);
-        double[] db = new double[half + 1], srt = new double[half + 1];
-        for (int f = 0; f < nFrames; f++) {
-            for (int b = 0; b <= half; b++) db[b] = 20 * Math.log10(mag[f][b] + 1e-12);
-            System.arraycopy(db, 0, srt, 0, db.length);
-            Arrays.sort(srt);
-            double ref = Math.max(srt[srt.length / 2] + floorDb, absFloor);
-            List<double[]> pk = new ArrayList<>();
-            for (int b = lo + 1; b < hi - 1 && b < half; b++) {
-                if (db[b] > db[b - 1] && db[b] >= db[b + 1] && db[b] > ref) {
-                    double a = db[b - 1], bb = db[b], cc = db[b + 1], den = a - 2 * bb + cc;
-                    double pp = den != 0 ? 0.5 * (a - cc) / den : 0;
-                    double bin = b + pp, amp = Math.pow(10, (bb - 0.25 * (a - cc) * pp) / 20);
-                    pk.add(new double[]{bin, bin * SR / (double) PA_N, amp});
-                }
-            }
-            pk.sort((x, y) -> Double.compare(y[2], x[2]));
-            if (pk.size() > PA_MAXPK) pk = new ArrayList<>(pk.subList(0, PA_MAXPK));
-            frames.add(pk);
-        }
-        // greedy nearest-frequency continuation; loud tracks pick first, a
-        // track survives PA_GAP missing frames, unmatched peaks start new ones
-        class T { final List<double[]> pts = new ArrayList<>(); int gap; }   // {bin, freq, amp, frame}
-        List<T> active = new ArrayList<>(), done = new ArrayList<>();
-        for (int f = 0; f < nFrames; f++) {
-            List<double[]> pk = frames.get(f);
-            boolean[] used = new boolean[pk.size()];
-            active.sort((x, y) -> Double.compare(y.pts.get(y.pts.size() - 1)[2], x.pts.get(x.pts.size() - 1)[2]));
-            for (T tr : active) {
-                double f0 = tr.pts.get(tr.pts.size() - 1)[1];
-                int best = -1; double bd = PA_TOL;
-                for (int j = 0; j < pk.size(); j++) {
-                    if (used[j]) continue;
-                    double d = Math.abs(pk.get(j)[1] - f0) / f0;
-                    if (d < bd) { best = j; bd = d; }
-                }
-                if (best >= 0) { used[best] = true; double[] q = pk.get(best); tr.pts.add(new double[]{q[0], q[1], q[2], f}); tr.gap = 0; }
-                else tr.gap++;
-            }
-            List<T> still = new ArrayList<>();
-            for (T tr : active) (tr.gap > PA_GAP ? done : still).add(tr);
-            active = still;
-            for (int j = 0; j < pk.size(); j++)
-                if (!used[j]) { T t = new T(); double[] q = pk.get(j); t.pts.add(new double[]{q[0], q[1], q[2], f}); active.add(t); }
-        }
-        done.addAll(active);
-        int minLen = (int) Math.max(1, Math.round(minLenMs / 1000.0 * SR / PA_HOP));
-        // per-frame arrays per track (gaps interpolated, one zero-amp fade frame
-        // at each end), plus which bins to notch out of each frame
-        List<PTrack> tracks = new ArrayList<>();
-        List<List<Integer>> notch = new ArrayList<>(nFrames);
-        for (int f = 0; f < nFrames; f++) notch.add(new ArrayList<>());
-        double ascale = 4.0 / PA_N;   // Hann-windowed FFT magnitude -> sinusoid amplitude
-        for (T tr : done) {
-            if (tr.pts.size() < minLen) continue;
-            int f0 = (int) tr.pts.get(0)[3], f1 = (int) tr.pts.get(tr.pts.size() - 1)[3];
-            PTrack t = new PTrack();
-            t.start = f0 - 1; t.len = f1 - f0 + 3;
-            t.freq = new float[t.len]; t.amp = new float[t.len];
-            int prev = -1;
-            for (double[] q : tr.pts) {
-                int fi = (int) q[3] - t.start;
-                t.freq[fi] = (float) q[1]; t.amp[fi] = (float) (q[2] * ascale);
-                for (int g = prev + 1; prev >= 0 && g < fi; g++) {
-                    double u = (g - prev) / (double) (fi - prev);
-                    t.freq[g] = (float) (t.freq[prev] + (t.freq[fi] - t.freq[prev]) * u);
-                    t.amp[g] = (float) (t.amp[prev] + (t.amp[fi] - t.amp[prev]) * u);
-                }
-                prev = fi;
-                notch.get((int) q[3]).add((int) Math.round(q[0]));
-            }
-            t.freq[0] = t.freq[1]; t.amp[0] = 0;
-            t.freq[t.len - 1] = t.freq[t.len - 2]; t.amp[t.len - 1] = 0;
-            tracks.add(t);
-        }
-        List<List<Integer>> act = new ArrayList<>(nFrames);
-        for (int f = 0; f < nFrames; f++) act.add(new ArrayList<>());
-        for (int k = 0; k < tracks.size(); k++) {
-            PTrack t = tracks.get(k);
-            for (int f = Math.max(0, t.start); f < Math.min(nFrames, t.start + t.len); f++) act.get(f).add(k);
-        }
-        // pass 2: residual = the stereo STFT with every tracked peak notched out
-        // (raised cosine, zero at the peak, untouched 4 bins away), overlap-added
-        float[][] res = new float[2][n];
-        double[] norm = new double[n];
-        double[] reR = new double[PA_N], imR = new double[PA_N];
-        for (int f = 0; f < nFrames; f++) {
-            int o = f * PA_HOP - half;
-            for (int i = 0; i < PA_N; i++) {
-                int j = o + i;
-                boolean in = j >= 0 && j < n;
-                re[i] = in ? smp[0][j] * win[i] : 0; im[i] = 0;
-                reR[i] = in ? smp[1][j] * win[i] : 0; imR[i] = 0;
-            }
-            fft(re, im, false); fft(reR, imR, false);
-            for (int b : notch.get(f))
-                for (int d = -4; d <= 4; d++) {
-                    int kk = b + d;
-                    if (kk < 0 || kk > half) continue;
-                    double w = 0.5 - 0.5 * Math.cos(Math.PI * Math.min(1.0, Math.abs(d) / 4.0));
-                    re[kk] *= w; im[kk] *= w; reR[kk] *= w; imR[kk] *= w;
-                    if (kk > 0 && kk < half) { int m = PA_N - kk; re[m] *= w; im[m] *= w; reR[m] *= w; imR[m] *= w; }
-                }
-            fft(re, im, true); fft(reR, imR, true);
-            for (int i = 0; i < PA_N; i++) {
-                int j = o + i;
-                if (j < 0 || j >= n) continue;
-                res[0][j] += (float) (re[i] * win[i]); res[1][j] += (float) (reR[i] * win[i]);
-                norm[j] += win[i] * win[i];
-            }
-        }
-        for (int j = 0; j < n; j++) if (norm[j] > 1e-6) { res[0][j] /= (float) norm[j]; res[1][j] /= (float) norm[j]; }
-        Partials pa = new Partials();
-        pa.nFrames = nFrames; pa.nTracks = tracks.size(); pa.res = res; pa.f0 = estimateF0(tracks);
-        for (PTrack t : tracks) { t.fmed = t.freq[t.len / 2]; t.ratio = pa.f0 > 0 ? (float) (t.fmed / pa.f0) : 0; t.harm = harmNum(t.ratio); }
-        double eS = 0, eR = 0;   // how tonal the recording is: a sinusoid of amplitude a carries a²/2 per sample
-        for (PTrack t : tracks) for (float a : t.amp) eS += 0.5 * a * a * PA_HOP;
-        for (int j = 0; j < n; j++) eR += 0.5 * (res[0][j] * res[0][j] + res[1][j] * res[1][j]);
-        pa.share = eS + eR > 0 ? eS / (eS + eR) : 0;
-        pa.tracks = tracks.toArray(new PTrack[0]);
-        pa.active = new int[nFrames][];
-        for (int f = 0; f < nFrames; f++) pa.active[f] = act.get(f).stream().mapToInt(Integer::intValue).toArray();
-        return pa;
-    }
-    // ---- harmonic controls, shared by partials clips (per tracked partial) and
-    // the tones bank (per synthesized harmonic). r = frequency / fundamental.
-    static final double LN2 = Math.log(2);
-    /** Harmonic number of ratio r (within 3 %), 0 = not on the series. */
-    static int harmNum(double r) { return harmNum(r, 0.03); }
-    static int harmNum(double r, double tol) {
-        int h = (int) Math.round(r);
-        return h >= 1 && h <= 32 && Math.abs(r / h - 1) < tol ? h : 0;
-    }
-    /** The root a partials clip classifies against: the estimate shifted by `root shift` (110 Hz stands in when there is no estimate). */
-    static double partialsRoot(Partials pa, double shiftSemis) {
-        double base = pa.f0 > 0 ? pa.f0 : 110;
-        return shiftSemis == 0 && pa.f0 <= 0 ? 0 : base * Math.pow(2, shiftSemis / 12);
-    }
-    /** Gain for a partial: tilt brightens or darkens by ratio, odd/even fades one
-     *  side of the series above the fundamental, purity scales the inharmonic ones. */
-    static double harmGain(double r, int h, double oddEven, double tilt, double purity) {
-        double g = 1;
-        if (tilt != 0 && r > 0) g = Math.pow(Math.max(r, 0.25), tilt);
-        if (h == 0) g *= purity;
-        else if (h >= 2) {
-            if (oddEven < 0 && (h & 1) == 0) g *= 1 + oddEven;
-            else if (oddEven > 0 && (h & 1) == 1) g *= 1 - oddEven;
-        }
-        return g;
-    }
-    /** Frequency multiplier: stretch warps the spacing (h -> h^(1+s)), gather pulls
-     *  toward the nearest pitch class of the chord, keeping the octave. */
-    static double harmFreq(double r, double stretch, double gather, int chord) {
-        if (r <= 0) return 1;
-        double m = 1;
-        if (stretch != 0) m = Math.pow(r, stretch);
-        if (gather > 0) {
-            double lr = Math.log(r * m), frac = lr - Math.floor(lr / LN2) * LN2, bestD = 1e9;
-            for (double tl : CHORD_LOGS[chord]) {
-                double tf = tl - Math.floor(tl / LN2) * LN2;
-                for (double cand : new double[]{tf - LN2, tf, tf + LN2}) { double d = cand - frac; if (Math.abs(d) < Math.abs(bestD)) bestD = d; }
-            }
-            m *= Math.exp(gather * bestD);
-        }
-        return m;
-    }
-    /** Deterministic per-partial shimmer LFO rate (Hz) and start phase. */
-    static double hash01(long seed, int k, int salt) { double h = Math.sin(k * 12.9898 + salt * 78.233 + (seed & 4095)) * 43758.5453; return h - Math.floor(h); }
-
-    /** Fundamental estimate from the tracked partials: candidates are the
-     *  strongest tracks' median frequencies (and their halves, for a missing
-     *  fundamental); the one whose harmonic series collects the most partial
-     *  energy wins. Effects rarely have a textbook series, so this lands on the
-     *  dominant ring when nothing better exists. 0 when there are no partials. */
-    static double estimateF0(List<PTrack> tracks) {
-        int nt = tracks.size();
-        if (nt == 0) return 0;
-        double[] fm = new double[nt], en = new double[nt];
-        Integer[] idx = new Integer[nt];
-        for (int k = 0; k < nt; k++) {
-            PTrack t = tracks.get(k);
-            fm[k] = t.freq[t.len / 2];
-            double e = 0;
-            for (float a : t.amp) e += a * a;
-            en[k] = e; idx[k] = k;
-        }
-        Arrays.sort(idx, (a, b) -> Double.compare(en[b], en[a]));
-        double best = 0, bestScore = -1;
-        for (int i = 0; i < Math.min(16, nt); i++)
-            for (double cand : new double[]{fm[idx[i]], fm[idx[i]] / 2}) {
-                if (cand < PA_FMIN) continue;
-                double score = 0;
-                for (int k = 0; k < nt; k++) {
-                    double r = fm[k] / cand;
-                    int h = (int) Math.round(r);
-                    if (h >= 1 && h <= 16 && Math.abs(r / h - 1) < 0.03) score += en[k] / Math.sqrt(h);
-                }
-                if (score > bestScore) { bestScore = score; best = cand; }
-            }
-        return best;
-    }
-
-    // ---- notes: names are concert pitch (A4 = 440, C4 = 60); the project root
-    // is where the crystal's degree I sits, and the key is measured from it
-    static final String[] NOTE_NAMES = {"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"};
-    /** "F#6 -4c" style name for a frequency (no cents when within half a cent). */
-    static String noteName(double hz) {
-        if (hz <= 0) return "-";
-        double m = 69 + 12 * Math.log(hz / 440) / Math.log(2);
-        int r = (int) Math.round(m), cents = (int) Math.round((m - r) * 100);
-        String n = NOTE_NAMES[((r % 12) + 12) % 12] + (int) Math.floor(r / 12.0 - 1);
-        return cents == 0 ? n : String.format(Locale.ROOT, "%s %+dc", n, cents);
-    }
-    /** Parses "c2", "F#4", "bb3", "65.4" or "65.4hz" into Hz; NaN if it won't parse. */
-    static double parseNote(String in) {
-        String t = in.trim().toLowerCase(Locale.ROOT);
-        java.util.regex.Matcher m = java.util.regex.Pattern.compile("^([a-g])([#b]?)(-?\\d)$").matcher(t);
-        if (m.matches()) {
-            int semi = "c d ef g a b".indexOf(m.group(1));
-            if (m.group(2).equals("#")) semi++; else if (m.group(2).equals("b")) semi--;
-            int midi = 12 * (Integer.parseInt(m.group(3)) + 1) + semi;
-            return 440 * Math.pow(2, (midi - 69) / 12.0);
-        }
-        try { return Double.parseDouble(t.endsWith("hz") ? t.substring(0, t.length() - 2).trim() : t); }
-        catch (NumberFormatException e) { return Double.NaN; }
-    }
-
-    /** In-place iterative radix-2 FFT (inverse is scaled by 1/n). */
-    static void fft(double[] re, double[] im, boolean inv) {
-        int n = re.length;
-        for (int i = 1, j = 0; i < n; i++) {
-            int bit = n >> 1;
-            for (; (j & bit) != 0; bit >>= 1) j ^= bit;
-            j ^= bit;
-            if (i < j) { double t = re[i]; re[i] = re[j]; re[j] = t; t = im[i]; im[i] = im[j]; im[j] = t; }
-        }
-        for (int len = 2; len <= n; len <<= 1) {
-            double ang = 2 * Math.PI / len * (inv ? 1 : -1), wr = Math.cos(ang), wi = Math.sin(ang);
-            for (int i = 0; i < n; i += len) {
-                double cr = 1, ci = 0;
-                for (int k = 0; k < len / 2; k++) {
-                    int a = i + k, b = a + len / 2;
-                    double xr = re[b] * cr - im[b] * ci, xi = re[b] * ci + im[b] * cr;
-                    re[b] = re[a] - xr; im[b] = im[a] - xi;
-                    re[a] += xr; im[a] += xi;
-                    double nr = cr * wr - ci * wi; ci = cr * wi + ci * wr; cr = nr;
-                }
-            }
-        }
-        if (inv) for (int i = 0; i < n; i++) { re[i] /= n; im[i] /= n; }
+        try (DataInputStream in = new DataInputStream(new BufferedInputStream(Files.newInputStream(cp), 1 << 16))) { return Partials.read(in); }
     }
 
     // ---- FORGE: promotes a finished sound (a recording, or a workbench project
@@ -1839,732 +1086,8 @@ public class SfxLab extends JPanel {
         return v;
     }
 
-    /** True (and records them) when the harmonic params differ from the voice's cache. */
-    static boolean harmChanged(Voice v, double odd, double tilt, double pur, double str, double gat, int chord, double shift, double tol) {
-        if (v.cOdd == odd && v.cTilt == tilt && v.cPur == pur && v.cStr == str && v.cGat == gat && v.cChord == chord && v.cShift == shift && v.cTol == tol) return false;
-        v.cOdd = odd; v.cTilt = tilt; v.cPur = pur; v.cStr = str; v.cGat = gat; v.cChord = chord; v.cShift = shift; v.cTol = tol;
-        return true;
-    }
-    static double smpAt(float[] a, double pos, int n) {
-        int i0 = (int) pos;
-        double fr = pos - i0;
-        return a[i0] * (1 - fr) + a[(i0 + 1) % n] * fr;
-    }
 
-    // ---- keep-len granular sampler: 50 ms Hann grains at 50 % overlap (the
-    // windows sum to 1), each new grain WSOLA-aligned to the sounding one
-    static final int GLEN = (int) (0.05 * SR), GHALF = GLEN / 2;
-    static final int GK = 200, GSTEP = 3, GSRCH = SR / 80 / GSTEP * GSTEP;   // 4.5 ms match, ±12.5 ms search (0 is a candidate)
-    static double mono(float[][] s, double pos, int n, boolean loop) {
-        int i = (int) Math.floor(pos);
-        if (loop) i = ((i % n) + n) % n;
-        else if (i < 0 || i >= n) return 0;
-        return s[0][i] + s[1][i];
-    }
-    /** Where should a grain start so that it continues, in phase, what the
-     *  other grain is about to play? Nominal start is `src`; slide it by up
-     *  to ±GSRCH samples to maximize normalized correlation with the sounding
-     *  grain's next GK reads (a small bias prefers the nominal spot). */
-    static double alignGrain(float[][] s, int n, double src, double other, double ratio, boolean loop, double[] ref) {
-        if (other < 0) return src;
-        double eRef = 1e-9;
-        for (int k = 0; k < GK; k++) { ref[k] = mono(s, other + k * ratio, n, loop); eRef += ref[k] * ref[k]; }
-        double best = -1e9;
-        int bestD = 0;
-        for (int d = -GSRCH; d <= GSRCH; d += GSTEP) {   // coarse pass
-            double sc = grainScore(s, n, src + d, ratio, loop, ref, eRef) - 0.02 * Math.abs(d) / GSRCH;
-            if (sc > best) { best = sc; bestD = d; }
-        }
-        int coarse = bestD;
-        for (int d = coarse - GSTEP + 1; d < coarse + GSTEP; d++) {   // fine pass around it
-            if (d == coarse) continue;
-            double sc = grainScore(s, n, src + d, ratio, loop, ref, eRef) - 0.02 * Math.abs(d) / GSRCH;
-            if (sc > best) { best = sc; bestD = d; }
-        }
-        return src + bestD;
-    }
-    static double grainScore(float[][] s, int n, double p0, double ratio, boolean loop, double[] ref, double eRef) {
-        if (!loop && (p0 < 0 || p0 + GK * ratio >= n)) return -1e9;
-        double dot = 0, e = 1e-9;
-        for (int k = 0; k < GK; k++) {
-            double x = mono(s, p0 + k * ratio, n, loop);
-            dot += x * ref[k]; e += x * x;
-        }
-        return dot / Math.sqrt(e * eRef);
-    }
 
-    static class Engine {
-        double t = 0;
-        double key = 0;   // global transposition, semitones (see KEY_*)
-        double inPeak = 0;   // loudest master input since last read (>1 = the tanh limiter is squashing)
-        final HashMap<Clip, Voice> voices = new HashMap<>();
-        // sidechain: per-track peak envelope of the previous sample's output
-        final double[] trackEnv = new double[TRACKS], trackAbs = new double[TRACKS];
-        static final double DK_ATT = 1 - Math.exp(-1.0 / (0.002 * SR)), DK_REL = 1 - Math.exp(-1.0 / (0.15 * SR));
-        final float[] dlyL = new float[(int) (0.31 * SR)], dlyR = new float[(int) (0.37 * SR)];
-        int dpL, dpR;
-        // reverb: freeverb-lite — 6 damped combs + 2 allpasses per channel,
-        // right channel offset for width. Fed by each clip's reverb send.
-        static final int[] COMB = {1116, 1188, 1277, 1356, 1422, 1491};
-        static final int[] ALLP = {556, 441};
-        static final double RV_FB = 0.84, RV_DAMP = 0.3;
-        final float[][] cvL = new float[COMB.length][], cvR = new float[COMB.length][];
-        final float[][] avL = new float[ALLP.length][], avR = new float[ALLP.length][];
-        final int[] cpL = new int[COMB.length], cpR = new int[COMB.length],
-                    apL = new int[ALLP.length], apR = new int[ALLP.length];
-        final double[] cfL = new double[COMB.length], cfR = new double[COMB.length];
-        {
-            for (int i = 0; i < COMB.length; i++) { cvL[i] = new float[COMB[i]]; cvR[i] = new float[COMB[i] + 23]; }
-            for (int i = 0; i < ALLP.length; i++) { avL[i] = new float[ALLP[i]]; avR[i] = new float[ALLP[i] + 23]; }
-        }
-
-        /** One sample of a Karplus-Strong string: a noise burst (one period
-         *  long, lowpassed by pick softness) circulates in a fractional delay
-         *  line; each pass loses highs (damp) and level (fb). Both strings of
-         *  a clip share the write clock; the caller advances v.kp. */
-        double ksString(Voice v, float[] buf, double f, double lt, double k, double fb, double pick) {
-            double N = Math.max(2, Math.min(KSN - 3, SR / f));
-            double ex = 0;
-            if (lt * f < 1.0) {
-                v.ex += (0.05 + 0.95 * pick) * ((v.rng.nextDouble() * 2 - 1) - v.ex);
-                ex = v.ex;
-            }
-            double rp = v.kp - N;
-            while (rp < 0) rp += KSN;
-            int i0 = (int) rp;
-            double fr = rp - i0;
-            int i1 = (i0 + 1) % KSN, im = (i0 + KSN - 1) % KSN;
-            double a = buf[i0] * (1 - fr) + buf[i1] * fr;        // tap at N
-            double b = buf[im] * (1 - fr) + buf[i0] * fr;        // tap at N+1
-            double s = ex + fb * ((1 - k) * a + k * 0.5 * (a + b));
-            buf[v.kp] = (float) s;
-            return s;
-        }
-
-        final double[] o1 = new double[6];
-        /** Render one sample of the mix into out[0..1] and advance time. */
-        void render(List<Clip> cs, Clip solo, boolean[] mute, double[] tvol, double[] out) {
-            double mixL = 0, mixR = 0, sendL = 0, sendR = 0, rvInL = 0, rvInR = 0;
-            for (int ci = 0; ci < cs.size(); ci++) {
-                Clip c = cs.get(ci);
-                if (solo != null ? c != solo : (mute != null && mute[c.track])) continue;
-                double lt = t - c.start;
-                if (lt < 0 || lt >= c.dur) continue;
-                Voice v = voices.computeIfAbsent(c, Voice::new);
-                if (!clipSample(c, v, lt, tvol, o1)) continue;
-                double sL = o1[0], sR = o1[1];
-                trackAbs[c.track] = Math.max(trackAbs[c.track], Math.max(Math.abs(sL), Math.abs(sR)));
-                mixL += sL; mixR += sR; sendL += o1[2]; sendR += o1[3]; rvInL += o1[4]; rvInR += o1[5];
-            }
-            post(mixL, mixR, sendL, sendR, rvInL, rvInR, out);
-        }
-
-        /** Renders n samples of the mix into outL / outR. With several clips and no sidechain in play (the
-         *  duck couples clips within a sample), every clip's block is rendered on its own thread and the
-         *  per-sample mix, sends and effects run afterwards in clip order, so the output is bit-identical
-         *  to the sample-by-sample path; otherwise it falls back to that path. */
-        void renderBlock(List<Clip> cs, Clip solo, boolean[] mute, double[] tvol, double[] outL, double[] outR, int n) {
-            boolean duck = false; int live = 0;
-            for (Clip c : cs) {
-                if (solo != null ? c != solo : (mute != null && mute[c.track])) continue;
-                live++;
-                int di = c.p.length - N_TAIL + 9;
-                if (c.p[di] + (c.mod != null ? c.mod[di] : 0) > 0.005) duck = true;
-            }
-            if (duck || live < 2 || POOL_N < 2) {
-                for (int i = 0; i < n; i++) { render(cs, solo, mute, tvol, o1); outL[i] = o1[0]; outR[i] = o1[1]; }
-                return;
-            }
-            if (ts == null || ts.length < n + 1) ts = new double[n + 1];
-            ts[0] = t;
-            for (int i = 0; i < n; i++) ts[i + 1] = ts[i] + 1.0 / SR;   // the same accumulation post() does
-            final ArrayList<Clip> act = new ArrayList<>();
-            for (Clip c : cs) {
-                if (solo != null ? c != solo : (mute != null && mute[c.track])) continue;
-                if (c.start >= ts[n] || c.end() <= ts[0]) continue;
-                voices.computeIfAbsent(c, Voice::new);
-                act.add(c);
-            }
-            int m = act.size();
-            if (cbuf == null || cbuf.length < m || cbuf[0].length < 6 * n) { cbuf = new double[Math.max(m, 8)][6 * n]; cact = new boolean[Math.max(m, 8)][n]; }
-            ArrayList<java.util.concurrent.Callable<Void>> tasks = new ArrayList<>(m);
-            final int nn = n;
-            for (int ci = 0; ci < m; ci++) {
-                final int k = ci; final Clip c = act.get(ci); final Voice v = voices.get(c);
-                final double[] buf = cbuf[k]; final boolean[] on = cact[k];
-                tasks.add(() -> {
-                    double[] o = new double[6];
-                    for (int i = 0; i < nn; i++) {
-                        double lt = ts[i] - c.start;
-                        if (lt < 0 || lt >= c.dur || !clipSample(c, v, lt, tvol, o)) { on[i] = false; continue; }
-                        on[i] = true;
-                        System.arraycopy(o, 0, buf, 6 * i, 6);
-                    }
-                    return null;
-                });
-            }
-            try { for (var f : POOL.invokeAll(tasks)) f.get(); }
-            catch (Exception e) { throw new RuntimeException(e); }
-            double[] o = new double[2];
-            for (int i = 0; i < n; i++) {
-                double mixL = 0, mixR = 0, sendL = 0, sendR = 0, rvInL = 0, rvInR = 0;
-                for (int ci = 0; ci < m; ci++) {
-                    if (!cact[ci][i]) continue;
-                    double[] b = cbuf[ci]; int j = 6 * i;
-                    double sL = b[j], sR = b[j + 1];
-                    int tr = act.get(ci).track;
-                    trackAbs[tr] = Math.max(trackAbs[tr], Math.max(Math.abs(sL), Math.abs(sR)));
-                    mixL += sL; mixR += sR; sendL += b[j + 2]; sendR += b[j + 3]; rvInL += b[j + 4]; rvInR += b[j + 5];
-                }
-                post(mixL, mixR, sendL, sendR, rvInL, rvInR, o);
-                outL[i] = o[0]; outR[i] = o[1];
-            }
-        }
-        double[] ts; double[][] cbuf; boolean[][] cact;
-        static final int POOL_N = Math.max(1, Math.min(8, Runtime.getRuntime().availableProcessors()));
-        static final java.util.concurrent.ExecutorService POOL = java.util.concurrent.Executors.newFixedThreadPool(POOL_N, r -> {
-            Thread th = new Thread(r, "engine-worker"); th.setDaemon(true); th.setPriority(Thread.MAX_PRIORITY - 1); return th; });
-
-        /** One sample of one clip: its stereo output and its echo / reverb sends into o[0..5]. False when it is silent. */
-        boolean clipSample(Clip c, Voice v, double lt, double[] tvol, double[] o) {
-                double[] p = c.mod != null ? v.effective(c) : c.p;
-                if (p[P_LEVEL] < 1e-4) return false;   // silent (a bench layer waiting for its cue): costs nothing
-                double prog = lt / c.dur;
-                int lb = p.length - N_TAIL;
-                double kp = (c.keyed & KEY_PITCH) != 0 ? key : 0, ku = (c.keyed & KEY_FILTER) != 0 ? key * KEY_U : 0;
-                double env = 1;
-                if (p[P_ATT] > 1e-4) env = Math.min(1, lt / p[P_ATT]);
-                if (p[P_REL] > 1e-4) env = Math.min(env, (c.dur - lt) / p[P_REL]);
-                if (env <= 0) return false;
-                double curve = p[lb + 5];
-                if (curve != 0) env = Math.pow(env, Math.pow(8, curve));
-                // per-clip LFO: phase runs in clip-local time; random shape is
-                // hashed from the cycle count + seed so renders stay deterministic
-                double lfo = 0, lfoAmp = p[lb + 3];
-                if (p[lb + 1] != 0 || p[lb + 2] != 0 || lfoAmp != 0 || p[lb + 7] > 0.005) {
-                    // the LFO's phase: parked / steered by `lfo pos` when set; else an accumulated angle for live clips (a moving
-                    // rate glides) and the closed form for timeline clips (old renders stay byte-identical)
-                    double lpos = p[lb + 15], cyc;
-                    if (lpos >= 0) cyc = Math.min(1, lpos);
-                    else if (c.mod != null) { v.lfoAng += p[lb] / SR; cyc = v.lfoAng; }
-                    else cyc = lt * p[lb];
-                    double frac = cyc - Math.floor(cyc);
-                    lfo = switch ((int) Math.round(p[lb + 4])) {
-                        case 1 -> 1 - 4 * Math.abs(frac - 0.5);
-                        case 2 -> frac < 0.5 ? 1 : -1;
-                        case 3 -> {
-                            double h = Math.sin((Math.floor(cyc) + 1) * 12.9898 + (c.seed & 1023)) * 43758.5453;
-                            yield 2 * (h - Math.floor(h)) - 1;
-                        }
-                        default -> Math.sin(2 * Math.PI * frac);
-                    };
-                }
-                double f0 = 110 * Math.pow(2, (p[P_PITCH] + kp + p[P_PSWP] * prog + lfo * p[lb + 1]) / 12.0);
-                double sL = 0, sR = 0;
-
-                switch (c.type) {
-                    case CLOUD -> {
-                        int n = (int) Math.max(1, Math.min(NV, Math.round(p[NCOMMON])));
-                        double gather = Math.max(0, Math.min(1, p[NCOMMON + 1] + p[NCOMMON + 6] * prog));
-                        double drift = p[NCOMMON + 2], timbre = p[NCOMMON + 3];
-                        int chord = chordIdx(p[NCOMMON + 4]);
-                        double[] tl = CHORD_LOGS[chord];
-                        double wr = 0.004 * drift * drift;
-                        for (int vi = 0; vi < n; vi++) {
-                            v.wander[vi] += (v.rng.nextDouble() - 0.5) * wr;
-                            if (v.wander[vi] < W_LO) v.wander[vi] = 2 * W_LO - v.wander[vi];
-                            if (v.wander[vi] > W_HI) v.wander[vi] = 2 * W_HI - v.wander[vi];
-                            double f = f0 * Math.exp(v.wander[vi] + (tl[vi] - v.wander[vi]) * gather) * (1 + v.det[vi]);
-                            v.ph[vi] += f / SR; if (v.ph[vi] >= 1) v.ph[vi] -= 1;
-                            double s = osc(v.ph[vi], timbre) * (n == 1 ? 1 : 1 - 0.55 * vi / (n - 1.0));
-                            double pv = (v.vpan[vi] + 1) * Math.PI / 4;
-                            sL += s * Math.cos(pv); sR += s * Math.sin(pv);
-                        }
-                        sL /= n * 0.5; sR /= n * 0.5;
-                        v.phSub += f0 * 0.5 / SR; if (v.phSub >= 1) v.phSub -= 1;
-                        double sub = osc(v.phSub, 2.0) * p[NCOMMON + 5];
-                        sL += sub; sR += sub;
-                    }
-                    case TONE -> {
-                        double interval = p[NCOMMON], timbre = p[NCOMMON + 1],
-                               det = p[NCOMMON + 2] * 0.01, shim = p[NCOMMON + 3];
-                        v.j = v.j * 0.9995 + (v.rng.nextDouble() - 0.5) * 0.004;
-                        double wob = 1 + v.j * shim * 1.5;
-                        double f1 = f0 * wob, f2 = f0 * Math.pow(2, interval / 12.0) * wob;
-                        v.ph1 += f1 / SR; if (v.ph1 >= 1) v.ph1 -= 1;
-                        v.ph2 += f2 / SR; if (v.ph2 >= 1) v.ph2 -= 1;
-                        // FM: phase-modulate the pair; depth rides the envelope so
-                        // percussive clips strike bright and mellow into the ring
-                        double m1 = 0, m2 = 0, fmDepth = p[NCOMMON + 5] * env;
-                        if (fmDepth > 1e-4) {
-                            double fmRatio = p[NCOMMON + 4];
-                            v.phM1 += f1 * fmRatio / SR; if (v.phM1 >= 1) v.phM1 -= 1;
-                            v.phM2 += f2 * fmRatio / SR; if (v.phM2 >= 1) v.phM2 -= 1;
-                            m1 = fmDepth * Math.sin(2 * Math.PI * v.phM1) / (2 * Math.PI);
-                            m2 = fmDepth * Math.sin(2 * Math.PI * v.phM2) / (2 * Math.PI);
-                        }
-                        double a = osc(wrap01(v.ph1 + m1), timbre), b = osc(wrap01(v.ph2 + m2), timbre);
-                        if (det > 1e-5) {
-                            v.ph3 += f1 * (1 + det) / SR; if (v.ph3 >= 1) v.ph3 -= 1;
-                            v.ph4 += f2 * (1 - det) / SR; if (v.ph4 >= 1) v.ph4 -= 1;
-                            a = (a + osc(v.ph3, timbre)) * 0.7;
-                            b = (b + osc(v.ph4, timbre)) * 0.7;
-                        }
-                        // tone 1 left, tone 2 right — they draw the Lissajous
-                        sL = a * 0.6; sR = b * 0.6;
-                        // additive harmonic bank on the base pitch, centred, with the
-                        // partials clip's harmonic controls — a stand-in "bed" when a
-                        // recording has run out of range (bank 0 = exactly the old tone)
-                        double bank = p[NCOMMON + TB_BANK];
-                        if (bank > 0) {
-                            boolean ch = harmChanged(v, p[NCOMMON + TB_ODD], p[NCOMMON + TB_TILT], 1,
-                                                     p[NCOMMON + TB_STRETCH], p[NCOMMON + TB_GATHER], chordIdx(p[NCOMMON + TB_CHORD]), 0, 0.03);
-                            if (v.hg == null || v.hg.length != TB_HARM || ch) {
-                                if (v.hg == null || v.hg.length != TB_HARM) {
-                                    v.hg = new double[TB_HARM]; v.hf = new double[TB_HARM]; v.bph = new double[TB_HARM];
-                                    v.hsh = new double[TB_HARM]; v.hsr = new double[TB_HARM];
-                                    for (int h = 0; h < TB_HARM; h++) { v.bph[h] = hash01(c.seed, h, 3); v.hsh[h] = hash01(c.seed, h, 1); v.hsr[h] = 0.05 + 0.35 * hash01(c.seed, h, 2); }
-                                }
-                                for (int h = 1; h <= TB_HARM; h++) {
-                                    v.hg[h - 1] = harmGain(h, h, v.cOdd, v.cTilt, 1) / h;   // 1/h: a saw-like series before the controls
-                                    v.hf[h - 1] = harmFreq(h, v.cStr, v.cGat, v.cChord) * h;
-                                }
-                            }
-                            double bshim = p[NCOMMON + TB_SHIM], sum = 0;
-                            for (int h = 0; h < TB_HARM; h++) {
-                                double fh = f0 * v.hf[h];
-                                if (bshim > 0) { v.hsh[h] += v.hsr[h] / SR; fh *= 1 + bshim * 0.012 * Math.sin(2 * Math.PI * v.hsh[h]); }
-                                if (fh >= SR * 0.5) continue;
-                                v.bph[h] += fh / SR; if (v.bph[h] >= 1) v.bph[h] -= 1;
-                                sum += v.hg[h] * Math.sin(2 * Math.PI * v.bph[h]);
-                            }
-                            double bs = bank * 0.6 * sum * 0.45;
-                            sL += bs; sR += bs;
-                        }
-                    }
-                    case NOISE -> {
-                        double w1 = (v.rng.nextDouble() * 2 - 1) * 0.8;
-                        double w2 = (v.rng.nextDouble() * 2 - 1) * 0.8;
-                        double color = p[NCOMMON];
-                        if (color > 0.01) {
-                            // one-pole lowpass with RMS makeup: white -> pink-ish -> brown
-                            double k = Math.pow(10, -3.2 * color);
-                            double mk = Math.sqrt((2 - k) / k);
-                            v.nl1 += k * (w1 - v.nl1);
-                            v.nl2 += k * (w2 - v.nl2);
-                            sL = v.nl1 * mk; sR = v.nl2 * mk;
-                        } else { sL = w1; sR = w2; }
-                    }
-                    case SPARKLE -> {
-                        double density = p[NCOMMON], dec = p[NCOMMON + 1], spread = p[NCOMMON + 2];
-                        int range = (int) Math.max(0, Math.round(p[NCOMMON + 3]));
-                        if (lt >= v.nextPing) {
-                            v.nextPing = lt + 1.0 / density;
-                            for (int k = 0; k < v.pf.length; k++) if (v.pa[k] < 0.01) {
-                                v.pf[k] = f0 * PENTA[v.rng.nextInt(PENTA.length)] * (1 << v.rng.nextInt(range + 1));
-                                v.pp[k] = 0; v.pm[k] = 0; v.pa[k] = 0.5;
-                                v.ppan[k] = (v.rng.nextDouble() * 2 - 1) * spread;
-                                break;
-                            }
-                        }
-                        double kDec = Math.exp(-1.0 / (dec * SR));
-                        double fmRatio = p[NCOMMON + 4], fmDepth = p[NCOMMON + 5];
-                        for (int k = 0; k < v.pf.length; k++) if (v.pa[k] >= 0.01) {
-                            v.pp[k] += v.pf[k] / SR; if (v.pp[k] >= 1) v.pp[k] -= 1;
-                            v.pa[k] *= kDec;
-                            double mm = 0;
-                            if (fmDepth > 1e-4) {   // each ping's FM brightness decays with its own ring-out
-                                v.pm[k] += v.pf[k] * fmRatio / SR; if (v.pm[k] >= 1) v.pm[k] -= 1;
-                                mm = fmDepth * (v.pa[k] / 0.5) * Math.sin(2 * Math.PI * v.pm[k]);
-                            }
-                            double s = Math.sin(2 * Math.PI * v.pp[k] + mm) * v.pa[k];
-                            double sp = (v.ppan[k] + 1) * Math.PI / 4;
-                            sL += s * Math.cos(sp); sR += s * Math.sin(sp);
-                        }
-                    }
-                    case PLUCK -> {
-                        double damp = p[NCOMMON], sus = p[NCOMMON + 1], pick = p[NCOMMON + 2],
-                               itv = p[NCOMMON + 3];
-                        double k = 0.05 + 0.95 * damp;      // per-cycle high-freq loss
-                        double fb = 0.9 + 0.099 * sus;      // overall ring length
-                        double s = ksString(v, v.ks, f0, lt, k, fb, pick);
-                        if (itv != 0)   // second string: summed BEFORE drive, so a
-                                        // power chord distorts as one (intermodulation)
-                            s += 0.9 * ksString(v, v.ks2, f0 * Math.pow(2, itv / 12.0) * 1.0012, lt, k, fb, pick);
-                        v.kp = (v.kp + 1) % KSN;
-                        // DC blocker (~7 Hz): the excitation burst's random DC
-                        // component would otherwise circulate and bias the drive
-                        v.dcp += 0.001 * (s - v.dcp);
-                        sL = (s - v.dcp) * 0.9; sR = sL;
-                    }
-                    case SAMPLE -> {
-                        if (c.file == null) break;
-                        float[][] smp = sample(c.file);
-                        int n = smp[0].length;
-                        boolean loop = p[NCOMMON] >= 0.5;
-                        double base = p[NCOMMON + 1] * n, ratio = f0 / 110.0, speed = p[NCOMMON + 3];
-                        if (p[NCOMMON + 2] < 0.5) {
-                            // tape: pitch IS playback speed, like a classic sampler
-                            double rate = ratio * speed;
-                            if (v.sp < 0) v.sp = lt * SR * rate;   // seek landed mid-clip
-                            double pos = base + v.sp;
-                            v.sp += rate;
-                            if (loop) pos = pos % n;
-                            else if (pos >= n - 1) break;          // one-shot: silent after the end
-                            sL = smpAt(smp[0], pos, n); sR = smpAt(smp[1], pos, n);
-                        } else {
-                            // keep len: the source position advances at `speed` no matter
-                            // the pitch; two overlapping grains read from around it at
-                            // the pitch ratio (see alignGrain for why it doesn't flutter)
-                            if (v.sp < 0) {
-                                v.sp = lt * SR * speed;
-                                v.gpos[0] = base + v.sp; v.gage[0] = 0;
-                                v.gpos[1] = -1; v.gage[1] = GHALF;   // idle until grain 0 is half-way
-                                v.gFirst = true;
-                            }
-                            double src = base + v.sp;
-                            v.sp += speed;
-                            if (!loop && src >= n - 1) break;
-                            for (int g = 0; g < 2; g++)   // spawn first, so the alignment sees
-                                if (v.gage[g] >= GLEN) {  // the other grain's NEXT read position
-                                    v.gage[g] = 0;
-                                    v.gpos[g] = alignGrain(smp, n, src, v.gpos[1 - g], ratio, loop, v.gref);
-                                    v.gFirst = false;
-                                }
-                            for (int g = 0; g < 2; g++) {
-                                double pos = v.gpos[g];
-                                if (pos >= 0) {
-                                    double w = 0.5 - 0.5 * Math.cos(2 * Math.PI * v.gage[g] / GLEN);
-                                    if (v.gFirst && v.gage[g] < GHALF) w = 1;   // the very first grain doesn't fade in
-                                    if (loop) pos = ((pos % n) + n) % n;
-                                    if (loop || pos < n - 1) {
-                                        sL += w * smpAt(smp[0], pos, n);
-                                        sR += w * smpAt(smp[1], pos, n);
-                                    }
-                                    v.gpos[g] += ratio;
-                                }
-                                v.gage[g]++;
-                            }
-                        }
-                    }
-                    case PARTIALS -> {
-                        if (c.file == null) break;
-                        long fl = Math.round(p[NCOMMON + PA_FLOOR]), ml = Math.round(p[NCOMMON + PA_MINLEN]);
-                        if (c.pa == null || fl != c.paFloor || ml != c.paMin) {
-                            if (c.pa == null && fl == c.paFloor && ml == c.paMin && (c.paRetry++ & 2047) != 0) break;   // pending: poll, don't churn
-                            c.pa = partials(c, false); c.paFloor = fl; c.paMin = ml;
-                        }
-                        Partials pa = c.pa;
-                        if (pa == null) break;                 // still analyzing: silent until ready
-                        float[][] smp = pa.res;
-                        int n = smp[0].length;
-                        boolean loop = p[NCOMMON + PA_LOOP] >= 0.5;
-                        double base = p[NCOMMON + PA_START] * n, ratio = f0 / 110.0, speed = p[NCOMMON + PA_SPEED];
-                        double gS = p[NCOMMON + PA_SINES], gR = p[NCOMMON + PA_RESID];
-                        if (v.sp < 0) {
-                            v.sp = lt * SR * speed;
-                            v.gpos[0] = base + v.sp; v.gage[0] = 0;
-                            v.gpos[1] = -1; v.gage[1] = GHALF;
-                            v.gFirst = true;
-                        }
-                        double src = base + v.sp;
-                        v.sp += speed;
-                        if (!loop && src >= n - 1) break;
-                        // residual — the recording's noise, breath and crackle — is NEVER
-                        // transposed. At speed 1 it is read straight (the grain aligner finds
-                        // spurious matches in noise and would sum two grains incoherently:
-                        // -3 dB and a smear); time-stretching goes through the grains at ratio 1.
-                        if (speed == 1.0) {
-                            double pos = loop ? ((src % n) + n) % n : src;
-                            if (gR > 0 && (loop || pos < n - 1) && pos >= 0) {
-                                sL += gR * smpAt(smp[0], pos, n);
-                                sR += gR * smpAt(smp[1], pos, n);
-                            }
-                        } else {
-                        for (int g = 0; g < 2; g++)
-                            if (v.gage[g] >= GLEN) {
-                                v.gage[g] = 0;
-                                v.gpos[g] = alignGrain(smp, n, src, v.gpos[1 - g], 1.0, loop, v.gref);
-                                v.gFirst = false;
-                            }
-                        for (int g = 0; g < 2; g++) {
-                            double pos = v.gpos[g];
-                            if (pos >= 0) {
-                                double w = 0.5 - 0.5 * Math.cos(2 * Math.PI * v.gage[g] / GLEN);
-                                if (v.gFirst && v.gage[g] < GHALF) w = 1;
-                                if (loop) pos = ((pos % n) + n) % n;
-                                if (gR > 0 && (loop || pos < n - 1)) {
-                                    sL += gR * w * smpAt(smp[0], pos, n);
-                                    sR += gR * w * smpAt(smp[1], pos, n);
-                                }
-                                v.gpos[g] += 1.0;
-                            }
-                            v.gage[g]++;
-                        }
-                        }
-                        // partials: an oscillator bank reads the tracked sinusoids at the same
-                        // source position, transposed by the clip's pitch (and the key)
-                        if (gS > 0 && pa.nTracks > 0) {
-                            double fr = src / PA_HOP;
-                            if (loop) fr = ((fr % pa.nFrames) + pa.nFrames) % pa.nFrames;
-                            int fi = (int) fr;
-                            if (fi >= 0 && fi < pa.active.length) {
-                                int nt = pa.nTracks;
-                                if (v.pph == null || v.pph.length != nt) {
-                                    v.pph = new double[nt];
-                                    for (int k = 0; k < nt; k++) v.pph[k] = v.rng.nextDouble() * 2 * Math.PI;
-                                }
-                                // harmonic controls: per-track gain and frequency multipliers,
-                                // rebuilt only when a control moves (neutral values give exactly 1.0)
-                                boolean ch = harmChanged(v, p[NCOMMON + PA_ODD], p[NCOMMON + PA_TILT], p[NCOMMON + PA_PURITY],
-                                                         p[NCOMMON + PA_STRETCH], p[NCOMMON + PA_GATHER], chordIdx(p[NCOMMON + PA_CHORD]),
-                                                         p[NCOMMON + PA_ROOT], p[NCOMMON + PA_HTOL] * 0.01);
-                                if (v.hg == null || v.hg.length != nt || ch) {
-                                    if (v.hg == null || v.hg.length != nt) { v.hg = new double[nt]; v.hf = new double[nt]; }
-                                    double root = partialsRoot(pa, v.cShift);   // classification root: the estimate, shifted
-                                    for (int k = 0; k < nt; k++) {
-                                        PTrack tr = pa.tracks[k];
-                                        double r = root > 0 ? tr.fmed / root : 0;
-                                        int h = harmNum(r, v.cTol);
-                                        v.hg[k] = harmGain(r, h, v.cOdd, v.cTilt, v.cPur);
-                                        v.hf[k] = harmFreq(r, v.cStr, v.cGat, v.cChord);
-                                    }
-                                }
-                                double shim = p[NCOMMON + PA_SHIM];
-                                if (shim > 0 && (v.hsh == null || v.hsh.length != nt)) {
-                                    v.hsh = new double[nt]; v.hsr = new double[nt];
-                                    for (int k = 0; k < nt; k++) { v.hsh[k] = hash01(c.seed, k, 1); v.hsr[k] = 0.05 + 0.35 * hash01(c.seed, k, 2); }
-                                }
-                                double ps = 0;
-                                for (int k : pa.active[fi]) {
-                                    PTrack tr = pa.tracks[k];
-                                    double tp = fr - tr.start;
-                                    if (tp < 0 || tp > tr.len - 1) continue;
-                                    int i = Math.min((int) tp, tr.len - 2);
-                                    double q = tp - i;
-                                    double mult = ratio * v.hf[k];
-                                    if (shim > 0) { v.hsh[k] += v.hsr[k] / SR; mult *= 1 + shim * 0.012 * Math.sin(2 * Math.PI * v.hsh[k]); }
-                                    double f = (tr.freq[i] * (1 - q) + tr.freq[i + 1] * q) * mult;
-                                    if (f >= SR * 0.5) continue;
-                                    double a = (tr.amp[i] * (1 - q) + tr.amp[i + 1] * q) * v.hg[k];
-                                    double ph = v.pph[k] + 2 * Math.PI * f / SR;
-                                    if (ph > 2 * Math.PI) ph -= 2 * Math.PI;
-                                    v.pph[k] = ph;
-                                    ps += a * Math.cos(ph);
-                                }
-                                sL += gS * ps; sR += gS * ps;
-                            }
-                        }
-                    }
-                    case CHOIR -> {
-                        if (c.file == null) break;
-                        float[][] smp = sample(c.file);
-                        int n = smp[0].length;
-                        int nv = (int) Math.max(1, Math.min(NV, Math.round(p[NCOMMON + CH_VOICES])));
-                        double gather = Math.max(0, Math.min(1, p[NCOMMON + CH_GATHER] + p[NCOMMON + CH_GSWP] * prog));
-                        double drift = p[NCOMMON + CH_DRIFT], speed = p[NCOMMON + CH_SPEED];
-                        double R = p[NCOMMON + CH_WANDER] * Math.log(2) / 12;
-                        double base = p[NCOMMON + CH_START] * n, scat = p[NCOMMON + CH_SCATTER] * n;
-                        int chord = chordIdx(p[NCOMMON + CH_CHORD]);
-                        double[] tl = CHOIR_LOGS[chord];
-                        double ratio0 = f0 / 110.0;
-                        // the walk rate scales with the wander band so drift feels the same at any width
-                        double wr = 0.004 * drift * drift * (2 * R / (W_HI - W_LO));
-                        if (v.sp < 0) {
-                            v.sp = lt * SR * speed;   // seek landed mid-clip
-                            for (int vi = 0; vi < NV; vi++) {
-                                v.cgpos[vi][0] = base + v.coff[vi] * scat + v.sp; v.cgage[vi][0] = 0;
-                                v.cgpos[vi][1] = -1; v.cgage[vi][1] = GHALF;
-                                v.cgFirst[vi] = true;
-                            }
-                        }
-                        double sp = v.sp;
-                        v.sp += speed;
-                        double gain = 1 / Math.sqrt(nv);
-                        for (int vi = 0; vi < nv; vi++) {
-                            if (R > 1e-9) {
-                                v.wander[vi] += (v.rng.nextDouble() - 0.5) * wr;
-                                if (v.wander[vi] < -R) v.wander[vi] = -2 * R - v.wander[vi];
-                                if (v.wander[vi] > R) v.wander[vi] = 2 * R - v.wander[vi];
-                            } else v.wander[vi] = 0;
-                            double ratio = ratio0 * Math.exp(v.wander[vi] + (tl[vi] - v.wander[vi]) * gather) * (1 + v.det[vi]);
-                            double src = base + v.coff[vi] * scat + sp;
-                            double[] gpos = v.cgpos[vi]; int[] gage = v.cgage[vi];
-                            double a = 0, b = 0;
-                            for (int g = 0; g < 2; g++)
-                                if (gage[g] >= GLEN) {
-                                    gage[g] = 0;
-                                    gpos[g] = alignGrain(smp, n, src, gpos[1 - g], ratio, true, v.gref);
-                                    v.cgFirst[vi] = false;
-                                }
-                            for (int g = 0; g < 2; g++) {
-                                double pos = gpos[g];
-                                if (pos >= 0) {
-                                    double w = 0.5 - 0.5 * Math.cos(2 * Math.PI * gage[g] / GLEN);
-                                    if (v.cgFirst[vi] && gage[g] < GHALF) w = 1;
-                                    pos = ((pos % n) + n) % n;
-                                    a += w * smpAt(smp[0], pos, n);
-                                    b += w * smpAt(smp[1], pos, n);
-                                    gpos[g] += ratio;
-                                }
-                                gage[g]++;
-                            }
-                            double amp = gain * (nv == 1 ? 1 : 1 - 0.55 * vi / (nv - 1.0));
-                            double pv = (v.vpan[vi] + 1) * Math.PI / 4;   // balance, like cloud's voice placement
-                            sL += a * amp * Math.cos(pv) * 1.3; sR += b * amp * Math.sin(pv) * 1.3;
-                        }
-                    }
-                }
-
-                // drive: waveshaping distortion ahead of the filter (which then
-                // plays the cabinet). Bypassed at 0 so clean clips stay clean.
-                double drive = p[P_DRIVE];
-                if (drive > 0.01) {
-                    double dg = 1 + 24 * drive, mk = 1 - 0.45 * drive;
-                    sL = Math.tanh(sL * dg) * mk;
-                    sR = Math.tanh(sR * dg) * mk;
-                }
-
-                // flanger: the signal plus itself a few swept milliseconds ago —
-                // a comb filter whose notches ride the clip's LFO
-                double flMix = p[lb + 7];
-                if (flMix > 0.005) {
-                    double flFb = p[lb + 8];
-                    double fpos = p[lb + 16];
-                    double d = (0.0012 + 0.0038 * (fpos >= 0 ? Math.min(1, fpos) : 0.5 + 0.5 * lfo)) * SR;   // 1.2 .. 5 ms: `flange pos` parks it, else the LFO
-                    double rp = v.fp - d;
-                    while (rp < 0) rp += FLN;
-                    int i0 = (int) rp;
-                    double fr = rp - i0;
-                    int i1 = (i0 + 1) % FLN;
-                    double d1 = v.fl1[i0] * (1 - fr) + v.fl1[i1] * fr;
-                    double d2 = v.fl2[i0] * (1 - fr) + v.fl2[i1] * fr;
-                    v.fl1[v.fp] = (float) (sL + d1 * flFb);
-                    v.fl2[v.fp] = (float) (sR + d2 * flFb);
-                    v.fp = (v.fp + 1) % FLN;
-                    sL += d1 * flMix;
-                    sR += d2 * flMix;
-                }
-
-                // phaser: `ph stages` first-order all-passes in series, their turnover
-                // frequency swept 200 Hz .. 3.2 kHz by a slow sine; mixed with the
-                // dry signal the phase cancellations become moving notches. A
-                // little feedback gives the notches a resonant, vocal edge.
-                double phMix = p[lb + 11];
-                if (phMix > 0.005) {
-                    // the sweep position: steered directly by `ph pos` when it is set (a bound signal moves the notches, smoothed
-                    // like every live param); else the LFO — an accumulated angle for live clips so a moving rate glides, the
-                    // closed form for plain timeline clips so old renders stay byte-identical
-                    double pos = p[lb + 14], sw;
-                    if (pos >= 0) sw = Math.min(1, pos);
-                    else if (c.mod != null) { v.phAng += p[lb + 12] / SR; sw = 0.5 + 0.5 * Math.sin(2 * Math.PI * v.phAng); }
-                    else sw = 0.5 + 0.5 * Math.sin(2 * Math.PI * lt * p[lb + 12]);
-                    double fc = 200 * Math.pow(16, sw);
-                    double tn = Math.tan(Math.PI * fc / SR);
-                    double a = (tn - 1) / (tn + 1);
-                    double xL = sL + v.phFbL * 0.45, xR = sR + v.phFbR * 0.45;
-                    int stages = (int) Math.max(1, Math.min(PH_MAX, Math.round(p[lb + 13])));
-                    for (int st = 0; st < stages; st++) {
-                        double yL = a * xL + v.apx[st] - a * v.apy[st];
-                        v.apx[st] = xL; v.apy[st] = yL; xL = yL;
-                        int s2 = st + PH_MAX;
-                        double yR = a * xR + v.apx[s2] - a * v.apy[s2];
-                        v.apx[s2] = xR; v.apy[s2] = yR; xR = yR;
-                    }
-                    v.phFbL = xL; v.phFbR = xR;
-                    sL = (sL + phMix * xL) / (1 + 0.5 * phMix);
-                    sR = (sR + phMix * xR) / (1 + 0.5 * phMix);
-                }
-
-                // Per-clip state-variable filter, cutoff swept over the clip.
-                // Runs at TWO half-steps per sample: the plain Chamberlin SVF
-                // goes unstable above ~6 kHz at low resonance (fS² + 2·fS·q1
-                // must stay < 4) and sprays Nyquist junk; half-stepping doubles
-                // the stable range past our 10 kHz max. The tanh on the band
-                // state still bounds high-Q settings.
-                double u = Math.max(0, Math.min(1, p[P_CUT] + ku + p[P_CSWP] * prog + lfo * p[lb + 2]));
-                double fc = 40 * Math.pow(250, u);   // 40 Hz .. 10 kHz
-                double fS = 2 * Math.sin(Math.PI * fc / (2 * SR));
-                double q1 = 1.0 / (0.5 + 7.5 * p[P_RES]);
-                int mode = (int) Math.round(p[P_MODE]);
-                double hi1 = 0, hi2 = 0;
-                for (int os = 0; os < 2; os++) {
-                    v.lo1 += fS * v.b1;
-                    hi1 = sL - v.lo1 - q1 * v.b1;
-                    v.b1 += fS * hi1; v.b1 = Math.tanh(v.b1 * 0.6) / 0.6;
-                    v.lo2 += fS * v.b2;
-                    hi2 = sR - v.lo2 - q1 * v.b2;
-                    v.b2 += fS * hi2; v.b2 = Math.tanh(v.b2 * 0.6) / 0.6;
-                }
-                sL = mode == 0 ? v.lo1 : mode == 1 ? v.b1 : hi1;
-                sR = mode == 0 ? v.lo2 : mode == 1 ? v.b2 : hi2;
-
-                double pan = Math.max(-1, Math.min(1, p[P_PAN] + p[P_PANSWP] * prog));
-                double gL = pan <= 0 ? 1 : 1 - pan, gR = pan >= 0 ? 1 : 1 + pan;
-                double amp = env * p[P_LEVEL] * (tvol == null ? 1 : tvol[c.track])
-                           * (1 - lfoAmp * 0.5 * (1 - lfo));   // tremolo: depth 1 gates fully
-                int duckFrom = (int) Math.round(p[lb + 10]);
-                if (duckFrom > 0 && p[lb + 9] > 0.005)   // sidechain: full dip once the key track passes -12 dBFS
-                    amp *= 1 - p[lb + 9] * Math.min(1, trackEnv[duckFrom - 1] * 4);
-                sL *= amp * gL; sR *= amp * gR;
-                o[0] = sL; o[1] = sR; o[2] = sL * p[P_ECHO]; o[3] = sR * p[P_ECHO]; o[4] = sL * p[lb + 6]; o[5] = sR * p[lb + 6];
-                return true;
-        }
-
-        /** The shared tail of a sample: sidechain envelopes, the ping-pong delay, the room, the limiter; advances time. */
-        void post(double mixL, double mixR, double sendL, double sendR, double rvInL, double rvInR, double[] out) {
-            // sidechain envelopes: fast up, slow down, ready for the next sample
-            for (int tr = 0; tr < TRACKS; tr++) {
-                double a = trackAbs[tr];
-                trackEnv[tr] += (a - trackEnv[tr]) * (a > trackEnv[tr] ? DK_ATT : DK_REL);
-                trackAbs[tr] = 0;
-            }
-            // shared ping-pong delay; clips feed it via their echo send
-            double dl = dlyL[dpL], dr = dlyR[dpR];
-            dlyL[dpL] = (float) (sendL + dr * 0.5);
-            dlyR[dpR] = (float) (sendR + dl * 0.5);
-            dpL = (dpL + 1) % dlyL.length; dpR = (dpR + 1) % dlyR.length;
-            // shared reverb, fed by the clips' reverb sends
-            double wetL = 0, wetR = 0;
-            for (int i = 0; i < COMB.length; i++) {
-                float[] b = cvL[i]; int cp = cpL[i];
-                double o = b[cp];
-                cfL[i] = o * (1 - RV_DAMP) + cfL[i] * RV_DAMP;
-                b[cp] = (float) (rvInL + cfL[i] * RV_FB);
-                cpL[i] = (cp + 1) % b.length;
-                wetL += o;
-                b = cvR[i]; cp = cpR[i];
-                o = b[cp];
-                cfR[i] = o * (1 - RV_DAMP) + cfR[i] * RV_DAMP;
-                b[cp] = (float) (rvInR + cfR[i] * RV_FB);
-                cpR[i] = (cp + 1) % b.length;
-                wetR += o;
-            }
-            wetL /= COMB.length; wetR /= COMB.length;
-            for (int i = 0; i < ALLP.length; i++) {
-                float[] b = avL[i]; int ap = apL[i];
-                double o = b[ap];
-                b[ap] = (float) (wetL + o * 0.5);
-                apL[i] = (ap + 1) % b.length;
-                wetL = o - wetL * 0.5;
-                b = avR[i]; ap = apR[i];
-                o = b[ap];
-                b[ap] = (float) (wetR + o * 0.5);
-                apR[i] = (ap + 1) % b.length;
-                wetR = o - wetR * 0.5;
-            }
-            inPeak = Math.max(inPeak, Math.max(Math.abs(mixL + dl + wetL * 0.9), Math.abs(mixR + dr + wetR * 0.9)));   // pre-limiter level, for the SAT meter
-            out[0] = Math.tanh((mixL + dl + wetL * 0.9) * 1.1) * 0.85;
-            out[1] = Math.tanh((mixR + dr + wetR * 0.9) * 1.1) * 0.85;
-            t += 1.0 / SR;
-        }
-    }
-
-    static double timelineEnd(List<Clip> cs) {
-        double e = 1;
-        for (Clip c : cs) e = Math.max(e, c.end());
-        return e;
-    }
 
     // =====================================================================
     // Project state
@@ -2611,7 +1134,6 @@ public class SfxLab extends JPanel {
     double keyOff = 0;   // audition transposition in semitones; not saved with the project
     volatile long clipAt;   // last time the master input went over 0 dB (header shows SAT for a second)
     volatile long xrunAt;   // last time the output buffer ran dry (header shows XRUN for a second)
-    static final double ROOT_DEFAULT = 65.4064;   // C2: the crystal's degree I in the mod
     double rootHz = ROOT_DEFAULT;   // key 0 = this note; saved with the project (`root` line)
     long lastEditAt = 0;
     String lastStampName = null;      // last named .sfx stamped or opened; prefills the save dialog
@@ -2623,15 +1145,6 @@ public class SfxLab extends JPanel {
     Snap pendingSnap = null;    // captured on mouse-press, committed on first change
     String lastOpTag = ""; long lastOpAt = 0;
 
-    static Clip copyClip(Clip c) {
-        Clip n = new Clip(c.name, c.type, c.track, c.start, c.dur, c.seed);
-        System.arraycopy(c.p, 0, n.p, 0, c.p.length);
-        n.file = c.file; n.vlink = c.vlink; n.keyed = c.keyed;
-        n.id = c.id; n.on = c.on; n.lmute = c.lmute;
-        if (c.range != null) { n.range = new HashMap<>(); for (var e : c.range.entrySet()) n.range.put(e.getKey(), e.getValue().clone()); }
-        if (c.rnote != null) n.rnote = new HashMap<>(c.rnote);
-        return n;
-    }
     Snap snapshot() {
         Snap s = new Snap();
         s.clips = new ArrayList<>();
@@ -2746,18 +1259,6 @@ public class SfxLab extends JPanel {
         attachVideo(Paths.get(vid[0]), st, false);
     }
 
-    static String clipLine(Clip c) {
-        StringBuilder sb = new StringBuilder(String.format(Locale.ROOT, "clip %s %d %d %.4f %.4f %d",
-                c.name, c.type, c.track, c.start, c.dur, c.seed));
-        for (int i = 0; i < c.p.length; i++)
-            sb.append(String.format(Locale.ROOT, " %s=%.5f", key(c.type, i), c.p[i]));
-        if (c.file != null) sb.append(" file=").append(c.file);
-        if (c.vlink) sb.append(" vlink=1");
-        sb.append(" keyed=").append(c.keyed);
-        if (c.id != null) sb.append(" id=").append(c.id);   // only bench-born clips carry one: old files re-save byte-identical
-        if (c.on != ON_NONE) sb.append(" on=").append(ON_NAMES[c.on]);
-        return sb.append('\n').toString();
-    }
 
     // =====================================================================
     // The bench: a regulator palette (H switches the workbench to it).
@@ -2774,26 +1275,9 @@ public class SfxLab extends JPanel {
     // The timeline parser skips all of these, and old clip lines never carry
     // the new tokens, so both directions stay compatible.
     // =====================================================================
-    static final int ON_NONE = 0, ON_LOCK = 1, ON_UNLOCK = 2;
-    static final int ON_ACCEPT = 3;
-    static final String[] ON_NAMES = {"none", "lock", "unlock", "accept"};   // accept: the crystal took a latched motion (the chime)
-    static final double ENDLESS = 1e9;   // dur of a layer that loops for ever
     static final Path BENCH_FILE = DIR.resolve("bench.sfx");   // the bench autosaves here, like project.sfx
     static final Path REG_DIR = DIR.resolve("regulator");      // regulator/<family>.sfx: the palette, then one `spell <id>` section per spell (its recipe, lock values, binds)
 
-    /** The regulator's signal contract. arm{n}.pitch is derived from arm{n}.ratio
-     *  (12·log2 of the ratio folded into one octave), so it has no slider. tone.* are arm-agnostic: how much reach
-     *  sits on each chord tone of the harmonic series, whichever arm carries it (RegulatorCore.computeSignals). */
-    static final String[] SIGNALS = {"arm1.ratio", "arm2.ratio", "arm3.ratio", "arm1.reach", "arm2.reach", "arm3.reach",
-                                     "radiance", "consonance", "tension", "drive", "coherence", "score",
-                                     "orb.speed", "orb.accel", "orb.curl", "orb.radius", "stir",   // orb.*: the pen's kinematics; stir: anything turning at all
-                                     "tone.root", "tone.third", "tone.fifth", "tone.seventh", "stack", "fit"};   // stack: engaged motions / 6; fit: reach agreement with the pinned recipe
-    static final double[] SIG_MAX = {8, 8, 8, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
-    static final int SIG_SCORE = 11;
-    static final String[] SIGNAL_CHOICES = {"arm1.ratio", "arm1.pitch", "arm1.reach", "arm2.ratio", "arm2.pitch", "arm2.reach",
-                                            "arm3.ratio", "arm3.pitch", "arm3.reach", "radiance", "consonance", "tension", "drive", "coherence", "score",
-                                            "orb.speed", "orb.accel", "orb.curl", "orb.radius", "stir", "tone.root", "tone.third", "tone.fifth", "tone.seventh", "stack", "fit"};
-    static int sigIdx(String name) { for (int i = 0; i < SIGNALS.length; i++) if (SIGNALS[i].equals(name)) return i; return -1; }
 
     /** How the machine derives a signal (RegulatorCore.computeSignals / orbSignals / evalOnce), for the panel's tooltips.
      *  "Engaged" = a motion switched on with some reach and a ratio above idle. */
@@ -2859,192 +1343,8 @@ public class SfxLab extends JPanel {
         };
     }
 
-    static class Bind {
-        String sig, layer, param; double lo, hi; boolean rel;   // lo/hi NaN = auto: the layer's marked range, else the full spec range
-        int steps;      // > 0: the value is quantised to this many steps across lo..hi (a sweep becomes a staircase)
-        String scale;   // a chord name (CHORD_NAMES, spaces as _): the value, in semitones, snaps to that scale's nearest degree
-        boolean mute;   // switched off (kept in the table for A/B comparison); `off` on the line, which older readers ignore
-        Bind(String sig, String layer, String param, double lo, double hi, boolean rel) { this.sig = sig; this.layer = layer; this.param = param; this.lo = lo; this.hi = hi; this.rel = rel; }
-        boolean auto() { return Double.isNaN(lo) || Double.isNaN(hi); }
-        String map() { return steps > 0 ? "steps=" + steps : scale != null ? "scale=" + scale : ""; }
-        /** Sets the mapping from its text form ("steps=5", "scale=penta", or nothing). False if unknown. */
-        boolean setMap(String m) {
-            m = m == null ? "" : m.trim();
-            if (m.isEmpty()) { steps = 0; scale = null; return true; }
-            if (m.startsWith("steps=")) { try { steps = Math.max(0, Integer.parseInt(m.substring(6).trim())); scale = null; return true; } catch (NumberFormatException e) { return false; } }
-            if (m.startsWith("scale=")) { String n = m.substring(6).trim().replace(' ', '_'); if (scaleDegrees(n) == null) return false; scale = n; steps = 0; return true; }
-            return false;
-        }
-        /** The mapping applied to a raw bind value across lo..hi. */
-        double map(double v, double lo, double hi) {
-            if (steps > 0 && hi != lo) v = lo + Math.round((v - lo) / (hi - lo) * steps) / (double) steps * (hi - lo);
-            if (scale != null) {
-                double[] deg = scaleDegrees(scale);
-                if (deg != null) {
-                    double best = v, bd = Double.MAX_VALUE;
-                    for (double d : deg) for (int k = (int) Math.floor((v - d) / 12) - 1; k <= (int) Math.floor((v - d) / 12) + 1; k++) {
-                        double c = d + 12 * k, dist = Math.abs(c - v);
-                        if (dist < bd) { bd = dist; best = c; }
-                    }
-                    v = best;
-                }
-            }
-            return v;
-        }
-        String line() { return "bind " + sig + " " + layer + " " + param + (auto() ? "" : " " + fmtNum5(lo) + " " + fmtNum5(hi)) + (rel ? " rel" : "") + (map().isEmpty() ? "" : " " + map()) + (mute ? " off" : ""); }
-    }
-    /** A chord's pitch classes in semitones (0..12), from its just ratios; null for an unknown name. */
-    static final HashMap<String, double[]> SCALES = new HashMap<>();
-    static double[] scaleDegrees(String name) {
-        synchronized (SCALES) {
-            if (SCALES.containsKey(name)) return SCALES.get(name);
-            double[] out = null;
-            for (int i = 0; i < NCHORD; i++) if (CHORD_NAMES[i].replace(' ', '_').equals(name)) {
-                TreeSet<Long> pcs = new TreeSet<>();
-                for (double r : CHORDS[i]) { double st = 12 * Math.log(r) / Math.log(2); pcs.add(Math.round((((st % 12) + 12) % 12) * 1000)); }
-                out = pcs.stream().mapToDouble(x -> x / 1000.0).toArray();
-            }
-            SCALES.put(name, out);
-            return out;
-        }
-    }
-    static String fmtNum5(double v) {
-        String s = String.format(Locale.ROOT, "%.5f", v);
-        return s.contains(".") ? s.replaceAll("0+$", "").replaceAll("\\.$", "") : s;
-    }
 
-    static class Bench {
-        final ArrayList<Clip> layers = new ArrayList<>();
-        final ArrayList<Bind> binds = new ArrayList<>();
-        final ArrayList<String> notes = new ArrayList<>();
-        final ArrayList<String> comments = new ArrayList<>();   // hand-written `#` lines, kept through every save (the header line excepted)
-        String palette;            // (older signature files) the palette they were authored against; the folder says it now
-        String name;               // spell files: the display name
-        int tier; boolean secret; RegulatorCore.Comp[] comps;   // spell files: the recipe (null when the file has none)
-        double rtol = RegulatorCore.DEFAULT_RTOL;                // spell files: the recipe's reach tolerance
-        double root = ROOT_DEFAULT;
-        Clip byId(String id) { if (id != null) for (Clip c : layers) if (id.equals(c.id)) return c; return null; }
-    }
 
-    static Bench parseBench(List<String> lines) {
-        Bench b = new Bench();
-        for (String line : lines) {
-            String[] t = line.trim().split("\\s+");
-            if (t.length == 0 || t[0].isEmpty()) continue;
-            if (t[0].startsWith("#")) { if (!line.trim().startsWith("# SfxLab ")) b.comments.add(line.trim()); continue; }
-            switch (t[0]) {
-                case "root" -> { if (t.length > 1) b.root = Double.parseDouble(t[1]); }
-                case "palette" -> { if (t.length > 1) b.palette = t[1]; }
-                case "name" -> b.name = line.trim().length() > 5 ? line.trim().substring(5) : null;
-                case "recipe" -> {   // recipe tier=1 [secret=1] [rtol=0.1] X3p1r0.7 Y2p0 ...   (axis, integer ratio, phase in quarters, reach target; @amp is the old spelling of r)
-                    ArrayList<RegulatorCore.Comp> cs = new ArrayList<>();
-                    for (int i = 1; i < t.length; i++) {
-                        if (t[i].startsWith("tier=")) b.tier = Integer.parseInt(t[i].substring(5));
-                        else if (t[i].startsWith("secret=")) b.secret = t[i].endsWith("1");
-                        else if (t[i].startsWith("rtol=")) b.rtol = Double.parseDouble(t[i].substring(5));
-                        else {
-                            java.util.regex.Matcher mm = java.util.regex.Pattern.compile("([XYZxyz])(\\d+)p(\\d)(?:[r@]([0-9.]+))?").matcher(t[i]);
-                            if (mm.matches()) cs.add(new RegulatorCore.Comp("xyz".indexOf(Character.toLowerCase(mm.group(1).charAt(0))), Integer.parseInt(mm.group(2)), Integer.parseInt(mm.group(3)) % 4, mm.group(4) != null ? Math.max(0.05, Math.min(1, Double.parseDouble(mm.group(4)))) : 1));
-                        }
-                    }
-                    if (b.tier < 1 || b.tier > 3) b.tier = 1;
-                    b.comps = cs.toArray(new RegulatorCore.Comp[0]);
-                }
-                case "note" -> b.notes.add(line.trim().length() > 5 ? line.trim().substring(5) : "");
-                case "layer" -> {
-                    if (t.length < 6) continue;
-                    int type = Math.max(0, Math.min(TYPE_NAMES.length - 1, Integer.parseInt(t[3])));
-                    double dur = Double.parseDouble(t[4]);
-                    Clip c = new Clip(t[2], type, 0, 0, dur > 0 ? dur : ENDLESS, Long.parseLong(t[5]));
-                    c.id = t[1];
-                    parseTokens(c, t, 6);
-                    if (c.on == ON_NONE) c.dur = ENDLESS;
-                    b.layers.add(c);
-                }
-                case "range" -> {
-                    if (t.length < 5) continue;
-                    Clip c = b.byId(t[1]);
-                    if (c == null) continue;
-                    int pi = idxOf(c.type, t[2]);
-                    if (pi < 0) continue;
-                    if (c.range == null) c.range = new HashMap<>();
-                    c.range.put(pi, new double[]{Double.parseDouble(t[3]), Double.parseDouble(t[4])});
-                    if (t.length > 5) { if (c.rnote == null) c.rnote = new HashMap<>(); c.rnote.put(pi, String.join(" ", Arrays.copyOfRange(t, 5, t.length))); }
-                }
-                case "bind" -> {   // bind signal id|* param [lo hi] [rel] [steps=N | scale=name]
-                    if (t.length < 4) continue;
-                    Bind bd = new Bind(t[1], t[2], t[3], Double.NaN, Double.NaN, false);
-                    int nums = 0;
-                    for (int i = 4; i < t.length; i++) {
-                        if (t[i].equals("rel")) bd.rel = true;
-                        else if (t[i].equals("off")) bd.mute = true;
-                        else if (t[i].contains("=")) bd.setMap(t[i]);
-                        else { try { double v = Double.parseDouble(t[i]); if (nums == 0) bd.lo = v; else if (nums == 1) bd.hi = v; nums++; } catch (NumberFormatException ignored) {} }
-                    }
-                    if (nums < 2) { bd.lo = Double.NaN; bd.hi = Double.NaN; }
-                    b.binds.add(bd);
-                }
-                default -> {}
-            }
-        }
-        return b;
-    }
-
-    static String benchText(Bench b, double rootHz) { return benchText(b, rootHz, false); }
-    /** A bench's lines; as a `section` (a spell inside a family file) without the header, `bench` and `root` lines. */
-    static String benchText(Bench b, double rootHz, boolean section) {
-        StringBuilder sb = new StringBuilder();
-        if (!section) {
-            sb.append("# SfxLab family v2: layer id name type dur seed key=value... (dur 0 = endless) · range id param lo hi [note] · bind signal id|* param [lo hi] [rel] [steps=N | scale=<chord>] · note text · then `spell <id>` sections: name, recipe, the spell's layers at their lock values, its binds and notes\n");
-            sb.append("bench 1\n");
-            sb.append(String.format(Locale.ROOT, "root %.4f%n", rootHz));
-        }
-        for (String c : b.comments) sb.append(c).append('\n');
-        if (b.name != null) sb.append("name ").append(b.name).append('\n');
-        if (b.comps != null) sb.append(recipeLine(b)).append('\n');
-        for (Clip c : b.layers) sb.append(layerLine(c));
-        for (Clip c : b.layers)
-            if (c.range != null)
-                for (int pi : new TreeSet<>(c.range.keySet())) {
-                    double[] r = c.range.get(pi);
-                    sb.append("range ").append(c.id).append(' ').append(key(c.type, pi)).append(' ').append(fmtNum5(r[0])).append(' ').append(fmtNum5(r[1]));
-                    String nt = c.rnote != null ? c.rnote.get(pi) : null;
-                    if (nt != null && !nt.isBlank()) sb.append(' ').append(nt.trim());
-                    sb.append('\n');
-                }
-        for (Bind bd : b.binds) sb.append(bd.line()).append('\n');
-        for (String n : b.notes) sb.append("note ").append(n).append('\n');
-        return sb.toString();
-    }
-    /** A family file: the palette, then each spell as a `spell <id>` section (name, recipe, layers, binds, notes). */
-    record Family(Bench palette, java.util.List<Spell> spells) {}
-    static Family parseFamily(List<String> lines) {
-        Bench pal = null; ArrayList<Spell> sps = new ArrayList<>();
-        ArrayList<String> cur = new ArrayList<>(); String id = null;
-        for (int i = 0; i <= lines.size(); i++) {
-            String line = i < lines.size() ? lines.get(i) : null, t = line != null ? line.trim() : null;
-            if (line == null || t.startsWith("spell ")) {
-                Bench b = parseBench(cur);
-                if (id == null) pal = b; else sps.add(makeSpell(id, b));
-                cur = new ArrayList<>();
-                if (line != null) id = t.substring(6).trim();
-            } else cur.add(line);
-        }
-        return new Family(pal, sps);
-    }
-    static Spell makeSpell(String id, Bench b) {
-        Spell sp = new Spell();
-        sp.id = id; sp.bench = b;
-        if (b.name == null) b.name = id.replace('_', ' ');
-        sp.name = b.name;
-        if (b.comps != null && b.comps.length > 0) { sp.recipe = new RegulatorCore.Recipe(id, sp.name, b.tier, "", b.secret, b.comps); sp.recipe.rtol = b.rtol; }
-        return sp;
-    }
-    static String familyText(Bench pal, java.util.List<Spell> sps, double rootHz) {
-        StringBuilder sb = new StringBuilder(benchText(pal, rootHz, false));
-        for (Spell sp : sps) sb.append("\nspell ").append(sp.id).append('\n').append(benchText(sp.bench, rootHz, true));
-        return sb.toString();
-    }
     /** One-time: a family kept the old way, regulator/<f>/<f>.sfx plus spells/*.sfx, becomes the single regulator/<f>.sfx
      *  (the old files go once the new one re-reads with the same spells and layers). */
     static void migrateFamilies() {
@@ -3063,7 +1363,7 @@ public class SfxLab extends JPanel {
                             used.add(p);
                         }
                     }
-                    String text = familyText(b, sps, b.root);
+                    String text = SfxFormat.familyText(b, sps, b.root);
                     Family chk = parseFamily(Arrays.asList(text.split("\n")));
                     if (chk.spells().size() != sps.size() || chk.palette().layers.size() != b.layers.size()) throw new IOException("re-read mismatch");
                     for (int i = 0; i < sps.size(); i++) if (chk.spells().get(i).bench.layers.size() != sps.get(i).bench.layers.size()) throw new IOException("re-read mismatch in spell " + sps.get(i).id);
@@ -3075,37 +1375,13 @@ public class SfxLab extends JPanel {
             }
         } catch (IOException ignored) {}
     }
-    static String recipeLine(Bench b) {
-        StringBuilder sb = new StringBuilder("recipe tier=" + b.tier + (b.secret ? " secret=1" : "") + (b.rtol != RegulatorCore.DEFAULT_RTOL ? " rtol=" + fmtNum5(b.rtol) : ""));
-        for (RegulatorCore.Comp c : b.comps) sb.append(' ').append("XYZ".charAt(c.axis())).append(c.n()).append('p').append(c.phase()).append(c.amp() != 1 ? "r" + fmtNum5(c.amp()) : "");
-        return sb.toString();
-    }
-    static String layerLine(Clip c) {
-        StringBuilder sb = new StringBuilder(String.format(Locale.ROOT, "layer %s %s %d %.4f %d", c.id, c.name, c.type, c.on == ON_NONE ? 0 : c.dur, c.seed));
-        for (int i = 0; i < c.p.length; i++) sb.append(String.format(Locale.ROOT, " %s=%.5f", key(c.type, i), c.p[i]));
-        if (c.file != null) sb.append(" file=").append(c.file);
-        sb.append(" keyed=").append(c.keyed);
-        if (c.on != ON_NONE) sb.append(" on=").append(ON_NAMES[c.on]);
-        if (c.lmute) sb.append(" mute=1");
-        return sb.append('\n').toString();
-    }
 
     // ---- bench state (UI writes, audio reads)
-    final Bench bench = new Bench();
     boolean benchOn;                        // the workbench shows the bench instead of the timeline (H); remembered in lab.cfg
     String benchName;                       // workspace-relative file the bench was opened from / stamped to
     volatile boolean benchPlaying;
-    volatile Clip benchSolo;
-    volatile Spell benchSoloSpell;   // set when the soloed layer is a spell's: it plays alone at its target values
-    final double[] sigVal = new double[SIGNALS.length];
-    /** A spell of the loaded family: its signature (a bench file) and, when the file carries one, its recipe. */
-    static class Spell { String id, name; RegulatorCore.Recipe recipe; Bench bench; volatile double w; }
     volatile String family;                                  // the loaded family (regulator/<family>.sfx), remembered in lab.cfg
-    volatile java.util.List<Spell> spells = new ArrayList<>();
     int familyGen;                                           // bumped when the family or its spells change (the panel and machine rebuild)
-    final java.util.concurrent.ConcurrentHashMap<String, Double> spellScore = new java.util.concurrent.ConcurrentHashMap<>();   // score.<id>: each spell's own match
-    final java.util.concurrent.ConcurrentLinkedQueue<Clip> fireQ = new java.util.concurrent.ConcurrentLinkedQueue<>();
-    final ArrayList<Clip> transients = new ArrayList<>();   // one-shots in flight (audio thread only)
     boolean benchDirty;
     int benchScroll, benchGen;              // benchGen: bumped on structural changes so the panel knows to rebuild its lists
     /** A bench undo snapshot: the family text (palette and spells: spell layers are edited in the same view) and which family. */
@@ -3121,179 +1397,58 @@ public class SfxLab extends JPanel {
     java.util.List<BenchRow> benchRows() {
         ArrayList<BenchRow> out = new ArrayList<>();
         for (Clip c : bench.layers) out.add(new BenchRow(ROW_LAYER, c, null));
-        for (Spell sp : spells) {
+        for (Spell sp : mix.spells) {
             out.add(new BenchRow(ROW_SPELL, null, sp));
             if (!collapsed.contains(sp.id)) for (Clip c : sp.bench.layers) out.add(new BenchRow(ROW_SPELL_LAYER, c, sp));
         }
         return out;
     }
     BenchSnap benchSnap() { BenchSnap b = new BenchSnap(); b.family = family; b.text = familyText(); return b; }
-    String familyText() { return familyText(bench, spells, rootHz); }
+    String familyText() { return SfxFormat.familyText(bench, mix.spells, rootHz); }
     /** A spell changed: the family autosaves (spells live in its file). */
     void markSpellDirty(Spell sp) { benchDirty = true; benchGen++; lastEditAt = System.currentTimeMillis(); }
     BenchPanel bpanel; boolean bpanelOn;    // the docked regulator panel (J); remembered in lab.cfg
     String panelFold = "";                  // the panel's folded sections ("signals", "spells"), remembered in lab.cfg
-    volatile boolean sigDriven;             // the machine (open, powered, driving) is writing the signals: the panel's sliders follow, not lead, and a solo hears the binds
     double[] sigHold; HashMap<String, Double> scoreHold;   // the panel's own values from before the machine took the signals over
     /** The machine takes the signals and spell scores (its core writes them every frame while it drives) or gives them
      *  back: the panel's values from before it took over return, so nothing the machine last wrote keeps blending the
      *  layers behind the panel's sliders once drive is unticked or the window is closed. */
     void setSigDriven(boolean on) {
-        if (on == sigDriven) return;
+        if (on == mix.driven) return;
         if (on) { sigHold = sigVal.clone(); scoreHold = new HashMap<>(spellScore); }
         else {
             if (sigHold != null) System.arraycopy(sigHold, 0, sigVal, 0, sigVal.length);
             if (scoreHold != null) { spellScore.keySet().retainAll(scoreHold.keySet()); spellScore.putAll(scoreHold); }
             sigHold = null; scoreHold = null;
         }
-        sigDriven = on; benchGen++;
+        mix.driven = on; benchGen++;
         if (bpanel != null) bpanel.pull();
     }
-    volatile boolean bindsOn = true;        // panel toggle: off = hear every layer at its saved params (auditioning)
-    final java.util.Set<String> mutedSigs = java.util.concurrent.ConcurrentHashMap.newKeySet();   // signals switched off in the panel (session only): their binds hold still, for A/B while playing
-    /** Whether a bind moves anything right now: not switched off itself, and its signal not muted in the panel. */
-    boolean bindLive(Bind b) { return !b.mute && !mutedSigs.contains(b.sig); }
-
-    double signal(String name) {
-        int i = sigIdx(name);
-        if (i >= 0) return sigVal[i];
-        if (name.startsWith("score.")) return spellScore.getOrDefault(name.substring(6), 0.0);
-        if (name.endsWith(".pitch")) {
-            int a = sigIdx(name.substring(0, name.length() - 6) + ".ratio");
-            if (a < 0) return 0;
-            double r = sigVal[a];
-            if (r <= 0.05) return 0;
-            double st = 12 * Math.log(r) / Math.log(2);
-            return ((st % 12) + 12) % 12;
-        }
-        return 0;
-    }
-    double signalMax(String name) { int i = sigIdx(name); return i >= 0 ? SIG_MAX[i] : name.endsWith(".pitch") ? 12 : 1; }
-    double signalNorm(String name) { return Math.max(0, Math.min(1, signal(name) / signalMax(name))); }
+    // ---- the live mix (sfxlab.runtime.BenchMixer: signals, binds, the spell blend, fired one-shots); the mod runs the same class
+    final BenchMixer mix = new BenchMixer(lock);
+    final Bench bench = mix.bench;
+    final double[] sigVal = mix.sigVal;
+    final java.util.concurrent.ConcurrentHashMap<String, Double> spellScore = mix.spellScore;
+    final java.util.Set<String> mutedSigs = mix.mutedSigs;
+    final java.util.concurrent.ConcurrentLinkedQueue<Clip> fireQ = mix.fireQ;
+    final ArrayList<Clip> transients = mix.transients;
+    boolean bindLive(Bind b) { return mix.bindLive(b); }
+    double signal(String name) { return mix.signal(name); }
+    double signalMax(String name) { return mix.signalMax(name); }
+    double signalNorm(String name) { return mix.signalNorm(name); }
     /** The bindable signal names: the contract plus one score per spell of the family. */
     java.util.List<String> signalChoices() {
         ArrayList<String> out = new ArrayList<>(Arrays.asList(SIGNAL_CHOICES));
-        for (Spell sp : spells) out.add("score." + sp.id);
+        for (Spell sp : mix.spells) out.add("score." + sp.id);
         return out;
     }
-    static double smoothstep(double a, double b, double x) { double u = Math.max(0, Math.min(1, (x - a) / (b - a))); return u * u * (3 - 2 * u); }
-    /** How far the signature has blended in: 0 below score 0.55, 1 at 1. */
-    double blendW() { return bindsOn ? smoothstep(0.55, 1.0, sigVal[SIG_SCORE]) : 0; }
-
-    /** Audio thread, once per block: the clips that sound now, with each
-     *  layer's modulation target computed from the signals, the binds and the
-     *  signature. Bound params are absolute targets (the modulation is the
-     *  difference from the saved value) unless the bind is `rel`; the blend
-     *  then moves everything toward the signature's values by w. */
-    /** A clip's live modulation array, zeroed and ready to fill. */
-    static double[] modOf(Clip c) {
-        double[] m = c.mod;
-        if (m == null || m.length != c.p.length) m = new double[c.p.length]; else Arrays.fill(m, 0);
-        return m;
-    }
-    void benchLive(double now, List<Clip> out) {
-        // every spell's signature blends in by its weight (its own score through smoothstep(0.55, 1) unless the spell
-        // binds `spell blend` to something else); when the weights add past 1 they share
-        java.util.List<Spell> sps = spells;
-        double sumW = 0;
-        for (Spell sp : sps) { sp.w = spellWeight(sp); sumW += sp.w; }
-        double norm = sumW > 1 ? 1 / sumW : 1;
-        Clip so = benchSolo; Spell soSp = benchSoloSpell;
-        // a solo while the machine drives the signals hears the layer through its binds and the blend, wherever the
-        // machine has them; with the machine off, closed or not driving, a solo is the layer exactly as authored
-        boolean audition = so != null && !sigDriven;
-        // No endless layer ever leaves the mix while it is on the bench: one that isn't heard (muted, not the solo,
-        // a spell's extra at zero weight) stays in `out` with its level driven to 0, so it fades over the engine's
-        // param smoother instead of stopping mid-cycle, and comes back the same way. A silent layer costs nothing.
-        if (so != null && soSp != null) {   // a spell's layer alone, at its target values, with that spell's own binds
-            double[] m = modOf(so);
-            if (bindsOn && !audition) applyBinds(soSp.bench.binds, so, m);
-            so.mod = m;
-            if (so.on == ON_NONE) out.add(so);
-        }
-        List<Clip> ls; List<Bind> bs;
-        synchronized (lock) { ls = new ArrayList<>(bench.layers); bs = new ArrayList<>(bench.binds); }
-        for (Clip c : ls) {
-            if (c.on != ON_NONE) continue;                      // one-shots only sound when fired
-            double[] m = modOf(c);
-            boolean heard = so != null ? c == so : !c.lmute;
-            if (!heard) { m[P_LEVEL] = -c.p[P_LEVEL]; c.mod = m; out.add(c); continue; }
-            if (bindsOn && !audition) applyBinds(bs, c, m);
-            if (sumW > 0 && !audition) {
-                double wl = 0; double[] acc = null;
-                for (Spell sp : sps) {
-                    if (sp.w <= 0) continue;
-                    Clip s = sp.bench.byId(c.id);
-                    if (s == null || s.type != c.type || s.lmute) continue;   // a spell that omits (or mutes) the layer leaves it at its searching value
-                    double w = sp.w * norm;
-                    if (acc == null) acc = new double[m.length];
-                    wl += w;
-                    double[] sm = spellBindMod(sp, s);   // the spell's own binds move its targets
-                    for (int i = 0; i < m.length; i++) acc[i] += w * (s.p[i] + (sm != null ? sm[i] : 0) - c.p[i]);
-                }
-                if (acc != null) for (int i = 0; i < m.length; i++) m[i] = (1 - wl) * m[i] + acc[i];
-            }
-            c.mod = m;
-            out.add(c);
-        }
-        for (Spell sp : sps)
-            for (Clip s : sp.bench.layers) {   // layers only this spell has fade in with its weight (and out again at 0)
-                if (s.on != ON_NONE || s == so) continue;
-                boolean inPalette = false;
-                for (Clip c : ls) if (s.id != null && s.id.equals(c.id)) { inPalette = true; break; }
-                if (inPalette) continue;
-                double w = so == null && !s.lmute ? sp.w * norm : 0;
-                double[] m = modOf(s);
-                if (w > 0) {
-                    if (bindsOn) applyBinds(sp.bench.binds, s, m);
-                    m[P_LEVEL] = w * (s.p[P_LEVEL] + m[P_LEVEL]) - s.p[P_LEVEL];   // its own binds, then faded in by the blend
-                } else m[P_LEVEL] = -s.p[P_LEVEL];
-                s.mod = m;
-                out.add(s);
-            }
-        for (Clip f; (f = fireQ.poll()) != null; ) { f.start = now; transients.add(f); }
-        transients.removeIf(f -> now >= f.end());
-        out.addAll(transients);
-    }
-
-    /** The reserved layer id and param a spell binds to set its own blend curve. */
-    static final String SPELL_LAYER = "spell", BLEND_PARAM = "blend";
-    /** A spell's blend rule, if its file binds `spell blend`. */
-    Bind blendBind(Spell sp) { for (Bind b : sp.bench.binds) if (SPELL_LAYER.equals(b.layer) && BLEND_PARAM.equals(b.param) && bindLive(b)) return b; return null; }
-    /** How far a spell is blended in: smoothstep over the bound signal's lo..hi (default score.<id> over 0.55..1),
-     *  with the bind's map (steps=1 makes a gate). Nothing while binds are off: that is the audition mode, where every
-     *  layer plays exactly as saved. */
-    double spellWeight(Spell sp) {
-        if (!bindsOn) return 0;
-        Bind b = blendBind(sp);
-        if (b == null) return smoothstep(0.55, 1.0, spellScore.getOrDefault(sp.id, 0.0));
-        double lo = b.auto() ? 0.55 : b.lo, hi = b.auto() ? 1.0 : b.hi;
-        double w = smoothstep(Math.min(lo, hi), Math.max(lo, hi), signal(b.sig));
-        if (lo > hi) w = 1 - w;
-        return Math.max(0, Math.min(1, b.map(w, 0, 1)));
-    }
-    /** Adds a bind list's modulation of clip c into m (absolute binds as the difference from the saved value). */
-    void applyBinds(List<Bind> bs, Clip c, double[] m) {
-        for (Bind b : bs) {
-            if (!(b.layer.equals("*") || b.layer.equals(c.id)) || !bindLive(b)) continue;
-            int pi = idxOf(c.type, b.param);
-            if (pi < 0) continue;
-            m[pi] += bindTerm(b, c, pi);
-        }
-    }
-    /** A bind's lo..hi on a layer: as written, or for auto the marked range, else the spec range (rel: 0 .. the spec's width). */
-    double[] bindRange(Bind b, Clip c, int pi) {
-        if (!b.auto()) return new double[]{b.lo, b.hi};
-        double[] r = c.range != null ? c.range.get(pi) : null;
-        PSpec s = spec(c.type, pi);
-        return new double[]{r != null ? r[0] : b.rel ? 0 : s.min(), r != null ? r[1] : b.rel ? s.max() - s.min() : s.max()};
-    }
-    /** What one bind adds to a param's modulation right now: rel adds its mapped value, absolute the difference from the saved value. */
-    double bindTerm(Bind b, Clip c, int pi) {
-        double[] lh = bindRange(b, c, pi);
-        double v = b.map(lh[0] + (lh[1] - lh[0]) * signalNorm(b.sig), lh[0], lh[1]);
-        return b.rel ? v : v - c.p[pi];
-    }
+    double blendW() { return mix.blendW(); }
+    void benchLive(double now, List<Clip> out) { mix.live(now, out); }
+    Bind blendBind(Spell sp) { return mix.blendBind(sp); }
+    double spellWeight(Spell sp) { return mix.spellWeight(sp); }
+    void applyBinds(List<Bind> bs, Clip c, double[] m) { mix.applyBinds(bs, c, m); }
+    double[] bindRange(Bind b, Clip c, int pi) { return mix.bindRange(b, c, pi); }
+    double bindTerm(Bind b, Clip c, int pi) { return mix.bindTerm(b, c, pi); }
     /** `lo + w·sig` with the zeros dropped, for the bind tooltips. */
     static String bindExpr(double lo, double hi, String sig) {
         String w = fmtNum5(hi - lo);
@@ -3342,26 +1497,20 @@ public class SfxLab extends JPanel {
         sb.append("<br><br><div width=520>" + sigHelp(b.sig) + "</div>");
         return sb.append("</html>").toString();
     }
-    /** A spell's binds applied to one of its layers' targets; null when it has none that touch it. */
-    double[] spellBindMod(Spell sp, Clip s) {
-        if (!bindsOn || sp.bench.binds.isEmpty()) return null;
-        double[] t = new double[s.p.length];
-        applyBinds(sp.bench.binds, s, t);
-        return t;
-    }
+    double[] spellBindMod(Spell sp, Clip s) { return mix.spellBindMod(sp, s); }
     /** Solo a layer: a palette layer with the searching mix's binds, or a spell's layer alone at its target values. */
     void toggleSolo(Clip c, Spell sp) {
-        if (benchSolo == c && benchPlaying) { benchSolo = null; benchSoloSpell = null; toast("solo off"); return; }   // a stopped bench: P plays it again
-        benchSolo = c; benchSoloSpell = sp;
+        if (mix.solo == c && benchPlaying) { mix.solo = null; mix.soloSpell = null; toast("solo off"); return; }   // a stopped bench: P plays it again
+        mix.solo = c; mix.soloSpell = sp;
         if (!benchPlaying) toggleBenchPlay();
         List<Bind> bs; synchronized (lock) { bs = new ArrayList<>(sp != null ? sp.bench.binds : bench.binds); }
-        toast((sp != null ? "spell " + sp.id + " · " : "") + c.id + " solo, " + (sigDriven ? "live through its binds (the machine drives the signals)" : "as authored" + (sp != null ? " for the spell" : ""))
-              + " (P or the S box clears)" + (sigDriven ? bindNote(bs, c) : ""));
+        toast((sp != null ? "spell " + sp.id + " · " : "") + c.id + " solo, " + (mix.driven ? "live through its binds (the machine drives the signals)" : "as authored" + (sp != null ? " for the spell" : ""))
+              + " (P or the S box clears)" + (mix.driven ? bindNote(bs, c) : ""));
     }
     /** Why a soloed layer sounds the way it does: the binds that touch it, each with what its signal holds right now,
      *  and a warning when they pin its level at 0 (a bound level at a signal that sits at 0 is silence, not a bug). */
     String bindNote(List<Bind> bs, Clip c) {
-        if (!bindsOn) return "";
+        if (!mix.bindsOn) return "";
         StringBuilder sb = new StringBuilder();
         for (Bind b : bs) {
             if (!(b.layer.equals("*") || b.layer.equals(c.id)) || idxOf(c.type, b.param) < 0) continue;
@@ -3374,7 +1523,7 @@ public class SfxLab extends JPanel {
         return sb.toString();
     }
     /** ENTER / the machine's Cut power: the bench stops and rewinds and the solo is dropped, so the next P means "hear this one". */
-    void stopBench() { benchPlaying = false; seekTo = 0; benchSolo = null; benchSoloSpell = null; }
+    void stopBench() { benchPlaying = false; seekTo = 0; mix.solo = null; mix.soloSpell = null; }
     /** Fires a one-shot layer: a copy, so a layer can overlap itself. Your own fires (P, the panel's buttons) wake a
      *  stopped bench where it stands, no rewind. Returns false when the shot was dropped instead. */
     boolean fire(Clip c) { return fire(c, true); }
@@ -3382,10 +1531,7 @@ public class SfxLab extends JPanel {
      *  never restarts playback behind your back, and no shots pile up to fire the next time you press SPACE. */
     boolean fire(Clip c, boolean wake) {
         if (!benchPlaying) { if (!wake) return false; benchPlaying = true; }
-        Clip f = copyClip(c);
-        f.id = null; f.on = ON_NONE; f.lmute = false; f.range = null; f.rnote = null;
-        if (f.dur >= ENDLESS / 2) f.dur = naturalDur(c);
-        fireQ.add(f);
+        mix.fire(c);
         return true;
     }
     /** The lock / unlock event: every one-shot layer marked for it fires (the bench's own and the picked signature's). */
@@ -3403,7 +1549,7 @@ public class SfxLab extends JPanel {
     int fireSpell(String id, int on) { return fireSpell(id, on, true); }
     int fireSpell(String id, int on, boolean wake) {
         int n = 0;
-        for (Spell sp : spells) if (sp.id.equals(id)) for (Clip c : sp.bench.layers) if (c.on == on && fire(c, wake)) n++;
+        for (Spell sp : mix.spells) if (sp.id.equals(id)) for (Clip c : sp.bench.layers) if (c.on == on && fire(c, wake)) n++;
         return n;
     }
 
@@ -3435,23 +1581,23 @@ public class SfxLab extends JPanel {
             sel = null; selSpell = null;
             setSpells(fm.spells());
             benchName = relPath(f); benchDirty = false;
-            toast("opened " + relPath(f) + " (" + bench.layers.size() + " layers, " + bench.binds.size() + " binds, " + spells.size() + " spell" + (spells.size() == 1 ? "" : "s") + ") — it autosaves as you work");
+            toast("opened " + relPath(f) + " (" + bench.layers.size() + " layers, " + bench.binds.size() + " binds, " + mix.spells.size() + " spell" + (mix.spells.size() == 1 ? "" : "s") + ") — it autosaves as you work");
         } catch (Exception e) { toast("family " + name + " failed: " + e); }
         saveCfg();
     }
     void setSpells(java.util.List<Spell> out) {
-        spells = out;
-        if (benchSoloSpell != null) { benchSolo = null; benchSoloSpell = null; }
+        mix.spells = out;
+        if (mix.soloSpell != null) { mix.solo = null; mix.soloSpell = null; }
         spellScore.keySet().removeIf(k -> out.stream().noneMatch(sp -> sp.id.equals(k)));
         familyGen++; benchGen++;
     }
     /** The family's recipes for the machine (spells with a recipe line); the prototype's roster when there are none. */
     RegulatorCore.Recipe[] familyRecipes() {
         ArrayList<RegulatorCore.Recipe> out = new ArrayList<>();
-        for (Spell sp : spells) if (sp.recipe != null) out.add(sp.recipe);
+        for (Spell sp : mix.spells) if (sp.recipe != null) out.add(sp.recipe);
         return out.isEmpty() ? RegulatorCore.DEFAULT_RECIPES : out.toArray(new RegulatorCore.Recipe[0]);
     }
-    Spell spell(String id) { for (Spell sp : spells) if (sp.id.equals(id)) return sp; return null; }
+    Spell spell(String id) { for (Spell sp : mix.spells) if (sp.id.equals(id)) return sp; return null; }
     /** The recipe's text form without the keyword: "tier=1 [secret=1] X3p1 Y2p0@0.35 ...". */
     static String recipeText(Bench b) { return b.comps == null ? "" : recipeLine(b).substring(7); }
     /** Why a recipe cannot be built at its tier (null when it can): a tier gives arms × motions per arm, each
@@ -3523,19 +1669,10 @@ public class SfxLab extends JPanel {
         pushUndo("");
         synchronized (lock) { bench.layers.remove(c); }
         if (sel == c) sel = null;
-        if (benchSolo == c) benchSolo = null;
+        if (mix.solo == c) mix.solo = null;
         benchGen++; markEdit();
     }
     /** How long a layer plays once: the recording's length at its rate, else 1.5 s. */
-    double naturalDur(Clip c) {
-        if (sampled(c)) {
-            float[][] s = sample(c.file);
-            double rate = c.p[speedIdx(c.type)] * (keepLen(c) ? 1 : Math.pow(2, c.p[P_PITCH] / 12.0));
-            if (rate < 0.01) rate = 1;
-            return Math.max(0.05, s[0].length / (double) SR / rate);
-        }
-        return 1.5;
-    }
     void setLayerOn(Clip c, int on) {
         pushUndo("");
         c.on = on;
@@ -3567,7 +1704,7 @@ public class SfxLab extends JPanel {
         ArrayList<Spell> followed = new ArrayList<>();
         synchronized (lock) {
             c.file = f; c.name = name; c.pa = null; c.paFloor = Long.MIN_VALUE; c.paRetry = 0;
-            for (Spell sp : spells) {
+            for (Spell sp : mix.spells) {
                 Clip sc = sp.bench.byId(c.id);
                 if (sc == null || sc == c || sc.type != c.type || !Objects.equals(sc.file, old)) continue;
                 sc.file = f; sc.name = name; sc.pa = null; sc.paFloor = Long.MIN_VALUE; sc.paRetry = 0;
@@ -3610,7 +1747,7 @@ public class SfxLab extends JPanel {
     }
     void removeBind(Bind b) {
         pushUndo("");
-        synchronized (lock) { if (!bench.binds.remove(b)) for (Spell sp : spells) if (sp.bench.binds.remove(b)) markSpellDirty(sp); }
+        synchronized (lock) { if (!bench.binds.remove(b)) for (Spell sp : mix.spells) if (sp.bench.binds.remove(b)) markSpellDirty(sp); }
         benchGen++; markEdit();
     }
     /** The binds on a param: the palette's for a palette layer, the spell's for a spell's layer. */
@@ -3676,7 +1813,7 @@ public class SfxLab extends JPanel {
         bench.comments.clear(); bench.comments.addAll(b.comments);
         bench.palette = b.palette;
         bench.name = null; bench.comps = null;   // the palette carries no recipe: spells do
-        benchSolo = null; benchSoloSpell = null; benchScroll = 0; benchGen++;
+        mix.solo = null; mix.soloSpell = null; benchScroll = 0; benchGen++;
     }
     String relPath(Path f) {
         try { return DIR.relativize(f.toAbsolutePath().normalize()).toString().replace('\\', '/'); }
@@ -3695,7 +1832,7 @@ public class SfxLab extends JPanel {
             setSpells(fm.spells());
             benchName = f.equals(BENCH_FILE) ? null : relPath(f);
             markEdit(); saveCfg();
-            toast("opened " + f.getFileName() + " as a scratch bench (" + bench.layers.size() + " layers, " + bench.binds.size() + " binds" + (spells.isEmpty() ? "" : ", " + spells.size() + " spells") + ") — S saves it as a family");
+            toast("opened " + f.getFileName() + " as a scratch bench (" + bench.layers.size() + " layers, " + bench.binds.size() + " binds" + (mix.spells.isEmpty() ? "" : ", " + mix.spells.size() + " spells") + ") — S saves it as a family");
         } catch (Exception e) { toast("open failed: " + e); }
     }
     void openBench() {
@@ -3749,7 +1886,7 @@ public class SfxLab extends JPanel {
         if (r != null) { b.comps = r.comps; b.tier = r.tier; b.secret = r.secret; b.rtol = r.rtol; }
         if (allC.isSelected()) for (Clip c : bench.layers) { Clip n = copyClip(c); n.lmute = false; n.range = null; n.rnote = null; b.layers.add(n); }
         Spell sp = makeSpell(id, b);
-        ArrayList<Spell> out = new ArrayList<>(spells); out.add(sp); setSpells(out);
+        ArrayList<Spell> out = new ArrayList<>(mix.spells); out.add(sp); setSpells(out);
         markSpellDirty(sp);
         String prob = recipeProblem(b);
         toast("spell " + id + " added to " + family
@@ -3759,7 +1896,7 @@ public class SfxLab extends JPanel {
     void deleteSpell(Spell sp) {
         if (JOptionPane.showConfirmDialog(this, "Delete spell " + sp.id + " from " + family + "? (ctrl+Z undoes)", "Delete spell", JOptionPane.OK_CANCEL_OPTION) != JOptionPane.OK_OPTION) return;
         pushUndo("");
-        ArrayList<Spell> out = new ArrayList<>(spells); out.remove(sp); setSpells(out);
+        ArrayList<Spell> out = new ArrayList<>(mix.spells); out.remove(sp); setSpells(out);
         if (selSpell == sp) { sel = null; selSpell = null; }
         collapsed.remove(sp.id);
         markSpellDirty(sp);
@@ -3825,7 +1962,7 @@ public class SfxLab extends JPanel {
 
     void toggleBench() {
         benchOn = !benchOn;
-        playing = false; benchPlaying = false; solo = null; benchSolo = null; sel = null;
+        playing = false; benchPlaying = false; solo = null; mix.solo = null; sel = null;
         dragMode = DR_NONE;
         saveCfg();
         toast(benchOn ? "bench: layers sound together; signals drive them — J opens the regulator panel, H returns to the timeline"
@@ -3857,7 +1994,7 @@ public class SfxLab extends JPanel {
         java.util.List<BenchRow> rows = benchRows();
         g.drawString(String.format(Locale.ROOT, "BENCH  %s   %d layer%s   %s   score %.2f → blend %.0f%%   family %s",
                 benchName != null ? benchName + (benchDirty ? " *" : "") : "(scratch bench)", n, n == 1 ? "" : "s", benchPlaying ? "▶" : "‖",
-                sigVal[SIG_SCORE], 100 * blendW(), family != null ? family + " (" + spells.size() + " spell" + (spells.size() == 1 ? "" : "s") + ", autosaves)" : "none — S saves the bench as one"), tlX() - 40, y0 + 14);
+                sigVal[SIG_SCORE], 100 * blendW(), family != null ? family + " (" + mix.spells.size() + " spell" + (mix.spells.size() == 1 ? "" : "s") + ", autosaves)" : "none — S saves the bench as one"), tlX() - 40, y0 + 14);
         g.setColor(new Color(60, 60, 60));
         g.drawLine(8, y0 + 20, w - 12, y0 + 20);
         g.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
@@ -3889,7 +2026,7 @@ public class SfxLab extends JPanel {
             Clip c = row.clip(); Spell sp = row.spell();
             boolean spellRow = row.kind() == ROW_SPELL_LAYER;
             int x0 = r.x + (spellRow ? 20 : 0);
-            boolean isSel = c == sel, muted = benchSolo != null ? benchSolo != c : c.lmute;
+            boolean isSel = c == sel, muted = mix.solo != null ? mix.solo != c : c.lmute;
             g.setColor(isSel ? new Color(42, 42, 42) : spellRow ? (i % 2 == 0 ? new Color(20, 18, 14) : new Color(26, 23, 18)) : i % 2 == 0 ? new Color(16, 16, 16) : new Color(23, 23, 23));
             g.fillRect(r.x, r.y, r.width, r.height);
             // mute box (and solo, palette rows only)
@@ -3898,7 +2035,7 @@ public class SfxLab extends JPanel {
             g.setColor(c.lmute ? Color.WHITE : Color.GRAY);
             g.drawString("M", x0 + 7, r.y + 17);
             {
-                boolean so = benchSolo == c;
+                boolean so = mix.solo == c;
                 g.setColor(so ? new Color(90, 200, 160) : new Color(60, 60, 60));
                 if (so) g.fillRect(x0 + 24, r.y + 5, 14, 14); else g.drawRect(x0 + 24, r.y + 5, 14, 14);
                 g.setColor(so ? Color.BLACK : Color.GRAY);
@@ -4015,7 +2152,7 @@ public class SfxLab extends JPanel {
         pushUndo("");
         sp.bench.layers.remove(c);
         if (sel == c) { sel = null; selSpell = null; }
-        if (benchSolo == c) { benchSolo = null; benchSoloSpell = null; }
+        if (mix.solo == c) { mix.solo = null; mix.soloSpell = null; }
         markSpellDirty(sp);
     }
     void setLevel(int mx) {
@@ -4063,9 +2200,9 @@ public class SfxLab extends JPanel {
                 toast("pick a recording for " + c.id + " in the browser: dbl-click / ENTER swaps it in, keeping the id, values and binds (ESC cancels)");
             }));
         }
-        if (!spells.isEmpty()) {
+        if (!mix.spells.isEmpty()) {
             JMenu add = new JMenu("add to a spell at these values");
-            for (Spell sp : spells) add.add(item(sp.id + (sp.bench.byId(c.id) != null ? "  (replace)" : ""), () -> addLayerToSpell(c, sp)));
+            for (Spell sp : mix.spells) add.add(item(sp.id + (sp.bench.byId(c.id) != null ? "  (replace)" : ""), () -> addLayerToSpell(c, sp)));
             m.add(add);
         }
         m.add(item("remove  (DEL)", () -> removeLayer(c)));
@@ -4145,7 +2282,7 @@ public class SfxLab extends JPanel {
         final JToggleButton autoB = new JToggleButton("▶ auto-play"), pauseB = new JToggleButton("pause");
         final JSlider speedS = new JSlider(5, 40, 10);
         final JCheckBox mistakesB = new JCheckBox("mistakes", true), anyB = new JCheckBox("any spell", false);
-        final JCheckBox classicB = new JCheckBox("classic crank", false), couplingB = new JCheckBox("coupled levers", true), wellsB = new JCheckBox("brake & wells", false);
+        final JCheckBox classicB = new JCheckBox("classic crank", false), couplingB = new JCheckBox("coupled levers", true), wellsB = new JCheckBox("brake & wells", true);
         final JButton brakeB = new JButton("brake");
         final JSlider snapS = new JSlider(2, 30, 10);
         final JLabel snapL = new JLabel();
@@ -5032,7 +3169,7 @@ public class SfxLab extends JPanel {
             sigRow.add(famBox);
             JButton lockB = new JButton("bench lock"), unlockB = new JButton("bench unlock"), rescanB = new JButton("↻");
             bindsB.setToolTipText("off: every layer plays its saved params — no signal moves anything and no spell blends in — for auditioning a layer on its own");
-            bindsB.addActionListener(e -> { lab.bindsOn = bindsB.isSelected(); lab.toast(lab.bindsOn ? "binds on: signals move bound params, spells blend in by their scores" : "binds off: layers play as saved, no blend (solo / mute to audition)"); });
+            bindsB.addActionListener(e -> { lab.mix.bindsOn = bindsB.isSelected(); lab.toast(lab.mix.bindsOn ? "binds on: signals move bound params, spells blend in by their scores" : "binds off: layers play as saved, no blend (solo / mute to audition)"); });
             lockB.setToolTipText("the lock event for the layers on the bench: score → 1, fires their on=lock one-shots (each spell has its own buttons below)");
             unlockB.setToolTipText("the unlock event for the layers on the bench: fires their on=unlock one-shots");
             lockB.addActionListener(e -> lab.fireEvent(ON_LOCK));
@@ -5128,7 +3265,7 @@ public class SfxLab extends JPanel {
                     Spell sp = (Spell) r[0];
                     ((JLabel) r[2]).setText(String.format(Locale.ROOT, "%.2f  blend %.0f%%", lab.spellScore.getOrDefault(sp.id, 0.0), 100 * sp.w));
                 }
-                boolean drv = lab.sigDriven;
+                boolean drv = lab.mix.driven;
                 if (sl[0].isEnabled() == drv) {
                     for (JSlider s : sl) s.setEnabled(!drv);
                     for (Object[] r : spellRows) ((JSlider) r[1]).setEnabled(!drv);
@@ -5168,14 +3305,14 @@ public class SfxLab extends JPanel {
             gc.insets = new Insets(1, 4, 1, 4); gc.anchor = GridBagConstraints.WEST; gc.fill = GridBagConstraints.HORIZONTAL;
             Font mono = new Font(Font.MONOSPACED, Font.PLAIN, 12);
             int row = 0;
-            for (Spell sp : lab.spells) {
+            for (Spell sp : lab.mix.spells) {
                 // row 1: score.<id>  [slider]  value · row 2: what it is, and its buttons
                 gc.gridy = row++; gc.gridwidth = 1;
                 gc.gridx = 0; gc.weightx = 0;
                 spellsP.add(sigLabel("score." + sp.id, mono), gc);
                 gc.gridx = 1; gc.weightx = 1;
                 JSlider s = new JSlider(0, 1000, (int) Math.round(lab.spellScore.getOrDefault(sp.id, 0.0) * 1000));
-                s.setEnabled(!lab.sigDriven);
+                s.setEnabled(!lab.mix.driven);
                 s.setToolTipText("<html><div width=520>" + sigHelp("score." + sp.id) + "</div></html>"); holdTip(s);
                 s.addChangeListener(e -> { if (!refreshing) lab.spellScore.put(sp.id, s.getValue() / 1000.0); });
                 spellsP.add(s, gc);
@@ -5198,12 +3335,12 @@ public class SfxLab extends JPanel {
                 spellsP.add(under, gc);
                 spellRows.add(new Object[]{sp, s, v});
             }
-            if (lab.spells.isEmpty()) { gc.gridy = 0; gc.gridx = 0; gc.gridwidth = 3; JLabel l = new JLabel(lab.family == null ? "no family loaded — pick one above, or S saves the bench as a new one" : "no spells in " + lab.family + " yet — the new spell button adds one"); l.setForeground(Color.GRAY); spellsP.add(l, gc); }
+            if (lab.mix.spells.isEmpty()) { gc.gridy = 0; gc.gridx = 0; gc.gridwidth = 3; JLabel l = new JLabel(lab.family == null ? "no family loaded — pick one above, or S saves the bench as a new one" : "no spells in " + lab.family + " yet — the new spell button adds one"); l.setForeground(Color.GRAY); spellsP.add(l, gc); }
             spellsP.revalidate(); spellsP.repaint();
             if (spellBindsBox != null) {
                 bindModels.removeIf(m -> m.sp != null);
                 spellBindsBox.removeAll();
-                for (Spell sp : lab.spells) spellBindsBox.add(bindSection("spell " + sp.id + " binds — its lock mix", sp.bench, sp));
+                for (Spell sp : lab.mix.spells) spellBindsBox.add(bindSection("spell " + sp.id + " binds — its lock mix", sp.bench, sp));
                 bindsBox.invalidate(); bindsBox.revalidate(); bindsBox.repaint();
             }
             refreshing = false;
@@ -5900,53 +4037,7 @@ public class SfxLab extends JPanel {
     }
 
     static List<Clip> parseProject(Path f, boolean[] loopOut, double[] tvolOut, boolean[] muteOut) throws IOException {
-        ArrayList<Clip> out = new ArrayList<>();
-        for (String line : Files.readAllLines(f)) {
-            String[] t = line.trim().split("\\s+");
-            if (t.length == 0 || t[0].isEmpty() || t[0].startsWith("#")) continue;
-            if (t[0].equals("loop")) { if (loopOut != null && t.length > 1) loopOut[0] = t[1].equals("1"); continue; }
-            if (t[0].equals("track") && t.length > 3) {
-                int i = Integer.parseInt(t[1]);
-                if (i >= 0 && i < TRACKS) {
-                    if (tvolOut != null) tvolOut[i] = Double.parseDouble(t[2]);
-                    if (muteOut != null) muteOut[i] = t[3].equals("1");
-                }
-                continue;
-            }
-            if (!t[0].equals("clip") || t.length < 7) continue;
-            int type = Math.max(0, Math.min(TYPE_NAMES.length - 1, Integer.parseInt(t[2])));
-            int track = Math.max(0, Math.min(TRACKS - 1, Integer.parseInt(t[3])));
-            Clip c = new Clip(t[1], type, track,
-                    Double.parseDouble(t[4]), Double.parseDouble(t[5]), Long.parseLong(t[6]));
-            parseTokens(c, t, 7);
-            out.add(c);
-        }
-        return out;
-    }
-
-    /** The key=value tail of a clip or layer line (bare numbers are legacy
-     *  positional params). Unknown keys are skipped, so newer files load in
-     *  older builds. */
-    static void parseTokens(Clip c, String[] t, int from) {
-        int type = c.type;
-        for (int i = from; i < t.length; i++) {
-            int eq = t[i].indexOf('=');
-            String k = eq >= 0 ? t[i].substring(0, eq) : legacyName(type, i - from);
-            if (k == null) continue;
-            String val = eq >= 0 ? t[i].substring(eq + 1) : t[i];
-            switch (k) {
-                case "file" -> c.file = val;
-                case "vlink" -> c.vlink = val.equals("1");
-                case "keyed" -> c.keyed = Integer.parseInt(val) & KEY_BOTH;
-                case "id" -> c.id = val;
-                case "on" -> c.on = val.equals("lock") ? ON_LOCK : val.equals("unlock") ? ON_UNLOCK : val.equals("accept") ? ON_ACCEPT : ON_NONE;
-                case "mute" -> c.lmute = val.equals("1");
-                default -> {
-                    int pi = idxOf(type, k);
-                    if (pi >= 0) c.p[pi] = Double.parseDouble(val);
-                }
-            }
-        }
+        return SfxFormat.parseProject(Files.readAllLines(f), loopOut, tvolOut, muteOut);
     }
 
     /** A small starter arrangement so an empty install makes a sound: a spell impact. */
@@ -6622,7 +4713,7 @@ public class SfxLab extends JPanel {
             }
             java.util.List<Clip> ls = selSpell != null ? selSpell.bench.layers : bench.layers;   // a spell's layer lives in that spell's list
             synchronized (lock) { int at = ls.indexOf(o); if (at >= 0) ls.set(at, c); }
-            if (benchSolo == o) benchSolo = c;
+            if (mix.solo == o) mix.solo = c;
             benchGen++;
         } else synchronized (lock) { clips.set(clips.indexOf(o), c); }
         sel = c;
@@ -7314,608 +5405,5 @@ public class SfxLab extends JPanel {
             if (lab.bpanelOn) { lab.bpanelOn = false; lab.showBenchPanel(true); }
             lab.requestFocusInWindow();
         });
-    }
-}
-
-// =========================================================================
-// RegulatorCore: the Harmonic Regulator's machine, with no Swing and no
-// Minecraft in it. Crank physics, the lever state machine, figure sampling,
-// recipe matching with shape equivalence, the research setpoint / copy
-// socket, and the signal contract (docs/HARMONIC-REGULATOR.md §3–4). Every
-// constant is the web prototype's (docs/regulator-prototype.html), which is
-// the oracle: when a port behaves differently, the prototype is right.
-//
-// The mod copies this class verbatim (it is a plain top-level class; add
-// `public` and a package line). Java 21's single-file launcher is why it
-// lives in this file rather than its own.
-//
-// Use: construct, setTarget(recipe), power(true); feed input (selectArm,
-// axisLever, nudge / drag*, latch, phaseStep, setReach); call tick(dt) each
-// frame; read signals[] (SIGNALS names), eval, targetEval, and drain
-// events(). figurePoint / armVector / blueprint draw the ribbon and the
-// pinned sigil.
-// =========================================================================
-class RegulatorCore {
-    // ---- tuning constants (prototype-exact)
-    static final int ARMS = 3, AXES = 3, MAX_N = 8;
-    static final double MAX_VEL = 4;            // crank rev/s; ratio = 2·|vel|, so ratio 8 at most
-    static final double CATCH_W = 0.16;         // catch half-width at integer n is CATCH_W / n
-    static final double REST_R = 0.12;          // below this ratio the crank settles to rest
-    static final double CATCH_RATE = 7, REST_RATE = 9, FRICTION = 0.09;
-    static final double BRAKE = 0.16;           // extra linear brake below ratio 1, in vel units (0.32 ratio/s)
-    static final double SLIP_NUDGE = 0.5, SLIP_DRAG = 0.15, DRAG_SMOOTH = 0.35;
-    static final double NUDGE_WHEEL = 0.05, NUDGE_FINE = 0.01, NUDGE_BUTTON = 0.125;   // vel steps: ratio ±0.1, ±0.02, ±0.25
-    // brake-and-wells model (wells = true), in ratio units, none of it scaling with the ratio: a high resonance is a
-    // harder figure to read, not a heavier crank. No friction: the crank keeps the speed it is left at, a detuned crank
-    // stays detuned and readable. The wheel is the only way up, the brake the only way down.
-    static final double BRAKE_RATE = 0.4;    // ratio/s at a tap; a hold bites harder (BRAKE_BITE × after BRAKE_RAMP s) for a long descent
-    static final double BRAKE_BITE = 4, BRAKE_RAMP = 1.2;
-    static final double WELL_TAU = 0.6;      // s: released inside the acceptance window, the crystal eases the crank onto the integer at this time constant
-    static final double NOTCH_JITTER = 0.3;  // a wheel notch varies by ±30 %: counting notches is no substitute for watching the figure
-    static final double ENGAGE_AMP = 0.04, ENGAGE_R = 0.05;
-    static final double SETPOINT_JITTER = 0.2, SOCKET_JITTER = 0.035;
-    static final double DEFAULT_REACH = 1.0;   // a pulled lever starts at full reach: recipes target 1 unless they say otherwise
-    static final int[][] TIERS = {{2, 1}, {3, 2}, {3, 3}};   // tier 1..3 -> {arms, motions per arm}
-    static final String[] AXIS = {"X", "Y", "Z"};
-    static final String[] PHASE = {"0", "¼", "½", "¾"};
-
-    /** The signal contract, in the order of signals[]. arm{n}.pitch is derived (pitch(arm)). tone.* (§4): the reach
-     *  on each chord tone of the harmonic series, from every engaged motion whichever arm holds it, weighted by how
-     *  close the motion's folded pitch is to that tone: a ratio gliding 1 → 2 sings root, third, fifth, seventh, root. */
-    static final String[] SIGNALS = {"arm1.ratio", "arm2.ratio", "arm3.ratio", "arm1.reach", "arm2.reach", "arm3.reach",
-                                     "radiance", "consonance", "tension", "drive", "coherence", "score",
-                                     "orb.speed", "orb.accel", "orb.curl", "orb.radius", "stir",
-                                     "tone.root", "tone.third", "tone.fifth", "tone.seventh", "stack", "fit"};
-    static final int S_RATIO = 0, S_REACH = 3, S_RADIANCE = 6, S_CONSONANCE = 7, S_TENSION = 8, S_DRIVE = 9, S_COHERENCE = 10, S_SCORE = 11,
-                     S_ORB_SPEED = 12, S_ORB_ACCEL = 13, S_ORB_CURL = 14, S_ORB_RADIUS = 15, S_STIR = 16, S_TONE = 17, S_STACK = 21, S_FIT = 22;
-    /** The chord tones' pitch classes in semitones (just ratios 1, 5/4, 3/2, 7/4) and how sharply a motion's pitch must sit on one.
-     *  Each tone signal sums √reach over the motions on that pitch class, so reach is heard but compressed. */
-    static final double[] TONE_ST = {0, 3.8631, 7.0196, 9.6883};
-    static final double TONE_K = 2.0;   // weight e^(−TONE_K·semitones off): half a semitone 0.37, one 0.14, two 0.02
-    static final double STIR_SMOOTH = 0.15;   // s: how fast `stir` follows the arms starting or stopping
-    static final double ORB_SMOOTH = 0.06;   // s: the orb signals' envelope follows the pen with this lag
-
-    // ---- recipes
-    /** One motion of a recipe: axis (0 X, 1 Y, 2 Z), integer ratio, phase in quarter cycles, and the reach target
-     *  (amp): the blueprint is drawn with it and a match needs the motion's reach within the recipe's rtol of it. */
-    record Comp(int axis, int n, int phase, double amp) {}
-    static final double DEFAULT_RTOL = 0.1;
-    static final class Recipe {
-        final String id, name, reward; final int tier; final boolean secret; final Comp[] comps;
-        double rtol = DEFAULT_RTOL;   // reach tolerance: |reach − amp| ≤ rtol counts
-        private java.util.List<Comp[]> variants;
-        Recipe(String id, String name, int tier, String reward, boolean secret, Comp... comps) {
-            this.id = id; this.name = name; this.tier = tier; this.reward = reward; this.secret = secret; this.comps = comps;
-        }
-        int arms() { return TIERS[tier - 1][0]; }
-        int motionsPerArm() { return TIERS[tier - 1][1]; }
-        /** Phase sets that trace the identical figure: start a quarter cycle later (each ×n motion gains n
-         *  quarters) and / or run it backwards (p becomes 2 − p). Mirroring one axis alone is NOT here, so a
-         *  mirrored asymmetric sigil is a wrong answer; a symmetric sigil's mirror is already in the set. */
-        java.util.List<Comp[]> variants() {
-            if (variants != null) return variants;
-            java.util.List<Comp[]> out = new java.util.ArrayList<>();
-            java.util.Set<String> seen = new java.util.HashSet<>();
-            for (int rev = 0; rev < 2; rev++)
-                for (int k = 0; k < 4; k++) {
-                    Comp[] cs = new Comp[comps.length];
-                    StringBuilder key = new StringBuilder();
-                    for (int i = 0; i < comps.length; i++) {
-                        Comp c = comps[i];
-                        int p = ((((rev == 1 ? 2 - c.phase : c.phase) + c.n * k) % 4) + 4) % 4;
-                        cs[i] = new Comp(c.axis, c.n, p, c.amp);
-                        key.append(p).append(',');
-                    }
-                    if (seen.add(key.toString())) out.add(cs);
-                }
-            return variants = out;
-        }
-    }
-    /** The prototype's roster. A mod supplies its own list to the constructor. */
-    static final Recipe[] DEFAULT_RECIPES = {
-        new Recipe("firebolt", "Fire bolt", 1, "fire", false, new Comp(0, 3, 1, 1), new Comp(1, 2, 0, 1)),
-        new Recipe("cinder", "Cinder bloom", 2, "lava", false, new Comp(0, 1, 1, 1), new Comp(1, 1, 0, 1),
-                   new Comp(0, 5, 1, 0.35), new Comp(1, 5, 2, 0.35), new Comp(2, 3, 0, 0.55)),
-        new Recipe("lance", "Torch lance", 3, "torch", false, new Comp(0, 1, 0, 1), new Comp(1, 2, 1, 0.8), new Comp(2, 3, 1, 0.7),
-                   new Comp(0, 4, 2, 0.4), new Comp(1, 5, 0, 0.3), new Comp(2, 6, 3, 0.25)),
-        new Recipe("wisp", "Will-o'-wisp", 1, "cloud", true, new Comp(0, 1, 0, 1), new Comp(1, 2, 0, 1)),
-    };
-
-    // ---- machine state
-    /** One arm × axis motion. off: !eng. driven: eng && drv (follows the crank and trim). held: eng && !drv. */
-    static final class Motion { boolean eng, drv, act; double r = 1, amp = DEFAULT_REACH; int ph; double osc; }   // act: the lever is down (coupled-lever model)   // osc: the motion's own accumulated angle (radians), so a changing ratio bends the trace instead of jumping it
-    /** A saved motion (voiced crystals, the copy socket). */
-    record Snap(int arm, int axis, double r, int phase, double amp) {}
-    static final class Eval { double score; boolean exact; double fit; }   // fit: reach agreement of the matched components, e^(−6·|reach − target|) averaged over the recipe
-
-    final Recipe[] recipes;
-    final Motion[][] comps = new Motion[ARMS][AXES];
-    final int[] focus = {-1, -1, -1};   // per arm: the axis the trim controls act on (the last lever pressed there)
-    Recipe target;
-    int arm;                       // the selected arm the axis levers act on
-    boolean powered;
-    double vel, ang, slip;         // crank: rev/s, degrees, seconds of slip left
-    int caught = -1;               // -1 free, 0 at rest; classic crank: n = caught at integer n
-    boolean drag;
-    double tau;                    // machine time in seconds (drives the pen)
-    /** classic: the prototype's crank, which catches and holds at integer ratios. Default is the free crank: friction
-     *  only, and the crystal accepts a motion when it is latched within snapTol/√n of integer n, snapping it there. */
-    boolean classic;
-    /** coupling (default): a lever down makes its motion ACTIVE — the trim controls act on every active motion,
-     *  and touching the crank couples it to all of them (at the slowest one already turning). Latch snaps every
-     *  coupled motion and decouples the crank without moving levers; a lever up PARKS its motion (it keeps its
-     *  speed, ignores trim and crank) or switches it off at rest. Off: the focus model (drive / hold per lever). */
-    boolean coupling = true;
-    /** wells: the third crank model. No friction; the brake (progressive) is the only way down; released inside the
-     *  acceptance window of an integer, the crystal eases the crank onto it (the well) — released outside, it sits detuned.
-     *  The technique is spin past, brake, let go as the figure's roll stops. The window is constant across ratios.
-     *  Classic wins if both are set. */
-    boolean wells, brake; double brakeHeld;   // brakeHeld: seconds the brake has been on, for the progressive bite
-    final java.util.Random notchRng = new java.util.Random(11);
-    double snapTol = 0.1;          // the acceptance window at ×1 (the difficulty scaler); narrower for higher ratios (constant under wells)
-    final java.util.Map<String, Eval> eval = new java.util.LinkedHashMap<>();
-    Eval targetEval = new Eval();
-    final double[] signals = new double[SIGNALS.length];
-    final java.util.Set<String> discovered = new java.util.HashSet<>();
-    private final java.util.Map<String, Boolean> prevExact = new java.util.HashMap<>();
-    private final java.util.List<String> events = new java.util.ArrayList<>();
-    private final java.util.List<java.util.List<Snap>> voiced = new java.util.ArrayList<>();   // one snapshot per voiced crystal
-
-    RegulatorCore() { this(DEFAULT_RECIPES); }
-    RegulatorCore(Recipe[] recipes) {
-        this.recipes = recipes;
-        for (Motion[] a : comps) for (int i = 0; i < AXES; i++) a[i] = new Motion();
-        for (Recipe r : recipes) eval.put(r.id, new Eval());
-        if (recipes.length > 0) target = recipes[0];
-    }
-    Recipe recipe(String id) { for (Recipe r : recipes) if (r.id.equals(id)) return r; return null; }
-    void resetComps() { for (Motion[] a : comps) for (int i = 0; i < AXES; i++) a[i] = new Motion(); java.util.Arrays.fill(focus, -1); }
-    /** Events since the last drain: lock, unlock (the target), discover:<id>, wrong:<id> (another blueprint's
-     *  sigil matched), voice, stopped:<arm>:<axis>. */
-    java.util.List<String> events() { java.util.List<String> out = new java.util.ArrayList<>(events); events.clear(); return out; }
-    java.util.List<java.util.List<Snap>> voiced() { return voiced; }
-
-    // ---- crank
-    double crankRatio() { return 2 * Math.abs(vel); }
-    static double catchWidth(int n) { return CATCH_W / n; }
-    /** A scroll notch / button press: dir ±1, step in vel units (NUDGE_*). Sets the slip timer. */
-    /** Coupled-lever model: touching the crank couples it to every active motion, at the slowest one already turning. */
-    void couple() {
-        if (!coupling) return;
-        double slowest = Double.MAX_VALUE; boolean any = false;
-        for (Motion[] a : comps) for (Motion c : a) if (c.eng && c.act) { any = true; if (c.r >= REST_R) slowest = Math.min(slowest, c.r); }
-        if (!any) return;
-        if (slowest < Double.MAX_VALUE) { double sg = Math.signum(vel); if (sg == 0) sg = 1; vel = sg * slowest / 2; }
-        double cr = 2 * Math.abs(vel);
-        for (Motion[] a : comps) for (Motion c : a) if (c.eng && c.act) { c.drv = true; c.r = cr; }
-        caught = -1;
-    }
-    void nudge(int dir, double step) {
-        if (wells && !classic) {
-            if (dir < 0) return;   // the wheel only goes up: the brake is the way down
-            step *= 1 + (notchRng.nextDouble() * 2 - 1) * NOTCH_JITTER;   // an imprecise notch: look and listen, don't count
-        }
-        couple();
-        double s = Math.signum(vel); if (s == 0) s = 1;
-        vel = Math.max(-MAX_VEL, Math.min(MAX_VEL, vel + s * dir * step));
-        if (Math.abs(vel) < 0.001) vel = 0;
-        slip = SLIP_NUDGE;
-        double cr = crankRatio();   // the driven motions follow at once, so a latch in the same frame sees the notch (tick repeats this)
-        for (Motion[] a : comps) for (Motion c : a) if (c.eng && c.drv) c.r = cr;
-    }
-    void dragStart() { couple(); drag = true; }
-    /** The brake (wells model): taking hold of it couples the active motions, as any touch on the crank does. */
-    void setBrake(boolean on) { if (on && !brake) { couple(); brakeHeld = 0; } brake = on; }
-    /** While dragging: the measured crank speed in rev/s (the pointer's angular velocity), smoothed in. */
-    void dragVelocity(double revPerSec) { if (!drag) return; double v = Math.max(-MAX_VEL, Math.min(MAX_VEL, revPerSec)); vel += (v - vel) * DRAG_SMOOTH; }
-    void dragEnd() { drag = false; slip = SLIP_DRAG; }
-    /** Loads a held motion's ratio into the crank (held → driven with no others driven). */
-    void loadCrank(double r) { vel = r / 2; slip = 0; int n = (int) Math.round(r); caught = classic && Math.abs(r - n) < 1e-6 ? n : -1; }
-    /** Free crank: how close to integer n a latched ratio must be for the crystal to take it. */
-    double acceptWindow(int n) { return wells && !classic ? snapTol : snapTol / Math.sqrt(n); }
-    /** Wells model: 1 once the crystal has taken the crank onto an integer (released, settled), else 0 — a confirmation, not a guide. */
-    double wellDepth() {
-        if (!wells || classic || brake || slip > 0) return 0;
-        double r = crankRatio(); int n = (int) Math.round(r);
-        return n >= 1 && n <= MAX_N && Math.abs(r - n) < 1e-3 ? 1 : 0;
-    }
-    /** Free crank: the integer this ratio would be accepted as on latch, or -1. */
-    int acceptable(double r) { int n = (int) Math.round(r); return n >= 1 && n <= MAX_N && Math.abs(r - n) <= acceptWindow(n) ? n : -1; }
-    void updateCrank(double dt) {
-        slip = Math.max(0, slip - dt);
-        if (!drag) {
-            double r = 2 * Math.abs(vel); int n = (int) Math.round(r);
-            double sg = Math.signum(vel); if (sg == 0) sg = 1;
-            if (slip <= 0 && n == 0 && r < REST_R) {
-                vel *= Math.exp(-dt * REST_RATE);
-                if (Math.abs(vel) < 5e-4) vel = 0;
-                caught = 0;
-            } else if (classic && slip <= 0 && n >= 1 && n <= MAX_N && Math.abs(r - n) < catchWidth(n)) {
-                double tv = sg * n / 2;
-                vel += (tv - vel) * Math.min(1, dt * CATCH_RATE);
-                if (Math.abs(vel - tv) < 2e-4) vel = tv;
-                caught = n;
-            } else if (wells && !classic) {
-                caught = -1;
-                double dr = 0, d = r - n, w = n >= 1 && n <= MAX_N ? acceptWindow(n) : 0;   // change in ratio this tick; the window around the nearest integer
-                boolean inWin = w > 0 && Math.abs(d) <= w;
-                if (brake) { brakeHeld += dt; dr -= BRAKE_RATE * (1 + (BRAKE_BITE - 1) * Math.min(1, brakeHeld / BRAKE_RAMP)) * dt; }
-                else {
-                    brakeHeld = 0;
-                    if (slip <= 0 && inWin) dr -= d * Math.min(1, dt / WELL_TAU);   // let go inside the window: the crystal eases it onto the integer
-                    if (r < 1 - w && slip <= 0) dr -= 2 * BRAKE * dt;               // the dead zone under the first resonance: rest is still a catch point
-                }
-                double nr = Math.max(0, r + dr);
-                if (!brake && slip <= 0 && inWin && Math.abs(nr - n) < 5e-4) nr = n;   // settled: exactly on it
-                vel = sg * nr / 2;
-            } else {
-                caught = -1;
-                vel *= Math.exp(-FRICTION * dt);
-                if (r < 1 && slip <= 0) vel = sg * Math.max(0, Math.abs(vel) - BRAKE * dt);   // the dead zone under the first resonance
-            }
-        } else caught = -1;
-        ang += vel * dt * 360;
-        double cr = 2 * Math.abs(vel);
-        for (Motion[] a : comps) for (Motion c : a) if (c.eng && c.drv) c.r = cr;
-    }
-
-    // ---- levers
-    int drivenCount() { int n = 0; for (Motion[] a : comps) for (Motion c : a) if (c.eng && c.drv) n++; return n; }
-    int engagedCount(int arm) { int n = 0; for (Motion c : comps[arm]) if (c.eng) n++; return n; }
-    boolean selectArm(int i) { if (target == null || i < 0 || i >= target.arms()) return false; arm = i; return true; }
-    void setTarget(Recipe r) { target = r; resetComps(); arm = 0; }
-    void power(boolean on) { powered = on; }
-    /** driven → held; a motion held at rest is switched off (that is how motions are released). Classic crank: a
-     *  caught ratio is written exactly. Free crank: a ratio within the acceptance window snaps to the integer (the
-     *  crystal answers: event accept:<arm>:<axis>:<n>), anything else is held detuned (event hold:<arm>:<axis>). */
-    private boolean holdOrStop(Motion c, int arm, int ax) {
-        if (classic) { if (caught >= 0) c.r = caught; }
-        else if (c.r >= REST_R) {
-            int n = acceptable(c.r);
-            if (n > 0) { c.r = n; events.add("accept:" + arm + ":" + ax + ":" + n); }
-            else events.add("hold:" + arm + ":" + ax);
-        } else c.r = 0;
-        c.drv = false;
-        if (c.r < 1e-6) { c.eng = false; c.r = 0; return true; }
-        return false;
-    }
-    /** The axis lever of the selected arm: off → driven (from rest, or joining the others at the crank's
-     *  ratio), driven → held (or off at rest), held → driven (loading the crank, or ganging). Returns false
-     *  when the tier allows no more motions on this arm. */
-    boolean axisLever(int ax) {
-        if (target == null) return false;
-        Motion c = comps[arm][ax];
-        if (coupling) {
-            if (!c.eng) {   // off → active, at rest; it joins the crank on the next scroll
-                if (engagedCount(arm) >= target.motionsPerArm()) return false;
-                c.eng = true; c.act = true; c.drv = false; c.r = 0; c.ph = 0; c.amp = DEFAULT_REACH; c.osc = 0;
-            } else if (c.act) {   // active → parked (keeps its speed), or off at rest
-                if (c.drv) holdOrStop(c, arm, ax);   // a coupled motion is latched as it goes up
-                c.act = false; c.drv = false;
-                if (c.r < REST_R) { c.eng = false; c.r = 0; events.add("stopped:" + arm + ":" + ax); }
-            } else c.act = true;   // parked → active again
-            return true;
-        }
-        int others = drivenCount();
-        if (!c.eng) {
-            if (engagedCount(arm) >= target.motionsPerArm()) return false;   // refused: the trim focus stays where it was
-            focus[arm] = ax;
-            c.eng = true; c.drv = true; c.ph = 0; c.amp = DEFAULT_REACH; c.osc = 0;
-            if (others > 0) c.r = crankRatio(); else { c.r = 0; loadCrank(0); }
-        } else if (c.drv) {
-            focus[arm] = ax;
-            if (holdOrStop(c, arm, ax)) { events.add("stopped:" + arm + ":" + ax); focus[arm] = -1; }
-        } else {
-            focus[arm] = ax;
-            c.drv = true;
-            if (others > 0) c.r = crankRatio(); else loadCrank(c.r);
-        }
-        return true;
-    }
-    /** Latch: every driven motion is held (snapped to the caught integer), or switched off at rest. Returns how many stopped. */
-    int latch() {
-        int stopped = 0;
-        for (int a = 0; a < ARMS; a++) for (int x = 0; x < AXES; x++) {
-            Motion c = comps[a][x];
-            if (c.eng && c.drv && holdOrStop(c, a, x)) { stopped++; events.add("stopped:" + a + ":" + x); }
-        }
-        return stopped;
-    }
-    /** Focus a motion of the selected arm for the trim controls without changing its state. */
-    boolean focusAxis(int ax) { if (ax < 0 || ax >= AXES || !comps[arm][ax].eng) return false; focus[arm] = ax; return true; }
-    /** The motion the trim controls act on: the focused axis of the selected arm (engaged), else null. */
-    Motion focused() { int ax = focus[arm]; return ax >= 0 && comps[arm][ax].eng ? comps[arm][ax] : null; }
-    /** The motions the trim controls act on: every active one (coupled-lever model), else the focused one. */
-    java.util.List<Motion> trimmed() {
-        java.util.List<Motion> out = new java.util.ArrayList<>();
-        if (coupling) { for (Motion[] a : comps) for (Motion c : a) if (c.eng && c.act) out.add(c); }
-        else { Motion c = focused(); if (c != null) out.add(c); }
-        return out;
-    }
-    int activeCount() { int n = 0; for (Motion[] a : comps) for (Motion c : a) if (c.eng && c.act) n++; return n; }
-    /** The phase dial: the trimmed motions turn a quarter cycle. */
-    void phaseStep() { for (Motion c : trimmed()) c.ph = (c.ph + 1) % 4; }
-    /** The reach control: the trimmed motions take this amplitude. */
-    void setReach(double amp) { for (Motion c : trimmed()) c.amp = amp; }
-    /** The first driven motion (what the trim controls show), or null. */
-    Motion firstDriven() { for (Motion[] a : comps) for (Motion c : a) if (c.eng && c.drv) return c; return null; }
-
-    // ---- matching
-    record Eng(int arm, int axis, double r, int ph, double amp) {}
-    java.util.List<Eng> engaged() {
-        java.util.List<Eng> out = new java.util.ArrayList<>();
-        for (int a = 0; a < ARMS; a++) for (int x = 0; x < AXES; x++) {
-            Motion c = comps[a][x];
-            if (c.eng && c.amp > ENGAGE_AMP && c.r > ENGAGE_R) out.add(new Eng(a, x, c.r, c.ph, c.amp));
-        }
-        return out;
-    }
-    static Eval evalOnce(Comp[] comps, java.util.List<Eng> eng) { return evalOnce(comps, eng, DEFAULT_RTOL); }
-    static Eval evalOnce(Comp[] comps, java.util.List<Eng> eng, double rtol) {
-        boolean[] used = new boolean[eng.size()];
-        double sum = 0, fitSum = 0; boolean exact = true; int nUsed = 0;
-        for (Comp t : comps) {
-            int best = -1; double bs = 0; boolean bx = false;
-            for (int i = 0; i < eng.size(); i++) {
-                Eng e = eng.get(i);
-                if (used[i] || e.axis != t.axis) continue;
-                double d = Math.abs(e.r - t.n);
-                boolean reachOk = Math.abs(e.amp - t.amp) <= rtol + 1e-9;
-                double s = Math.exp(-d * 5) * (e.ph == t.phase ? 1 : 0.5) * (reachOk ? 1 : 0.7);
-                if (s > bs) { bs = s; best = i; bx = d < 1e-6 && e.ph == t.phase && reachOk; }
-            }
-            if (best >= 0) { used[best] = true; nUsed++; sum += bs; if (!bx) exact = false; fitSum += Math.exp(-6 * Math.abs(eng.get(best).amp - t.amp)); }
-            else exact = false;
-        }
-        int extra = eng.size() - nUsed;
-        if (extra > 0) exact = false;
-        Eval ev = new Eval();
-        ev.score = sum / comps.length * Math.pow(0.6, extra);
-        ev.exact = exact;
-        ev.fit = nUsed > 0 ? fitSum / nUsed : 0;   // over the matched components only: reach quality, not recipe progress
-        return ev;
-    }
-    /** The best score over every phase set that traces the recipe's figure (§3.4). */
-    static Eval evaluate(Recipe rec, java.util.List<Eng> eng) {
-        Eval best = new Eval();
-        for (Comp[] cs : rec.variants()) {
-            Eval e = evalOnce(cs, eng, rec.rtol);
-            if (e.exact) return e;
-            if (e.score > best.score) best = e;
-        }
-        return best;
-    }
-
-    // ---- the frame: physics, evaluation, events, signals
-    /** Coupled-lever model: the crank is coupled to at least one active motion. */
-    boolean coupled() { return drivenCount() > 0; }
-    void tick(double dt) {
-        tau += dt;
-        updateCrank(dt);
-        // every engaged motion runs its own oscillator; one held exactly on an integer eases into alignment with
-        // the receiver (its angle → ratio × receiver angle), which is what makes the dial's quarters meaningful
-        for (Motion[] a : comps) for (Motion c : a) {
-            if (!c.eng) continue;
-            c.osc += c.r * DRAW_RATE * dt;
-            if (!c.drv && c.r == Math.rint(c.r)) {
-                double want = c.r * DRAW_RATE * tau, d = want - c.osc;
-                d -= 2 * Math.PI * Math.rint(d / (2 * Math.PI));
-                c.osc += d * Math.min(1, dt * 4);
-            }
-            if (c.osc > 1e6) c.osc -= 2 * Math.PI * Math.floor(c.osc / (2 * Math.PI));
-        }
-        java.util.List<Eng> eng = engaged();
-        for (Recipe r : recipes) {
-            Eval e = evaluate(r, eng);
-            eval.put(r.id, e);
-            boolean was = prevExact.getOrDefault(r.id, false);
-            if (e.exact && !was && powered) {
-                events.add("match:" + r.id);   // every recipe reports; lock / unlock are the pinned target's
-                if (r == target) events.add("lock");
-                else if (r.secret) { if (discovered.add(r.id)) events.add("discover:" + r.id); }
-                else events.add("wrong:" + r.id);
-            } else if (!e.exact && was) { events.add("unmatch:" + r.id); if (r == target) events.add("unlock"); }
-            prevExact.put(r.id, e.exact && powered);
-        }
-        targetEval = target != null ? eval.get(target.id) : new Eval();
-        computeSignals(eng);
-    }
-    void computeSignals(java.util.List<Eng> eng) {
-        java.util.Arrays.fill(signals, 0, S_ORB_SPEED, 0);   // the orb envelopes persist (smoothed across ticks)
-        for (int a = 0; a < ARMS; a++) {
-            double best = -1, reach = 0;
-            for (Eng e : eng) if (e.arm == a) { reach += e.amp; if (e.amp > best) { best = e.amp; signals[S_RATIO + a] = e.r; } }
-            signals[S_REACH + a] = Math.min(1, reach);
-        }
-        double z = 0, coh = 0, cons = 0, tension = 0; int pairs = 0;
-        for (int i = 0; i < eng.size(); i++) {
-            Eng e = eng.get(i);
-            if (e.axis == 2) z += e.amp;
-            coh += Math.exp(-8 * Math.abs(e.r - Math.round(e.r)));
-            tension = Math.max(tension, e.r);
-            for (int j = i + 1; j < eng.size(); j++) {
-                int ni = Math.max(1, (int) Math.round(e.r)), nj = Math.max(1, (int) Math.round(eng.get(j).r)), g = gcd(ni, nj);
-                cons += 2.0 / (ni / g + nj / g);
-                pairs++;
-            }
-        }
-        signals[S_RADIANCE] = Math.min(1, z);
-        signals[S_CONSONANCE] = pairs > 0 ? cons / pairs : eng.size() == 1 ? 1 : 0;
-        signals[S_TENSION] = Math.min(1, tension / MAX_N);
-        signals[S_DRIVE] = Math.min(1, crankRatio() / MAX_N);
-        signals[S_COHERENCE] = eng.isEmpty() ? 0 : coh / eng.size();
-        signals[S_SCORE] = targetEval.score;
-        for (int t = 0; t < TONE_ST.length; t++) {
-            double sum = 0;
-            for (Eng e : eng) {
-                double d = Math.abs(pitchOf(e.r) - TONE_ST[t]); d = Math.min(d, 12 - d);   // circular semitone distance
-                sum += Math.sqrt(e.amp) * Math.exp(-TONE_K * d);   // √reach: a quarter-reach chord tone still sings at half
-            }
-            signals[S_TONE + t] = Math.min(1, sum);
-        }
-        signals[S_STACK] = Math.min(1, eng.size() / 6.0);   // how full the machine is: a tier-III recipe's six motions = 1
-        signals[S_FIT] = targetEval.fit;                     // the reach hint: 1 when every matched motion's reach is on the pinned recipe's target
-        orbSignals();
-    }
-    // ---- the orb's kinematics, from the oscillators' derivatives (exact, whatever the frame rate), each an
-    // envelope smoothed over ORB_SMOOTH so binds get a contour rather than the pen's every wobble
-    private final double[] orbP = new double[3], orbV = new double[3], orbA = new double[3];
-    private double lastOrbTau = -1;
-    void orbSignals() {
-        double vmax = 0, amax = 0, ext = extent();
-        java.util.Arrays.fill(orbP, 0); java.util.Arrays.fill(orbV, 0); java.util.Arrays.fill(orbA, 0);
-        for (Motion[] a : comps) for (int ax = 0; ax < AXES; ax++) {
-            Motion c = a[ax];
-            if (!c.eng) continue;
-            double amp = c.amp * Math.min(1, c.r / 0.6), w = c.r * DRAW_RATE, th = c.osc + c.ph * Math.PI / 2;
-            orbP[ax] += amp * Math.sin(th); orbV[ax] += amp * w * Math.cos(th); orbA[ax] -= amp * w * w * Math.sin(th);
-            vmax += amp * w; amax += amp * w * w;
-        }
-        double v = Math.sqrt(orbV[0] * orbV[0] + orbV[1] * orbV[1] + orbV[2] * orbV[2]);
-        double acc = Math.sqrt(orbA[0] * orbA[0] + orbA[1] * orbA[1] + orbA[2] * orbA[2]);
-        double cx = orbV[1] * orbA[2] - orbV[2] * orbA[1], cy = orbV[2] * orbA[0] - orbV[0] * orbA[2], cz = orbV[0] * orbA[1] - orbV[1] * orbA[0];
-        double kappa = v > 1e-6 ? Math.sqrt(cx * cx + cy * cy + cz * cz) / (v * v * v) : 0;   // curvature: 1/radius of the loop being drawn
-        double speed = vmax > 0 ? v / vmax : 0;                       // 1 = every motion pulling the same way at once
-        double accel = amax > 0 ? acc / amax : 0;
-        double curl = Math.min(1, kappa * ext / 4);                    // a circle at full extent = 0.25, a loop a quarter that size = 1
-        double radius = Math.min(1, Math.sqrt(orbP[0] * orbP[0] + orbP[1] * orbP[1] + orbP[2] * orbP[2]) / ext);
-        double k = lastOrbTau < 0 ? 1 : 1 - Math.exp(-(tau - lastOrbTau) / ORB_SMOOTH), ks = lastOrbTau < 0 ? 1 : 1 - Math.exp(-(tau - lastOrbTau) / STIR_SMOOTH);
-        lastOrbTau = tau;
-        // stir: 0 with every arm at rest, 1 once anything turns at ×0.5 or faster (whatever the crank is doing)
-        double fastest = 0;
-        for (Eng e : engaged()) fastest = Math.max(fastest, e.r);
-        signals[S_STIR] += (Math.min(1, fastest / 0.5) - signals[S_STIR]) * ks;
-        signals[S_ORB_SPEED] += (speed - signals[S_ORB_SPEED]) * k;
-        signals[S_ORB_ACCEL] += (accel - signals[S_ORB_ACCEL]) * k;
-        signals[S_ORB_CURL] += (curl - signals[S_ORB_CURL]) * k;
-        signals[S_ORB_RADIUS] += (radius - signals[S_ORB_RADIUS]) * k;
-    }
-    static int gcd(int a, int b) { while (b != 0) { int t = a % b; a = b; b = t; } return a; }
-    /** arm{n}.pitch: the arm's ratio as semitones folded into one octave (0 when the arm is silent). */
-    double pitch(int arm) { return pitchOf(signals[S_RATIO + arm]); }
-    static double pitchOf(double ratio) { if (ratio <= 0.05) return 0; double st = 12 * Math.log(ratio) / Math.log(2); return ((st % 12) + 12) % 12; }
-
-    // ---- the figure (§3.3, revised): a pen. The receiver's own cycle takes DRAW_PERIOD seconds of machine time;
-    // every motion oscillates at its ratio times that, so integer ratios retrace one closed figure and a detuned
-    // motion makes the trace precess at a rate proportional to the detune, slowing to a stop as it is tuned in.
-    static final double DRAW_PERIOD = 2.5, DRAW_RATE = 2 * Math.PI / DRAW_PERIOD;
-    /** The pen's position at machine time tauAt (between the last tick and the next, extrapolated at each motion's rate). */
-    void pen(double tauAt, double[] out) {
-        out[0] = out[1] = out[2] = 0;
-        for (Motion[] a : comps) for (int ax = 0; ax < AXES; ax++) {
-            Motion c = a[ax];
-            if (!c.eng) continue;
-            out[ax] += c.amp * Math.min(1, c.r / 0.6) * Math.sin(c.osc + c.r * DRAW_RATE * (tauAt - tau) + c.ph * Math.PI / 2);
-        }
-    }
-    /** One arm's own contribution to the pen (for drawing the arm heads). */
-    void armPen(int arm, double tauAt, double[] out) {
-        out[0] = out[1] = out[2] = 0;
-        for (int ax = 0; ax < AXES; ax++) {
-            Motion c = comps[arm][ax];
-            if (!c.eng) continue;
-            out[ax] += c.amp * Math.min(1, c.r / 0.6) * Math.sin(c.osc + c.r * DRAW_RATE * (tauAt - tau) + c.ph * Math.PI / 2);
-        }
-    }
-    /** The figure's shape as the recipe would draw it: every motion phase-locked to the receiver, over one receiver
-     *  cycle t ∈ [0, 2π). Closed only for integer ratios. */
-    void figurePoint(double t, double[] out) {
-        out[0] = out[1] = out[2] = 0;
-        for (Motion[] a : comps) for (int ax = 0; ax < AXES; ax++) {
-            Motion c = a[ax];
-            if (!c.eng) continue;
-            out[ax] += c.amp * Math.min(1, c.r / 0.6) * Math.sin(c.r * t + c.ph * Math.PI / 2);
-        }
-    }
-    /** Per-axis extent of the engaged motions (summed reach), floored at 0.7 like the prototype's stage. */
-    double extent() { double m = 0.7; for (int ax = 0; ax < AXES; ax++) { double s = 0; for (Motion[] a : comps) if (a[ax].eng) s += a[ax].amp; m = Math.max(m, s); } return m; }
-
-    // ---- the blueprint (§3.6): a damped harmonograph trace of the recipe
-    static final int BP_FRONT = 0, BP_TOP = 1, BP_POINTS = 2401;
-    /** Points {h, v} of the recipe's trace in one view, in figure units (divide by extent(rec) to fit).
-     *  Front: h = X, v = Y up. Top: h = X, v = −Z, so +Z draws toward the bottom, matching the machine's top camera. */
-    static double[][] blueprint(Recipe rec, int view) {
-        double[][] out = new double[BP_POINTS][2];
-        int ha = 0, va = view == BP_TOP ? 2 : 1;
-        double T = Math.PI * 2 * 4;
-        double[] p = new double[3];
-        for (int i = 0; i < BP_POINTS; i++) {
-            double t = i / (double) (BP_POINTS - 1) * T, damp = Math.exp(-0.022 * t);
-            p[0] = p[1] = p[2] = 0;
-            for (int j = 0; j < rec.comps.length; j++) {
-                Comp c = rec.comps[j];
-                double drift = 0.0025 * (j % 2 == 1 ? 1 : -1) * (1 + j * 0.3);
-                p[c.axis] += c.amp * Math.sin(c.n * t + c.phase * Math.PI / 2 + drift * t);
-            }
-            out[i][0] = p[ha] * damp;
-            out[i][1] = (view == BP_TOP ? -1 : 1) * p[va] * damp;
-        }
-        return out;
-    }
-    static double extent(Recipe rec) { double m = 0.7; for (int ax = 0; ax < AXES; ax++) { double s = 0; for (Comp c : rec.comps) if (c.axis == ax) s += c.amp; m = Math.max(m, s); } return m; }
-    /** Authoring check: true when the recipe's curve retraces itself into an open line (some c has
-     *  p(c − t) = p(t) for all t, e.g. sin 3t against cos 2t). Valid but reads poorly as a sigil. */
-    static boolean degenerate(Recipe rec) {
-        int N = 240;
-        double[][] pts = new double[N][3];
-        for (int i = 0; i < N; i++) {
-            double t = 2 * Math.PI * i / N;
-            for (Comp c : rec.comps) pts[i][c.axis] += c.amp * Math.sin(c.n * t + c.phase * Math.PI / 2);
-        }
-        for (int k = 0; k < N; k++) {   // candidate c = 2π k / N: compare p(t) with p(c − t)
-            double worst = 0;
-            for (int i = 0; i < N && worst < 1e-6; i++) {
-                int j = ((k - i) % N + N) % N;
-                for (int ax = 0; ax < 3; ax++) worst = Math.max(worst, Math.abs(pts[i][ax] - pts[j][ax]));
-            }
-            if (worst < 1e-6) return true;
-        }
-        return false;
-    }
-
-    // ---- research setpoint, copy socket, voicing
-    /** The recipe laid onto arms the way the station would: greedily, one motion per arm-axis within the tier. */
-    static java.util.List<Snap> recipeSnapshot(Recipe rec) {
-        int arms = rec.arms(), per = rec.motionsPerArm();
-        int[] load = new int[ARMS]; boolean[] used = new boolean[ARMS * AXES];
-        java.util.List<Snap> snap = new java.util.ArrayList<>();
-        for (Comp cp : rec.comps)
-            for (int a = 0; a < arms; a++)
-                if (load[a] < per && !used[a * 3 + cp.axis]) { used[a * 3 + cp.axis] = true; load[a]++; snap.add(new Snap(a, cp.axis, cp.n, cp.phase, cp.amp)); break; }
-        return snap;
-    }
-    /** Loads motions with ratios jittered by ±jit·(0.5..1) (never below 0.5), every motion held; with phaseErr one
-     *  random phase is a quarter off. Setpoint: recipeSnapshot(target), SETPOINT_JITTER, true. Copy socket: a
-     *  voiced crystal's snapshot, SOCKET_JITTER, false. */
-    void applySnapshot(java.util.List<Snap> snap, double jit, boolean phaseErr, java.util.Random rng) {
-        resetComps();
-        int wrong = phaseErr && !snap.isEmpty() ? rng.nextInt(snap.size()) : -1;
-        for (int i = 0; i < snap.size(); i++) {
-            Snap s = snap.get(i);
-            Motion c = comps[s.arm][s.axis];
-            c.eng = true; c.drv = false; c.act = false; c.amp = s.amp;
-            double d = (rng.nextDouble() < 0.5 ? -1 : 1) * (jit * (0.5 + rng.nextDouble() * 0.5));
-            c.r = Math.max(0.5, s.r + d);
-            c.ph = i == wrong ? (s.phase + 1) % 4 : s.phase;
-            c.osc = c.r * DRAW_RATE * tau;
-            if (focus[s.arm] < 0) focus[s.arm] = s.axis;
-        }
-        arm = 0;
-    }
-    void loadSetpoint(java.util.Random rng) { if (target != null) applySnapshot(recipeSnapshot(target), SETPOINT_JITTER, true, rng); }
-    /** Every engaged motion as it stands. */
-    java.util.List<Snap> snapshot() {
-        java.util.List<Snap> out = new java.util.ArrayList<>();
-        for (int a = 0; a < ARMS; a++) for (int x = 0; x < AXES; x++) { Motion c = comps[a][x]; if (c.eng) out.add(new Snap(a, x, c.r, c.ph, c.amp)); }
-        return out;
-    }
-    /** The voice lever: only at an exact match. Writes the sigil (returned) and clears the machine for a fresh crystal. */
-    java.util.List<Snap> voice() {
-        if (target == null || !targetEval.exact) return null;
-        java.util.List<Snap> snap = snapshot();
-        voiced.add(snap);
-        resetComps();
-        events.add("voice");
-        return snap;
     }
 }

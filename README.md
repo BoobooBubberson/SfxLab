@@ -1,6 +1,6 @@
 # SfxLab
 
-A timeline sound-effect workbench in one Java file. It began as SynthLab, a
+A timeline sound-effect workbench in plain Java. It began as SynthLab, a
 spellcasting-audio toy, and grew into a small DAW built for game sound: synth
 generators and recordings on six tracks, per-clip effects, a global musical key,
 spectral (sines + residual) re-pitching of recordings, and a "forge" that
@@ -11,7 +11,9 @@ The design notes behind the tuning features are in
 
 ## Requirements
 
-- Java 21 (or newer); the whole lab is `SfxLab.java`, run in source-file mode, no build step
+- Java 21 (or newer). The authoring GUI is `SfxLab.java`, run in source-file mode; the runtime it shares with the
+  mod (engine, live mix, `RegulatorCore`) is in `runtime/`, which `./sfxlab` compiles into `.build/runtime.jar`
+  whenever a source there changes (about a second), so there is still no build step to run by hand
 - `ffmpeg` on the PATH for anything that is not a plain wav: mp3/ogg/flac samples, video reference, ogg export
 - optional: Python 3 with numpy and scipy for `tools/partials.py`, the standalone prototype of the partials analysis
 - more cores help: clips render in parallel (bit-identical to the single-threaded path); partials analyses are cached in `forge/.parts/`
@@ -21,7 +23,7 @@ The design notes behind the tuning features are in
 ```sh
 git clone https://github.com/BoobooBubberson/SfxLab.git
 cd SfxLab
-java SfxLab.java
+./sfxlab
 ```
 
 The folder holding `SfxLab.java` is the workspace: `samples/`, `projects/`,
@@ -37,10 +39,10 @@ Headless, without the GUI:
 
 ```sh
 # render a project to wav or ogg
-java SfxLab.java --render projects/pyretic_synth.sfx renders/pyretic.ogg --mono --normalize [--key 7]
+./sfxlab --render projects/pyretic_synth.sfx renders/pyretic.ogg --mono --normalize [--key 7]
 
 # promote a sound or project into a tuned key-set (residual, sines, one file per key)
-java SfxLab.java --forge projects/pyretic_synth.sfx --name pyretic --root C2
+./sfxlab --forge projects/pyretic_synth.sfx --name pyretic --root C2
 ```
 
 ## Layout
@@ -152,9 +154,12 @@ the machine's signals rather than by time. **H** swaps the timeline for that ben
 
 `RegulatorCore` is the machine with no Swing or Minecraft in it: crank physics, the
 lever state machine, figure sampling, recipe matching with shape equivalence, the
-setpoint and copy socket, and the signal contract. It is the second top-level class
-in `SfxLab.java` (Java 21's single-file launcher cannot load a second source file);
-the mod copies it verbatim. The web prototype in `docs/` is its test oracle.
+setpoint and copy socket, and the signal contract. It lives in the shared runtime,
+`runtime/sfxlab/runtime/`, beside the engine (`Engine`, `Voice`, `Clip`), the
+partials model, the `.sfx` format (`SfxFormat`) and the live mix (`BenchMixer`: signals,
+binds and the spell blend). None of it touches Swing, the file system or ffmpeg (hosts
+install a `Samples.loader` and optionally a `Partials.source`), so the mod builds the
+same sources. The web prototype in `docs/` is the core's test oracle.
 
 `.sfx` files are plain text, one clip per line, so they diff and merge like
 code and clip lines can be copied between projects and the library by hand.
