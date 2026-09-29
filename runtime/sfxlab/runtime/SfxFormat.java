@@ -146,7 +146,7 @@ public final class SfxFormat {
         StringBuilder sb = new StringBuilder();
         if (!section) {
             sb.append("# SfxLab family v2: layer id name type dur seed key=value... (dur 0 = endless) · range id param lo hi [note] · bind signal id|* param [lo hi] [rel] [steps=N | scale=<chord>] · note text · then `spell <id>` sections: name, recipe, the spell's layers at their lock values, its binds and notes\n");
-            sb.append("bench 1\n");
+            sb.append("bench ").append(FAMILY_FORMAT).append('\n');
             sb.append(String.format(Locale.ROOT, "root %.4f%n", rootHz));
         }
         for (String c : b.comments) sb.append(c).append('\n');
@@ -208,5 +208,137 @@ public final class SfxFormat {
         if (c.on != ON_NONE) sb.append(" on=").append(ON_NAMES[c.on]);
         if (c.lmute) sb.append(" mute=1");
         return sb.append('\n').toString();
+    }
+    /** Why a recipe cannot be built at its tier (null when it can): a tier gives arms × motions per arm, each motion takes one
+     *  arm-axis slot, so at most arms×per motions in all and at most `arms` on any one axis; ratios run 1..7, reach 0.05..1. */
+    public static String recipeProblem(int tier, RegulatorCore.Comp[] comps) {
+        int arms = RegulatorCore.TIERS[tier - 1][0], per = RegulatorCore.TIERS[tier - 1][1];
+        if (comps.length > arms * per) return comps.length + " motions, but tier " + tier + " has " + arms + " arms × " + per + " = " + arms * per + " slots";
+        int[] perAxis = new int[3];
+        for (RegulatorCore.Comp c : comps) perAxis[c.axis()]++;
+        for (int ax = 0; ax < 3; ax++) if (perAxis[ax] > arms) return perAxis[ax] + " motions on " + RegulatorCore.AXIS[ax] + ", but only " + arms + " arms can each hold one " + RegulatorCore.AXIS[ax] + " at tier " + tier;
+        for (RegulatorCore.Comp c : comps) if (c.n() < 1 || c.n() > 7) return "ratio ×" + c.n() + " — ratios run 1..7 (×8 is past the crank's cap once friction has its say)";
+        for (RegulatorCore.Comp c : comps) if (c.amp() < 0.05 || c.amp() > 1) return "reach " + fmtNum5(c.amp()) + " — reach targets run 0.05..1";
+        return null;
+    }
+    public static String recipeProblem(Bench r) { return r == null || r.comps == null ? null : recipeProblem(r.tier, r.comps); }
+
+    /** The family format version this runtime writes and reads (the `bench N` line). Version 1 is the format as frozen on
+     *  2026-09-28; a change to the lines or keys bumps it, and a reader refuses a newer file (validateFamily). */
+    public static final int FAMILY_FORMAT = 1;
+    static final Set<String> FAMILY_LINES = Set.of("bench", "root", "palette", "name", "recipe", "note", "layer", "range", "bind", "spell");
+    static final Set<String> CLIP_KEYS = Set.of("file", "vlink", "keyed", "id", "on", "mute");
+
+    /** Everything wrong with a family file that the lenient parser would silently skip or misread: unknown lines and keys,
+     *  bad numbers, binds and ranges that point at no layer, param or signal, duplicate ids, spells the machine cannot
+     *  build, a file newer than this runtime. Empty = clean. The lab reports these when it loads a family; the mod should
+     *  refuse a family that has any. */
+    public static List<String> validateFamily(List<String> lines) {
+        List<String> out = new ArrayList<>();
+        // pass 1: sections, their layers, the spell ids
+        List<String> spellIds = new ArrayList<>();
+        Map<String, Map<String, Integer>> layers = new LinkedHashMap<>();   // section ("" = palette) -> layer id -> type
+        String sec = "";
+        layers.put(sec, new LinkedHashMap<>());
+        for (int i = 0; i < lines.size(); i++) {
+            String[] t = lines.get(i).trim().split("\\s+");
+            if (t[0].equals("spell")) {
+                sec = t.length > 1 ? t[1] : "?";
+                if (spellIds.contains(sec)) out.add("line " + (i + 1) + ": spell " + sec + " appears twice");
+                spellIds.add(sec); layers.put(sec, new LinkedHashMap<>());
+            } else if (t[0].equals("layer") && t.length >= 6) {
+                try {
+                    int type = Integer.parseInt(t[3]);
+                    if (type < 0 || type >= TYPE_NAMES.length) out.add("line " + (i + 1) + ": layer " + t[1] + " has unknown type " + t[3]);
+                    else if (layers.get(sec).put(t[1], type) != null) out.add("line " + (i + 1) + ": layer id " + t[1] + " appears twice in " + (sec.isEmpty() ? "the palette" : "spell " + sec));
+                } catch (NumberFormatException e) { out.add("line " + (i + 1) + ": layer " + t[1] + ": type is not a number"); }
+            }
+        }
+        // pass 2: every line
+        sec = ""; boolean recipe = false;
+        for (int i = 0; i < lines.size(); i++) {
+            String line = lines.get(i).trim(), at = "line " + (i + 1) + ": ";
+            if (line.isEmpty() || line.startsWith("#")) continue;
+            String[] t = line.split("\\s+");
+            if (!FAMILY_LINES.contains(t[0])) { out.add(at + "unknown line type `" + t[0] + "`"); continue; }
+            Map<String, Integer> ls = layers.get(sec);
+            try {
+                switch (t[0]) {
+                    case "bench" -> { int v = Integer.parseInt(t[1]); if (v > FAMILY_FORMAT) out.add(at + "written in family format " + v + ", newer than this runtime's " + FAMILY_FORMAT); }
+                    case "root" -> { if (Double.parseDouble(t[1]) <= 0) out.add(at + "root must be a frequency above 0"); }
+                    case "spell" -> {
+                        if (!sec.isEmpty() && !recipe) out.add("spell " + sec + " has no recipe line: the machine cannot tune to it");
+                        sec = t[1]; recipe = false;
+                    }
+                    case "recipe" -> {
+                        if (sec.isEmpty()) { out.add(at + "a recipe belongs in a spell section, not the palette"); break; }
+                        recipe = true;
+                        int tier = 1; List<RegulatorCore.Comp> cs = new ArrayList<>();
+                        for (int k = 1; k < t.length; k++) {
+                            if (t[k].startsWith("tier=")) tier = Integer.parseInt(t[k].substring(5));
+                            else if (t[k].startsWith("secret=")) { if (!t[k].matches("secret=[01]")) out.add(at + "secret takes 0 or 1"); }
+                            else if (t[k].startsWith("rtol=")) Double.parseDouble(t[k].substring(5));
+                            else {
+                                java.util.regex.Matcher m = java.util.regex.Pattern.compile("([XYZxyz])(\\d+)p([0-3])(?:[r@]([0-9.]+))?").matcher(t[k]);
+                                if (!m.matches()) { out.add(at + "recipe token `" + t[k] + "` is not a motion (like X3p1r0.7)"); continue; }
+                                cs.add(new RegulatorCore.Comp("xyz".indexOf(Character.toLowerCase(m.group(1).charAt(0))), Integer.parseInt(m.group(2)), Integer.parseInt(m.group(3)), m.group(4) != null ? Double.parseDouble(m.group(4)) : 1));
+                            }
+                        }
+                        if (tier < 1 || tier > 3) out.add(at + "tier " + tier + " — tiers run 1..3");
+                        else if (cs.isEmpty()) out.add(at + "the recipe has no motions");
+                        else { String p = recipeProblem(tier, cs.toArray(new RegulatorCore.Comp[0])); if (p != null) out.add(at + p); }
+                    }
+                    case "layer" -> {
+                        if (t.length < 6) { out.add(at + "a layer line needs: layer id name type dur seed key=value..."); break; }
+                        Double.parseDouble(t[4]); Long.parseLong(t[5]);
+                        Integer type = ls.get(t[1]);
+                        if (type == null) break;   // reported in pass 1
+                        for (int k = 6; k < t.length; k++) {
+                            int eq = t[k].indexOf('=');
+                            if (eq < 0) { out.add(at + "layer " + t[1] + ": `" + t[k] + "` is not key=value"); continue; }
+                            String key = t[k].substring(0, eq), val = t[k].substring(eq + 1);
+                            if (CLIP_KEYS.contains(key)) {
+                                if (key.equals("on") && !Arrays.asList(ON_NAMES).contains(val)) out.add(at + "layer " + t[1] + ": on=" + val + " is not one of " + String.join(", ", ON_NAMES));
+                                if (key.equals("keyed")) Integer.parseInt(val);
+                            } else if (idxOf(type, key) < 0) out.add(at + "layer " + t[1] + " (" + TYPE_NAMES[type] + ") has no param `" + key + "`");
+                            else Double.parseDouble(val);
+                        }
+                    }
+                    case "range" -> {
+                        if (t.length < 5) { out.add(at + "a range line needs: range id param lo hi"); break; }
+                        Integer type = ls.get(t[1]);
+                        if (type == null) out.add(at + "range on `" + t[1] + "`, which is no layer here");
+                        else if (idxOf(type, t[2]) < 0) out.add(at + "range on " + t[1] + "." + t[2] + ": no such param");
+                        Double.parseDouble(t[3]); Double.parseDouble(t[4]);
+                    }
+                    case "bind" -> {
+                        if (t.length < 4) { out.add(at + "a bind line needs: bind signal layer param [lo hi] [rel] [steps=N | scale=chord] [off]"); break; }
+                        String sig = t[1];
+                        boolean sigOk = sigIdx(sig) >= 0 || sig.matches("arm[1-3]\\.pitch") || sig.startsWith("score.") && spellIds.contains(sig.substring(6));
+                        if (!sigOk) out.add(at + "bind on unknown signal `" + sig + "`");
+                        if (t[2].equals(BenchMixer.SPELL_LAYER)) {
+                            if (sec.isEmpty()) out.add(at + "`spell` binds belong in a spell section");
+                            else if (!t[3].equals(BenchMixer.BLEND_PARAM)) out.add(at + "the spell row takes only `blend`, not `" + t[3] + "`");
+                        } else if (t[2].equals("*")) {
+                            if (ls.values().stream().noneMatch(ty -> idxOf(ty, t[3]) >= 0)) out.add(at + "bind * " + t[3] + ": no layer here has that param");
+                        } else {
+                            Integer type = ls.get(t[2]);
+                            if (type == null) out.add(at + "bind on `" + t[2] + "`, which is no layer here");
+                            else if (idxOf(type, t[3]) < 0) out.add(at + "bind on " + t[2] + "." + t[3] + ": no such param");
+                        }
+                        int nums = 0;
+                        for (int k = 4; k < t.length; k++) {
+                            if (t[k].equals("rel") || t[k].equals("off")) continue;
+                            if (t[k].contains("=")) { if (!new Bind(sig, t[2], t[3], 0, 0, false).setMap(t[k])) out.add(at + "unknown mapping `" + t[k] + "`"); continue; }
+                            Double.parseDouble(t[k]); nums++;
+                        }
+                        if (nums != 0 && nums != 2) out.add(at + "a bind takes both lo and hi, or neither (auto)");
+                    }
+                    default -> {}
+                }
+            } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) { out.add(at + "cannot read `" + line + "` (" + e.getMessage() + ")"); }
+        }
+        if (!sec.isEmpty() && !recipe) out.add("spell " + sec + " has no recipe line: the machine cannot tune to it");
+        return out;
     }
 }

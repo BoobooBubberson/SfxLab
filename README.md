@@ -44,6 +44,9 @@ Headless, without the GUI:
 # promote a sound or project into a tuned key-set (residual, sines, one file per key)
 ./sfxlab --forge projects/pyretic_synth.sfx --name pyretic --root C2
 
+# check the family files for format problems the lenient loader would skip (exit 1 if any)
+./sfxlab --check [pyretic ...]
+
 # bake what the mod ships for the families (default: all) into forge/baked/
 ./sfxlab --bake [pyretic gravitic ...] [--out dir] [--quality 5]
 ```

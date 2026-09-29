@@ -266,6 +266,7 @@ import static sfxlab.runtime.BenchMixer.*;
  *       is the workspace (samples/, projects/, forge/, renders/, lab.cfg live in it).
  *       $SFXLAB_DIR overrides that; ~/synthlab is the fallback when run elsewhere.
  * Headless render:  ./sfxlab --render [project.sfx] [out.wav|out.ogg] [--mono] [--normalize] [--no-trim] [--key N]
+ * Headless check:   ./sfxlab --check [family ...]   format problems in the family files (exit 1 if any)
  * Headless bake:    ./sfxlab --bake [family ...] [--out dir] [--quality 0-10]   what the mod ships: forge/baked/
  * Headless forge:   ./sfxlab --forge <sound.ogg|project.sfx> [--name n] [--root C2] [--register nearest|0|1|2] [--keys 0,2,4,...] [--wav] [--stereo]
  */
@@ -1096,6 +1097,10 @@ public class SfxLab extends JPanel {
         Set<String> done = new HashSet<>();
         long rawBytes = 0, bakedBytes = 0, sampleBytes = 0;
         for (String fam : fams) {
+            List<String> probs = SfxFormat.validateFamily(Files.readAllLines(familyFile(fam)));
+            if (!probs.isEmpty()) throw new IOException(fam + ".sfx has " + probs.size() + " format problem(s), not baked:\n  " + String.join("\n  ", probs));
+        }
+        for (String fam : fams) {
             Family fm = parseFamily(Files.readAllLines(familyFile(fam)));
             List<Clip> all = new ArrayList<>(fm.palette().layers);
             for (Spell sp : fm.spells()) all.addAll(sp.bench.layers);
@@ -1662,13 +1667,24 @@ public class SfxLab extends JPanel {
                     installBench(wf.palette()); rootHz = wRoot; setSpells(wf.spells());
                     unsaved = true;
                     toast("opened " + name + " with its unsaved edits (" + bench.layers.size() + " layers, " + mix.spells.size() + " spells) — S saves them to " + relPath(f) + ", shift+O reverts to the saved file");
+                    reportProblems(name, Files.readAllLines(w));
                     saveCfg();
                     return;
                 }
             }
             toast("opened " + relPath(f) + " (" + bench.layers.size() + " layers, " + bench.binds.size() + " binds, " + mix.spells.size() + " spell" + (mix.spells.size() == 1 ? "" : "s") + ") — edits autosave to a working copy, S saves the family");
+            reportProblems(name, Files.readAllLines(f));
         } catch (Exception e) { toast("family " + name + " failed: " + e); }
         saveCfg();
+    }
+    /** A family file's format problems (SfxFormat.validateFamily), which the lenient loader would otherwise skip in silence:
+     *  listed on the console, counted in a toast. The mod refuses a family that has any. */
+    void reportProblems(String name, List<String> lines) {
+        List<String> probs = SfxFormat.validateFamily(lines);
+        if (probs.isEmpty()) return;
+        System.err.println(name + ".sfx: " + probs.size() + " format problem" + (probs.size() == 1 ? "" : "s") + ":");
+        for (String p : probs) System.err.println("  " + p);
+        toast(name + ".sfx has " + probs.size() + " format problem" + (probs.size() == 1 ? "" : "s") + " the mod would refuse — the first: " + probs.get(0) + " (all: ./sfxlab --check " + name + ")");
     }
     /** S with a family loaded: the working state becomes the family file. */
     void saveFamily() {
@@ -1725,19 +1741,6 @@ public class SfxLab extends JPanel {
     Spell spell(String id) { for (Spell sp : mix.spells) if (sp.id.equals(id)) return sp; return null; }
     /** The recipe's text form without the keyword: "tier=1 [secret=1] X3p1 Y2p0@0.35 ...". */
     static String recipeText(Bench b) { return b.comps == null ? "" : recipeLine(b).substring(7); }
-    /** Why a recipe cannot be built at its tier (null when it can): a tier gives arms × motions per arm, each
-     *  motion takes one arm-axis slot, so at most arms×per motions in all and at most `arms` on any one axis. */
-    static String recipeProblem(int tier, RegulatorCore.Comp[] comps) {
-        int arms = RegulatorCore.TIERS[tier - 1][0], per = RegulatorCore.TIERS[tier - 1][1];
-        if (comps.length > arms * per) return comps.length + " motions, but tier " + tier + " has " + arms + " arms × " + per + " = " + arms * per + " slots";
-        int[] perAxis = new int[3];
-        for (RegulatorCore.Comp c : comps) perAxis[c.axis()]++;
-        for (int ax = 0; ax < 3; ax++) if (perAxis[ax] > arms) return perAxis[ax] + " motions on " + RegulatorCore.AXIS[ax] + ", but only " + arms + " arms can each hold one " + RegulatorCore.AXIS[ax] + " at tier " + tier;
-        for (RegulatorCore.Comp c : comps) if (c.n() < 1 || c.n() > 7) return "ratio ×" + c.n() + " — ratios run 1..7 (×8 is past the crank's cap once friction has its say)";
-        for (RegulatorCore.Comp c : comps) if (c.amp() < 0.05 || c.amp() > 1) return "reach " + fmtNum5(c.amp()) + " — reach targets run 0.05..1";
-        return null;
-    }
-    static String recipeProblem(Bench r) { return r == null || r.comps == null ? null : recipeProblem(r.tier, r.comps); }
     /** Parses recipe text; null when it holds no motions. */
     static Bench parseRecipe(String text) {
         if (text == null || text.isBlank()) return null;
@@ -5504,6 +5507,17 @@ public class SfxLab extends JPanel {
             System.out.printf(Locale.ROOT, "rendered %d clips, %.2fs -> %s (peak %.3f%s)%n",
                     cs.size(), timelineEnd(cs) + 1.5, outw, peak, key != 0 ? String.format(Locale.ROOT, ", key %+.2f st", key) : "");
             return;
+        }
+        if (args.length > 0 && args[0].equals("--check")) {
+            List<String> fams = args.length > 1 ? Arrays.asList(args).subList(1, args.length) : familyNames();
+            int bad = 0;
+            for (String fam : fams) {
+                List<String> probs = SfxFormat.validateFamily(Files.readAllLines(familyFile(fam)));
+                System.out.println(fam + ".sfx: " + (probs.isEmpty() ? "clean (family format " + SfxFormat.FAMILY_FORMAT + ")" : probs.size() + " problem" + (probs.size() == 1 ? "" : "s")));
+                for (String p : probs) System.out.println("  " + p);
+                if (!probs.isEmpty()) bad++;
+            }
+            System.exit(bad == 0 ? 0 : 1);
         }
         if (args.length > 0 && args[0].equals("--bake")) {
             List<String> a = new ArrayList<>(Arrays.asList(args).subList(1, args.length));

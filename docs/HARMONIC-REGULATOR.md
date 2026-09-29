@@ -325,6 +325,7 @@ snapshots in signal space, not arrangements. The file format is the `.sfx`
 line style, which the timeline parser skips:
 
 ```
+bench <N>                                the family format version (1 since 2026-09-28; SfxFormat.FAMILY_FORMAT)
 layer <id> <name> <type> <dur> <seed> key=value... [on=lock|unlock] [mute=1]   dur 0 = endless
 range <id> <param> <lo> <hi> [note]      the span that sounded good (authoring notes; default bind range)
 bind <signal> <id|*> <param> [lo hi] [rel] [steps=N | scale=<chord>] [off]   no range = the marked range, else the spec range; off = kept but inert;
@@ -335,6 +336,10 @@ name <display name>                      (spell sections)
 recipe tier=N [secret=1] [rtol=0.1] X3p1r0.7 ...   (spell sections) axis, ratio, phase in quarters, reach target
 ```
 
+- The loader is lenient (unknown lines and keys are skipped, so older builds read newer
+  files); `SfxFormat.validateFamily` is the strict reading, which the lab reports on
+  load, `./sfxlab --check` lists, `--bake` requires clean, and the mod should enforce.
+  A change to the lines or keys bumps the `bench` version.
 - Binds target absolute knob positions (the modulation is the difference from
   the saved value); `rel` binds add to the layer's own value, which is what
   pitch wants. Several binds on one param add up, so two opposed level binds

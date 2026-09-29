@@ -3,6 +3,7 @@
 # Compiles the runtime, the GUI and the tests into .build/test, then runs:
 #   CoreTest   RegulatorCore (runtime only): matching, the three crank models, levers, events, signals, pen, blueprint
 #   BakeTest   the baked partials format (runtime only): quantisation bounds, silence, residual gain
+#   FormatTest the family format (runtime only): fixtures validate clean and re-write stably; injected problems are named
 #   GuiCheck   the regulator panel and the machine window, headless (never saves)
 #   golden.sh  the reference renders, bit-identical to tests/golden.md5 (--bless accepts new ones)
 # Both run in a scratch workspace, .build/test/ws: the frozen family and project files in tests/fixtures/ (so
@@ -22,6 +23,7 @@ export SFXLAB_DIR="$WS"
 status=0
 echo "== CoreTest";  java -cp "$CLS" CoreTest | grep -vE '^PASS|^  ' ; [ "${PIPESTATUS[0]}" -eq 0 ] || status=1
 echo "== BakeTest";  java -cp "$CLS" BakeTest | grep -vE '^PASS' ; [ "${PIPESTATUS[0]}" -eq 0 ] || status=1
+echo "== FormatTest"; java -cp "$CLS" FormatTest tests/fixtures/regulator | grep -vE '^PASS' ; [ "${PIPESTATUS[0]}" -eq 0 ] || status=1
 echo "== GuiCheck";  java -Djava.awt.headless=true -cp "$CLS" GuiCheck "$PWD/.build/test/shots" | grep -vE '^PASS' ; [ "${PIPESTATUS[0]}" -eq 0 ] || status=1
 echo "== golden";    tests/golden.sh "$PWD/$CLS" "${1:-}" || status=1
 [ $status -eq 0 ] && echo "ALL GREEN" || echo "SOMETHING FAILED"
