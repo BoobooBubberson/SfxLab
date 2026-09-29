@@ -276,6 +276,39 @@ public class CoreTest {
         check("stir: stays 1 for a parked motion (nothing coupled to the crank)", q.signals[RegulatorCore.S_STIR] > 0.95 && !q.coupled());
         check("one signal list: the bench reads the core's, with a range for every signal", Sfx.SIGNALS == RegulatorCore.SIGNALS && Sfx.SIG_MAX.length == RegulatorCore.SIGNALS.length);
 
+        // ---- the free machine (the game's): no pin, the machine's own limits, the score follows the best recipe
+        RegulatorCore f = new RegulatorCore(); f.classic = true; f.coupling = false; f.setFree(3, 3); f.power(true);
+        check("free: three arms of three motions whatever is pinned (the default pin is tier I)", f.target == fire && f.arms() == 3 && f.motionsPerArm() == 3 && f.selectArm(2));
+        f.selectArm(0); boolean three = f.axisLever(0) & f.axisLever(1) & f.axisLever(2);
+        check("free: one arm takes X, Y and Z", three && f.engagedCount(0) == 3);
+        f.setFree(1, 2);
+        check("free: a smaller machine refuses what it cannot make (1 arm × 2 motions), and setFree cleared the arms", f.engaged().isEmpty() && !f.selectArm(1) && f.axisLever(0) && f.axisLever(1) && !f.axisLever(2));
+        f.setFree(3, 3); f.target = lance; f.events();
+        f.selectArm(0); f.axisLever(0); f.nudge(1, 0.5); run(f, 2); f.latch();            // X ×1, p0
+        f.selectArm(1); f.axisLever(1); f.nudge(1, 1.05); run(f, 2);                       // Y: 2.1 coasts into ×2, p0
+        run(f, 0.1);
+        List<String> fev = f.events();
+        check("free: wisp (secret, not the pin) held exactly: match, lock and discover, never wrong (" + fev + ")", fev.contains("match:wisp") && fev.contains("lock") && fev.contains("discover:wisp") && fev.stream().noneMatch(e -> e.startsWith("wrong")));
+        check("free: matched and best are wisp, the score and fit are its own", f.matched == wisp && f.best == wisp && f.targetEval.exact && f.signals[RegulatorCore.S_SCORE] == 1 && f.signals[RegulatorCore.S_FIT] > 0.99);
+        f.latch(); f.selectArm(0); f.axisLever(0);                                        // Y held at ×2; X held → driven alone, the crank loads ×1
+        f.nudge(1, 1.05); run(f, 2); f.phaseStep(); run(f, 0.1);                           // X: 3.1 coasts into ×3, p1: fire bolt
+        fev = f.events();
+        check("free: retuned to fire bolt: wisp unmatched, fire bolt matched (" + fev + ")", fev.contains("unmatch:wisp") && fev.contains("unlock") && fev.contains("match:firebolt") && fev.lastIndexOf("lock") > fev.lastIndexOf("unlock") && f.matched == fire);
+        f.nudge(1, 0.1); f.tick(1 / 60.0);
+        fev = f.events();
+        check("free: off the resonance: unlock, nothing matched, the score still follows fire bolt (" + String.format(Locale.ROOT, "%.3f", f.targetEval.score) + ")", fev.contains("unlock") && f.matched == null && f.best == fire && f.targetEval.score > 0.5 && f.targetEval.score < 1);
+        check("free: nothing to voice off the match", f.voice() == null);
+        run(f, 2);
+        check("free: back in the resonance, the voice lever writes fire bolt and clears the arms", f.matched == fire && f.voice() != null && f.lastVoiced == fire && f.engaged().isEmpty() && f.events().contains("voice"));
+        f.tick(1 / 60.0);
+        check("free: the cleared machine unlocks", f.events().contains("unlock") && f.matched == null && f.best == null && f.targetEval.score == 0);
+        f.comps[0][0].eng = true; f.comps[0][0].r = 3; f.comps[0][0].ph = 1; f.comps[1][1].eng = true; f.comps[1][1].r = 2; f.power(false); f.tick(1 / 60.0);
+        check("free: unpowered, an exact figure is no match and cannot be voiced", f.matched == null && !f.events().contains("lock") && f.voice() == null);
+        check("exactMatch: a host's check of claimed motions", RegulatorCore.exactMatch(RegulatorCore.DEFAULT_RECIPES, eng(new Object[]{0, 3, 1}, new Object[]{1, 2, 0})) == fire
+                && RegulatorCore.exactMatch(RegulatorCore.DEFAULT_RECIPES, eng(new Object[]{0, 3.01, 1}, new Object[]{1, 2, 0})) == null);
+        RegulatorCore pin = new RegulatorCore(); pin.classic = true; pin.coupling = false; pin.setTarget(fire); pin.power(true);
+        check("pinned (the default) is untouched: tier I limits, no best / matched", !pin.free && pin.arms() == 2 && pin.motionsPerArm() == 1 && !pin.selectArm(2) && pin.axisLever(0) && !pin.axisLever(1) && pin.best == null && pin.matched == null);
+
         System.out.println(fails == 0 ? "ALL PASS" : fails + " FAILED");
         System.exit(fails == 0 ? 0 : 1);
     }

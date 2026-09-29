@@ -2420,7 +2420,7 @@ public class SfxLab extends JPanel {
         final JToggleButton autoB = new JToggleButton("▶ auto-play"), pauseB = new JToggleButton("pause");
         final JSlider speedS = new JSlider(5, 40, 10);
         final JCheckBox mistakesB = new JCheckBox("mistakes", true), anyB = new JCheckBox("any spell", false);
-        final JCheckBox classicB = new JCheckBox("classic crank", false), couplingB = new JCheckBox("coupled levers", true), wellsB = new JCheckBox("brake & wells", true);
+        final JCheckBox classicB = new JCheckBox("classic crank", false), couplingB = new JCheckBox("coupled levers", true), wellsB = new JCheckBox("brake & wells", true), freeB = new JCheckBox("free machine", false);
         final JButton brakeB = new JButton("brake");
         final JSlider snapS = new JSlider(2, 30, 10);
         final JLabel snapL = new JLabel();
@@ -2484,7 +2484,7 @@ public class SfxLab extends JPanel {
                 axB[i].setToolTipText("coupled levers: down = active (trim, crank), up = parked (keeps its speed) or off at rest. Focus model: off → driven → held → driven; shift-click focuses");
                 axB[i].addActionListener(e -> {
                     if (!core.coupling && (e.getModifiers() & ActionEvent.SHIFT_MASK) != 0) { if (!core.focusAxis(k)) notify("Nothing to trim there: that motion is off."); return; }
-                    if (!core.axisLever(k)) notify("At tier " + core.target.tier + " each arm can hold " + core.target.motionsPerArm() + " motion" + (core.target.motionsPerArm() > 1 ? "s" : "") + ".");
+                    if (!core.axisLever(k)) notify((core.free ? "On this machine" : "At tier " + core.target.tier) + " each arm can hold " + core.motionsPerArm() + " motion" + (core.motionsPerArm() > 1 ? "s" : "") + ".");
                 });
                 axB[i].addMouseListener(new MouseAdapter() { @Override public void mousePressed(MouseEvent e) { if (SwingUtilities.isRightMouseButton(e)) { if (!core.focusAxis(k)) Machine.this.notify("Nothing to trim there: that motion is off."); } } });
                 axes.add(axB[i]);
@@ -2518,7 +2518,9 @@ public class SfxLab extends JPanel {
             snapS.addChangeListener(e -> { core.snapTol = snapS.getValue() / 100.0; snapLabel(); });
             couplingB.setToolTipText("on: a lever down is active (trim reaches it, the crank couples to it when touched); latch snaps and decouples; lever up parks the motion. Off: the focus model (each lever drives / holds its motion; shift-click focuses)");
             couplingB.addActionListener(e -> { core.coupling = couplingB.isSelected(); trimL.setText(trimText()); });
-            cm.add(classicB); cm.add(wellsB); cm.add(couplingB); cm.add(new JLabel("acceptance")); cm.add(snapS); cm.add(snapL);
+            freeB.setToolTipText("the machine as the game runs it: nothing is pinned. Every arm takes three motions whatever the blueprint's tier, the score and fit signals follow the best-scoring spell, and any spell held exactly locks and can be voiced");
+            freeB.addActionListener(e -> { core.free = freeB.isSelected(); syncTarget(); });
+            cm.add(classicB); cm.add(wellsB); cm.add(couplingB); cm.add(freeB); cm.add(new JLabel("acceptance")); cm.add(snapS); cm.add(snapL);
             snapLabel();
             ctl.add(cm);
             trimL = section(trimText());
@@ -2536,9 +2538,9 @@ public class SfxLab extends JPanel {
             voiceB.addActionListener(e -> {
                 java.util.List<RegulatorCore.Snap> snap = core.voice();
                 if (snap == null) return;
-                shelf.addElement(core.target.name + "  (" + snap.size() + " motions)");
+                shelf.addElement(core.lastVoiced.name + "  (" + snap.size() + " motions)");
                 flashV = 1;
-                notify(core.target.name + " voiced. A fresh crystal is in the socket.");
+                notify(core.lastVoiced.name + " voiced. A fresh crystal is in the socket.");
             });
             JButton recipeB = new JButton("→ recipe");
             recipeB.setToolTipText("write the motions on the arms (rounded to their resonances) as the pinned spell's recipe");
@@ -2625,7 +2627,7 @@ public class SfxLab extends JPanel {
         void notify(String m, double sec) { flash = m; flashUntil = System.currentTimeMillis() + (long) (sec * 1000); }
         void syncTarget() {
             if (armB[0] == null || core.target == null) return;   // called once before the panel exists
-            for (int i = 0; i < 3; i++) armB[i].setEnabled(i < core.target.arms());
+            for (int i = 0; i < 3; i++) armB[i].setEnabled(i < core.arms());
             armB[0].setSelected(true);
             for (JToggleButton b : targetB) if (b.isSelected() != (b.getClientProperty("recipe") == core.target)) b.setSelected(b.getClientProperty("recipe") == core.target);
             stage.repaint();
@@ -2638,6 +2640,7 @@ public class SfxLab extends JPanel {
             core = new RegulatorCore(rs);
             core.power(wasOn);
             core.classic = classicB.isSelected(); core.wells = wellsB.isSelected(); core.coupling = couplingB.isSelected(); core.snapTol = snapS.getValue() / 100.0;
+            core.free = freeB.isSelected();
             auto.stop(); autoB.setSelected(false);
             for (JToggleButton b : targetB) tgGroup.remove(b);
             targetB.clear(); tg.removeAll();
@@ -2990,7 +2993,7 @@ public class SfxLab extends JPanel {
                     double[] py = {an[0] * 0.62 + av[0], -0.35 + av[1] * 0.8, an[2] * 0.62 + av[2]};
                     double[] el = {(an[0] + py[0]) / 2 * 1.15, (an[1] + py[1]) / 2 + 0.55, (an[2] + py[2]) / 2 * 1.15};
                     double[] P0 = proj(an, R, W, H), P1 = proj(el, R, W, H), P2 = proj(py, R, W, H);
-                    boolean active = i < core.target.arms(), on = core.engagedCount(i) > 0;
+                    boolean active = i < core.arms(), on = core.engagedCount(i) > 0;
                     g.setColor(active ? (i == core.arm ? new Color(230, 189, 124, 217) : new Color(184, 140, 78, 140)) : new Color(120, 95, 70, 64));
                     g.setStroke(active ? new BasicStroke(3f) : new BasicStroke(2f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 1, new float[]{4, 5}, 0));
                     g.drawLine((int) P0[0], (int) P0[1], (int) P1[0], (int) P1[1]);

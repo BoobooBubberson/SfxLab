@@ -557,6 +557,30 @@ The auto-player uses the technique (scroll past, hold, taps near, let go
 inside the window) and locks every roster recipe at every speed and at a
 window of 0.03.
 
+**The free machine (2026-09-29, the game's mode, a toggle in the lab).** The
+game pins nothing: no blueprint beside the machine, no spell buttons. The
+core's pinned target decided three things, and `free` (`setFree(arms,
+motionsPerArm)`) takes each of them back:
+
+- **What the levers allow is the machine's own.** Arms and motions per arm
+  are the machine's upgrade path (the first game build is the full 3 × 3),
+  never the pinned recipe's tier: a high spell is out of reach because the
+  machine cannot make its motions, not because a control is greyed out.
+- **`score` and `fit` follow the best-scoring recipe** (`best`), so the
+  palette's binds on them (the near-miss flicker, the reach hint) answer
+  whichever spell the player is closest to. Per-spell scores are unchanged.
+- **`lock` / `unlock` report any recipe held exactly** (`matched`), and
+  `voice()` writes that one (`lastVoiced`). `match:<id>` / `unmatch:<id>` are
+  as before; there is no `wrong:<id>`, since nothing is pinned to be wrong
+  against; a secret recipe still reports `discover:<id>` the first time.
+
+`RegulatorCore.exactMatch(recipes, motions)` is the same judgement as a
+static check, for a host that must verify a match it did not compute (the
+mod's server, against the operator's client). Pinned remains the default
+and is unchanged; "free machine" in the machine window auditions a family
+the way the game will play it, and `@t free [arms] [motions]` does the same
+in a BenchRender script.
+
 The auto-player trims first (reach, phase), spins to just above the target
 and latches as friction carries the ratio through the window, which is
 also the human technique; under coupled levers it parks each motion after

@@ -16,6 +16,7 @@ import sfxlab.runtime.*;
  *  run with java -XX:ActiveProcessorCount=1 for the one-thread cost a game sound thread pays)
  *  script lines (times absolute, seconds):
  *    @t pin <spellId>              the machine's target
+ *    @t free [arms] [motions]      the free machine, as the game runs it (no target: score and fit follow the best recipe)
  *    @t motion <arm> <axis> <n> <phase> <amp>    engage a motion at ratio n (driven = detuned allowed)
  *    @t ramp <arm> <axis> <nTo> <dur>            glide that motion's ratio to nTo over dur s, then hold exactly
  *    @t off <arm> <axis>
@@ -155,6 +156,7 @@ public class BenchRender {
                 String[] a = evs.get(ei++).a;
                 switch (a[0]) {
                     case "pin" -> { for (RegulatorCore.Recipe r : core.recipes) if (r.id.equals(a[1])) core.setTarget(r); }
+                    case "free" -> core.setFree(a.length > 1 ? Integer.parseInt(a[1]) : RegulatorCore.ARMS, a.length > 2 ? Integer.parseInt(a[2]) : RegulatorCore.AXES);
                     case "motion" -> { RegulatorCore.Motion m = core.comps[Integer.parseInt(a[1])][Integer.parseInt(a[2])]; m.eng = true; m.act = true; m.r = Double.parseDouble(a[3]); m.ph = Integer.parseInt(a[4]); m.amp = Double.parseDouble(a[5]); m.drv = m.r != Math.rint(m.r); }
                     case "ramp" -> { Ramp r = new Ramp(); r.arm = Integer.parseInt(a[1]); r.axis = Integer.parseInt(a[2]); r.from = core.comps[r.arm][r.axis].r; r.to = Double.parseDouble(a[3]); r.t0 = now; r.t1 = now + Double.parseDouble(a[4]); ramps.add(r); }
                     case "off" -> { RegulatorCore.Motion m = core.comps[Integer.parseInt(a[1])][Integer.parseInt(a[2])]; m.eng = false; m.act = false; m.drv = false; }

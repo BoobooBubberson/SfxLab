@@ -24,6 +24,10 @@ import static sfxlab.runtime.SfxFormat.*;
 // frame; read signals[] (SIGNALS names), eval, targetEval, and drain
 // events(). figurePoint / armVector / blueprint draw the ribbon and the
 // pinned sigil.
+//
+// The game's machine pins nothing: setFree(arms, motionsPerArm) instead of
+// setTarget, then the same input and tick; read matched (the recipe held
+// exactly, or null) and voice() writes it (lastVoiced says which).
 // =========================================================================
 public class RegulatorCore {
     // ---- tuning constants (prototype-exact)
@@ -142,6 +146,17 @@ public class RegulatorCore {
      *  Classic wins if both are set. */
     public boolean wells = true, brake; public double brakeHeld;   // brakeHeld: seconds the brake has been on, for the progressive bite
     public final java.util.Random notchRng = new java.util.Random(11);
+    /** free: the machine as the game has it, with no pinned recipe. What the levers allow is the machine's own
+     *  (freeArms × freeMotions per arm: its upgrade path), never a recipe's tier, so a recipe is out of reach when the
+     *  machine cannot make its motions. score and fit follow the best-scoring recipe (best); lock / unlock report any
+     *  recipe held exactly (matched), and voice() writes that one. target is left alone and decides nothing (the lab
+     *  still draws its blueprint). Off (the default), everything is the pinned machine's, unchanged. */
+    public boolean free;
+    public int freeArms = ARMS, freeMotions = AXES;
+    /** Free machine, as of the last tick: the recipe the score follows (null while nothing scores) and the recipe held
+     *  exactly while powered (null if none). lastVoiced: the recipe the last voice() wrote, in either mode. */
+    public Recipe best, matched, lastVoiced;
+    private boolean freeLocked;
     public double snapTol = 0.1;          // the acceptance window at ×1 (the difficulty scaler); narrower for higher ratios (constant under wells)
     public final java.util.Map<String, Eval> eval = new java.util.LinkedHashMap<>();
     public Eval targetEval = new Eval();
@@ -159,6 +174,17 @@ public class RegulatorCore {
         if (recipes.length > 0) target = recipes[0];
     }
     public Recipe recipe(String id) { for (Recipe r : recipes) if (r.id.equals(id)) return r; return null; }
+    /** The free machine (the game's): this many arms, each holding this many motions; the arms are cleared. */
+    public void setFree(int arms, int motionsPerArm) {
+        free = true;
+        freeArms = Math.max(1, Math.min(ARMS, arms)); freeMotions = Math.max(1, Math.min(AXES, motionsPerArm));
+        resetComps(); arm = 0;
+    }
+    /** How many arms the levers reach, and how many motions each may hold: the machine's own when free, else the pinned recipe's tier. */
+    public int arms() { return free ? freeArms : target != null ? target.arms() : 0; }
+    public int motionsPerArm() { return free ? freeMotions : target != null ? target.motionsPerArm() : 0; }
+    /** The recipe these motions trace exactly, or null: what a host checks before it trusts a claimed match. */
+    public static Recipe exactMatch(Recipe[] recipes, java.util.List<Eng> eng) { for (Recipe r : recipes) if (evaluate(r, eng).exact) return r; return null; }
     public void resetComps() { for (Motion[] a : comps) for (int i = 0; i < AXES; i++) a[i] = new Motion(); java.util.Arrays.fill(focus, -1); }
     /** Events since the last drain: lock, unlock (the target), discover:<id>, wrong:<id> (another blueprint's
      *  sigil matched), voice, stopped:<arm>:<axis>. */
@@ -252,7 +278,7 @@ public class RegulatorCore {
     // ---- levers
     public int drivenCount() { int n = 0; for (Motion[] a : comps) for (Motion c : a) if (c.eng && c.drv) n++; return n; }
     public int engagedCount(int arm) { int n = 0; for (Motion c : comps[arm]) if (c.eng) n++; return n; }
-    public boolean selectArm(int i) { if (target == null || i < 0 || i >= target.arms()) return false; arm = i; return true; }
+    public boolean selectArm(int i) { if (i < 0 || i >= arms()) return false; arm = i; return true; }
     public void setTarget(Recipe r) { target = r; resetComps(); arm = 0; }
     public void power(boolean on) { powered = on; }
     /** driven → held; a motion held at rest is switched off (that is how motions are released). Classic crank: a
@@ -273,11 +299,11 @@ public class RegulatorCore {
      *  ratio), driven → held (or off at rest), held → driven (loading the crank, or ganging). Returns false
      *  when the tier allows no more motions on this arm. */
     public boolean axisLever(int ax) {
-        if (target == null) return false;
+        if (!free && target == null) return false;
         Motion c = comps[arm][ax];
         if (coupling) {
             if (!c.eng) {   // off → active, at rest; it joins the crank on the next scroll
-                if (engagedCount(arm) >= target.motionsPerArm()) return false;
+                if (engagedCount(arm) >= motionsPerArm()) return false;
                 c.eng = true; c.act = true; c.drv = false; c.r = 0; c.ph = 0; c.amp = DEFAULT_REACH; c.osc = 0;
             } else if (c.act) {   // active → parked (keeps its speed), or off at rest
                 if (c.drv) holdOrStop(c, arm, ax);   // a coupled motion is latched as it goes up
@@ -288,7 +314,7 @@ public class RegulatorCore {
         }
         int others = drivenCount();
         if (!c.eng) {
-            if (engagedCount(arm) >= target.motionsPerArm()) return false;   // refused: the trim focus stays where it was
+            if (engagedCount(arm) >= motionsPerArm()) return false;   // refused: the trim focus stays where it was
             focus[arm] = ax;
             c.eng = true; c.drv = true; c.ph = 0; c.amp = DEFAULT_REACH; c.osc = 0;
             if (others > 0) c.r = crankRatio(); else { c.r = 0; loadCrank(0); }
@@ -395,19 +421,29 @@ public class RegulatorCore {
             if (c.osc > 1e6) c.osc -= 2 * Math.PI * Math.floor(c.osc / (2 * Math.PI));
         }
         java.util.List<Eng> eng = engaged();
+        Recipe bestNow = null, exactNow = null; double bestScore = 0;
         for (Recipe r : recipes) {
             Eval e = evaluate(r, eng);
             eval.put(r.id, e);
+            if (e.exact && exactNow == null) exactNow = r;
+            if (e.score > bestScore) { bestScore = e.score; bestNow = r; }
             boolean was = prevExact.getOrDefault(r.id, false);
             if (e.exact && !was && powered) {
-                events.add("match:" + r.id);   // every recipe reports; lock / unlock are the pinned target's
-                if (r == target) events.add("lock");
+                events.add("match:" + r.id);   // every recipe reports; lock / unlock are the pinned target's (free: any recipe's, below)
+                if (free) { if (r.secret && discovered.add(r.id)) events.add("discover:" + r.id); }
+                else if (r == target) events.add("lock");
                 else if (r.secret) { if (discovered.add(r.id)) events.add("discover:" + r.id); }
                 else events.add("wrong:" + r.id);
-            } else if (!e.exact && was) { events.add("unmatch:" + r.id); if (r == target) events.add("unlock"); }
+            } else if (!e.exact && was) { events.add("unmatch:" + r.id); if (!free && r == target) events.add("unlock"); }
             prevExact.put(r.id, e.exact && powered);
         }
-        targetEval = target != null ? eval.get(target.id) : new Eval();
+        if (free) {   // no pin: the score follows the best recipe, and lock is the machine holding any recipe exactly
+            best = exactNow != null ? exactNow : bestNow;
+            matched = powered ? exactNow : null;
+            if (matched != null && !freeLocked) events.add("lock"); else if (matched == null && freeLocked) events.add("unlock");
+            freeLocked = matched != null;
+            targetEval = best != null ? eval.get(best.id) : new Eval();
+        } else targetEval = target != null ? eval.get(target.id) : new Eval();
         computeSignals(eng);
     }
     public void computeSignals(java.util.List<Eng> eng) {
@@ -599,9 +635,13 @@ public class RegulatorCore {
         for (int a = 0; a < ARMS; a++) for (int x = 0; x < AXES; x++) { Motion c = comps[a][x]; if (c.eng) out.add(new Snap(a, x, c.r, c.ph, c.amp)); }
         return out;
     }
-    /** The voice lever: only at an exact match. Writes the sigil (returned) and clears the machine for a fresh crystal. */
+    /** The voice lever: only at an exact match. Writes the sigil (returned) and clears the machine for a fresh crystal.
+     *  Pinned, the match is the target's; free, any recipe's, judged on the motions as they stand (not the last tick's
+     *  view of them). lastVoiced names the recipe written. */
     public java.util.List<Snap> voice() {
-        if (target == null || !targetEval.exact) return null;
+        Recipe r = free ? (powered ? exactMatch(recipes, engaged()) : null) : target != null && targetEval.exact ? target : null;
+        if (r == null) return null;
+        lastVoiced = r;
         java.util.List<Snap> snap = snapshot();
         voiced.add(snap);
         resetComps();

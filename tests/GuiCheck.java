@@ -108,6 +108,10 @@ public class GuiCheck {
         check("the family has a two-motion recipe to play", target != null);
         if (target == null) { System.out.println(fails + " FAILED"); System.exit(1); }
         c.setTarget(target); mc.syncTarget();
+        mc.freeB.doClick();
+        check("free machine: every arm is in reach whatever the pin's tier, and off again restores the tier", c.free && mc.armB[2].isEnabled() && c.arms() == 3);
+        mc.freeB.doClick();
+        check("pinned again: the third arm is the tier's to give", !c.free && mc.armB[2].isEnabled() == (target.arms() > 2));
         mc.power.doClick();
         check("power starts the bench playing", c.powered && lab.benchPlaying);
         for (RegulatorCore.Comp k : target.comps) {   // each motion on its own arm, spun to its ratio, phased, reached, latched
