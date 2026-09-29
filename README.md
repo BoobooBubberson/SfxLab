@@ -164,6 +164,24 @@ same sources. The web prototype in `docs/` is the core's test oracle.
 `.sfx` files are plain text, one clip per line, so they diff and merge like
 code and clip lines can be copied between projects and the library by hand.
 
+## Tests
+
+```sh
+tests/run.sh            # about 50 s; exits non-zero on any failure
+```
+
+- `CoreTest`: `RegulatorCore` on its own: shape matching, all three crank models (brake & wells, the free crank,
+  the classic catching crank), levers and coupling, events, signals, the pen and the blueprint.
+- `GuiCheck`: the regulator panel (binds, mutes, filter, undo) and the machine window playing to a lock and voicing
+  the crystal, headless.
+- `golden.sh`: 16 reference renders (every timeline project at key 0 and +7, a mono export, and a scripted machine
+  approach per family) that must stay bit-identical. After a change meant to alter the sound, listen to the new
+  renders in `.build/test/renders/` and accept them with `tests/run.sh --bless`.
+
+The suite renders frozen copies of the family and project files in `tests/fixtures/`, so authoring never turns it
+red; `tests/fixtures.sh` refreshes them from the last commit when you want the references to follow. The hashes are
+this machine's: they depend on the local ffmpeg and on `samples/minecraft_sounds_assets/`, which git does not track.
+
 ## Contributing samples
 
 Recordings go in a subfolder of `samples/` with a row in `samples/CREDITS.md`
