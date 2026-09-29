@@ -1123,7 +1123,7 @@ public class SfxLab extends JPanel {
                     }
                     Path ogg = out.resolve("partials").resolve(stem + ".res.ogg"), ptk = out.resolve("partials").resolve(stem + ".ptk");
                     run("ffmpeg", "-v", "error", "-y", "-f", "f32le", "-ar", String.valueOf(SR), "-ac", "1", "-i", raw.toString(),
-                        "-c:a", "libvorbis", "-q:a", String.valueOf(quality), ogg.toString());
+                        "-c:a", "libvorbis", "-q:a", String.valueOf(quality), "-fflags", "+bitexact", "-flags:a", "+bitexact", ogg.toString());   // bitexact: no random stream serial, so an unchanged bake is byte-identical (no churn in the mod's history)
                     Files.delete(raw);
                     try (OutputStream o = Files.newOutputStream(ptk)) { Partials.writeBaked(o, pa, n, g); }   // m is (L + R) / 2 of the residual as the engine plays it
                     long cached = 8L * n + 20L * pa.tracks.length; for (PTrack t : pa.tracks) cached += 8L * t.len;
