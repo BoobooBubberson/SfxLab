@@ -1,3 +1,4 @@
+import java.io.*;
 import java.nio.file.*;
 import java.util.*;
 import sfxlab.runtime.*;
@@ -9,7 +10,8 @@ import sfxlab.runtime.*;
  *  the live signals and scores, and (with --layers) each layer's contribution in dB (full mix minus the mix without it).
  *  Rough targets that read as "clear" rather than "mud": sat 0, no band over ~60 %, the notes within ~6 dB of the bed.
  *  Drives a RegulatorCore through a scripted approach and renders the bench through SfxLab's own benchLive + Engine.
- *  usage: BenchRender <palette.sfx> <family> <script> <out.wav> [--layers]
+ *  usage: BenchRender <palette.sfx> <family> <script> <out.wav> [--layers] [--warm]   (--warm: time a second, JIT-warm pass;
+ *  run with java -XX:ActiveProcessorCount=1 for the one-thread cost a game sound thread pays)
  *  script lines (times absolute, seconds):
  *    @t pin <spellId>              the machine's target
  *    @t motion <arm> <axis> <n> <phase> <amp>    engage a motion at ratio n (driven = detuned allowed)
@@ -19,6 +21,7 @@ import sfxlab.runtime.*;
  *    @t end */
 public class BenchRender {
     record Ev(double t, String[] a) {}
+    static final double[] COST = new double[600];   // seconds of work per second of audio (the full mix)
     public static void main(String[] args) throws Exception {
         System.setProperty("java.awt.headless", "true");
         System.setProperty("sfxlab.noautosave", "true");
@@ -46,7 +49,17 @@ public class BenchRender {
         for (Clip c : lab.bench.layers) ids.add(c.id);
         for (Spell sp : lab.mix.spells) for (Clip c : sp.bench.layers) if (c.on == Sfx.ON_NONE && !ids.contains(c.id)) ids.add(c.id + "@" + sp.id);
         // full mix, then optionally each endless layer alone (live, through its binds)
+        if (Arrays.asList(args).contains("--warm")) {   // for timing: one pass first, so the JIT has compiled the engine before the measured one
+            PrintStream so = System.out; System.setOut(new PrintStream(OutputStream.nullOutputStream()));
+            render(lab, evs, endT, null, null, true);
+            System.setOut(so); Arrays.fill(COST, 0);
+        }
+        long r0 = System.nanoTime();
         double[][] mix = render(lab, evs, endT, null, null, true);
+        double took = (System.nanoTime() - r0) / 1e9, len = mix[0].length / (double) Sfx.SR;
+        int worst = 0; for (int k = 1; k < Math.min(COST.length, (int) len); k++) if (COST[k] > COST[worst]) worst = k;
+        System.err.printf(Locale.ROOT, "rendered %.1f s of audio in %.2f s: %.3f of realtime on %d render thread%s; worst second %.3f (at %d s)%n", len, took, took / len,
+                          Engine.POOL_N, Engine.POOL_N == 1 ? "" : "s", COST[worst], worst);
         writeWav(out, mix);
         int win = Sfx.SR;   // 1 s windows
         int nw = mix[0].length / win;
@@ -141,11 +154,13 @@ public class BenchRender {
                 else if (ev.startsWith("accept:")) lab.fireEvent(Sfx.ON_ACCEPT, false, true);
                 if (log) System.out.printf(Locale.ROOT, "  %.2fs event %s%n", now, ev);
             }
+            long b0 = System.nanoTime();   // the audio thread's share: the live mix and the engine
             snap.clear();
             lab.benchLive(eng.t, snap);
             eng.voices.keySet().removeIf(c -> !snap.contains(c) || eng.t < c.start || eng.t >= c.end());
             int n = Math.min(Sfx.BLOCK, total - i);
             eng.renderBlock(snap, null, null, null, bl, br, n);
+            if (log && (int) now < COST.length) COST[(int) now] += (System.nanoTime() - b0) / 1e9;
             for (int k = 0; k < n; k++) { mix[0][i + k] = bl[k]; mix[1][i + k] = br[k]; }
             int w = (int) now;
             if (log) {

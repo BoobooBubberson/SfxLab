@@ -288,6 +288,25 @@ these are backward compatible with existing files and older builds.
   once should be measured early. The forge's baked per-key files are the
   fallback if runtime resynthesis is too heavy.
 
+  *Measured 2026-09-28* (Ryzen 7 3700X, one render thread as a game sound
+  thread gets: `java -XX:ActiveProcessorCount=1 … BenchRender … --warm`, the
+  scripted approach per family, JIT warm). One machine's full mix, palette and
+  spells, costs on average 0.22–0.36 of a core and 0.35–0.50 in its worst
+  second; luminal's dense pads are the heaviest, aqueous the lightest. The
+  worst seconds come where layers first sound: each partials voice sets up a
+  phase and a harmonic cache per tracked partial, thousands at once. About 60 %
+  of the time is the partials oscillator bank (one `Math.cos` per active partial
+  per sample); the rest is spread over filters, drive and the effects. So:
+  - render each machine on its own worker thread, a block ahead, and hand the
+    blocks to the stream; never on Minecraft's sound thread;
+  - one machine at full palette is affordable; several at once are not, so
+    only the machine being worked plays its full mix, and others fall silent or
+    to a cheap idle bed by distance;
+  - the oscillator bank has headroom: a phase rotator (one complex multiply per
+    partial) instead of `cos`, and skipping partials far below the mix. Either
+    changes the renders slightly, so it goes in with listening and a
+    `tests/run.sh --bless`, not silently.
+
 ### 5.3 As built in SfxLab (2026-09-24)
 
 Step 1 of section 6 is done, with one change of shape from 5.1: the palette is
