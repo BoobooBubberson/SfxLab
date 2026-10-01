@@ -149,6 +149,17 @@ public class CoreTest {
         double offs = pc.comps[0][0].osc - 3 * RegulatorCore.DRAW_RATE * pc.tau; offs -= 2 * Math.PI * Math.rint(offs / (2 * Math.PI));
         check("held ×3 eases into alignment with the receiver within 2 s (offset " + String.format(Locale.ROOT, "%.4f", offs) + ")", Math.abs(offs) < 0.01);
 
+        // ---- the receiver's period is the machine's own: twice the period, half the tempo, the same ratios
+        RegulatorCore slow = new RegulatorCore(); slow.power(true); slow.setTarget(slow.recipes[0]);
+        RegulatorCore usual = new RegulatorCore(); usual.power(true); usual.setTarget(usual.recipes[0]);
+        slow.setDrawPeriod(2 * RegulatorCore.DRAW_PERIOD);
+        for (RegulatorCore rc : new RegulatorCore[]{slow, usual}) { rc.axisLever(0); rc.nudge(1, 1.5); rc.latch(); }
+        for (int i = 0; i < 300; i++) { slow.tick(1 / 60.0); slow.tick(1 / 60.0); usual.tick(1 / 60.0); }
+        double[] ps = new double[3], pu = new double[3];
+        slow.pen(slow.tau, ps); usual.pen(usual.tau, pu);
+        check("a machine with twice the receiver period draws the same figure in twice the time (" + String.format(Locale.ROOT, "%.4f vs %.4f", ps[0], pu[0]) + ")",
+                slow.comps[0][0].r == usual.comps[0][0].r && Math.abs(ps[0] - pu[0]) < 1e-6);
+
         // ---- figure and blueprint
         double[] p = new double[3];
         c.figurePoint(0, p);

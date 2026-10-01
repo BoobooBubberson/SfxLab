@@ -412,9 +412,9 @@ public class RegulatorCore {
         // the receiver (its angle → ratio × receiver angle), which is what makes the dial's quarters meaningful
         for (Motion[] a : comps) for (Motion c : a) {
             if (!c.eng) continue;
-            c.osc += c.r * DRAW_RATE * dt;
+            c.osc += c.r * drawRate() * dt;
             if (!c.drv && c.r == Math.rint(c.r)) {
-                double want = c.r * DRAW_RATE * tau, d = want - c.osc;
+                double want = c.r * drawRate() * tau, d = want - c.osc;
                 d -= 2 * Math.PI * Math.rint(d / (2 * Math.PI));
                 c.osc += d * Math.min(1, dt * 4);
             }
@@ -493,7 +493,7 @@ public class RegulatorCore {
         for (Motion[] a : comps) for (int ax = 0; ax < AXES; ax++) {
             Motion c = a[ax];
             if (!c.eng) continue;
-            double amp = c.amp * Math.min(1, c.r / 0.6), w = c.r * DRAW_RATE, th = c.osc + c.ph * Math.PI / 2;
+            double amp = c.amp * Math.min(1, c.r / 0.6), w = c.r * drawRate(), th = c.osc + c.ph * Math.PI / 2;
             orbP[ax] += amp * Math.sin(th); orbV[ax] += amp * w * Math.cos(th); orbA[ax] -= amp * w * w * Math.sin(th);
             vmax += amp * w; amax += amp * w * w;
         }
@@ -521,17 +521,22 @@ public class RegulatorCore {
     public double pitch(int arm) { return pitchOf(signals[S_RATIO + arm]); }
     public static double pitchOf(double ratio) { if (ratio <= 0.05) return 0; double st = 12 * Math.log(ratio) / Math.log(2); return ((st % 12) + 12) % 12; }
 
-    // ---- the figure (§3.3, revised): a pen. The receiver's own cycle takes DRAW_PERIOD seconds of machine time;
+    // ---- the figure (§3.3, revised): a pen. The receiver's own cycle takes drawPeriod seconds of machine time (DRAW_PERIOD by default);
     // every motion oscillates at its ratio times that, so integer ratios retrace one closed figure and a detuned
     // motion makes the trace precess at a rate proportional to the detune, slowing to a stop as it is tuned in.
     public static final double DRAW_PERIOD = 2.5, DRAW_RATE = 2 * Math.PI / DRAW_PERIOD;
+    /** This machine's own receiver period, seconds (DRAW_PERIOD unless a host sets another): every motion's rate and
+     *  the figure's tempo go with it; the ratios, the wells and the signals' levels do not. */
+    public double drawPeriod = DRAW_PERIOD;
+    public double drawRate() { return 2 * Math.PI / drawPeriod; }
+    public void setDrawPeriod(double seconds) { drawPeriod = Math.max(0.25, Math.min(60, seconds)); }
     /** The pen's position at machine time tauAt (between the last tick and the next, extrapolated at each motion's rate). */
     public void pen(double tauAt, double[] out) {
         out[0] = out[1] = out[2] = 0;
         for (Motion[] a : comps) for (int ax = 0; ax < AXES; ax++) {
             Motion c = a[ax];
             if (!c.eng) continue;
-            out[ax] += c.amp * Math.min(1, c.r / 0.6) * Math.sin(c.osc + c.r * DRAW_RATE * (tauAt - tau) + c.ph * Math.PI / 2);
+            out[ax] += c.amp * Math.min(1, c.r / 0.6) * Math.sin(c.osc + c.r * drawRate() * (tauAt - tau) + c.ph * Math.PI / 2);
         }
     }
     /** One arm's own contribution to the pen (for drawing the arm heads). */
@@ -540,7 +545,7 @@ public class RegulatorCore {
         for (int ax = 0; ax < AXES; ax++) {
             Motion c = comps[arm][ax];
             if (!c.eng) continue;
-            out[ax] += c.amp * Math.min(1, c.r / 0.6) * Math.sin(c.osc + c.r * DRAW_RATE * (tauAt - tau) + c.ph * Math.PI / 2);
+            out[ax] += c.amp * Math.min(1, c.r / 0.6) * Math.sin(c.osc + c.r * drawRate() * (tauAt - tau) + c.ph * Math.PI / 2);
         }
     }
     /** The figure's shape as the recipe would draw it: every motion phase-locked to the receiver, over one receiver
@@ -623,7 +628,7 @@ public class RegulatorCore {
             double d = (rng.nextDouble() < 0.5 ? -1 : 1) * (jit * (0.5 + rng.nextDouble() * 0.5));
             c.r = Math.max(0.5, s.r + d);
             c.ph = i == wrong ? (s.phase + 1) % 4 : s.phase;
-            c.osc = c.r * DRAW_RATE * tau;
+            c.osc = c.r * drawRate() * tau;
             if (focus[s.arm] < 0) focus[s.arm] = s.axis;
         }
         arm = 0;
