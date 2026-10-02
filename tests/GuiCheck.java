@@ -135,6 +135,14 @@ public class GuiCheck {
         check("the stage offers the composite, the seated crystal and the planted components to the hand",
               mc.picks.stream().anyMatch(p -> p.on() == SfxLab.Machine.On.COMPOSITE) && mc.picks.stream().anyMatch(p -> p.on() == SfxLab.Machine.On.CRYSTAL)
               && mc.picks.stream().filter(p -> p.on() == SfxLab.Machine.On.COMPONENT).count() == target.comps.length);
+        for (boolean rising : new boolean[]{true, false}) {   // the thread is drawn for both verbs (a crescendo's once threw in the paint)
+            mc.beginThread(new SfxLab.Machine.Pick(SfxLab.Machine.On.ARM, cm.selectedAxis(), cm.selectedSlot(), 0, 0, 1, true), rising);
+            mc.step(DT);
+            boolean painted = true;
+            try { Graphics2D g2 = img.createGraphics(); mc.print(g2); g2.dispose(); } catch (RuntimeException e) { painted = false; }
+            mc.endThread();
+            check("the stage paints with a " + (rising ? "crescendo" : "diminuendo") + " thread in hand", painted);
+        }
         mc.pauseB.doClick();
         double tau0 = c.tau, s0 = lab.sigVal[Sfx.sigIdx("drive")];
         for (int i = 0; i < 60; i++) mc.frameTick();

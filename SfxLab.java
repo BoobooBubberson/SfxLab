@@ -3065,7 +3065,7 @@ public class SfxLab extends JPanel {
                     for (Pick p : picks) if (p.on() == thread.on() && p.axis() == thread.axis() && p.slot() == thread.slot()) { tx = p.x(); ty = p.y(); }
                     if (thread.on() == On.COMPOSITE) { tx = ox; ty = oy; }
                     g.setColor(new Color(255, 247, 224, threadRising ? 200 : 110));
-                    g.setStroke(new BasicStroke(threadRising ? 1.8f : 1.2f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 1, new float[]{6, 5}, (float) (-(threadRising ? 1 : -1) * core.tau * 40 % 11)));
+                    g.setStroke(new BasicStroke(threadRising ? 1.8f : 1.2f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 1, new float[]{6, 5}, (float) ((((threadRising ? -1 : 1) * core.tau * 40) % 11 + 11) % 11)));   // the dashes run toward the machine for crescendo, back for diminuendo; a dash phase may not be negative
                     g.drawLine(mouse.x, mouse.y, (int) tx, (int) ty);
                 }
                 blueprint(g, W, H, BP);
