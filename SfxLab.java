@@ -3371,7 +3371,7 @@ public class SfxLab extends JPanel {
             rescanB.setToolTipText("rescan regulator/ and reload the family from disk");
             rescanB.addActionListener(e -> { rescanFamilies(); if (lab.family != null) lab.loadFamily(lab.family); });
             for (AbstractButton b : new AbstractButton[]{lockB, unlockB, rescanB, bindsB, syncB}) b.setFocusable(false);   // a click here must not take P / SPACE away from the bench
-            sigRow.add(lockB); sigRow.add(unlockB); sigRow.add(rescanB); sigRow.add(bindsB); sigRow.add(syncB);
+            sigRow.add(lockB); sigRow.add(unlockB); sigRow.add(rescanB); sigRow.add(bindsB);
             top.add(sigRow, gc);
             // fold buttons: the signal sliders and the spell rows each fold away so the bind tables get the height
             gc.gridy = 1;
@@ -3389,6 +3389,8 @@ public class SfxLab extends JPanel {
             };
             sigT.addActionListener(e -> { fold.run(); lab.saveCfg(); }); spT.addActionListener(e -> { fold.run(); lab.saveCfg(); });
             foldRow.add(sigT); foldRow.add(spT);
+            syncB.setMargin(new Insets(0, 6, 0, 6));
+            foldRow.add(syncB);   // here, not on the family row: that row is full, and a narrow panel clipped the button away
             JLabel muteHint = new JLabel("box off: its binds hold still (A/B)"); muteHint.setForeground(Color.GRAY);
             foldRow.add(muteHint);
             top.add(foldRow, gc);
