@@ -168,6 +168,14 @@ public class GuiCheck {
                 check(String.format(Locale.ROOT, "auto-play conducts %s to a lock%s (%.0f s)", r.name, pass == 1 ? ", meandering" : "", t), locked);
             }
         }
+        // closing the window ends the session: nothing is left running or seated for the next one
+        mc.pin(target);
+        mc.auto.start(); mc.autoB.setSelected(true);
+        for (int i = 0; i < 300; i++) mc.step(1 / 30.0);
+        mc.pauseB.doClick();
+        mc.closed();
+        check("closing the window stops auto-play, takes the crystal out, clears the machine and stops the bench",
+              !mc.auto.on && !mc.auto.paused && !mc.autoB.isSelected() && !mc.power.isSelected() && !c.powered && c.snapshot().isEmpty() && !lab.benchPlaying);
         System.out.println(fails == 0 ? "ALL PASS" : fails + " FAILED");
         System.exit(fails == 0 ? 0 : 1);
     }

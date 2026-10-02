@@ -2579,11 +2579,23 @@ public class SfxLab extends JPanel {
             if (frame == null) {
                 frame = new JFrame("Harmonic Regulator — the machine");
                 frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+                frame.addWindowListener(new WindowAdapter() { @Override public void windowClosing(WindowEvent e) { closed(); } });
                 frame.add(this);
                 frame.setSize(1180, 860);
                 frame.setLocationByPlatform(true);
             }
             frame.setVisible(true); frame.toFront();
+        }
+        /** The window is closed: the session is over. Auto-play stops, the crystal comes out (the machine is cleared),
+         *  the bench stops playing and the panel's sliders own the signals again, so reopening starts clean. */
+        void closed() {
+            auto.stop(); autoB.setSelected(false);
+            auto.paused = false; pauseB.setSelected(false);
+            endThread();
+            if (power.isSelected()) power.doClick();
+            if (lab.benchPlaying) lab.stopBench();
+            lab.setSigDriven(false);
+            lastNs = 0;
         }
         void notify(String m) { notify(m, 3.5); }
         void notify(String m, double sec) { flash = m; flashUntil = System.currentTimeMillis() + (long) (sec * 1000); }
@@ -3058,6 +3070,21 @@ public class SfxLab extends JPanel {
                 g.setColor(new Color(255, 240, 210, 235)); g.fillOval(ox - 5, oy - 5, 10, 10);
                 picks.add(new Pick(On.COMPOSITE, -1, -1, O[0], O[1], Math.max(34, FIG * R * O[3] + 8), false));
                 if (flashV > 0) { g.setColor(new Color(255, 200, 140, (int) (flashV * 64))); g.fillRect(0, 0, W, H); }
+
+                // what is on the machine, in words: every component counts toward a match, wherever it stands
+                g.setFont(small);
+                int line = 0;
+                for (int a = 0; a < RegulatorCore.AXES; a++) for (int s = 0; s < cm.slots(); s++) {
+                    RegulatorCore.Motion mo = cm.motion(a, s);
+                    if (!mo.eng || mo.amp <= RegulatorCore.ENGAGE_AMP) continue;
+                    boolean sel = a == aiming && s == selSlot, onStation = mo.r == Math.rint(mo.r) && mo.r >= 1;
+                    g.setColor(sel ? new Color(255, 247, 224, 220) : onStation ? new Color(230, 190, 124, 190) : new Color(230, 120, 90, 210));
+                    g.drawString(String.format(Locale.ROOT, "%s %s ×%.2f  φ%s  reach %.2f%s", sel ? "▸" : " ", RegulatorCore.AXIS[a], mo.r, RegulatorCore.PHASE[mo.ph], mo.amp,
+                            mo.r <= RegulatorCore.ENGAGE_R ? "   (at rest: not in the sum)" : onStation ? "" : "   (off its station)"), 10, 18 + 14 * line++);
+                }
+                if (line == 0) { g.setColor(new Color(184, 140, 78, 150)); g.drawString("nothing on the machine", 10, 18); line = 1; }
+                g.setColor(hold ? GOLD : new Color(184, 140, 78, 170));
+                g.drawString(hold ? "holds: " + core.matched.name : core.best != null && !core.engaged().isEmpty() ? String.format(Locale.ROOT, "nearest: %s  %.0f%%", core.best.name, 100 * core.targetEval.score) : "", 10, 22 + 14 * line);
 
                 // the thread, from the pointer to what it is on
                 if (thread != null) {
