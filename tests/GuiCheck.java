@@ -6,7 +6,7 @@ import java.util.List;
 import sfxlab.runtime.*;
 
 /** Headless checks of the authoring GUI around the shared runtime: the regulator panel's bind tables (mutes, filter,
- *  undo) and the machine window playing to a lock and voicing the crystal. Loads the pyretic family without assuming
+ *  undo) and the machine window conducted to a lock and voicing the crystal, by hand and by its auto-player. Loads the pyretic family without assuming
  *  its contents, never autosaves, and leaves two screenshots in the folder given as the first argument. */
 public class GuiCheck {
     static int fails = 0;
@@ -97,45 +97,69 @@ public class GuiCheck {
         check("shift+M toggles the mono audition and remembers it", lab.monoOut != mono0 && saved);
         lab.handleKey(sm);
 
-        // the machine: power, drive the bench, lock, freeze, voice
+        // the machine, conducted as the game conducts it: seat a crystal, build a spell by the casts, lock, freeze, voice
         SfxLab.Machine mc = new SfxLab.Machine(lab);
-        mc.setSize(1180, 720); mc.addNotify(); layoutAll(mc); layoutAll(mc);
+        mc.setSize(1180, 760); mc.addNotify(); layoutAll(mc); layoutAll(mc);
         RegulatorCore c = mc.core;
-        check("the machine opens on the brake & wells crank", c.wells && !c.classic);
-        c.wells = false; c.classic = true; mc.classicB.setSelected(true); c.coupling = false; mc.couplingB.setSelected(false);   // scripted below with the catching crank
+        ConductedMachine cm = mc.cm;
+        check("the machine is the game's: free, on the wells, one motion in hand at a time", c.free && c.wells && !c.classic && !c.coupling && c.arms() == 3);
         RegulatorCore.Recipe target = null;
         for (RegulatorCore.Recipe r : c.recipes) if (r.comps.length == 2) { target = r; break; }
         check("the family has a two-motion recipe to play", target != null);
         if (target == null) { System.out.println(fails + " FAILED"); System.exit(1); }
-        c.setTarget(target); mc.syncTarget();
-        mc.freeB.doClick();
-        check("free machine: every arm is in reach whatever the pin's tier, and off again restores the tier", c.free && mc.armB[2].isEnabled() && c.arms() == 3);
-        mc.freeB.doClick();
-        check("pinned again: the third arm is the tier's to give", !c.free && mc.armB[2].isEnabled() == (target.arms() > 2));
+        mc.pin(target);
+        mc.toggle(new SfxLab.Machine.Pick(SfxLab.Machine.On.CRYSTAL, -1, -1, 0, 0, 1, false));
+        check("no crystal seated: the casts do nothing", cm.selectedAxis() == 0);
         mc.power.doClick();
-        check("power starts the bench playing", c.powered && lab.benchPlaying);
-        for (RegulatorCore.Comp k : target.comps) {   // each motion on its own arm, spun to its ratio, phased, reached, latched
-            int arm = Arrays.asList(target.comps).indexOf(k);
-            c.selectArm(arm); c.axisLever(k.axis());
-            c.loadCrank(k.n());                        // the crank on the integer, caught
-            for (int i = 0; i < 30; i++) c.tick(1 / 60.0);
-            while (c.focused().ph != k.phase()) c.phaseStep();
-            c.setReach(k.amp());
-            c.latch();
+        check("seating a crystal starts the bench playing", c.powered && lab.benchPlaying);
+        final double DT = 1 / 60.0;
+        for (RegulatorCore.Comp k : target.comps) {   // each component by its casts: the socket's toggle, reach, the aim, the phase, planted
+            for (int i = 0; i < 3 && cm.selectedAxis() != k.axis(); i++) mc.toggle(new SfxLab.Machine.Pick(SfxLab.Machine.On.CRYSTAL, -1, -1, 0, 0, 1, false));
+            mc.beginThread(new SfxLab.Machine.Pick(SfxLab.Machine.On.ARM, k.axis(), cm.selectedSlot(), 0, 0, 1, true), true);
+            for (int i = 0; i < 600 && cm.selectedReach() < k.amp() - 0.03; i++) mc.step(DT);
+            mc.endThread();
+            mc.beginThread(new SfxLab.Machine.Pick(SfxLab.Machine.On.COMPOSITE, -1, -1, 0, 0, 1, false), cm.aim() < k.n());
+            for (int i = 0; i < 2000 && Math.abs(cm.aim() - k.n()) > 0.06; i++) mc.step(DT);
+            mc.endThread();
+            RegulatorCore.Motion mo = cm.motion(k.axis(), cm.selectedSlot());
+            for (int i = 0; i < 600 && !(mo.r == k.n() && !mo.drv); i++) mc.step(DT);
+            cm.phase(k.phase() - cm.phaseAngle(k.axis(), cm.selectedSlot())); cm.phaseLetGo();
+            mc.step(DT);
+            mc.toggle(new SfxLab.Machine.Pick(SfxLab.Machine.On.COMPOSITE, -1, -1, 0, 0, 1, false));
         }
-        for (int i = 0; i < 30; i++) { c.tick(1 / 60.0); mc.frameTick(); }
-        check("lock reached and handed to the bench (score " + lab.sigVal[Sfx.SIG_SCORE] + ")", c.targetEval.exact && lab.sigVal[Sfx.SIG_SCORE] == 1);
-        BufferedImage img = new BufferedImage(1180, 720, BufferedImage.TYPE_INT_RGB);
+        for (int i = 0; i < 30; i++) mc.step(DT);
+        check("the casts built " + target.name + ", and the lock is handed to the bench (score " + lab.sigVal[Sfx.SIG_SCORE] + ")", c.matched == target && lab.sigVal[Sfx.SIG_SCORE] == 1);
+        BufferedImage img = new BufferedImage(1180, 760, BufferedImage.TYPE_INT_RGB);
         Graphics2D g = img.createGraphics(); mc.print(g); g.dispose();
         javax.imageio.ImageIO.write(img, "png", shots.resolve("machine-lock.png").toFile());
+        check("the stage offers the composite, the seated crystal and the planted components to the hand",
+              mc.picks.stream().anyMatch(p -> p.on() == SfxLab.Machine.On.COMPOSITE) && mc.picks.stream().anyMatch(p -> p.on() == SfxLab.Machine.On.CRYSTAL)
+              && mc.picks.stream().filter(p -> p.on() == SfxLab.Machine.On.COMPONENT).count() == target.comps.length);
         mc.pauseB.doClick();
         double tau0 = c.tau, s0 = lab.sigVal[Sfx.sigIdx("drive")];
         for (int i = 0; i < 60; i++) mc.frameTick();
         check("freeze stops machine time and the signals", c.tau == tau0 && lab.sigVal[Sfx.sigIdx("drive")] == s0 && mc.auto.paused);
         mc.pauseB.doClick();
-        check("voice lever enabled at lock", mc.voiceB.isEnabled());
-        mc.voiceB.doClick(); mc.frameTick();
-        check("voiced: shelf entry, machine cleared", mc.shelf.size() == 1 && c.snapshot().isEmpty());
+        mc.beginThread(new SfxLab.Machine.Pick(SfxLab.Machine.On.CRYSTAL, -1, -1, 0, 0, 1, false), true);
+        for (int i = 0; i < 40; i++) mc.step(DT);
+        mc.endThread();
+        check("crescendo into the seated crystal at a lock voices it: the machine is cleared", mc.voicedCount == 1 && c.snapshot().isEmpty() && c.lastVoiced == target);
+
+        // the auto-player conducts every spell of the family to a lock with the same casts, with and without its meanders
+        for (RegulatorCore.Recipe r : c.recipes) {
+            if (r.secret) continue;
+            for (int pass = 0; pass < 2; pass++) {
+                mc.pin(r);
+                mc.auto.rng = new Random(11 + pass);
+                mc.auto.mistakes = pass == 1;
+                mc.auto.start();
+                boolean locked = false;
+                double t = 0;
+                for (; t < 240 && !locked; t += 1 / 30.0) { mc.step(1 / 30.0); locked = c.matched == r; }
+                mc.auto.stop();
+                check(String.format(Locale.ROOT, "auto-play conducts %s to a lock%s (%.0f s)", r.name, pass == 1 ? ", meandering" : "", t), locked);
+            }
+        }
         System.out.println(fails == 0 ? "ALL PASS" : fails + " FAILED");
         System.exit(fails == 0 ? 0 : 1);
     }

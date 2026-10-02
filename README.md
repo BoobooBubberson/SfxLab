@@ -73,7 +73,7 @@ residual). `tools/bench/BenchRender --baked forge/baked` renders a family from a
 | `tools/` | `partials.py` prototype and `sfx_batch.sh` batch cleaner for raw recordings |
 | `legacy/` | `SynthLab.java`, the original spellcasting playground, and its presets |
 | `lab.cfg.example` | template for the git-ignored `lab.cfg` |
-| `forge/`, `renders/`, `video-cache/`, `samples/.decoded/` | outputs and caches, git-ignored |
+| `forge/`, `renders/`, `video-cache/`, `samples/.decoded/` | outputs and caches, git-ignored. `forge/.parts/` (analyses) and `samples/.decoded/` (decoded copies) are rebuilt on demand and can be emptied at any time |
 | `bench.sfx`, `regulator/.working/` | the bench's autosaves (git-ignored): a scratch bench, and each family's unsaved edits |
 
 ## Working in the lab
@@ -154,19 +154,19 @@ the machine's signals rather than by time. **H** swaps the timeline for that ben
 - A bench with no family is a scratch bench that autosaves to `bench.sfx`; **S** saves
   it as a family. **shift+S** forks the loaded family under a new name. **N** starts a fresh
   scratch bench and leaves the family on disk. `regulator/pyretic.sfx` is the worked example.
-- **U** opens the machine: the regulator itself (crank, arms, motion levers, latch,
-  phase and reach, the research setpoint, the voice lever, the copy socket) around
-  `RegulatorCore`, with the pen's trail and the pinned blueprint. The crank only winds
-  down; latching within the acceptance window snaps a motion to its integer ratio
-  (the `on=accept` chime hook), outside it the motion is held detuned and beats.
-  Levers down are the motions the trim controls reach and the crank couples to when
-  touched; latch snaps them and lets the crank go; a lever up parks its motion. The
-  prototype's catching crank and the earlier focus model are there as toggles. With "drive the bench"
-  on and the receiver powered, its signals replace the panel's sliders and every spell's match fires that
-  spell's one-shots, so the puzzle is played and the palette answers. **Auto-play**
-  works the controls toward the pinned spell along a randomised path, with optional
-  wrong resonances and an "any spell" mode that keeps chaining locks: pause it when
-  the sound goes wrong, adjust the layers, resume.
+- **U** opens the machine: the regulator as the game plays it (`sfxlab.runtime.ConductedMachine`, the same
+  class the mod runs), worked on the stage with the mouse the way the game's three casts work it. Hold the
+  **left** button for crescendo and the **right** for diminuendo on what the pointer is over when the button goes
+  down; the **middle** button, or **T**, is the toggle. On the aiming arm's crystal the two verbs set the reach
+  of the component in hand; on the composite figure they wind the aim (the ratio) round the ring of stations,
+  and let go inside a station's window the crystal takes it (the `on=accept` chime hook); on the component in
+  hand they turn its phase. The toggle on the composite plants the component, on a planted one takes it back,
+  and on the seated crystal passes the aim to the next arm; crescendo into the seated crystal while a sigil holds
+  voices it. With "drive the bench" on and a crystal seated, the machine's signals replace the panel's sliders
+  and every spell's match fires that spell's one-shots, so the puzzle is played and the palette answers.
+  **Auto-play** conducts toward the pinned spell with the same casts on the game's own curves, with optional
+  meanders and an "any spell" mode that keeps chaining locks: freeze it when the sound goes wrong, adjust the
+  layers, resume. The period slider sets the tempo of the figure (3.5 s, as the game has it).
 
 `RegulatorCore` is the machine with no Swing or Minecraft in it: crank physics, the
 lever state machine, figure sampling, recipe matching with shape equivalence, the
@@ -188,11 +188,14 @@ tests/run.sh            # about 50 s; exits non-zero on any failure
 
 - `CoreTest`: `RegulatorCore` on its own: shape matching, all three crank models (brake & wells, the free crank,
   the classic catching crank), levers and coupling, events, signals, the pen and the blueprint.
-- `GuiCheck`: the regulator panel (binds, mutes, filter, undo) and the machine window playing to a lock and voicing
-  the crystal, headless.
+- `ConductedTest`: `ConductedMachine` on its own: the two verbs' curves, what moves the aim and what does not, the
+  ends of the arc, and every default recipe built by the casts alone.
+- `GuiCheck`: the regulator panel (binds, mutes, filter, undo) and the machine window conducted to a lock and
+  voicing the crystal, by hand and by its auto-player for every spell of the family, headless.
 - `golden.sh`: 16 reference renders (every timeline project at key 0 and +7, a mono export, and a scripted machine
   approach per family) that must stay bit-identical. After a change meant to alter the sound, listen to the new
   renders in `.build/test/renders/` and accept them with `tests/run.sh --bless`.
+  They are a guard for refactors and nothing more: a red result after a deliberate change is expected.
 
 The suite renders frozen copies of the family and project files in `tests/fixtures/`, so authoring never turns it
 red; `tests/fixtures.sh` refreshes them from the last commit when you want the references to follow. The hashes are

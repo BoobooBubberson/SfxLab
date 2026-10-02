@@ -613,3 +613,38 @@ which is what makes the bench sound out of tune.
 - **Multiplayer.** Machine state is server-authoritative; audio and ribbon are
   client-side from synced motion state.
 - **Left/right variants.** Mirror pairs as spell variants, shelved for later.
+
+## 8. The machine, conducted (2026-10-01)
+
+The console of sections 3 and 6b (crank, levers, latch, phase dial, reach slider) was built in the game, field-tested,
+and taken away again: in first person it pulled the eyes off the figure, and it read as a machine tool. The game now
+**conducts** the regulator with three casts of pure anima, and since 2026-10-01 the lab's machine window is the same
+thing. The design, its reasons and its field history are in the mod, `docs/resonance_chamber.md`; what follows is
+what an author needs here.
+
+`sfxlab.runtime.ConductedMachine` is the machine as it is played: the core of section 3 underneath, unchanged, worked
+one **component** (one motion) at a time. It is the single copy; the mod runs this class.
+
+- **The array has one aim, and the aim is the ratio.** Seven **stations** stand round the machine, one for each
+  ratio 1 to 7, 45° apart, counted from the conductor's side; the zero position is the conductor's. One arm at a time
+  is the **aiming arm** (arm 1 X, arm 2 Y, arm 3 Z) and faces the station the aim is on.
+- **Crescendo** winds up what it lands on, steadily (1.2 ratio a second). **Diminuendo** damps it, gently at first
+  and harder the longer it is held (0.06 · e^(t / 0.9 s) ratio a second, capped at 4). On the composite figure they
+  move the aim; on the aiming arm's crystal, the reach (0.4 a second at the first moment); on the component in hand,
+  its phase (a quarter a second), which is drawn onto the nearest quarter when let go.
+- **Let go inside a station's window** (the acceptance window, the same at every ratio) and the well draws the aim
+  onto the station and the crystal takes the component: the `accept` event. Anywhere else it hangs where it is,
+  above ×7 and under ×1 alike. The aim winds to ×7.5 and no further.
+- **The toggle** is one press: on the composite it plants the component in hand and the next place on that axis is
+  selected; on a planted component it takes it back; on the seated crystal the next arm aims. The aim is shared, so
+  a component begun after another starts at the ratio just left.
+- **A component exists once it has reach.** At the zero position it sits still. Only its reach taken to nothing
+  removes it: the machine switches nothing off.
+- **Voicing** is crescendo into the seated crystal while a sigil holds.
+- **The receiver's period** is the machine's own (`RegulatorCore.drawPeriod`), 3.5 s by default since 2026-10-01
+  (it was 2.5): the tempo of the figure and of the signals that follow it. Ratios, wells and signal levels do not
+  change with it.
+
+The signal contract of section 4 is unchanged. `tools/bench/BenchRender` scripts still drive the core's own API
+(levers, nudges, latch), which is what the conducted machine is built on.
+

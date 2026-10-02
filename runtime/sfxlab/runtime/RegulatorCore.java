@@ -524,7 +524,7 @@ public class RegulatorCore {
     // ---- the figure (§3.3, revised): a pen. The receiver's own cycle takes drawPeriod seconds of machine time (DRAW_PERIOD by default);
     // every motion oscillates at its ratio times that, so integer ratios retrace one closed figure and a detuned
     // motion makes the trace precess at a rate proportional to the detune, slowing to a stop as it is tuned in.
-    public static final double DRAW_PERIOD = 2.5, DRAW_RATE = 2 * Math.PI / DRAW_PERIOD;
+    public static final double DRAW_PERIOD = 3.5, DRAW_RATE = 2 * Math.PI / DRAW_PERIOD;   // 3.5 s since 2026-10-01 (it was 2.5): the tempo the game settled on
     /** This machine's own receiver period, seconds (DRAW_PERIOD unless a host sets another): every motion's rate and
      *  the figure's tempo go with it; the ratios, the wells and the signals' levels do not. */
     public double drawPeriod = DRAW_PERIOD;

@@ -245,7 +245,8 @@ import static sfxlab.runtime.BenchMixer.*;
  *   N           clear the workspace (undoable)
  *   H           bench view (the regulator palette); shift+H sends the selected clip there
  *   J           regulator panel: signal sliders, signature, lock / unlock, binds, ranges, notes
- *   U           the machine: play the regulator (RegulatorCore) and hear the bench answer
+ *   U           the machine: conduct the regulator as the game does (hold left = crescendo, right = diminuendo,
+ *               middle or T = toggle, on the stage) and hear the bench answer
  *
  * FILE FORMATS: .sfx is the lab's editable source (the workspace autosaves
  * to project.sfx; S stamps named copies); exported .wav is what the mod
@@ -802,7 +803,7 @@ public class SfxLab extends JPanel {
         if (Files.exists(p)) return p;
         return SAMPLE_PATHS.computeIfAbsent(name, nm -> {
             String base = Paths.get(nm).getFileName().toString();
-            try (var st = Files.walk(SAMPLE_DIR)) {
+            try (var st = Files.walk(SAMPLE_DIR, FileVisitOption.FOLLOW_LINKS)) {   // samples/ may itself be a link (the test workspace)
                 Optional<Path> hit = st.filter(f -> Files.isRegularFile(f) && f.getFileName().toString().equals(base)
                                                  && !SAMPLE_DIR.relativize(f).toString().startsWith(".decoded")).sorted().findFirst();
                 if (hit.isPresent()) {
@@ -848,14 +849,18 @@ public class SfxLab extends JPanel {
         return l.endsWith(".wav") || l.endsWith(".aif") || l.endsWith(".aiff") || l.endsWith(".au");
     }
     /** Anything javax.sound can't read (mp3, ogg, a video's audio track…) is
-     *  decoded once by ffmpeg into samples/.decoded/<name>.wav. */
+     *  decoded by ffmpeg into samples/.decoded/, one wav per source file: named by its folder as well as its name
+     *  (two folders may hold a file of the same name), and decoded again whenever the source is newer than the
+     *  copy. (Until 2026-10-01 the copy was named by the file name alone and never refreshed: a recording replaced
+     *  under its old name went on playing as the old one.) */
     static Path decodedPath(Path f) throws IOException, InterruptedException {
         if (isPcmName(f.getFileName().toString())) return f;
         Path abs = f.toAbsolutePath();
-        String tag = abs.startsWith(SAMPLE_DIR) || abs.getParent() == null ? ""
-                   : Integer.toHexString(abs.getParent().toString().hashCode()) + "-";   // outside samples/: keep same-named files apart
+        String tag = abs.getParent() == null ? ""
+                   : abs.startsWith(SAMPLE_DIR) ? SAMPLE_DIR.relativize(abs.getParent()).toString().replaceAll("[^A-Za-z0-9_.-]+", "__") + "__"
+                   : Integer.toHexString(abs.getParent().toString().hashCode()) + "-";   // outside samples/
         Path out = SAMPLE_DIR.resolve(".decoded").resolve(tag + f.getFileName() + ".wav");
-        if (!Files.exists(out)) {
+        if (!Files.exists(out) || Files.getLastModifiedTime(out).compareTo(Files.getLastModifiedTime(f)) < 0) {
             Files.createDirectories(out.getParent());
             run("ffmpeg", "-v", "error", "-y", "-i", f.toString(), "-vn", "-ac", "2", "-ar", String.valueOf(SR),
                 "-c:a", "pcm_s16le", out.toString());
@@ -898,7 +903,8 @@ public class SfxLab extends JPanel {
     static Path partsCachePath(String file, double fl, double ml) {
         try {
             Path f = samplePath(file);
-            String key = file + "|" + Math.round(fl) + "|" + Math.round(ml) + "|" + Files.size(f) + "|" + Files.getLastModifiedTime(f).toMillis();
+            // "|2": analyses made before the decoded copies were kept fresh (see decodedPath) may be of the wrong audio
+            String key = file + "|" + Math.round(fl) + "|" + Math.round(ml) + "|" + Files.size(f) + "|" + Files.getLastModifiedTime(f).toMillis() + "|2";
             String base = f.getFileName().toString().replaceAll("[^A-Za-z0-9_.-]", "_");
             return PARTS_DIR.resolve(String.format("%08x-%s.parts", key.hashCode(), base));
         } catch (Exception e) { return null; }
@@ -2399,50 +2405,59 @@ public class SfxLab extends JPanel {
     }
     void toggleBenchPanel() { showBenchPanel(!bpanelOn); }
 
-    // ---- the machine window (U): RegulatorCore with the prototype's controls, driving the bench
+    // ---- the machine window (U): the regulator as the game plays it (sfxlab.runtime.ConductedMachine), driving the bench
     Machine machine;
     void showMachine() {
         if (machine == null) machine = new Machine(this);
         machine.open();
     }
 
-    /** The regulator machine: the prototype's control panel and stage around a RegulatorCore.
-     *  While "drive the bench" is on and the receiver is powered, the core's signals replace the panel's
-     *  sliders every frame and its lock / unlock events fire the bench's one-shots; unpowered or closed,
-     *  the panel's own values come back and a solo (P) is the authored layer. */
+    /** The regulator machine, conducted: the same {@link ConductedMachine} the game runs, worked on the stage with
+     *  the mouse the way the game's three casts work it. Hold the left button for crescendo and the right for
+     *  diminuendo on what the pointer is over when the button goes down (the thread stays on it until the button
+     *  comes up); the middle button, or T, is the toggle.
+     *  <pre>
+     *    the aiming arm's crystal   crescendo / diminuendo: the reach of the component in hand
+     *    the composite figure       crescendo / diminuendo: the aim, and so the ratio;  toggle: plant the component
+     *    the component in hand      crescendo / diminuendo: its phase
+     *    a planted component        toggle: take it back in hand
+     *    the seated crystal         toggle: the next arm aims;  crescendo while a sigil holds: voice it
+     *  </pre>
+     *  While "drive the bench" is on and the receiver is powered, the core's signals replace the panel's sliders
+     *  every frame and its events fire the bench's one-shots; unpowered or closed, the panel's own values come
+     *  back and a solo (P) is the authored layer. */
     static class Machine extends JPanel {
         final SfxLab lab;
-        RegulatorCore core;
+        ConductedMachine cm;
+        RegulatorCore core;                 // cm.core
+        RegulatorCore.Recipe pinned;        // the blueprint shown, and what auto-play goes for; the machine itself is free
         int seenFamily = -1;
         final JPanel tg = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 2));
         final ButtonGroup tgGroup = new ButtonGroup();
         final Autopilot auto = new Autopilot(System.nanoTime());
-        final JToggleButton autoB = new JToggleButton("▶ auto-play"), pauseB = new JToggleButton("pause");
+        final JToggleButton autoB = new JToggleButton("▶ auto-play"), pauseB = new JToggleButton("freeze");
         final JSlider speedS = new JSlider(5, 40, 10);
         final JCheckBox mistakesB = new JCheckBox("mistakes", true), anyB = new JCheckBox("any spell", false);
-        final JCheckBox classicB = new JCheckBox("classic crank", false), couplingB = new JCheckBox("coupled levers", true), wellsB = new JCheckBox("brake & wells", true), freeB = new JCheckBox("free machine", false);
-        final JButton brakeB = new JButton("brake");
-        final JSlider snapS = new JSlider(2, 30, 10);
-        final JLabel snapL = new JLabel();
+        final JSlider snapS = new JSlider(2, 30, 10), periodS = new JSlider(10, 80, (int) Math.round(RegulatorCore.DRAW_PERIOD * 10));
+        final JLabel snapL = new JLabel(), periodL = new JLabel();
         JFrame frame;
         final Stage stage = new Stage();
-        final Crank crank = new Crank();
-        final JToggleButton power = new JToggleButton("Power receiver");
-        final JToggleButton[] armB = new JToggleButton[3];
-        final JButton[] axB = new JButton[3];
-        final JButton latchB = new JButton("Latch"), phaseB = new JButton("Phase ¼"), setpointB = new JButton("Load research setpoint"),
-                      voiceB = new JButton("Voice crystal"), readB = new JButton("Read into machine");
-        final JSlider reach = new JSlider(0, 100, 100);
+        final JToggleButton power = new JToggleButton("Seat crystal");
         final JCheckBox driveB = new JCheckBox("drive the bench", true), valsB = new JCheckBox("show values");
         final JComboBox<String> viewBox = new JComboBox<>(new String[]{"orbit", "front", "top"});
         final java.util.List<JToggleButton> targetB = new ArrayList<>();
-        final DefaultListModel<String> shelf = new DefaultListModel<>();
-        final JList<String> shelfL = new JList<>(shelf);
         final JTextArea status = new JTextArea(2, 30);
         final JTextArea vals = new JTextArea(8, 30);
         String flash; long flashUntil;
-        long lastNs; double flashV; int frameNo; boolean reachByUser;
-        double yaw, pitch = 0.35, dYaw, dPitch, ext = 1;
+        long lastNs; double flashV; int frameNo, voicedCount;
+        double yaw, elev = 0.5, dYaw, dElev, ext = 1, turn;
+
+        // ---- the hand: what the thread is on
+        enum On { ARM, COMPOSITE, COMPONENT, CRYSTAL }
+        record Pick(On on, int axis, int slot, double x, double y, double r, boolean selected) {}
+        final java.util.List<Pick> picks = new ArrayList<>();
+        Pick thread; boolean threadRising, threadVoiced; double threadHeld;
+        final Point mouse = new Point(-1, -1);
 
         Machine(SfxLab lab) {
             this.lab = lab;
@@ -2457,138 +2472,84 @@ public class SfxLab extends JPanel {
             JPanel pw = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 2));
             power.addActionListener(e -> {
                 core.power(power.isSelected());
+                if (!power.isSelected()) { endThread(); cm.clear(); }
                 if (driveB.isSelected() && lab.benchOn) { if (power.isSelected()) { if (!lab.benchPlaying) lab.toggleBenchPlay(); } else lab.stopBench(); }
-                power.setText(power.isSelected() ? "Cut power" : "Power receiver");
+                power.setText(power.isSelected() ? "Take crystal" : "Seat crystal");
             });
             pw.add(power); pw.add(new JLabel("view")); pw.add(viewBox);
             ctl.add(pw);
-            ctl.add(section("arms — which one the motion levers act on"));
-            JPanel arms = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 2));
-            ButtonGroup ag = new ButtonGroup();
-            for (int i = 0; i < 3; i++) {
-                final int k = i;
-                armB[i] = new JToggleButton("Arm " + (i + 1));
-                armB[i].addActionListener(e -> core.selectArm(k));
-                ag.add(armB[i]); arms.add(armB[i]);
-            }
-            armB[0].setSelected(true);
-            ctl.add(arms);
-            syncTarget();
-            ctl.add(section("motions — down is driven, lit is held; stop: crank to rest, latch"));
-            JPanel axes = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 2));
-            for (int i = 0; i < 3; i++) {
-                final int k = i;
-                axB[i] = new JButton(RegulatorCore.AXIS[i] + "  off");
-                axB[i].setFont(mono);
-                axB[i].setPreferredSize(new Dimension(134, 28));
-                axB[i].setToolTipText("coupled levers: down = active (trim, crank), up = parked (keeps its speed) or off at rest. Focus model: off → driven → held → driven; shift-click focuses");
-                axB[i].addActionListener(e -> {
-                    if (!core.coupling && (e.getModifiers() & ActionEvent.SHIFT_MASK) != 0) { if (!core.focusAxis(k)) notify("Nothing to trim there: that motion is off."); return; }
-                    if (!core.axisLever(k)) notify((core.free ? "On this machine" : "At tier " + core.target.tier) + " each arm can hold " + core.motionsPerArm() + " motion" + (core.motionsPerArm() > 1 ? "s" : "") + ".");
-                });
-                axB[i].addMouseListener(new MouseAdapter() { @Override public void mousePressed(MouseEvent e) { if (SwingUtilities.isRightMouseButton(e)) { if (!core.focusAxis(k)) Machine.this.notify("Nothing to trim there: that motion is off."); } } });
-                axes.add(axB[i]);
-            }
-            ctl.add(axes);
-            ctl.add(section("crank — drag or wheel (shift: fine); latch near an integer and the crystal takes it · brake & wells: hold B / brake"));
-            JPanel ck = new JPanel(new FlowLayout(FlowLayout.LEFT, 6, 2));
-            ck.add(crank);
-            JPanel nb = new JPanel(new GridLayout(4, 1, 2, 2));
-            JButton up = new JButton("+"), dn = new JButton("−");
-            up.addActionListener(e -> core.nudge(1, RegulatorCore.NUDGE_BUTTON));
-            dn.addActionListener(e -> core.nudge(-1, RegulatorCore.NUDGE_BUTTON));
-            latchB.addActionListener(e -> { int d = core.drivenCount(); if (d == 0) return; int caught = core.caught; int st = core.latch();
-                notify(st == d ? "Stopped. Those motions are at rest." : caught >= 0 ? "Held at resonance." : "Held off-resonance. It will drift."); });
-            nb.add(up); nb.add(dn); nb.add(brakeB); nb.add(latchB);
-            ck.add(nb);
-            ctl.add(ck);
-            JPanel cm = new JPanel(new FlowLayout(FlowLayout.LEFT, 6, 0));
-            classicB.setToolTipText("the prototype's crank: it catches and holds at integer ratios. Off: friction only, and a latch within the acceptance window snaps the motion to the integer");
-            classicB.addActionListener(e -> { core.classic = classicB.isSelected(); if (core.classic) { wellsB.setSelected(false); core.wells = false; } snapLabel(); });
-            wellsB.setToolTipText("<html><div width=420>the third crank: no friction — it keeps the speed it is left at, so a detuned crank stays detuned and readable. The wheel is the only way up (its notches vary a little), the brake the only way down "
-                    + "(button, or B on the crank: taps for small steps, a hold bites harder). Let go inside the acceptance window of an integer and the crystal eases the crank onto it; let go outside and it sits where it is. "
-                    + "The window is the same at every ratio.</div></html>");
-            wellsB.addActionListener(e -> { core.wells = wellsB.isSelected(); if (core.wells) { classicB.setSelected(false); core.classic = false; } snapLabel(); });
-            holdTip(wellsB);
-            brakeB.setToolTipText("hold: the crank winds down fast (brake & wells model); B on the crank does the same");
-            brakeB.setFocusable(false);
-            brakeB.getModel().addChangeListener(e -> core.setBrake(brakeB.getModel().isPressed()));
+            ctl.add(section("the casts — on the stage, as in the game"));
+            JTextArea help = new JTextArea(
+                    "hold LEFT  = crescendo     hold RIGHT = diminuendo\n"
+                  + "MIDDLE click, or T  = toggle\n\n"
+                  + "aiming arm's crystal   cresc / dim: reach\n"
+                  + "composite figure       cresc / dim: the aim (ratio)\n"
+                  + "                       toggle: plant\n"
+                  + "component in hand      cresc / dim: phase\n"
+                  + "planted component      toggle: take it back\n"
+                  + "seated crystal         toggle: next arm aims\n"
+                  + "                       cresc at a lock: voice");
+            help.setFont(mono); help.setEditable(false); help.setOpaque(false); help.setFocusable(false);
+            help.setMaximumSize(new Dimension(380, 170));
+            ctl.add(help);
+            JPanel cmRow = new JPanel(new FlowLayout(FlowLayout.LEFT, 6, 0));
             snapS.setPreferredSize(new Dimension(110, 20));
-            snapS.setToolTipText("acceptance window at ×1 (it narrows as 1/√n; constant at every ratio under brake & wells): the difficulty scaler");
+            snapS.setToolTipText("the acceptance window, the same at every ratio: let go inside it and the crystal takes the motion onto the integer. The difficulty scaler");
             snapS.addChangeListener(e -> { core.snapTol = snapS.getValue() / 100.0; snapLabel(); });
-            couplingB.setToolTipText("on: a lever down is active (trim reaches it, the crank couples to it when touched); latch snaps and decouples; lever up parks the motion. Off: the focus model (each lever drives / holds its motion; shift-click focuses)");
-            couplingB.addActionListener(e -> { core.coupling = couplingB.isSelected(); trimL.setText(trimText()); });
-            freeB.setToolTipText("the machine as the game runs it: nothing is pinned. Every arm takes three motions whatever the blueprint's tier, the score and fit signals follow the best-scoring spell, and any spell held exactly locks and can be voiced");
-            freeB.addActionListener(e -> { core.free = freeB.isSelected(); syncTarget(); });
-            cm.add(classicB); cm.add(wellsB); cm.add(couplingB); cm.add(freeB); cm.add(new JLabel("acceptance")); cm.add(snapS); cm.add(snapL);
+            cmRow.add(new JLabel("acceptance")); cmRow.add(snapS); cmRow.add(snapL);
+            ctl.add(cmRow);
+            JPanel pr = new JPanel(new FlowLayout(FlowLayout.LEFT, 6, 0));
+            periodS.setPreferredSize(new Dimension(110, 20));
+            periodS.setToolTipText("the receiver's period: how long the figure takes to go round once. The tempo of everything; the ratios, the wells and the levels of the signals do not change with it");
+            periodS.addChangeListener(e -> { core.setDrawPeriod(periodS.getValue() / 10.0); snapLabel(); });
+            pr.add(new JLabel("period")); pr.add(periodS); pr.add(periodL);
+            ctl.add(pr);
             snapLabel();
-            ctl.add(cm);
-            trimL = section(trimText());
-            ctl.add(trimL);
-            JPanel tr = new JPanel(new FlowLayout(FlowLayout.LEFT, 6, 2));
-            phaseB.addActionListener(e -> core.phaseStep());
-            reach.setPreferredSize(new Dimension(140, 20));
-            reach.addChangeListener(e -> { if (reach.getValueIsAdjusting() || reachByUser) core.setReach(reach.getValue() / 100.0); });
-            reach.addMouseListener(new MouseAdapter() { @Override public void mousePressed(MouseEvent e) { reachByUser = true; } @Override public void mouseReleased(MouseEvent e) { reachByUser = false; } });
-            tr.add(phaseB); tr.add(new JLabel("reach")); tr.add(reach);
-            ctl.add(tr);
-            ctl.add(section("research station · shelf"));
+            ctl.add(section("the sigil"));
             JPanel rs = new JPanel(new FlowLayout(FlowLayout.LEFT, 6, 2));
-            setpointB.addActionListener(e -> { core.loadSetpoint(new Random()); notify("Setpoint loaded from the research station. It is close, not exact."); });
-            voiceB.addActionListener(e -> {
-                java.util.List<RegulatorCore.Snap> snap = core.voice();
-                if (snap == null) return;
-                shelf.addElement(core.lastVoiced.name + "  (" + snap.size() + " motions)");
-                flashV = 1;
-                notify(core.lastVoiced.name + " voiced. A fresh crystal is in the socket.");
-            });
             JButton recipeB = new JButton("→ recipe");
-            recipeB.setToolTipText("write the motions on the arms (rounded to their resonances) as the pinned spell's recipe");
+            recipeB.setToolTipText("write the components on the machine (rounded to their stations) as the pinned spell's recipe");
             recipeB.addActionListener(e -> captureRecipe());
-            rs.add(setpointB); rs.add(voiceB); rs.add(recipeB);
+            JButton clearB = new JButton("clear");
+            clearB.setToolTipText("a fresh machine: every component gone, the aim at rest");
+            clearB.addActionListener(e -> { endThread(); cm.clear(); });
+            rs.add(recipeB); rs.add(clearB); rs.add(driveB); rs.add(valsB);
             ctl.add(rs);
-            shelfL.setFont(mono); shelfL.setVisibleRowCount(3);
-            JScrollPane sp = new JScrollPane(shelfL); sp.setPreferredSize(new Dimension(360, 60));
-            ctl.add(sp);
-            readB.addActionListener(e -> {
-                int i = shelfL.getSelectedIndex();
-                if (i < 0 || i >= core.voiced().size()) return;
-                core.applySnapshot(core.voiced().get(i), RegulatorCore.SOCKET_JITTER, false, new Random());
-                notify("The copy socket got close. Re-catch each motion to clean it up.");
-            });
-            JPanel rb = new JPanel(new FlowLayout(FlowLayout.LEFT, 6, 2)); rb.add(readB); rb.add(driveB); rb.add(valsB);
-            ctl.add(rb);
-            ctl.add(section("auto-play — a player works the controls toward the pinned spell; pause it, tweak the layers, resume"));
+            ctl.add(section("auto-play — a player conducts toward the pinned spell"));
             JPanel ap = new JPanel(new FlowLayout(FlowLayout.LEFT, 6, 2));
             autoB.addActionListener(e -> { if (autoB.isSelected()) { if (!power.isSelected()) power.doClick(); auto.start(); } else { auto.stop(); } });
-            pauseB.setText("freeze");
-            pauseB.setToolTipText("stop the machine's time: crank, pen and auto-play hold still, the signals stay put, and the layers can be tuned against this exact moment");
+            pauseB.setToolTipText("stop the machine's time: the figure and auto-play hold still, the signals stay put, and the layers can be tuned against this exact moment");
             pauseB.addActionListener(e -> auto.paused = pauseB.isSelected());
-            speedS.setPreferredSize(new Dimension(90, 20)); speedS.setToolTipText("speed ×0.5 .. ×4");
+            speedS.setPreferredSize(new Dimension(90, 20)); speedS.setToolTipText("the player's hands, ×0.5 .. ×4");
             speedS.addChangeListener(e -> auto.speed = speedS.getValue() / 10.0);
-            mistakesB.setToolTipText("meander now and then: catch the wrong resonance first, or spin past the target and back off — brief, and always ending on the integer before the next motion");
-            anyB.setToolTipText("after each lock, pin a random spell of the family and go for that one");
+            mistakesB.setToolTipText("meander now and then: settle on the next station first, hear it, and come back");
+            anyB.setToolTipText("after each voicing, pin a random spell of the family and go for that one");
             mistakesB.addActionListener(e -> auto.mistakes = mistakesB.isSelected());
             anyB.addActionListener(e -> auto.anySpell = anyB.isSelected());
-            ap.add(autoB); ap.add(new JLabel("speed")); ap.add(speedS); ap.add(mistakesB); ap.add(anyB); ap.add(pauseB);
+            ap.add(autoB); ap.add(pauseB); ap.add(new JLabel("speed")); ap.add(speedS);
             ctl.add(ap);
+            JPanel ap2 = new JPanel(new FlowLayout(FlowLayout.LEFT, 6, 0));
+            ap2.add(mistakesB); ap2.add(anyB);
+            ctl.add(ap2);
             status.setFont(new Font(Font.SANS_SERIF, Font.ITALIC, 13));
             status.setEditable(false); status.setLineWrap(true); status.setWrapStyleWord(true); status.setOpaque(false);
             status.setMaximumSize(new Dimension(380, 40));
             ctl.add(status);
             vals.setFont(mono); vals.setEditable(false);
-            JScrollPane vs = new JScrollPane(vals); vs.setPreferredSize(new Dimension(360, 150));
+            JScrollPane vs = new JScrollPane(vals); vs.setPreferredSize(new Dimension(360, 220));
             ctl.add(vs);
             ctl.add(Box.createVerticalGlue());
+            for (Component k : ctl.getComponents()) if (k instanceof JComponent jc) jc.setAlignmentX(LEFT_ALIGNMENT);
+            tg.setLayout(new GridLayout(0, 2, 4, 2));   // the blueprints two to a row: the panel stays narrow and the stage gets the window
+            ctl.setPreferredSize(new Dimension(400, 700));
             add(ctl, BorderLayout.EAST);
-            syncTarget();
-            new javax.swing.Timer(33, e -> frameTick()).start();
+            new javax.swing.Timer(33, e -> { if (frame != null) frameTick(); }).start();   // only once it is a window: a headless test steps it itself
         }
-        /** The motions on the arms as recipe text: integer ratios, phases, and the reaches as targets. */
+        /** The components on the machine as recipe text: integer ratios, phases, and the reaches as targets. */
         String currentSigil() {
             java.util.List<RegulatorCore.Eng> eng = core.engaged();
-            StringBuilder sb = new StringBuilder("tier=" + (core.target != null ? core.target.tier : 1));
-            if (core.target != null && core.target.secret) sb.append(" secret=1");
+            StringBuilder sb = new StringBuilder("tier=" + (pinned != null ? pinned.tier : 1));
+            if (pinned != null && pinned.secret) sb.append(" secret=1");
             for (RegulatorCore.Eng e : eng) {
                 double amp = Math.max(0.05, Math.min(1, Math.round(e.amp() * 20) / 20.0));   // the reach target, to 0.05
                 sb.append(' ').append("XYZ".charAt(e.axis())).append((int) Math.max(1, Math.round(e.r()))).append('p').append(e.ph()).append(amp != 1 ? "r" + fmtNum5(amp) : "");
@@ -2596,10 +2557,10 @@ public class SfxLab extends JPanel {
             return sb.toString();
         }
         void captureRecipe() {
-            if (core.target == null) return;
-            Spell sp = lab.spell(core.target.id);
+            if (pinned == null) return;
+            Spell sp = lab.spell(pinned.id);
             if (sp == null) { lab.toast("the pinned blueprint is not a spell of the loaded family (pick the family in the panel, J)"); return; }
-            if (core.engaged().isEmpty()) { lab.toast("nothing on the arms — pull levers and set the motions first"); return; }
+            if (core.engaged().isEmpty()) { lab.toast("nothing on the machine — build the components first"); return; }
             String text = currentSigil();
             Bench r = parseRecipe(text);
             RegulatorCore.Recipe probe = new RegulatorCore.Recipe(sp.id, sp.name, r.tier, "", r.secret, r.comps);
@@ -2609,69 +2570,129 @@ public class SfxLab extends JPanel {
                     "Recipe", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE) != JOptionPane.OK_OPTION) return;
             lab.setSpellRecipe(sp, text);
         }
-        JLabel trimL;
-        String trimText() { return core.coupling ? "trim — every lever that is down (active); the crank couples to them when touched, latch snaps them and lets go" : "trim — the focused motion (▸): the last lever pressed on this arm; shift-click a lever to focus it"; }
-        void snapLabel() { snapL.setText(String.format(Locale.ROOT, "±%.3f at ×1 · ±%.3f at ×7", core.acceptWindow(1), core.acceptWindow(7))); }
+        void snapLabel() {
+            snapL.setText(String.format(Locale.ROOT, "±%.2f of a ratio", core.acceptWindow(1)));
+            periodL.setText(String.format(Locale.ROOT, "%.1f s", core.drawPeriod));
+        }
         static JLabel section(String t) { JLabel l = new JLabel(t); l.setForeground(Color.GRAY); l.setBorder(BorderFactory.createEmptyBorder(6, 2, 0, 2)); return l; }
         void open() {
             if (frame == null) {
                 frame = new JFrame("Harmonic Regulator — the machine");
                 frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
                 frame.add(this);
-                frame.setSize(1180, 820);
+                frame.setSize(1180, 860);
                 frame.setLocationByPlatform(true);
             }
             frame.setVisible(true); frame.toFront();
         }
         void notify(String m) { notify(m, 3.5); }
         void notify(String m, double sec) { flash = m; flashUntil = System.currentTimeMillis() + (long) (sec * 1000); }
-        void syncTarget() {
-            if (armB[0] == null || core.target == null) return;   // called once before the panel exists
-            for (int i = 0; i < 3; i++) armB[i].setEnabled(i < core.arms());
-            armB[0].setSelected(true);
-            for (JToggleButton b : targetB) if (b.isSelected() != (b.getClientProperty("recipe") == core.target)) b.setSelected(b.getClientProperty("recipe") == core.target);
+        void pin(RegulatorCore.Recipe r) {
+            pinned = r;
+            for (JToggleButton b : targetB) if (b.isSelected() != (b.getClientProperty("recipe") == r)) b.setSelected(b.getClientProperty("recipe") == r);
             stage.repaint();
         }
-        /** The core follows the loaded family's roster (spell files with a recipe line); the blueprint buttons follow the core. */
+        /** The machine follows the loaded family's roster (spell files with a recipe line); the blueprint buttons follow it. */
         void rebuildCore() {
             seenFamily = lab.familyGen;
-            RegulatorCore.Recipe[] rs = lab.familyRecipes();
             boolean wasOn = core != null && core.powered;
-            core = new RegulatorCore(rs);
+            endThread();
+            cm = new ConductedMachine(lab.familyRecipes(), RegulatorCore.ARMS, RegulatorCore.AXES);
+            core = cm.core;
             core.power(wasOn);
-            core.classic = classicB.isSelected(); core.wells = wellsB.isSelected(); core.coupling = couplingB.isSelected(); core.snapTol = snapS.getValue() / 100.0;
-            core.free = freeB.isSelected();
+            core.snapTol = snapS.getValue() / 100.0;
+            core.setDrawPeriod(periodS.getValue() / 10.0);
             auto.stop(); autoB.setSelected(false);
             for (JToggleButton b : targetB) tgGroup.remove(b);
             targetB.clear(); tg.removeAll();
-            tg.add(new JLabel("blueprint:"));
+            pinned = null;
             for (RegulatorCore.Recipe r : core.recipes) {
                 if (r.secret) continue;
                 JToggleButton b = new JToggleButton(r.name + " " + new String[]{"", "I", "II", "III"}[r.tier]);
                 b.putClientProperty("recipe", r);
-                b.addActionListener(e -> { core.setTarget(r); syncTarget(); });
+                b.addActionListener(e -> pin(r));
                 tgGroup.add(b); tg.add(b); targetB.add(b);
+                if (pinned == null) pinned = r;
             }
             if (!targetB.isEmpty()) targetB.get(0).setSelected(true);
             tg.revalidate(); tg.repaint();
-            shelf.clear();
-            syncTarget();
         }
+
+        // ---- the casts
+        /** A channel begins on what the pointer is over: the thread stays there until {@link #endThread}. */
+        void beginThread(Pick p, boolean rising) {
+            endThread();
+            if (p == null || !core.powered || auto.on) return;
+            if (p.on() == On.COMPOSITE && !cm.takeSelected()) return;
+            thread = p; threadRising = rising; threadHeld = 0; threadVoiced = false;
+        }
+        void endThread() {
+            if (thread != null) {
+                if (thread.on() == On.COMPOSITE) cm.letGo();
+                if (thread.on() == On.COMPONENT) cm.phaseLetGo();
+            }
+            thread = null;
+        }
+        /** A frame of the channel in hand, on the verbs' shipped curves. */
+        void cast(double dt) {
+            if (thread == null) return;
+            threadHeld += dt;
+            ConductedMachine.Verb v = threadRising ? ConductedMachine.CRESCENDO : ConductedMachine.DIMINUENDO;
+            switch (thread.on()) {
+                case COMPOSITE -> cm.push(v.aim(threadHeld, dt));
+                case ARM -> cm.reach(v.reach(threadHeld, dt));
+                case COMPONENT -> cm.phase(v.phase(threadHeld, dt));
+                case CRYSTAL -> { if (threadRising && !threadVoiced && core.matched != null && threadHeld >= ConductedMachine.VOICE_SECONDS) { threadVoiced = true; voice(); } }
+            }
+        }
+        /** One press of the toggle on what the pointer is over. */
+        void toggle(Pick p) {
+            if (!core.powered || auto.on) return;
+            if (p == null) { notify("The toggle found nothing to press.", 1.5); return; }
+            switch (p.on()) {
+                case CRYSTAL -> { cm.nextAxis(); notify(RegulatorCore.AXIS[cm.selectedAxis()] + " aims.", 1.5); }
+                case COMPOSITE -> notify(cm.plant() ? "Planted." : "Nothing in hand to plant: give the aiming arm's crystal some reach first.", 2.5);
+                case COMPONENT -> { cm.select(p.axis(), p.slot()); notify("Taken back in hand.", 1.5); }
+                default -> notify("The toggle does nothing there.", 1.5);
+            }
+        }
+        /** Crescendo into the seated crystal while a sigil holds: the crystal is written and a fresh one seated. */
+        boolean voice() {
+            java.util.List<RegulatorCore.Snap> snap = core.voice();
+            if (snap == null) return false;
+            cm.clear();
+            voicedCount++;
+            flashV = 1;
+            notify(core.lastVoiced.name + " voiced. A fresh crystal is in the socket.");
+            return true;
+        }
+        /** What a press at this point lands on: for a channel the aiming arm's crystal, the composite, the component in
+         *  hand or the seated crystal; for the toggle the seated crystal, the composite or a planted component. */
+        Pick pickAt(Point at, boolean forToggle) {
+            Pick best = null; double bestD = 1;
+            for (Pick p : picks) {
+                if (forToggle ? p.on() == On.ARM || (p.on() == On.COMPONENT && p.selected()) : p.on() == On.COMPONENT && !p.selected()) continue;
+                double d = Math.hypot(at.x - p.x(), at.y - p.y()) / p.r();
+                if (d < bestD) { bestD = d; best = p; }
+            }
+            return best;
+        }
+
         void frameTick() {
-            if (frame != null && !frame.isVisible()) { lastNs = 0; lab.setSigDriven(false); return; }   // closed: nothing runs, the panel's sliders are free again
+            if (frame != null && !frame.isVisible()) { lastNs = 0; endThread(); lab.setSigDriven(false); return; }   // closed: nothing runs, the panel's sliders are free again
             long now = System.nanoTime();
             double dt = lastNs == 0 ? 1 / 60.0 : Math.min(0.05, (now - lastNs) / 1e9);
             lastNs = now;
             if (lab.familyGen != seenFamily) rebuildCore();
             step(dt);
         }
-        /** One frame of machine time: the auto-player's move, the core, the hand-off to the bench. Tests call this with fixed dt. */
+        /** One frame of machine time: the hand's cast (or the auto-player's), the machine, the hand-off to the bench. Tests call this with fixed dt. */
         void step(double dt) {
-            // paused = frozen: no machine time passes (crank, pen, auto-play), so the signals hold still and the
-            // layers can be adjusted against exactly the state that was playing
+            // frozen: no machine time passes (the figure, auto-play), so the signals hold still and the layers can be
+            // adjusted against exactly the state that was playing
             if (!auto.paused) {
-                if (auto.on) auto.advance(dt * auto.speed);
-                core.tick(dt);
+                if (auto.on) auto.advance(dt * auto.speed); else cast(dt);
+                cm.tick(dt);
             }
             flashV = Math.max(0, flashV - dt * 1.2);
             frameNo++;
@@ -2688,289 +2709,194 @@ public class SfxLab extends JPanel {
                 else if (ev.startsWith("match:")) { if (driving) lab.fireSpell(ev.substring(6), ON_LOCK, false); }
                 else if (ev.startsWith("unmatch:")) { if (driving) lab.fireSpell(ev.substring(8), ON_UNLOCK, false); }
                 else if (ev.startsWith("discover:")) notify("Something answered that no blueprint shows: " + core.recipe(ev.substring(9)).name + ".");
-                else if (ev.startsWith("wrong:")) notify("That's the " + core.recipe(ev.substring(6)).name + " sigil. It isn't the one pinned up.");
                 else if (ev.startsWith("accept:")) { if (driving) lab.fireEvent(ON_ACCEPT, false, false); notify("The crystal takes ×" + ev.substring(ev.lastIndexOf(':') + 1) + ".", 1.8); }
-                else if (ev.startsWith("hold:")) notify("Held off-resonance. It beats until you re-drive it.", 2.5);
             }
-            // panel state
-            RegulatorCore.Motion[] ms = core.comps[core.arm];
-            for (int i = 0; i < 3; i++) {
-                RegulatorCore.Motion m = ms[i];
-                if (core.coupling) {
-                    axB[i].setText((m.eng && m.act ? "▾" : " ") + RegulatorCore.AXIS[i] + " " + (!m.eng ? "off" : m.act ? (m.drv ? "⟳ " : "") + String.format(Locale.ROOT, "×%.2f", m.r) : String.format(Locale.ROOT, "parked ×%.2f", m.r)));
-                    axB[i].setForeground(!m.eng ? Color.GRAY : m.act ? (m.drv ? new Color(200, 120, 40) : new Color(230, 190, 120)) : new Color(150, 150, 150));
-                } else {
-                    boolean foc = core.focus[core.arm] == i && m.eng;
-                    axB[i].setText((foc ? "▸" : " ") + RegulatorCore.AXIS[i] + " " + (!m.eng ? "off" : m.drv ? "driven" : String.format(Locale.ROOT, "held ×%.2f", m.r)));
-                    axB[i].setForeground(!m.eng ? Color.GRAY : m.drv ? new Color(200, 120, 40) : new Color(230, 190, 120));
-                }
-            }
-            for (int i = 0; i < 3; i++) if (armB[i].isSelected() != (i == core.arm)) armB[i].setSelected(i == core.arm);
-            int d = core.drivenCount();
-            java.util.List<RegulatorCore.Motion> tr = core.trimmed();
-            RegulatorCore.Motion fd = tr.isEmpty() ? null : tr.get(0);
-            latchB.setEnabled(d > 0); phaseB.setEnabled(fd != null); reach.setEnabled(fd != null);
-            if (fd != null && !reach.getValueIsAdjusting()) { int v = (int) Math.round(fd.amp * 100); if (reach.getValue() != v) reach.setValue(v); }
-            voiceB.setEnabled(core.targetEval.exact && core.powered);
-            readB.setEnabled(!core.voiced().isEmpty());
-            // status line, the prototype's
+            // status line
             String m;
             if (auto.paused) m = "FROZEN — the machine's time is stopped; tune the layers, then unfreeze." + (auto.on ? "   (auto: " + auto.doing + ")" : "");
             else if (auto.on) m = "auto: " + auto.doing;
             else if (System.currentTimeMillis() < flashUntil) m = flash;
-            else if (!core.powered) m = "Power the receiver to begin.";
-            else if (core.targetEval.exact) m = "The sigil holds. Pull the voice lever to write it to the crystal.";
-            else if (core.coupling && d == 0 && core.activeCount() > 0) m = core.activeCount() + " lever" + (core.activeCount() > 1 ? "s" : "") + " down. Trim them, then scroll the crank to drive them.";
-            else if (d > 0 && core.caught == 0) m = "At rest. Spin the crank up to drive the motion, or latch to stop it.";
-            else if (d > 0 && core.classic && core.caught > 0) m = "Caught a resonance. Latch to hold it, or nudge on.";
-            else if (d > 0 && !core.classic && core.acceptable(core.crankRatio()) > 0) m = "Within reach of ×" + core.acceptable(core.crankRatio()) + ". Latch and the crystal takes it.";
-            else if (d > 0) m = core.classic ? "Spin the crank and let it wind down until it catches." : "Spin the crank. Listen for the beating to slow, then latch.";
-            else if (core.engaged().isEmpty()) m = "Pick an arm, pull a motion lever, then turn the crank.";
-            else if (core.targetEval.score > 0.7) m = "Close. Listen for the beating to slow.";
+            else if (!core.powered) m = "Seat a crystal to begin.";
+            else if (core.matched != null) m = "The sigil holds: " + core.matched.name + ". Crescendo into the seated crystal writes it.";
+            else if (thread != null) m = (threadRising ? "crescendo" : "diminuendo") + " on " + switch (thread.on()) { case ARM -> "the reach"; case COMPOSITE -> "the aim"; case COMPONENT -> "the phase"; case CRYSTAL -> "the seated crystal"; };
+            else if (!cm.selectedExists()) m = RegulatorCore.AXIS[cm.selectedAxis()] + " aims. Crescendo on its crystal gives a component reach; on the composite, winds the aim.";
+            else if (core.acceptable(cm.aim()) > 0 && cm.motion(cm.selectedAxis(), cm.selectedSlot()).drv) m = "Within reach of ×" + core.acceptable(cm.aim()) + ": the crystal is taking it.";
+            else if (core.targetEval.score > 0.7) m = "Close. Watch the figure slow.";
             else m = " ";
             if (!status.getText().equals(m)) status.setText(m);
             if (valsB.isSelected() && frameNo % 4 == 0) {
-                StringBuilder sb = new StringBuilder(String.format(Locale.ROOT, "crank ×%.3f%s%s%s%n", core.crankRatio(), core.caught >= 0 ? "  caught " + core.caught : "",
-                        core.wellDepth() > 0 ? "  taken ×" + Math.round(core.crankRatio()) : "", core.brake ? "  BRAKE" : ""));
-                for (RegulatorCore.Eng e : core.engaged()) sb.append(String.format(Locale.ROOT, "arm%d %s  ×%.3f  φ%s  reach %.2f%n", e.arm() + 1, RegulatorCore.AXIS[e.axis()], e.r(), RegulatorCore.PHASE[e.ph()], e.amp()));
+                StringBuilder sb = new StringBuilder(String.format(Locale.ROOT, "aim ×%.3f   %s aims (slot %d)   reach %.2f%n", cm.aim(), RegulatorCore.AXIS[cm.selectedAxis()], cm.selectedSlot() + 1, cm.selectedReach()));
+                for (int a = 0; a < RegulatorCore.AXES; a++) for (int s = 0; s < cm.slots(); s++) {
+                    RegulatorCore.Motion mo = cm.motion(a, s);
+                    if (mo.eng) sb.append(String.format(Locale.ROOT, "%s%s %d  ×%.3f  φ%.2f  reach %.2f%s%n", a == cm.selectedAxis() && s == cm.selectedSlot() ? "▸" : " ", RegulatorCore.AXIS[a], s + 1, mo.r, cm.phaseAngle(a, s), mo.amp, mo.drv ? "  (in hand)" : ""));
+                }
                 sb.append('\n');
                 for (RegulatorCore.Recipe r : core.recipes) sb.append(String.format(Locale.ROOT, "%-14s %.3f%s%n", r.name, core.eval.get(r.id).score, core.eval.get(r.id).exact ? "  ✓" : ""));
                 sb.append('\n');
                 for (int i = 0; i < RegulatorCore.SIGNALS.length; i++) sb.append(String.format(Locale.ROOT, "%-12s %.3f%n", RegulatorCore.SIGNALS[i], core.signals[i]));
                 for (int a = 0; a < 3; a++) sb.append(String.format(Locale.ROOT, "arm%d.pitch   %.2f st%n", a + 1, core.pitch(a)));
                 if (!vals.getText().contentEquals(sb)) vals.setText(sb.toString());
-            } else if (!vals.getText().isEmpty()) vals.setText("");
-            stage.repaint(); crank.repaint();
+            } else if (!valsB.isSelected() && !vals.getText().isEmpty()) vals.setText("");
+            stage.repaint();
         }
 
-        /** The auto-player: works the machine's real controls toward the pinned spell along a randomised path
-         *  (arm order, reach, overshoot, an occasional wrong resonance first), so the soundscape can be listened
-         *  to as it will be played. Every move goes through the core's input API. */
+        /** The auto-player: conducts the machine toward the pinned spell with the game's own casts, on the verbs' shipped
+         *  curves (reach on the aiming arm, the aim wound past its station and damped back, the phase turned, planted),
+         *  in a random order of components, so the soundscape can be listened to as it will be played. */
         class Autopilot {
-            final Random rng;
+            Random rng;
             boolean on, paused, mistakes = true, anySpell; double speed = 1;
             String doing = "";
-            final ArrayDeque<Object[]> plan = new ArrayDeque<>();   // {what, delay, act, until (BooleanSupplier or null), timeout}
-            Object[] cur; double sinceAct, elapsed;
+            interface Move { boolean run(double dt); }   // true once it is done
+            record Step(String what, Move move, double timeout) {}
+            final ArrayDeque<Step> plan = new ArrayDeque<>();
+            Step cur; double elapsed;
             Autopilot(long seed) { rng = new Random(seed); }
-            void start() { on = true; paused = false; plan.clear(); cur = null; core.resetComps(); planTarget(); }
-            void stop() { on = false; plan.clear(); cur = null; doing = ""; }
-            double pause(double a, double b) { return a + rng.nextDouble() * (b - a); }
-            Object[] mk(String what, double delay, Runnable act, java.util.function.BooleanSupplier until, double timeout) { return new Object[]{what, delay, act, until, timeout}; }
-            void step(String what, double delay, Runnable act, java.util.function.BooleanSupplier until, double timeout) { plan.add(mk(what, delay, act, until, timeout)); }
+            void start() { on = true; paused = false; plan.clear(); cur = null; endThread(); cm.clear(); planTarget(); }
+            void stop() { on = false; plan.clear(); cur = null; doing = ""; if (cm != null) { cm.letGo(); cm.phaseLetGo(); } }
+            double between(double a, double b) { return a + rng.nextDouble() * (b - a); }
+            Step wait(String what, double sec) { double[] t = {0}; return new Step(what, dt -> (t[0] += dt) >= sec, sec + 1); }
+            Step once(String what, double pause, Runnable r) { double[] t = {0}; return new Step(what, dt -> { if ((t[0] += dt) < pause) return false; r.run(); return true; }, pause + 1); }
             void planTarget() {
                 if (anySpell) {
                     ArrayList<RegulatorCore.Recipe> rs = new ArrayList<>();
                     for (RegulatorCore.Recipe r : core.recipes) if (!r.secret) rs.add(r);
-                    if (!rs.isEmpty()) { core.setTarget(rs.get(rng.nextInt(rs.size()))); syncTarget(); }
+                    if (!rs.isEmpty()) pin(rs.get(rng.nextInt(rs.size())));
                 }
-                RegulatorCore.Recipe rec = core.target;
-                if (rec == null) return;
-                java.util.List<RegulatorCore.Snap> snap = new ArrayList<>(RegulatorCore.recipeSnapshot(rec));
-                java.util.List<Integer> perm = new ArrayList<>();   // any arm assignment matches; take a random one
-                for (int i = 0; i < rec.arms(); i++) perm.add(i);
-                Collections.shuffle(perm, rng);
-                Collections.shuffle(snap, rng);
-                for (RegulatorCore.Snap sn : snap) planMotion(perm.get(sn.arm()), sn.axis(), (int) Math.round(sn.r()), sn.phase(), sn.amp());
-                step("holding the lock, listening", pause(3, 6), () -> {}, null, 0);
-                step("a fresh crystal", 0.5, () -> { if (core.voice() == null) core.resetComps(); planTarget(); }, null, 0);
+                RegulatorCore.Recipe rec = pinned;
+                if (rec == null) { on = false; return; }
+                java.util.List<RegulatorCore.Comp> comps = new ArrayList<>(Arrays.asList(rec.comps));
+                Collections.shuffle(comps, rng);
+                for (RegulatorCore.Comp c : comps) planComponent(c);
+                plan.add(wait("holding the lock, listening", between(3, 6)));
+                plan.add(once("crescendo into the crystal", 0.5, () -> { if (!voice()) cm.clear(); planTarget(); }));
             }
-            void planMotion(int arm, int ax, int n, int ph, double reach) {
-                step("arm " + (arm + 1), pause(0.4, 1.0), () -> { core.selectArm(arm); armB[arm].setSelected(true); }, null, 0);
-                step("pull " + RegulatorCore.AXIS[ax], pause(0.3, 0.8), () -> core.axisLever(ax), null, 0);
-                // phase first (it applies to the driven motion whatever its ratio), then spin and latch at once (with the
-                // free crank there is no holding, so the latch has to land while the ratio is in the window), and only then
-                // the reach: the player's own technique is to latch on the integer by ear, then work the reach slider while
-                // watching the orb, so the reach is explored — a few wandering settings closing in on the target
-                for (int k = 0; k < ph; k++) step("phase dial", pause(0.3, 0.7), core::phaseStep, null, 0);
-                // mistakes are brief and end on an integer: a player meanders, but hunts the resonance down before moving on,
-                // so the machine never sits detuned for long (that is what makes the bench sound out of tune)
-                double dice = mistakes ? rng.nextDouble() : 1;
-                if (dice < 0.3) {
-                    int wrong = n < 7 ? n + 1 : n - 1;
-                    if (wrong >= 1) {
-                        spinTo(wrong); latchNow(wrong);
-                        step("that's ×" + wrong + " — listening, then correcting", pause(0.8, 2.2), () -> {}, null, 0);
-                        if (!core.coupling) step("re-driving it", pause(0.2, 0.5), () -> core.axisLever(ax), null, 0);   // focus model: held → driven; coupled model: the next scroll couples
+            void planComponent(RegulatorCore.Comp c) {
+                String ax = RegulatorCore.AXIS[c.axis()];
+                // the toggle at the socket until this component's arm aims
+                double[] t = {0};
+                plan.add(new Step("the toggle at the socket: " + ax + " aims", dt -> {
+                    if ((t[0] += dt) < 0.45) return false;
+                    if (cm.selectedAxis() == c.axis()) return true;
+                    cm.nextAxis(); t[0] = 0;
+                    return false;
+                }, 8));
+                // reach: crescendo past it, diminuendo back
+                double want = c.amp(), over = Math.min(1, want + between(0.04, 0.2));
+                double[] h = {0};
+                plan.add(new Step("reach: crescendo on " + ax + "'s crystal", dt -> { h[0] += dt; cm.reach(ConductedMachine.CRESCENDO.reach(h[0], dt)); return cm.selectedReach() >= over - 1e-9; }, 8));
+                double[] h2 = {0};
+                plan.add(new Step(String.format(Locale.ROOT, "reach %.2f: diminuendo back, watching the orb", want), dt -> {
+                    if (cm.selectedReach() <= want + 0.02) return true;
+                    h2[0] += dt;
+                    cm.reach(Math.max(want - cm.selectedReach(), ConductedMachine.DIMINUENDO.reach(h2[0], dt)));
+                    return false;
+                }, 8));
+                // the aim: sometimes the next station first, heard and left
+                if (mistakes && rng.nextDouble() < 0.3 && c.n() < 7) {
+                    plan.add(new Step("winding the aim", aimTo(c.n() + 1), 30));
+                    plan.add(wait("that's ×" + (c.n() + 1) + " — listening, then back", between(0.8, 2.2)));
+                }
+                plan.add(new Step("the aim to ×" + c.n() + ": past it, and back into its window", aimTo(c.n()), 30));
+                // the phase, turned on the component's own figure
+                double[] h3 = {0}; boolean[] let = {false};
+                plan.add(new Step("phase: turning the component", dt -> {
+                    double at = cm.phaseAngle(cm.selectedAxis(), cm.selectedSlot()), gap = ((c.phase() - at) % 4 + 4) % 4;
+                    if (!let[0]) {
+                        if (gap < 0.3 || gap > 3.7) { cm.phaseLetGo(); let[0] = true; return false; }
+                        h3[0] += dt; cm.phase(ConductedMachine.CRESCENDO.phase(h3[0], dt));
+                        return false;
                     }
-                } else if (dice < 0.55 && !core.classic) {   // overshoot (or stop short), hear it, then close in
-                    double miss = (rng.nextBoolean() ? 1 : -1) * pause(0.25, 0.45), aim = Math.max(0.6, Math.min(RegulatorCore.MAX_N, n + miss));
-                    plan.add(spinStep(String.format(Locale.ROOT, "spinning past ×%d", n), aim, () -> Math.abs(core.crankRatio() - aim) < 0.05, 4));
-                    step(miss > 0 ? "past it — backing off" : "not there yet", pause(0.2, 0.5), () -> {}, null, 0);
-                }
-                spinTo(n); latchNow(n);
-                double a = Math.max(0.05, Math.min(1, reach + (rng.nextDouble() - 0.5) * 0.08));
-                int sweeps = 2 + rng.nextInt(3);
-                for (int k = 0; k < sweeps; k++) {   // wander around the target, closing in: ±0.35, ±0.2, ±0.1 ...
-                    double spread = 0.35 * Math.pow(0.55, k);
-                    double r = Math.max(0.05, Math.min(1, a + (rng.nextBoolean() ? spread : -spread)));
-                    step(String.format(Locale.ROOT, "reach %.2f — watching the orb", r), pause(0.4, 0.9), () -> core.setReach(r), null, 0);
-                }
-                step(String.format(Locale.ROOT, "reach %.2f", a), pause(0.4, 0.9), () -> core.setReach(a), null, 0);
-                if (rng.nextDouble() < 0.5) step("listening", pause(0.5, 1.5), () -> {}, null, 0);
-                if (core.coupling) step("lever up (parked)", pause(0.2, 0.5), () -> { core.selectArm(arm); if (core.comps[arm][ax].act) core.axisLever(ax); }, null, 0);
+                    return gap < 1e-6 || gap > 4 - 1e-6;
+                }, 10));
+                if (rng.nextDouble() < 0.5) plan.add(wait("listening", between(0.5, 1.5)));
+                plan.add(once("the toggle on the composite: planted", between(0.3, 0.7), cm::plant));
             }
-            /** Latch on integer n. If the spin didn't get there (it timed out), a player would not hold a sour ratio: spin again,
-             *  up to twice, before settling for whatever it is. */
-            void latchNow(int n) { plan.add(latchStep(n, 0)); }
-            Object[] latchStep(int n, int retry) {
-                return mk("latch", core.classic ? pause(0.4, 1.0) : 0, () -> {
-                    boolean there = core.classic ? core.caught == n : core.acceptable(core.crankRatio()) == n;
-                    if (!there && retry < 2) { plan.addFirst(latchStep(n, retry + 1)); plan.addFirst(spinStep(n)); return; }
-                    core.latch();
-                }, null, 0);
-            }
-            void spinTo(int n) { plan.add(spinStep(n)); }
-            /** Free crank: scroll the ratio to `aim`. Far off, wheel notches; close, a few fine notches per tick — enough to beat
-             *  the friction that pulls a fast crank back between notches (at ×7 it takes 0.6 ratio/s, more than one fine notch per
-             *  frame gave), closing in geometrically without overshoot. Above the aim, friction does most of the work. */
-            Object[] spinStep(String what, double aim, java.util.function.BooleanSupplier until, double timeout) {
-                return mk(what, 0.02, () -> {
-                    double r = core.crankRatio(), gap = aim - r;
-                    if (core.wells && !core.classic) {   // no friction: notches up, the brake down
-                        if (gap > 0.01) { core.setBrake(false); core.nudge(1, gap > 0.3 ? RegulatorCore.NUDGE_WHEEL : RegulatorCore.NUDGE_FINE); }
-                        else core.setBrake(gap < -0.01);
-                        return;
+            /** The aim to station n the way a hand does it: crescendo past, diminuendo back into the window, let go, and
+             *  wait for the crystal to take it; round again if it slipped through. */
+            Move aimTo(int n) {
+                int[] st = {0}; double[] h = {0};
+                double over = mistakes ? between(0.12, 0.4) : 0.12;
+                return dt -> {
+                    double a = cm.aim(), w = core.acceptWindow(n);
+                    RegulatorCore.Motion m = cm.motion(cm.selectedAxis(), cm.selectedSlot());
+                    switch (st[0]) {
+                        case 0 -> {   // take the aim in hand, unless it already stands on the station
+                            if (m.eng && !m.drv && m.r == n) return true;
+                            if (!cm.takeSelected()) return false;
+                            h[0] = 0; st[0] = a < n + 0.6 * w ? 1 : 2;
+                        }
+                        case 1 -> {   // crescendo, past it
+                            h[0] += dt; cm.push(ConductedMachine.CRESCENDO.aim(h[0], dt));
+                            if (cm.aim() >= Math.min(ConductedMachine.AIM_MAX, n + over)) { st[0] = 2; h[0] = 0; }
+                        }
+                        case 2 -> {   // diminuendo, back into the window
+                            if (a < n - w) { st[0] = 1; h[0] = 0; }
+                            else if (a <= n + 0.6 * w) { cm.letGo(); st[0] = 3; h[0] = 0; }
+                            else { h[0] += dt; cm.push(Math.max(n + 0.3 * w - a, ConductedMachine.DIMINUENDO.aim(h[0], dt))); }
+                        }
+                        default -> {   // hands off: the crystal draws it in and takes it
+                            h[0] += dt;
+                            if (m.eng && !m.drv && m.r == n) return true;
+                            if (core.acceptable(cm.aim()) != n || h[0] > 8) st[0] = 0;
+                        }
                     }
-                    double loss = r * RegulatorCore.FRICTION * 0.02 / Math.max(0.1, speed);   // what friction takes back before the next notch
-                    if (gap > 0.5) core.nudge(1, RegulatorCore.NUDGE_WHEEL);
-                    else if (gap > 0.003) core.nudge(1, RegulatorCore.NUDGE_FINE * Math.min(5, Math.max(1, (int) Math.ceil((0.6 * gap + loss) / 0.02))));
-                    else if (gap < -0.5) core.nudge(-1, RegulatorCore.NUDGE_WHEEL);
-                    else if (-gap > loss + 0.003) core.nudge(-1, RegulatorCore.NUDGE_FINE * Math.min(5, Math.max(1, (int) Math.ceil((0.6 * -gap - loss) / 0.02))));
-                }, until, timeout);
-            }
-            /** Spin the crank into resonance n. Free crank: land a hair above n (friction eases it onto n during the latch frame)
-             *  inside the acceptance window. Classic crank: nudge up past the point friction brings back into the window during
-             *  the slip, then let it coast in; from above, nudge down to that point. Keeps trying until it catches. */
-            Object[] spinStep(int n) {
-                if (core.wells && !core.classic) {   // spin past, brake down (a hold from far, taps near), let go inside the window: the crystal finishes
-                    double[] st = {0, 0};   // {0 spinning up / 1 braking / 2 settling, tap phase}
-                    double w = core.acceptWindow(n), rim = n + w;
-                    return mk("spinning to ×" + n, 0.02, () -> {
-                        double r = core.crankRatio();
-                        if (st[0] == 0) {
-                            if (r < rim + 0.15) core.nudge(1, RegulatorCore.NUDGE_WHEEL);
-                            else { st[0] = 1; core.setBrake(true); }                       // the brake couples, like a scroll
-                        } else if (st[0] == 1) {
-                            if (r <= n + w * 0.4) { core.setBrake(false); st[0] = 2; }
-                            else if (r < n + 0.6) { st[1]++; core.setBrake(st[1] % 3 != 0); }   // near: tap, so the bite stays gentle
-                        } else if (r < n - w) st[0] = 0;   // let go too late: round again
-                    }, () -> !core.brake && Math.abs(core.crankRatio() - n) < 0.005, 15);
-                }
-                if (!core.classic) {
-                    double win = core.acceptWindow(n);
-                    return spinStep("spinning to ×" + n, n + 0.35 * win, () -> Math.abs(core.crankRatio() - n) <= win * 0.6, 10);
-                }
-                double over = n * Math.exp(RegulatorCore.FRICTION * RegulatorCore.SLIP_NUDGE) + RegulatorCore.catchWidth(n) * 0.4;
-                double w = RegulatorCore.catchWidth(n);
-                double[] st = {0, 0};   // {released (1/0), machine time since release}
-                return mk("spinning to ×" + n, 0.02, () -> {
-                    double r = core.crankRatio();
-                    if (core.caught == n) return;
-                    if (st[0] == 1) {   // hands off: let it coast in. Re-spin if it caught elsewhere or fell through the window
-                        st[1] += 0.02;
-                        boolean wrongCatch = core.caught > 0 && core.caught != n, fell = st[1] > 1.5 && core.slip <= 0 && r < n - 2 * w;
-                        if (!wrongCatch && !fell) return;
-                        st[0] = 0; st[1] = 0;
-                    }
-                    if (r < over - 0.1) core.nudge(1, RegulatorCore.NUDGE_WHEEL);
-                    else if (r < over - 0.004) core.nudge(1, RegulatorCore.NUDGE_FINE);
-                    else if (r > over + 0.1) core.nudge(-1, RegulatorCore.NUDGE_WHEEL);
-                    else if (r > over + 0.03) core.nudge(-1, RegulatorCore.NUDGE_FINE);
-                    else st[0] = 1;
-                }, () -> core.caught == n, 15);
+                    return false;
+                };
             }
             void advance(double dt) {
-                if (cur == null) { cur = plan.poll(); if (cur == null) { on = false; doing = ""; return; } sinceAct = 0; elapsed = 0; doing = (String) cur[0]; }
-                sinceAct += dt; elapsed += dt;
-                double delay = (Double) cur[1];
-                java.util.function.BooleanSupplier until = (java.util.function.BooleanSupplier) cur[3];
-                if (until == null) {   // one move after its pause
-                    if (sinceAct >= delay) { ((Runnable) cur[2]).run(); cur = null; }
-                    return;
-                }
-                if (until.getAsBoolean() || elapsed > (Double) cur[4]) { core.setBrake(false); cur = null; followUp(); return; }
-                for (int k = 0; sinceAct >= delay && k < 8; k++) {   // the 20 ms cadence held at a 33 ms frame: catch up, and stop as soon as it is there
-                    sinceAct -= delay; ((Runnable) cur[2]).run();
-                    if (until.getAsBoolean()) { core.setBrake(false); cur = null; followUp(); return; }
-                }
-            }
-            /** A zero-delay step after a repeating one runs in the same frame it finished, before any machine time passes: the free
-             *  crank's latch lands where the spin left the ratio, not a frame of friction later (more than a narrow window at ×7). */
-            void followUp() {
-                Object[] nx = plan.peek();
-                if (nx == null || (Double) nx[1] != 0 || nx[3] != null) return;
-                plan.poll(); doing = (String) nx[0];
-                ((Runnable) nx[2]).run();
+                if (cur == null) { cur = plan.poll(); if (cur == null) { on = false; doing = ""; return; } elapsed = 0; doing = cur.what(); }
+                elapsed += dt;
+                if (cur.move().run(dt) || elapsed > cur.timeout()) { if (elapsed > cur.timeout()) { cm.letGo(); cm.phaseLetGo(); } cur = null; }
             }
         }
 
-        /** The crank: a dial that spins with the core's angle; drag it to drive, wheel to nudge. */
-        class Crank extends JComponent {
-            double lastA; long lastT;
-            Crank() {
-                setPreferredSize(new Dimension(150, 150)); setMinimumSize(new Dimension(150, 150));
-                setFocusable(true);
-                MouseAdapter m = new MouseAdapter() {
-                    double ang(MouseEvent e) { return Math.atan2(e.getY() - getHeight() / 2.0, e.getX() - getWidth() / 2.0); }
-                    @Override public void mousePressed(MouseEvent e) { requestFocusInWindow(); core.dragStart(); lastA = ang(e); lastT = System.nanoTime(); }
-                    @Override public void mouseDragged(MouseEvent e) {
-                        double a = ang(e); long now = System.nanoTime();
-                        double d = a - lastA; if (d > Math.PI) d -= 2 * Math.PI; if (d < -Math.PI) d += 2 * Math.PI;
-                        double dt = Math.max(0.008, (now - lastT) / 1e9);
-                        core.dragVelocity(d / (2 * Math.PI) / dt);
-                        lastA = a; lastT = now;
-                    }
-                    @Override public void mouseReleased(MouseEvent e) { core.dragEnd(); }
-                    @Override public void mouseWheelMoved(MouseWheelEvent e) { core.nudge(e.getWheelRotation() < 0 ? 1 : -1, e.isShiftDown() ? RegulatorCore.NUDGE_FINE : RegulatorCore.NUDGE_WHEEL); }
-                };
-                addMouseListener(m); addMouseMotionListener(m); addMouseWheelListener(m);
-                addKeyListener(new KeyAdapter() { @Override public void keyPressed(KeyEvent e) {
-                    int k = e.getKeyCode();
-                    if (k == KeyEvent.VK_UP || k == KeyEvent.VK_RIGHT) core.nudge(1, e.isShiftDown() ? RegulatorCore.NUDGE_FINE : RegulatorCore.NUDGE_WHEEL);
-                    if (k == KeyEvent.VK_DOWN || k == KeyEvent.VK_LEFT) core.nudge(-1, e.isShiftDown() ? RegulatorCore.NUDGE_FINE : RegulatorCore.NUDGE_WHEEL);
-                    if (k == KeyEvent.VK_B) core.setBrake(true);
-                } @Override public void keyReleased(KeyEvent e) { if (e.getKeyCode() == KeyEvent.VK_B) core.setBrake(false); } });
-            }
-            @Override protected void paintComponent(Graphics g0) {
-                Graphics2D g = (Graphics2D) g0;
-                g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                int w = getWidth(), h = getHeight(), cx = w / 2, cy = h / 2, r = Math.min(w, h) / 2 - 8;
-                g.setColor(new Color(20, 14, 10)); g.fillOval(cx - r, cy - r, 2 * r, 2 * r);
-                double wd = core.wellDepth();   // wells model: the ring warms as the crank sinks into a well
-                g.setColor(core.classic && core.caught > 0 ? new Color(255, 194, 122) : wd > 0 ? new Color(184 + (int) (71 * wd), 140 + (int) (54 * wd), 78 + (int) (44 * wd)) : new Color(184, 140, 78));
-                g.setStroke(new BasicStroke(core.brake ? 8 : 5)); g.drawOval(cx - r, cy - r, 2 * r, 2 * r);
-                double a = Math.toRadians(core.ang - 90);
-                int hx = cx + (int) (Math.cos(a) * (r - 14)), hy = cy + (int) (Math.sin(a) * (r - 14));
-                g.setStroke(new BasicStroke(4)); g.drawLine(cx, cy, hx, hy);
-                g.fillOval(hx - 8, hy - 8, 16, 16);
-                g.setColor(Color.GRAY); g.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
-                String s = String.format(Locale.ROOT, "×%.2f", core.crankRatio());
-                g.drawString(s, cx - g.getFontMetrics().stringWidth(s) / 2, cy + 5);
-            }
-        }
-
-        /** The stage: receiver, arms and the ribbon (the prototype's drawStage) with the blueprint strip under it. */
+        /** The stage: the composite figure over the seated crystal, the three arms, the ring of stations with the
+         *  components turning at them, and the blueprint strip under it. Figure axes: X right, Y up, Z toward the
+         *  conductor (the viewer, in the orbit and front views). */
         class Stage extends JPanel {
-            final double[] pt = new double[3], av = new double[3];
-            static final int TRAIL = 2400;                       // ~5 s of pen at 480 samples/s: two receiver cycles
-            final double[][] trail = new double[TRAIL][3]; int trailN, trailPos; double trailTau = -1;
-            Point dragAt; double dragYaw, dragPitch;
+            final double[] pt = new double[3];
+            static final int TRAIL = 8000;                       // the pen sub-sampled at 480 a second: room for two cycles of an 8 s period
+            final double[][] trail = new double[TRAIL][3]; final double[] trailAt = new double[TRAIL]; int trailN, trailPos; double trailTau = -1;
+            Point dragAt; double dragYaw, dragElev;
+            /** In stage units (the stage's short side is about five): the composite's radius, the ring of stations, a
+             *  component's size per unit of reach, and how far under the composite the crystal sits. */
+            static final double FIG = 0.7, RING = 1.9, COMP = 0.34, FLOOR = -1.35;
+            static final Color PALE = new Color(255, 247, 224), WARM = new Color(255, 150, 70), GOLD = new Color(255, 214, 110);
             Stage() {
                 setBackground(new Color(19, 14, 12));
+                setFocusable(true);
                 MouseAdapter m = new MouseAdapter() {
-                    @Override public void mousePressed(MouseEvent e) { if (viewBox.getSelectedIndex() == 0) { dragAt = e.getPoint(); dragYaw = dYaw; dragPitch = dPitch; } }
-                    @Override public void mouseDragged(MouseEvent e) { if (dragAt != null) { dYaw = dragYaw + (e.getX() - dragAt.x) * 0.01; dPitch = Math.max(-1.2, Math.min(1.2, dragPitch + (e.getY() - dragAt.y) * 0.01)); } }
-                    @Override public void mouseReleased(MouseEvent e) { dragAt = null; }
+                    @Override public void mousePressed(MouseEvent e) {
+                        requestFocusInWindow();
+                        mouse.setLocation(e.getPoint());
+                        if (SwingUtilities.isMiddleMouseButton(e)) { toggle(pickAt(e.getPoint(), true)); return; }
+                        Pick p = pickAt(e.getPoint(), false);
+                        if (p != null) beginThread(p, SwingUtilities.isLeftMouseButton(e));
+                        else if (viewBox.getSelectedIndex() == 0) { dragAt = e.getPoint(); dragYaw = dYaw; dragElev = dElev; }
+                    }
+                    @Override public void mouseDragged(MouseEvent e) {
+                        mouse.setLocation(e.getPoint());
+                        if (dragAt != null) { dYaw = dragYaw + (e.getX() - dragAt.x) * 0.01; dElev = Math.max(-0.45, Math.min(1.0, dragElev + (e.getY() - dragAt.y) * 0.01)); }
+                    }
+                    @Override public void mouseMoved(MouseEvent e) { mouse.setLocation(e.getPoint()); }
+                    @Override public void mouseReleased(MouseEvent e) { dragAt = null; endThread(); }
                 };
                 addMouseListener(m); addMouseMotionListener(m);
+                addKeyListener(new KeyAdapter() { @Override public void keyPressed(KeyEvent e) { if (e.getKeyCode() == KeyEvent.VK_T) toggle(pickAt(mouse, true)); } });
             }
-            double[] proj(double[] p, double u, int W, int H) {
-                double cy = Math.cos(yaw), sy = Math.sin(yaw), cp = Math.cos(pitch), sp = Math.sin(pitch);
-                double x = p[0] * cy + p[2] * sy, z1 = -p[0] * sy + p[2] * cy;
-                double y = p[1] * cp - z1 * sp, z = p[1] * sp + z1 * cp;
-                double k = 3.4 / (3.4 + z * 0.5);
-                return new double[]{W / 2.0 + x * u * k, H * 0.47 - y * u * k, z, k};
+            /** Stage units to the screen: {x, y, depth, scale}. Elevation 0 looks from the front, a quarter turn from above. */
+            double[] proj(double x, double y, double z, double R, int W, int H) {
+                double cy = Math.cos(yaw), sy = Math.sin(yaw), ce = Math.cos(elev), se = Math.sin(elev);
+                double x1 = x * cy + z * sy, z1 = -x * sy + z * cy;
+                double up = y * ce - z1 * se, depth = -(z1 * ce + y * se);
+                double k = 3.4 / (3.4 + depth * 0.35);
+                return new double[]{W / 2.0 + x1 * R * k, H * 0.42 - up * R * k, depth, k};
+            }
+            /** Where a ratio's station lies: round the machine from the conductor's side, 45° a unit. */
+            void station(double ratio, double[] out) {
+                double a = Math.toRadians(45 * ratio);
+                out[0] = -RING * Math.sin(a); out[1] = 0; out[2] = RING * Math.cos(a);
             }
             @Override protected void paintComponent(Graphics g0) {
                 super.paintComponent(g0);
@@ -2978,90 +2904,184 @@ public class SfxLab extends JPanel {
                 g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
                 int BP = 150, W = getWidth(), H = getHeight() - BP;
                 int view = viewBox.getSelectedIndex();
-                double tY = view == 0 ? 0.45 * Math.sin(core.tau * 0.12) + dYaw : 0, tP = view == 0 ? 0.3 + dPitch : view == 1 ? 0 : Math.PI / 2 - 0.001;
-                yaw += (tY - yaw) * 0.08; pitch += (tP - pitch) * 0.08;
-                double R = Math.min(W, H) * 0.34;
-                double extT = core.extent(); ext += (extT - ext) * 0.05;
-                double u = R / ext;
-                boolean hold = core.targetEval.exact;
-                // arms
-                for (int i = 0; i < 3; i++) {
-                    double th = Math.PI / 2 + i * 2 * Math.PI / 3;
-                    double[] an = {Math.cos(th) * 1.35, -1.05, Math.sin(th) * 1.35};
-                    core.armPen(i, core.tau, av);
-                    for (int k = 0; k < 3; k++) av[k] = av[k] / ext * 0.45;
-                    double[] py = {an[0] * 0.62 + av[0], -0.35 + av[1] * 0.8, an[2] * 0.62 + av[2]};
-                    double[] el = {(an[0] + py[0]) / 2 * 1.15, (an[1] + py[1]) / 2 + 0.55, (an[2] + py[2]) / 2 * 1.15};
-                    double[] P0 = proj(an, R, W, H), P1 = proj(el, R, W, H), P2 = proj(py, R, W, H);
-                    boolean active = i < core.arms(), on = core.engagedCount(i) > 0;
-                    g.setColor(active ? (i == core.arm ? new Color(230, 189, 124, 217) : new Color(184, 140, 78, 140)) : new Color(120, 95, 70, 64));
-                    g.setStroke(active ? new BasicStroke(3f) : new BasicStroke(2f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 1, new float[]{4, 5}, 0));
-                    g.drawLine((int) P0[0], (int) P0[1], (int) P1[0], (int) P1[1]);
-                    g.drawLine((int) P1[0], (int) P1[1], (int) P2[0], (int) P2[1]);
-                    g.setColor(on ? new Color(255, 194, 122) : new Color(107, 82, 56));
-                    int hx = (int) P2[0], hy = (int) P2[1], s = (int) (9 * P2[3]);
-                    g.fillPolygon(new int[]{hx, hx + s / 2, hx, hx - s / 2}, new int[]{hy - s, hy, hy + s, hy}, 4);
-                }
-                // receiver
-                int cx = W / 2, cy = (int) (H * 0.47), cs = (int) (Math.min(W, H) * 0.045);
-                float pulse = core.powered ? (float) (0.5 + 0.25 * Math.sin(core.tau * 2)) : 0.15f;
-                g.setColor(new Color(255, 210, 150, (int) (255 * (0.35 + pulse * 0.4))));
+                double tY = view == 0 ? dYaw : 0, tE = view == 0 ? 0.5 + dElev : view == 1 ? 0 : Math.PI / 2 - 0.001;
+                yaw += (tY - yaw) * 0.12; elev += (tE - elev) * 0.12;
+                double R = Math.min(W, H) * 0.2;
+                ext += (core.extent() - ext) * 0.05;
+                boolean hold = core.matched != null;
+                picks.clear();
+                Font small = new Font(Font.MONOSPACED, Font.PLAIN, 11);
+                g.setFont(small);
+
+                // the seated crystal, under the composite
+                double[] C = proj(0, FLOOR, 0, R, W, H);
+                int cx = (int) C[0], cy = (int) C[1], cs = (int) (R * 0.16 * C[3]);
+                float pulse = core.powered ? (float) (0.5 + 0.25 * Math.sin(core.tau * 2)) : 0.12f;
+                g.setColor(new Color(255, 210, 150, (int) (255 * (0.3 + pulse * 0.45))));
                 g.fillPolygon(new int[]{cx, cx + (int) (cs * 0.7), cx + (int) (cs * 0.7), cx, cx - (int) (cs * 0.7), cx - (int) (cs * 0.7)},
                               new int[]{cy - (int) (cs * 1.6), cy - cs / 2, cy + cs / 2, cy + (int) (cs * 1.6), cy + cs / 2, cy - cs / 2}, 6);
+                picks.add(new Pick(On.CRYSTAL, -1, -1, cx, cy, cs * 1.9 + 6, false));
                 if (!core.powered) {
                     g.setColor(new Color(233, 220, 196, 140)); g.setFont(new Font(Font.SERIF, Font.ITALIC, 20));
-                    String t = "The receiver is dark."; g.drawString(t, cx - g.getFontMetrics().stringWidth(t) / 2, cy + (int) (Math.min(W, H) * 0.2));
-                } else {
-                    // the pen: its path since the last frame is sub-sampled into a ring of positions that fade with
-                    // age. Integer ratios retrace one figure; a detuned motion precesses it, slowing as it is tuned in.
-                    if (trailTau < 0 || core.tau < trailTau) { trailTau = core.tau; trailN = 0; trailPos = 0; }
-                    int sub = Math.max(1, Math.min(64, (int) Math.ceil((core.tau - trailTau) * 480)));
-                    for (int k = 1; k <= sub; k++) {
-                        core.pen(trailTau + (core.tau - trailTau) * k / sub, pt);
-                        double[] t3 = trail[trailPos]; t3[0] = pt[0]; t3[1] = pt[1]; t3[2] = pt[2];
-                        trailPos = (trailPos + 1) % TRAIL; trailN = Math.min(TRAIL, trailN + 1);
-                    }
-                    trailTau = core.tau;
-                    int NB = 8;
-                    java.awt.geom.Path2D.Float[] paths = new java.awt.geom.Path2D.Float[NB];
-                    double[] prev = null, head = null;
-                    for (int i = 0; i < trailN; i++) {
-                        double[] q = proj(trail[(trailPos - trailN + i + TRAIL) % TRAIL], u, W, H);
-                        if (prev != null) {
-                            int b = Math.min(NB - 1, i * NB / trailN);   // age bucket: 0 oldest, NB-1 newest
-                            if (paths[b] == null) paths[b] = new java.awt.geom.Path2D.Float();
-                            paths[b].moveTo(prev[0], prev[1]); paths[b].lineTo(q[0], q[1]);
-                        }
-                        prev = q; head = q;
-                    }
-                    for (int pass = 0; pass < 2; pass++) {
-                        g.setStroke(new BasicStroke((float) (pass == 1 ? 1.5 + flashV * 2 : 6 + flashV * 8), BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
-                        for (int b = 0; b < NB; b++) {
-                            if (paths[b] == null) continue;
-                            double age = (b + 0.5) / NB;   // 1 = freshest
-                            Color c = hold ? new Color(255, 214, 110) : new Color(255, 150, 70);
-                            double al = (pass == 1 ? 0.95 : 0.09) * age * age * (hold ? 1.1 : 1);
-                            g.setColor(new Color(c.getRed(), c.getGreen(), c.getBlue(), (int) (255 * Math.min(1, al))));
-                            g.draw(paths[b]);
-                        }
-                    }
-                    if (head != null) {   // the orb
-                        int hx = (int) head[0], hy = (int) head[1];
-                        g.setColor(new Color(255, 200, 120, 70)); g.fillOval(hx - 11, hy - 11, 22, 22);
-                        g.setColor(new Color(255, 240, 210, 235)); g.fillOval(hx - 5, hy - 5, 10, 10);
-                    }
-                    if (flashV > 0) { g.setColor(new Color(255, 200, 140, (int) (flashV * 64))); g.fillRect(0, 0, W, H); }
+                    String t = "The socket is empty."; g.drawString(t, W / 2 - g.getFontMetrics().stringWidth(t) / 2, (int) (H * 0.42));
+                    blueprint(g, W, H, BP);
+                    return;
                 }
-                // blueprint strip: front (X right, Y up) and top (X right, +Z toward the bottom); static per
-                // target and size, so it is drawn once into an image
-                if (bpImg == null || bpRec != core.target || bpImg.getWidth() != W || bpImg.getHeight() != BP) {
+                int aiming = cm.selectedAxis(), selSlot = cm.selectedSlot();
+                double aim = cm.aim();
+
+                // the stations
+                int near = core.acceptable(aim);
+                for (int n = 1; n <= 7; n++) {
+                    station(n, pt);
+                    double[] S = proj(pt[0], pt[1], pt[2], R, W, H);
+                    int r = n == near ? 5 : 3;
+                    g.setColor(n == near ? new Color(255, 194, 122, 220) : new Color(184, 140, 78, 110));
+                    g.fillOval((int) S[0] - r, (int) S[1] - r, 2 * r, 2 * r);
+                    g.setColor(new Color(184, 140, 78, 120));
+                    g.drawString("×" + n, (int) S[0] + 8, (int) S[1] + 14);
+                }
+
+                // the components, grouped by ratio: each group one figure at its station, with its own orb
+                boolean[] drawn = new boolean[9];
+                int[] ga = new int[9], gs = new int[9];
+                for (int s0 = 0; s0 < RegulatorCore.ARMS; s0++) for (int a0 = 0; a0 < RegulatorCore.AXES; a0++) {
+                    RegulatorCore.Motion lead = core.comps[s0][a0];
+                    if (drawn[s0 * 3 + a0] || !lead.eng || lead.amp <= RegulatorCore.ENGAGE_AMP) continue;
+                    int n = 0; boolean inHand = false; double size = 0;
+                    for (int s = 0; s < RegulatorCore.ARMS; s++) for (int a = 0; a < RegulatorCore.AXES; a++) {
+                        RegulatorCore.Motion mo = core.comps[s][a];
+                        if (drawn[s * 3 + a] || !mo.eng || mo.amp <= RegulatorCore.ENGAGE_AMP || Math.abs(mo.r - lead.r) > 0.02) continue;
+                        drawn[s * 3 + a] = true; ga[n] = a; gs[n++] = s; size = Math.max(size, mo.amp);
+                        if (a == aiming && s == selSlot) inHand = true;
+                    }
+                    station(lead.r, pt);
+                    double sx = pt[0], sy = pt[1], sz = pt[2], grow = Math.min(1, lead.r / 0.6);
+                    Color col = inHand ? PALE : WARM;
+                    java.awt.geom.Path2D.Float ring = new java.awt.geom.Path2D.Float();
+                    for (int i = 0; i <= 48; i++) {
+                        double th = 2 * Math.PI * i / 48, x = 0, y = 0, z = 0;
+                        for (int k = 0; k < n; k++) {
+                            RegulatorCore.Motion mo = core.comps[gs[k]][ga[k]];
+                            double v = mo.amp * grow * Math.sin(th + (mo.osc - lead.osc) + cm.phaseAngle(ga[k], gs[k]) * Math.PI / 2);
+                            if (ga[k] == 0) x += v; else if (ga[k] == 1) y += v; else z += v;
+                        }
+                        double[] q = proj(sx + x * COMP, sy + y * COMP, sz + z * COMP, R, W, H);
+                        if (i == 0) ring.moveTo(q[0], q[1]); else ring.lineTo(q[0], q[1]);
+                    }
+                    g.setColor(new Color(col.getRed(), col.getGreen(), col.getBlue(), inHand ? 150 : 100));
+                    g.setStroke(new BasicStroke(inHand ? 1.8f : 1.2f)); g.draw(ring);
+                    double x = 0, y = 0, z = 0;
+                    for (int k = 0; k < n; k++) { double v = cm.swing(ga[k], gs[k], core.tau); if (ga[k] == 0) x += v; else if (ga[k] == 1) y += v; else z += v; }
+                    double[] q = proj(sx + x * COMP, sy + y * COMP, sz + z * COMP, R, W, H), S = proj(sx, sy, sz, R, W, H);
+                    g.setColor(new Color(col.getRed(), col.getGreen(), col.getBlue(), 70)); g.fillOval((int) q[0] - 8, (int) q[1] - 8, 16, 16);
+                    g.setColor(new Color(255, 245, 225, 235)); g.fillOval((int) q[0] - 3, (int) q[1] - 3, 7, 7);
+                    for (int k = 0; k < n; k++) picks.add(new Pick(On.COMPONENT, ga[k], gs[k], S[0], S[1], Math.max(18, size * COMP * R * S[3] + 10), ga[k] == aiming && gs[k] == selSlot));
+                }
+
+                // the arms: the array turns with the aim; the aiming arm faces out to its station, the others the composite
+                double want = 45 * aim - aiming * 120, d = want - turn;
+                d -= 360 * Math.round(d / 360);
+                turn += d * 0.15;
+                for (int i = 0; i < 3; i++) {
+                    double th = Math.toRadians(turn + i * 120), ux = -Math.sin(th), uz = Math.cos(th);
+                    boolean aims = i == aiming;
+                    double[] B = proj(ux * 0.85, FLOOR, uz * 0.85, R, W, H), E = proj(ux * 1.2, FLOOR + 0.6, uz * 1.2, R, W, H);
+                    double hr = aims ? 1.1 : 0.75, hy = FLOOR + (aims ? 1.2 : 1.05);
+                    double[] Hd = proj(ux * hr, hy, uz * hr, R, W, H);
+                    boolean carries = false;
+                    for (int s = 0; s < cm.slots(); s++) { RegulatorCore.Motion mo = cm.motion(i, s); if (mo.eng && mo.amp > RegulatorCore.ENGAGE_AMP) carries = true; }
+                    g.setColor(aims ? new Color(230, 189, 124, 225) : new Color(184, 140, 78, 140));
+                    g.setStroke(new BasicStroke(aims ? 3f : 2.2f));
+                    g.drawLine((int) B[0], (int) B[1], (int) E[0], (int) E[1]);
+                    g.drawLine((int) E[0], (int) E[1], (int) Hd[0], (int) Hd[1]);
+                    int hx = (int) Hd[0], hY = (int) Hd[1], s = (int) (9 * Hd[3]);
+                    if (aims) {   // its beam, out to what it is building
+                        station(aim, pt);
+                        double v = cm.selectedExists() ? cm.swing(aiming, selSlot, core.tau) * COMP : 0;
+                        double[] T = proj(pt[0] + (aiming == 0 ? v : 0), pt[1] + (aiming == 1 ? v : 0), pt[2] + (aiming == 2 ? v : 0), R, W, H);
+                        g.setColor(new Color(255, 247, 224, cm.selectedExists() ? 70 : 28)); g.setStroke(new BasicStroke(1.2f));
+                        g.drawLine(hx, hY, (int) T[0], (int) T[1]);
+                        g.setColor(new Color(255, 220, 160, 60)); g.fillOval(hx - s - 5, hY - s - 5, 2 * s + 10, 2 * s + 10);
+                        picks.add(new Pick(On.ARM, i, selSlot, hx, hY, s + 12, true));
+                    }
+                    g.setColor(aims || carries ? new Color(255, 194, 122) : new Color(107, 82, 56));
+                    g.fillPolygon(new int[]{hx, hx + s / 2, hx, hx - s / 2}, new int[]{hY - s, hY, hY + s, hY}, 4);
+                    g.setColor(new Color(184, 140, 78, 150)); g.setFont(small);
+                    g.drawString(RegulatorCore.AXIS[i], (int) B[0] - 3, (int) B[1] + 15);
+                }
+
+                // the composite: the pen's path sub-sampled into a ring of positions that fade with age. Integer ratios
+                // retrace one figure; a detuned motion precesses it, slowing as it is tuned in.
+                double u = FIG / ext;
+                if (trailTau < 0 || core.tau < trailTau) { trailTau = core.tau; trailN = 0; trailPos = 0; }
+                int sub = Math.max(1, Math.min(64, (int) Math.ceil((core.tau - trailTau) * 480)));
+                for (int k = 1; k <= sub; k++) {
+                    double at = trailTau + (core.tau - trailTau) * k / sub;
+                    core.pen(at, pt);
+                    double[] t3 = trail[trailPos]; t3[0] = pt[0]; t3[1] = pt[1]; t3[2] = pt[2]; trailAt[trailPos] = at;
+                    trailPos = (trailPos + 1) % TRAIL; trailN = Math.min(TRAIL, trailN + 1);
+                }
+                trailTau = core.tau;
+                int NB = 8;
+                java.awt.geom.Path2D.Float[] paths = new java.awt.geom.Path2D.Float[NB];
+                double[] prev = null, head = null;
+                double span = 2 * core.drawPeriod;   // two of the receiver's cycles
+                for (int i = 0; i < trailN; i++) {
+                    int idx = (trailPos - trailN + i + TRAIL) % TRAIL;
+                    double age = (core.tau - trailAt[idx]) / span;
+                    if (age > 1) continue;
+                    double[] t3 = trail[idx];
+                    double[] q = proj(t3[0] * u, t3[1] * u, t3[2] * u, R, W, H);
+                    if (prev != null) {
+                        int b = Math.max(0, Math.min(NB - 1, (int) ((1 - age) * NB)));   // age bucket: 0 oldest, NB-1 newest
+                        if (paths[b] == null) paths[b] = new java.awt.geom.Path2D.Float();
+                        paths[b].moveTo(prev[0], prev[1]); paths[b].lineTo(q[0], q[1]);
+                    }
+                    prev = q; head = q;
+                }
+                for (int pass = 0; pass < 2; pass++) {
+                    g.setStroke(new BasicStroke((float) (pass == 1 ? 1.5 + flashV * 2 : 6 + flashV * 8), BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+                    for (int b = 0; b < NB; b++) {
+                        if (paths[b] == null) continue;
+                        double fresh = (b + 0.5) / NB;   // 1 = freshest
+                        Color c = hold ? GOLD : WARM;
+                        double al = (pass == 1 ? 0.95 : 0.09) * fresh * fresh * (hold ? 1.1 : 1);
+                        g.setColor(new Color(c.getRed(), c.getGreen(), c.getBlue(), (int) (255 * Math.min(1, al))));
+                        g.draw(paths[b]);
+                    }
+                }
+                double[] O = proj(0, 0, 0, R, W, H);
+                if (head == null) head = O;
+                int ox = (int) head[0], oy = (int) head[1];
+                g.setColor(new Color(255, 200, 120, 70)); g.fillOval(ox - 11, oy - 11, 22, 22);
+                g.setColor(new Color(255, 240, 210, 235)); g.fillOval(ox - 5, oy - 5, 10, 10);
+                picks.add(new Pick(On.COMPOSITE, -1, -1, O[0], O[1], Math.max(34, FIG * R * O[3] + 8), false));
+                if (flashV > 0) { g.setColor(new Color(255, 200, 140, (int) (flashV * 64))); g.fillRect(0, 0, W, H); }
+
+                // the thread, from the pointer to what it is on
+                if (thread != null) {
+                    double tx = thread.x(), ty = thread.y();
+                    for (Pick p : picks) if (p.on() == thread.on() && p.axis() == thread.axis() && p.slot() == thread.slot()) { tx = p.x(); ty = p.y(); }
+                    if (thread.on() == On.COMPOSITE) { tx = ox; ty = oy; }
+                    g.setColor(new Color(255, 247, 224, threadRising ? 200 : 110));
+                    g.setStroke(new BasicStroke(threadRising ? 1.8f : 1.2f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 1, new float[]{6, 5}, (float) (-(threadRising ? 1 : -1) * core.tau * 40 % 11)));
+                    g.drawLine(mouse.x, mouse.y, (int) tx, (int) ty);
+                }
+                blueprint(g, W, H, BP);
+            }
+            // the blueprint strip: front (X right, Y up) and top (X right, +Z toward the bottom); static per pinned
+            // recipe and size, so it is drawn once into an image
+            void blueprint(Graphics2D g, int W, int H, int BP) {
+                if (pinned == null) return;
+                if (bpImg == null || bpRec != pinned || bpImg.getWidth() != W || bpImg.getHeight() != BP) {
                     bpImg = new BufferedImage(Math.max(1, W), BP, BufferedImage.TYPE_INT_RGB);
                     Graphics2D gi = bpImg.createGraphics();
                     gi.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
                     gi.translate(0, -H);
                     paintBlueprint(gi, W, H, BP);
                     gi.dispose();
-                    bpRec = core.target;
+                    bpRec = pinned;
                 }
                 g.drawImage(bpImg, 0, H, null);
             }
@@ -3072,7 +3092,7 @@ public class SfxLab extends JPanel {
                 g.setColor(new Color(214, 230, 245, 20));
                 for (int x = 0; x < W; x += 12) g.drawLine(x, by, x, by + BP);
                 for (int y = by; y < by + BP; y += 12) g.drawLine(0, y, W, y);
-                RegulatorCore.Recipe rec = core.target;
+                RegulatorCore.Recipe rec = pinned;
                 double E = RegulatorCore.extent(rec);
                 int pw = Math.min(W / 2, 2 * BP);
                 int ox0 = W / 2 - pw;
@@ -3090,7 +3110,9 @@ public class SfxLab extends JPanel {
                     g.setColor(new Color(214, 230, 245, 150)); g.drawString(k == 0 ? "front" : "top", ox0 + pw * k + 6, by + BP - 6);
                 }
                 g.setColor(new Color(214, 230, 245, 200));
-                g.drawString(rec.name + " — tier " + new String[]{"", "I", "II", "III"}[rec.tier] + " blueprint: " + rec.arms() + " arms, " + rec.motionsPerArm() + " motion" + (rec.motionsPerArm() > 1 ? "s" : "") + " each   (front: X right, Y up · top: X right, +Z down)", 8, by + 15);
+                StringBuilder parts = new StringBuilder();
+                for (RegulatorCore.Comp c : rec.comps) parts.append("  ").append(RegulatorCore.AXIS[c.axis()]).append(" ×").append(c.n()).append(" φ").append(RegulatorCore.PHASE[c.phase()]).append(c.amp() != 1 ? String.format(Locale.ROOT, " reach %.2f", c.amp()) : "");
+                g.drawString(rec.name + " — tier " + new String[]{"", "I", "II", "III"}[rec.tier] + ":" + parts + "   (front: X right, Y up · top: X right, +Z down)", 8, by + 15);
             }
         }
     }
