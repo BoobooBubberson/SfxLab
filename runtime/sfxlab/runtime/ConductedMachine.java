@@ -34,6 +34,11 @@ public final class ConductedMachine {
      *  the core would accept and no recipe uses. */
     public static final double AIM_MAX = 7.5;
 
+    /** How near its station a motion drawn in by a well must come before the crystal takes it, in ratio. The core's
+     *  own well eases all the way on (to a thousandth, about three seconds from the window's edge); taking it at a
+     *  fiftieth puts the catch, and its chime, about a second after the hand lets go. A host may tune it. */
+    public double takeWithin = 0.02;
+
     /** While a motion is pushed the well must not pull: the core's slip timer, kept topped up. Seconds. */
     private static final double HELD_SLIP = 0.12;
 
@@ -406,8 +411,9 @@ public final class ConductedMachine {
         if (!m.eng || !m.drv) return;
         aim = m.r;   // wound, or drawn in by a well: the aim goes with it
         if (inHand) return;
-        if (core.wellDepth() == 1) {
-            core.latch();   // settled on a resonance: the crystal takes it (accept:<slot>:<axis>:<n>)
+        int n = core.acceptable(m.r);
+        if (core.wellDepth() == 1 || (n > 0 && core.slip <= 0 && Math.abs(m.r - n) <= takeWithin)) {
+            core.latch();   // drawn onto a resonance: the crystal takes it (accept:<slot>:<axis>:<n>)
             aim = m.r;
         }
     }

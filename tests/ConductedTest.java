@@ -36,6 +36,15 @@ public class ConductedTest {
         check("reach at the zero position is a component, sitting still", m.selectedExists() && m.core.engaged().isEmpty() && m.aim() == 0);
         aimTo(m, 3);
         check("the aim wound past ×3 and damped back is taken by the crystal (" + m.aim() + ")", m.aim() == 3 && m.motion(0, 0).r == 3 && !m.motion(0, 0).drv);
+        ConductedMachine quick = machine();
+        reachTo(quick, 1);
+        quick.takeSelected();
+        while (quick.aim() < 2.0) { quick.push(up.aim(1, DT)); quick.tick(DT); }
+        quick.push(2.09 - quick.aim()); quick.tick(DT);   // just inside the window's edge
+        quick.letGo();
+        int ticks = 0;
+        while (quick.motion(0, 0).drv && ticks < 200) { quick.tick(DT); ticks++; }
+        check("let go at the window's edge, the crystal takes it in about a second (" + String.format(Locale.ROOT, "%.2f s", ticks * DT) + "), exactly", quick.motion(0, 0).r == 2 && ticks * DT > 0.5 && ticks * DT < 1.5);
         for (int i = 0; i < 60; i++) { m.reach(-0.4 * DT); m.tick(DT); }
         rest(m, 2);
         check("a component shrunk to nothing is gone, and the aim has not moved", !m.motion(0, 0).eng && m.aim() == 3);
