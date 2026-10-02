@@ -1184,6 +1184,7 @@ public class SfxLab extends JPanel {
     static final Path CFG_FILE = DIR.resolve("lab.cfg");
     String exportDir = "renders";   // relative = inside the workspace
     String forgeMirror = "";        // the mod's sounds folder the forge panel browses; empty until picked (folder… button)
+    String modDir = "";             // the mod checkout the regulator panel's "sync to mod" button syncs into; empty until picked
     Path mirrorRoot() { return DIR.resolve(forgeMirror); }
     boolean expOgg = false, expMono = false, expNorm = false, expTrim = true;
     volatile boolean monoOut;   // shift+M: hear the mix as the game plays it, one mono source ((L + R) / 2, the export's downmix); remembered in lab.cfg
@@ -3357,7 +3358,10 @@ public class SfxLab extends JPanel {
             famBox.setToolTipText("regulator/<family>.sfx: the palette and its spells, loaded onto the bench; edits autosave to a working copy (regulator/.working/) until S saves the family");
             famBox.addActionListener(e -> { if (!refreshing) { String f = (String) famBox.getSelectedItem(); if (f != null && !f.equals(lab.family)) lab.loadFamily(f.equals("(none)") ? null : f); } });
             sigRow.add(famBox);
-            JButton lockB = new JButton("bench lock"), unlockB = new JButton("bench unlock"), rescanB = new JButton("↻");
+            JButton lockB = new JButton("bench lock"), unlockB = new JButton("bench unlock"), rescanB = new JButton("↻"), syncB = new JButton("sync to mod");
+            syncB.setToolTipText("<html><div width=420>run the mod's sync: checks the SAVED family files, bakes what they play, and copies the runtime, the families and the bake into the mod. "
+                    + "Edits not yet saved with S are not synced and are left as they are. Nothing is committed; relaunch the game to hear it.</div></html>");
+            syncB.addActionListener(e -> lab.syncToMod());
             bindsB.setToolTipText("off: every layer plays its saved params — no signal moves anything and no spell blends in — for auditioning a layer on its own");
             bindsB.addActionListener(e -> { lab.mix.bindsOn = bindsB.isSelected(); lab.toast(lab.mix.bindsOn ? "binds on: signals move bound params, spells blend in by their scores" : "binds off: layers play as saved, no blend (solo / mute to audition)"); });
             lockB.setToolTipText("the lock event for the layers on the bench: score → 1, fires their on=lock one-shots (each spell has its own buttons below)");
@@ -3366,8 +3370,8 @@ public class SfxLab extends JPanel {
             unlockB.addActionListener(e -> lab.fireEvent(ON_UNLOCK));
             rescanB.setToolTipText("rescan regulator/ and reload the family from disk");
             rescanB.addActionListener(e -> { rescanFamilies(); if (lab.family != null) lab.loadFamily(lab.family); });
-            for (AbstractButton b : new AbstractButton[]{lockB, unlockB, rescanB, bindsB}) b.setFocusable(false);   // a click here must not take P / SPACE away from the bench
-            sigRow.add(lockB); sigRow.add(unlockB); sigRow.add(rescanB); sigRow.add(bindsB);
+            for (AbstractButton b : new AbstractButton[]{lockB, unlockB, rescanB, bindsB, syncB}) b.setFocusable(false);   // a click here must not take P / SPACE away from the bench
+            sigRow.add(lockB); sigRow.add(unlockB); sigRow.add(rescanB); sigRow.add(bindsB); sigRow.add(syncB);
             top.add(sigRow, gc);
             // fold buttons: the signal sliders and the spell rows each fold away so the bind tables get the height
             gc.gridy = 1;
@@ -4075,6 +4079,54 @@ public class SfxLab extends JPanel {
         toast("removed marker " + m.name);
     }
 
+    // ---- sync to mod: the mod's own tools/sync_sfxlab.sh, run from here (the regulator panel's button). It checks the
+    // saved family files, bakes what they play, and copies the runtime, the families and the bake into the mod. What
+    // is synced is what is SAVED: edits still in a family's working copy (not yet S) stay there, untouched. Nothing
+    // is committed in either repository, and the game reads the result at its next launch.
+    static final String SYNC_SCRIPT = "tools/sync_sfxlab.sh";
+    boolean syncing;
+    /** The mod checkout: the remembered one, else one found above the forge's mirror folder, else asked for. */
+    Path findMod() {
+        if (!modDir.isEmpty() && Files.exists(Paths.get(modDir).resolve(SYNC_SCRIPT))) return Paths.get(modDir);
+        if (!forgeMirror.isEmpty()) for (Path p = Paths.get(forgeMirror).toAbsolutePath(); p != null; p = p.getParent()) if (Files.exists(p.resolve(SYNC_SCRIPT))) return p;
+        JFileChooser fc = new JFileChooser(DIR.getParent() != null ? DIR.getParent().toFile() : DIR.toFile());
+        fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        fc.setDialogTitle("The mod's folder (the one holding " + SYNC_SCRIPT + ")");
+        if (fc.showOpenDialog(this) != JFileChooser.APPROVE_OPTION) return null;
+        Path p = fc.getSelectedFile().toPath();
+        if (!Files.exists(p.resolve(SYNC_SCRIPT))) { toast("no " + SYNC_SCRIPT + " in " + p); return null; }
+        return p;
+    }
+    void syncToMod() {
+        if (syncing) { toast("a sync is already running"); return; }
+        Path mod = findMod();
+        if (mod == null) return;
+        if (!mod.toString().equals(modDir)) { modDir = mod.toString(); saveCfg(); }
+        JTextArea out = new JTextArea(22, 100);
+        out.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12)); out.setEditable(false);
+        JDialog dlg = new JDialog(SwingUtilities.getWindowAncestor(this), "Sync to mod — " + mod);
+        dlg.add(new JScrollPane(out)); dlg.pack(); dlg.setLocationRelativeTo(this); dlg.setVisible(true);
+        out.append("syncing what is saved (S) in " + DIR + "\ninto " + mod + "\n\n");
+        syncing = true;
+        Thread t = new Thread(() -> {
+            String verdict;
+            try {
+                ProcessBuilder pb = new ProcessBuilder("bash", SYNC_SCRIPT).directory(mod.toFile()).redirectErrorStream(true);
+                pb.environment().put("SFXLAB_SRC", DIR.toAbsolutePath().toString());
+                Process p = pb.start();
+                try (BufferedReader r = new BufferedReader(new InputStreamReader(p.getInputStream()))) {
+                    for (String l; (l = r.readLine()) != null; ) { String line = l; SwingUtilities.invokeLater(() -> { out.append(line + "\n"); out.setCaretPosition(out.getDocument().getLength()); }); }
+                }
+                int code = p.waitFor();
+                verdict = code == 0 ? "\nSYNCED. Nothing was committed in either repository; the game picks this up at its next launch.\n"
+                                    : "\nNOT SYNCED (exit " + code + "): the lines above say why. The mod is as it was unless the copying had begun.\n";
+            } catch (Exception e) { verdict = "\nNOT SYNCED: " + e + "\n"; }
+            String v = verdict;
+            SwingUtilities.invokeLater(() -> { out.append(v); out.setCaretPosition(out.getDocument().getLength()); syncing = false; });
+        }, "sync-to-mod");
+        t.setDaemon(true); t.start();
+    }
+
     // ---- lab.cfg: export settings
     void loadCfg() {
         try {
@@ -4086,6 +4138,7 @@ public class SfxLab extends JPanel {
                 switch (k) {
                     case "export_dir" -> exportDir = v;
                     case "forge_mirror" -> forgeMirror = v;
+                    case "mod_dir" -> modDir = v;
                     case "browser" -> browserOn = v.equals("1");
                     case "bench" -> benchOn = v.equals("1");
                     case "bpanel" -> bpanelOn = v.equals("1");
@@ -4104,9 +4157,9 @@ public class SfxLab extends JPanel {
     void saveCfg() {
         try {
             Files.createDirectories(DIR);
-            Files.writeString(CFG_FILE, String.format("export_dir=%s%nexport_ogg=%d%nexport_mono=%d%nexport_norm=%d%nexport_trim=%d%nforge_mirror=%s%nbrowser=%d%nbench=%d%nbpanel=%d%nbench_name=%s%nfamily=%s%nbpanel_fold=%s%nmono_out=%d%n",
+            Files.writeString(CFG_FILE, String.format("export_dir=%s%nexport_ogg=%d%nexport_mono=%d%nexport_norm=%d%nexport_trim=%d%nforge_mirror=%s%nbrowser=%d%nbench=%d%nbpanel=%d%nbench_name=%s%nfamily=%s%nbpanel_fold=%s%nmono_out=%d%nmod_dir=%s%n",
                     exportDir, expOgg ? 1 : 0, expMono ? 1 : 0, expNorm ? 1 : 0, expTrim ? 1 : 0, forgeMirror, browserOn ? 1 : 0,
-                    benchOn ? 1 : 0, bpanelOn ? 1 : 0, benchName != null ? benchName : "", family != null ? family : "", panelFold, monoOut ? 1 : 0));
+                    benchOn ? 1 : 0, bpanelOn ? 1 : 0, benchName != null ? benchName : "", family != null ? family : "", panelFold, monoOut ? 1 : 0, modDir));
         } catch (IOException e) { toast("cfg save failed: " + e); }
     }
 

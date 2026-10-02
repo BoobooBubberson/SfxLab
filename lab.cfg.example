@@ -23,3 +23,6 @@ bench_name=
 family=
 # hear the mix in mono, as the game plays it (shift+M toggles)
 mono_out=0
+# the mod checkout that the regulator panel's "sync to mod" button syncs into (the folder
+# holding tools/sync_sfxlab.sh); asked for on first use and remembered here
+mod_dir=
