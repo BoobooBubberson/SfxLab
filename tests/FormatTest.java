@@ -41,10 +41,15 @@ public class FormatTest {
         cases.put("layer " + lay + " dup 0 0 7 level=0.5", "appears twice");
         cases.put("bench " + (SfxFormat.FAMILY_FORMAT + 1), "newer than this runtime");
         cases.put("recipe tier=1 X3p1", "belongs in a spell section");
-        cases.put("spell broken\nname Broken\nrecipe tier=1 X3p1 Y2p0 Z1p0", "slots");
+        cases.put("spell broken\nname Broken\nrecipe tier=1 X3p1 Y2p0 X3p0r0.5", "an axis holds one motion at a ratio");
         cases.put("spell broken2\nname Broken\nrecipe tier=4 X3p1", "tiers run");
         cases.put("spell broken3\nname Broken\nrecipe tier=1 X3q1", "is not a motion");
         cases.put("spell norecipe\nname No recipe", "has no recipe");
+        {   // a second spell with the first one's sigil, started a quarter cycle later: the same figure
+            StringBuilder twin = new StringBuilder("spell twin\nname Twin\nrecipe tier=1");
+            for (RegulatorCore.Comp c : fm.spells().get(0).recipe.comps) twin.append(' ').append("XYZ".charAt(c.axis())).append(c.n()).append('p').append((c.phase() + c.n()) % 4).append('r').append(c.amp());
+            cases.put(twin.toString(), "have the same sigil");
+        }
         cases.put("spell " + fm.spells().get(0).id + "\nrecipe tier=1 X1p0", "appears twice");
         for (var e : cases.entrySet()) {
             List<String> lines = new ArrayList<>(base);

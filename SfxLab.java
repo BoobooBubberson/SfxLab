@@ -2566,7 +2566,7 @@ public class SfxLab extends JPanel {
             Bench r = parseRecipe(text);
             RegulatorCore.Recipe probe = new RegulatorCore.Recipe(sp.id, sp.name, r.tier, "", r.secret, r.comps);
             String prob = recipeProblem(r);
-            String warn = prob != null ? "\n\nWARNING, unbuildable at this tier: " + prob : RegulatorCore.degenerate(probe) ? "\n\nWARNING: this trace retraces itself into an open line; it will read poorly as a sigil." : "";
+            String warn = prob != null ? "\n\nWARNING, unbuildable: " + prob : RegulatorCore.degenerate(probe) ? "\n\nWARNING: this trace retraces itself into an open line; it will read poorly as a sigil." : "";
             if (JOptionPane.showConfirmDialog(this, "Make this the recipe of " + sp.name + "?\n\n" + text + warn + "\n\n(the file keeps its layers; the machine scores the new sigil from now on)",
                     "Recipe", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE) != JOptionPane.OK_OPTION) return;
             lab.setSpellRecipe(sp, text);
@@ -2610,7 +2610,7 @@ public class SfxLab extends JPanel {
             seenFamily = lab.familyGen;
             boolean wasOn = core != null && core.powered;
             endThread();
-            cm = new ConductedMachine(lab.familyRecipes(), RegulatorCore.ARMS, RegulatorCore.AXES);
+            cm = new ConductedMachine(lab.familyRecipes(), RegulatorCore.SLOTS, RegulatorCore.AXES);
             core = cm.core;
             core.power(wasOn);
             core.snapTol = snapS.getValue() / 100.0;
@@ -2956,13 +2956,13 @@ public class SfxLab extends JPanel {
                 }
 
                 // the components, grouped by ratio: each group one figure at its station, with its own orb
-                boolean[] drawn = new boolean[9];
-                int[] ga = new int[9], gs = new int[9];
-                for (int s0 = 0; s0 < RegulatorCore.ARMS; s0++) for (int a0 = 0; a0 < RegulatorCore.AXES; a0++) {
+                boolean[] drawn = new boolean[RegulatorCore.SLOTS * 3];
+                int[] ga = new int[drawn.length], gs = new int[drawn.length];
+                for (int s0 = 0; s0 < RegulatorCore.SLOTS; s0++) for (int a0 = 0; a0 < RegulatorCore.AXES; a0++) {
                     RegulatorCore.Motion lead = core.comps[s0][a0];
                     if (drawn[s0 * 3 + a0] || !lead.eng || lead.amp <= RegulatorCore.ENGAGE_AMP) continue;
                     int n = 0; boolean inHand = false; double size = 0;
-                    for (int s = 0; s < RegulatorCore.ARMS; s++) for (int a = 0; a < RegulatorCore.AXES; a++) {
+                    for (int s = 0; s < RegulatorCore.SLOTS; s++) for (int a = 0; a < RegulatorCore.AXES; a++) {
                         RegulatorCore.Motion mo = core.comps[s][a];
                         if (drawn[s * 3 + a] || !mo.eng || mo.amp <= RegulatorCore.ENGAGE_AMP || Math.abs(mo.r - lead.r) > 0.02) continue;
                         drawn[s * 3 + a] = true; ga[n] = a; gs[n++] = s; size = Math.max(size, mo.amp);

@@ -85,11 +85,11 @@ public final class ConductedMachine {
     public static final double PHASE_WELL_TAU = 0.3;
 
     public final RegulatorCore core;
-    private final int[][] planPhase = new int[RegulatorCore.AXES][RegulatorCore.ARMS];
-    private final double[][] planReach = new double[RegulatorCore.AXES][RegulatorCore.ARMS];
+    private final int[][] planPhase = new int[RegulatorCore.AXES][RegulatorCore.SLOTS];
+    private final double[][] planReach = new double[RegulatorCore.AXES][RegulatorCore.SLOTS];
     /** Each component's phase as a continuous tilt, quarters (0..4): what is drawn and turned; the core sees the nearest quarter. */
-    private final double[][] phaseAngle = new double[RegulatorCore.AXES][RegulatorCore.ARMS];
-    private final boolean[][] phaseInHand = new boolean[RegulatorCore.AXES][RegulatorCore.ARMS];
+    private final double[][] phaseAngle = new double[RegulatorCore.AXES][RegulatorCore.SLOTS];
+    private final boolean[][] phaseInHand = new boolean[RegulatorCore.AXES][RegulatorCore.SLOTS];
     private int axis = 0, slot = 0;
     private boolean inHand;
     /** The array's aim, as a ratio. The machine's own: see the head of the class for what moves it. */
@@ -143,7 +143,7 @@ public final class ConductedMachine {
         slot = 0;
         inHand = false;
         aim = 0;
-        for (int a = 0; a < RegulatorCore.AXES; a++) for (int s = 0; s < RegulatorCore.ARMS; s++) {
+        for (int a = 0; a < RegulatorCore.AXES; a++) for (int s = 0; s < RegulatorCore.SLOTS; s++) {
             RegulatorCore.Motion m = core.comps[s][a];
             m.ph = planPhase[a][s];
             m.amp = planReach[a][s];
@@ -217,7 +217,7 @@ public final class ConductedMachine {
      * aim and the tilts follow what is there now.
      */
     public void resync() {
-        for (int a = 0; a < RegulatorCore.AXES; a++) for (int s = 0; s < RegulatorCore.ARMS; s++) {
+        for (int a = 0; a < RegulatorCore.AXES; a++) for (int s = 0; s < RegulatorCore.SLOTS; s++) {
             if (!phaseInHand[a][s] && ((int) Math.round(phaseAngle[a][s])) % 4 != core.comps[s][a].ph) phaseAngle[a][s] = core.comps[s][a].ph;
         }
         inHand = false;
@@ -392,7 +392,7 @@ public final class ConductedMachine {
     /** The machine's tick, then what the crystal does with a motion the hand has left. */
     public void tick(double dt) {
         core.tick(dt);
-        for (int a = 0; a < RegulatorCore.AXES; a++) for (int s = 0; s < RegulatorCore.ARMS; s++) {
+        for (int a = 0; a < RegulatorCore.AXES; a++) for (int s = 0; s < RegulatorCore.SLOTS; s++) {
             if (phaseInHand[a][s]) continue;
             double p = phaseAngle[a][s], q = Math.round(p);
             if (Math.abs(p - q) > 1e-9) {   // the well at the quarter: let go, the tilt is drawn on

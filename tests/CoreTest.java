@@ -104,9 +104,16 @@ public class CoreTest {
         List<RegulatorCore.Snap> snap = c.snapshot();
         int wrongPh = 0; boolean jitOk = true;
         List<RegulatorCore.Snap> ideal = RegulatorCore.recipeSnapshot(cinder);
-        for (int i = 0; i < snap.size(); i++) { double d = Math.abs(snap.get(i).r() - ideal.get(i).r()); if (d < 0.1 - 1e-9 || d > 0.2 + 1e-9) jitOk = false; if (snap.get(i).phase() != ideal.get(i).phase()) wrongPh++; }
+        for (RegulatorCore.Snap got : snap) for (RegulatorCore.Snap want : ideal) {   // the same motion: the same place on the same axis
+            if (got.arm() != want.arm() || got.axis() != want.axis()) continue;
+            double d = Math.abs(got.r() - want.r()); if (d < 0.1 - 1e-9 || d > 0.2 + 1e-9) jitOk = false; if (got.phase() != want.phase()) wrongPh++;
+        }
         check("setpoint: 5 held motions, ratios off by 0.1..0.2, exactly one phase wrong, score " + String.format(Locale.ROOT, "%.3f", c.targetEval.score), snap.size() == 5 && jitOk && wrongPh == 1 && !c.targetEval.exact && c.targetEval.score > 0.3 && c.drivenCount() == 0);
-        check("setpoint lays cinder onto arms within the tier", ideal.get(0).arm() == 0 && ideal.get(1).arm() == 0 && ideal.get(2).arm() == 1 && ideal.get(4).arm() == 2);
+        check("a recipe is laid with each motion in the first free place on its axis", ideal.get(0).arm() == 0 && ideal.get(1).arm() == 0 && ideal.get(2).arm() == 1 && ideal.get(3).arm() == 1 && ideal.get(4).arm() == 0);
+        RegulatorCore.Recipe wide = new RegulatorCore.Recipe("wide", "Wide", 3, "", false, new RegulatorCore.Comp(0, 1, 0, 1), new RegulatorCore.Comp(0, 2, 0, .5), new RegulatorCore.Comp(0, 3, 0, .5), new RegulatorCore.Comp(0, 5, 0, .4), new RegulatorCore.Comp(0, 7, 0, .3), new RegulatorCore.Comp(1, 4, 1, .6));
+        RegulatorCore wc = new RegulatorCore(new RegulatorCore.Recipe[]{wide}); wc.setFree(RegulatorCore.SLOTS, RegulatorCore.AXES); wc.power(true);
+        wc.applySnapshot(RegulatorCore.recipeSnapshot(wide), 0, false, new Random(1)); wc.tick(1 / 60.0);
+        check("an axis holds a motion for each ratio: five on X are laid, matched and voiced", RegulatorCore.recipeSnapshot(wide).size() == 6 && wc.matched == wide && wc.voice() != null);
 
         // ---- events, signals, voice
         c = new RegulatorCore(); c.classic = true; c.coupling = false; c.setTarget(fire); c.power(true);

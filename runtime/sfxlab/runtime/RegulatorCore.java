@@ -32,6 +32,10 @@ import static sfxlab.runtime.SfxFormat.*;
 public class RegulatorCore {
     // ---- tuning constants (prototype-exact)
     public static final int ARMS = 3, AXES = 3, MAX_N = 8;
+    /** How many motions one axis can hold: one for each ratio a recipe may use, 1 to 7. (It was three, one an arm,
+     *  while the machine was worked from a console arm by arm; ARMS is still the machine's three arms, and what the
+     *  arm1..arm3 signals and the console's levers count.) The first index of {@link #comps}. */
+    public static final int SLOTS = 7;
     public static final double MAX_VEL = 4;            // crank rev/s; ratio = 2·|vel|, so ratio 8 at most
     public static final double CATCH_W = 0.16;         // catch half-width at integer n is CATCH_W / n
     public static final double REST_R = 0.12;          // below this ratio the crank settles to rest
@@ -123,8 +127,8 @@ public class RegulatorCore {
     public static final class Eval { public double score; public boolean exact; public double fit; }   // fit: reach agreement of the matched components, e^(−6·|reach − target|) averaged over the recipe
 
     public final Recipe[] recipes;
-    public final Motion[][] comps = new Motion[ARMS][AXES];
-    public final int[] focus = {-1, -1, -1};   // per arm: the axis the trim controls act on (the last lever pressed there)
+    public final Motion[][] comps = new Motion[SLOTS][AXES];
+    public final int[] focus = new int[SLOTS]; { java.util.Arrays.fill(focus, -1); }   // per arm: the axis the trim controls act on (the last lever pressed there)
     public Recipe target;
     public int arm;                       // the selected arm the axis levers act on
     public boolean powered;
@@ -177,7 +181,7 @@ public class RegulatorCore {
     /** The free machine (the game's): this many arms, each holding this many motions; the arms are cleared. */
     public void setFree(int arms, int motionsPerArm) {
         free = true;
-        freeArms = Math.max(1, Math.min(ARMS, arms)); freeMotions = Math.max(1, Math.min(AXES, motionsPerArm));
+        freeArms = Math.max(1, Math.min(SLOTS, arms)); freeMotions = Math.max(1, Math.min(AXES, motionsPerArm));
         resetComps(); arm = 0;
     }
     /** How many arms the levers reach, and how many motions each may hold: the machine's own when free, else the pinned recipe's tier. */
@@ -331,7 +335,7 @@ public class RegulatorCore {
     /** Latch: every driven motion is held (snapped to the caught integer), or switched off at rest. Returns how many stopped. */
     public int latch() {
         int stopped = 0;
-        for (int a = 0; a < ARMS; a++) for (int x = 0; x < AXES; x++) {
+        for (int a = 0; a < SLOTS; a++) for (int x = 0; x < AXES; x++) {
             Motion c = comps[a][x];
             if (c.eng && c.drv && holdOrStop(c, a, x)) { stopped++; events.add("stopped:" + a + ":" + x); }
         }
@@ -360,7 +364,7 @@ public class RegulatorCore {
     public record Eng(int arm, int axis, double r, int ph, double amp) {}
     public java.util.List<Eng> engaged() {
         java.util.List<Eng> out = new java.util.ArrayList<>();
-        for (int a = 0; a < ARMS; a++) for (int x = 0; x < AXES; x++) {
+        for (int a = 0; a < SLOTS; a++) for (int x = 0; x < AXES; x++) {
             Motion c = comps[a][x];
             if (c.eng && c.amp > ENGAGE_AMP && c.r > ENGAGE_R) out.add(new Eng(a, x, c.r, c.ph, c.amp));
         }
@@ -605,14 +609,13 @@ public class RegulatorCore {
     }
 
     // ---- research setpoint, copy socket, voicing
-    /** The recipe laid onto arms the way the station would: greedily, one motion per arm-axis within the tier. */
+    /** The recipe laid onto the machine: each motion in the first free place on its axis. */
     public static java.util.List<Snap> recipeSnapshot(Recipe rec) {
-        int arms = rec.arms(), per = rec.motionsPerArm();
-        int[] load = new int[ARMS]; boolean[] used = new boolean[ARMS * AXES];
+        boolean[] used = new boolean[SLOTS * AXES];
         java.util.List<Snap> snap = new java.util.ArrayList<>();
         for (Comp cp : rec.comps)
-            for (int a = 0; a < arms; a++)
-                if (load[a] < per && !used[a * 3 + cp.axis]) { used[a * 3 + cp.axis] = true; load[a]++; snap.add(new Snap(a, cp.axis, cp.n, cp.phase, cp.amp)); break; }
+            for (int a = 0; a < SLOTS; a++)
+                if (!used[a * AXES + cp.axis]) { used[a * AXES + cp.axis] = true; snap.add(new Snap(a, cp.axis, cp.n, cp.phase, cp.amp)); break; }
         return snap;
     }
     /** Loads motions with ratios jittered by ±jit·(0.5..1) (never below 0.5), every motion held; with phaseErr one
@@ -637,7 +640,7 @@ public class RegulatorCore {
     /** Every engaged motion as it stands. */
     public java.util.List<Snap> snapshot() {
         java.util.List<Snap> out = new java.util.ArrayList<>();
-        for (int a = 0; a < ARMS; a++) for (int x = 0; x < AXES; x++) { Motion c = comps[a][x]; if (c.eng) out.add(new Snap(a, x, c.r, c.ph, c.amp)); }
+        for (int a = 0; a < SLOTS; a++) for (int x = 0; x < AXES; x++) { Motion c = comps[a][x]; if (c.eng) out.add(new Snap(a, x, c.r, c.ph, c.amp)); }
         return out;
     }
     /** The voice lever: only at an exact match. Writes the sigil (returned) and clears the machine for a fresh crystal.

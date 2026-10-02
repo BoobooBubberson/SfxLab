@@ -645,6 +645,13 @@ one **component** (one motion) at a time. It is the single copy; the mod runs th
   (it was 2.5): the tempo of the figure and of the signals that follow it. Ratios, wells and signal levels do not
   change with it.
 
+**Recipes (2026-10-01).** An axis holds one motion at a ratio, never two: two on one axis at one station cannot be
+told apart, on the machine or in a reading. So an axis can carry up to seven motions, one a ratio
+(`RegulatorCore.SLOTS`; it was three, one an arm), and the family check refuses a recipe that doubles one up, and
+two spells of a family whose recipes trace the same figure. A recipe's **tier** is a label and limits nothing
+here: the pinned-spell tiers of sections 3 and 6b went with the console, and what a given machine can hold is the
+game's to decide.
+
 The signal contract of section 4 is unchanged. `tools/bench/BenchRender` scripts still drive the core's own API
 (levers, nudges, latch), which is what the conducted machine is built on.
 

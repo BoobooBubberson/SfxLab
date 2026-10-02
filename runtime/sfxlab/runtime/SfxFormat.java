@@ -209,17 +209,31 @@ public final class SfxFormat {
         if (c.lmute) sb.append(" mute=1");
         return sb.append('\n').toString();
     }
-    /** Why a recipe cannot be built at its tier (null when it can): a tier gives arms × motions per arm, each motion takes one
-     *  arm-axis slot, so at most arms×per motions in all and at most `arms` on any one axis; ratios run 1..7, reach 0.05..1. */
+    /** Why a recipe cannot be built (null when it can): an axis holds one motion at a ratio, never two (two on one
+     *  axis at one station cannot be told apart, on the machine or in a reading); ratios run 1..7, reach 0.05..1.
+     *  The tier is a label for the spell and limits nothing here: what a given machine can hold is the game's affair. */
     public static String recipeProblem(int tier, RegulatorCore.Comp[] comps) {
-        int arms = RegulatorCore.TIERS[tier - 1][0], per = RegulatorCore.TIERS[tier - 1][1];
-        if (comps.length > arms * per) return comps.length + " motions, but tier " + tier + " has " + arms + " arms × " + per + " = " + arms * per + " slots";
-        int[] perAxis = new int[3];
-        for (RegulatorCore.Comp c : comps) perAxis[c.axis()]++;
-        for (int ax = 0; ax < 3; ax++) if (perAxis[ax] > arms) return perAxis[ax] + " motions on " + RegulatorCore.AXIS[ax] + ", but only " + arms + " arms can each hold one " + RegulatorCore.AXIS[ax] + " at tier " + tier;
+        for (int i = 0; i < comps.length; i++) for (int j = i + 1; j < comps.length; j++)
+            if (comps[i].axis() == comps[j].axis() && comps[i].n() == comps[j].n())
+                return "two motions on " + RegulatorCore.AXIS[comps[i].axis()] + " at ×" + comps[i].n() + " — an axis holds one motion at a ratio";
         for (RegulatorCore.Comp c : comps) if (c.n() < 1 || c.n() > 7) return "ratio ×" + c.n() + " — ratios run 1..7 (×8 is past the crank's cap once friction has its say)";
         for (RegulatorCore.Comp c : comps) if (c.amp() < 0.05 || c.amp() > 1) return "reach " + fmtNum5(c.amp()) + " — reach targets run 0.05..1";
         return null;
+    }
+    /** Whether two recipes trace the same figure as the machine judges it: the same motions, in one of the phase sets
+     *  that are equivalent (see {@link RegulatorCore.Recipe#variants}), with reaches inside each other's tolerance. */
+    public static boolean sameFigure(RegulatorCore.Comp[] a, RegulatorCore.Comp[] b) {
+        if (a.length != b.length) return false;
+        for (RegulatorCore.Comp[] v : new RegulatorCore.Recipe("", "", 1, "", false, a).variants()) {
+            boolean all = true;
+            for (RegulatorCore.Comp x : v) {
+                boolean found = false;
+                for (RegulatorCore.Comp y : b) if (x.axis() == y.axis() && x.n() == y.n() && x.phase() == y.phase() && Math.abs(x.amp() - y.amp()) <= RegulatorCore.DEFAULT_RTOL + 1e-9) { found = true; break; }
+                if (!found) { all = false; break; }
+            }
+            if (all) return true;
+        }
+        return false;
     }
     public static String recipeProblem(Bench r) { return r == null || r.comps == null ? null : recipeProblem(r.tier, r.comps); }
 
@@ -255,6 +269,7 @@ public final class SfxFormat {
             }
         }
         // pass 2: every line
+        Map<String, RegulatorCore.Comp[]> recipes = new LinkedHashMap<>();
         sec = ""; boolean recipe = false;
         for (int i = 0; i < lines.size(); i++) {
             String line = lines.get(i).trim(), at = "line " + (i + 1) + ": ";
@@ -286,7 +301,7 @@ public final class SfxFormat {
                         }
                         if (tier < 1 || tier > 3) out.add(at + "tier " + tier + " — tiers run 1..3");
                         else if (cs.isEmpty()) out.add(at + "the recipe has no motions");
-                        else { String p = recipeProblem(tier, cs.toArray(new RegulatorCore.Comp[0])); if (p != null) out.add(at + p); }
+                        else { String p = recipeProblem(tier, cs.toArray(new RegulatorCore.Comp[0])); if (p != null) out.add(at + p); else recipes.put(sec, cs.toArray(new RegulatorCore.Comp[0])); }
                     }
                     case "layer" -> {
                         if (t.length < 6) { out.add(at + "a layer line needs: layer id name type dur seed key=value..."); break; }
@@ -339,6 +354,10 @@ public final class SfxFormat {
             } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) { out.add(at + "cannot read `" + line + "` (" + e.getMessage() + ")"); }
         }
         if (!sec.isEmpty() && !recipe) out.add("spell " + sec + " has no recipe line: the machine cannot tune to it");
+        // two spells of one family whose recipes trace the same figure: the machine could not tell which it holds
+        List<String> ids = new ArrayList<>(recipes.keySet());
+        for (int i = 0; i < ids.size(); i++) for (int j = i + 1; j < ids.size(); j++)
+            if (sameFigure(recipes.get(ids.get(i)), recipes.get(ids.get(j)))) out.add("spells " + ids.get(i) + " and " + ids.get(j) + " have the same sigil: the machine cannot tell them apart");
         return out;
     }
 }

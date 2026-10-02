@@ -102,7 +102,7 @@ public class GuiCheck {
         mc.setSize(1180, 760); mc.addNotify(); layoutAll(mc); layoutAll(mc);
         RegulatorCore c = mc.core;
         ConductedMachine cm = mc.cm;
-        check("the machine is the game's: free, on the wells, one motion in hand at a time", c.free && c.wells && !c.classic && !c.coupling && c.arms() == 3);
+        check("the machine is the game's: free, on the wells, one motion in hand at a time", c.free && c.wells && !c.classic && !c.coupling && c.arms() == RegulatorCore.SLOTS);
         RegulatorCore.Recipe target = null;
         for (RegulatorCore.Recipe r : c.recipes) if (r.comps.length == 2) { target = r; break; }
         check("the family has a two-motion recipe to play", target != null);
