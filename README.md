@@ -192,7 +192,7 @@ tests/run.sh            # about 50 s; exits non-zero on any failure
   ends of the arc, and every default recipe built by the casts alone.
 - `GuiCheck`: the regulator panel (binds, mutes, filter, undo) and the machine window conducted to a lock and
   voicing the crystal, by hand and by its auto-player for every spell of the family, headless.
-- `golden.sh`: 16 reference renders (every timeline project at key 0 and +7, a mono export, and a scripted machine
+- `golden.sh`: 14 reference renders (every timeline project at key 0 and +7, a mono export, and a scripted machine
   approach per family) that must stay bit-identical. After a change meant to alter the sound, listen to the new
   renders in `.build/test/renders/` and accept them with `tests/run.sh --bless`.
   They are a guard for refactors and nothing more: a red result after a deliberate change is expected.

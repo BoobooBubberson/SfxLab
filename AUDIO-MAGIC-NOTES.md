@@ -40,7 +40,7 @@ Use-cases: bake a pentatonic set of a spell in one shell loop; render the
 "spam-detuned" variant with `--key 0.4`; audition a whole project in G by
 pressing `>` seven times.
 
-### Recipe: a recording that sings (`projects/examples/whoosh-keyed.sfx`, `cinder-keyed.sfx`)
+### Recipe: a recording that sings (`projects/examples/whoosh-keyed.sfx`)
 
 Two copies of the same sample: one **dry** (`keyed=0`, the body, never moves),
 one through a **resonant bandpass** (`filter=1`, `cutoff=440hz`,
@@ -98,7 +98,7 @@ reads C-something on the panel before it is baked.
 
 ## 3. Files
 
-- `projects/examples/whoosh-keyed.sfx`, `projects/examples/cinder-keyed.sfx` — bandpass + pluck recipes.
+- `projects/examples/whoosh-keyed.sfx` — the bandpass + pluck recipe. (`cinder-keyed.sfx` was removed 2026-10-02: one of its recordings had left the library.)
 - `projects/examples/partials-demo.sfx` — ice cast + charge-up as partials clips.
 - `archive/keyed/renders/` (local only) — the above at pentatonic keys; `archive/keyed/partials/` — Python
   tool output (sines / residual / per-key mixes) for several library sounds.
