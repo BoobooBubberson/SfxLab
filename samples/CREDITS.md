@@ -14,6 +14,8 @@ wants to find the source.
 | `pyretic/lava_loop.ogg` | freesound_community on Pixabay | Pixabay Content License | |
 | `pyretic/flamethrower_*.ogg` | alex_jauk on Pixabay | Pixabay Content License | `flamethrower-sound-effect-421402`, cut into turn-on / loop / turn-off |
 | `fire/blazing_fire.ogg` | SoundReality on Pixabay | Pixabay Content License | `soundreality-bliazing-fire-394355.mp3` | |
+| `cryic/frost_synth_base*.ogg` | Ferris (own synthesis, made in-lab) | MIT, with the repo | the cryic family's pad; projects/frost_synth_base*.sfx are its sources |
+| `cryic/ice_crunching.mp3` | JesseQuinnMedia on Pixabay | Pixabay Content License | `jessequinnmedia-breaking-ice-crunching-307632.mp3` |
 
 
 
