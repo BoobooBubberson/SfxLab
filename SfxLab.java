@@ -780,6 +780,7 @@ public class SfxLab extends JPanel {
                                          new double[]{0.7, 0.45, 0.5, 0.28, 0.5, 0.6, 1, -0.7, 1.4}),
         new Pal("sparkle", SPARKLE, 1.6, new int[]{P_PITCH, P_REL}, new double[]{39, 0.5}),
         new Pal("pluck",   PLUCK,   1.2, new int[]{P_PITCH, P_REL}, new double[]{-5, 0.15}),
+        new Pal("arc",     ARC,     1.5, new int[]{P_LEVEL, P_PITCH, P_REL}, new double[]{0.5, 15, 0.2}),
     };
 
     Clip fromPal(Pal pal, int track, double start) {
@@ -1906,7 +1907,7 @@ public class SfxLab extends JPanel {
         if (sel == null) { toast("select a clip first"); return; }
         Clip c = copyClip(sel);
         c.id = null;
-        boolean bed = c.type == CLOUD || c.type == TONE || c.type == NOISE || c.type == CHOIR || (sampled(c) && looping(c));
+        boolean bed = c.type == CLOUD || c.type == TONE || c.type == NOISE || c.type == CHOIR || c.type == ARC || (sampled(c) && looping(c));
         c.on = bed ? ON_NONE : ON_LOCK;
         boolean was = benchOn;
         benchOn = true;
@@ -4570,7 +4571,7 @@ public class SfxLab extends JPanel {
     double tOf(int x) { return Math.max(0, tOfRaw(x)); }
     double tOfRaw(int x) { return scroll + (x - tlX()) / pps; }   // may be negative: clips can hang off the left
 
-    Rectangle palRect(int i) { return new Rectangle(12 + i * 70, paletteY(), 66, 24); }
+    Rectangle palRect(int i) { return new Rectangle(12 + i * 66, paletteY(), 63, 24); }   // eleven presets clear of the action buttons
     static final String[] ACTIONS = {"video", "library", "+ lib", "preview", "export", "save"};
     Rectangle actRect(int i) { return new Rectangle(getWidth() - (actions().length - i) * 74 - 12, paletteY(), 68, 24); }
     static final int SLIDER_ROWS = 16;   // partials has 46 params: three columns of 16
@@ -4585,7 +4586,7 @@ public class SfxLab extends JPanel {
     static final Color[] TYPE_COLORS = {
         new Color(90, 255, 190), new Color(255, 215, 120), new Color(150, 170, 255),
         new Color(255, 140, 200), new Color(255, 170, 90), new Color(170, 225, 225),
-        new Color(215, 175, 255), new Color(245, 235, 215)
+        new Color(215, 175, 255), new Color(245, 235, 215), new Color(235, 255, 110)
     };
 
     SfxLab() {
@@ -5303,7 +5304,7 @@ public class SfxLab extends JPanel {
             g.fillRect(r.x, r.y, r.width, r.height);
             g.setColor(new Color(tc.getRed(), tc.getGreen(), tc.getBlue(), 150));
             g.drawRect(r.x, r.y, r.width, r.height);
-            String lb = (i + 1) % 10 + " " + PALETTE[i].label();
+            String lb = i < 10 ? (i + 1) % 10 + " " + PALETTE[i].label() : PALETTE[i].label();   // the number keys reach the first ten
             g.drawString(lb, r.x + (r.width - g.getFontMetrics().stringWidth(lb)) / 2, r.y + 16);
         }
         g.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 13));

@@ -298,3 +298,27 @@ they are desired.
   │ mechanic │ root hum                 │ motor harmonics, clicks     │ ticking, crank-rate │ room       │
   └──────────┴──────────────────────────┴─────────────────────────────┴─────────────────────┴────────────┘
 
+## 10. The arc primitive (2026-10-03)
+
+A ninth clip type, `arc`, made for the voltaic family: electricity as a pulse train. The clip fires at its pitch
+(a singing Tesla coil plays a note by its firing rate) and every pulse is a crack: a click plus a short noise burst.
+It is the eleventh preset on the palette strip (click it; the number keys reach the first ten).
+
+| slider    | does                                                                                   | default |
+|-----------|----------------------------------------------------------------------------------------|---------|
+| `jitter`  | pulse timing: 0 periodic (a pitched buzz) .. 1 random at the same mean rate (sputter)   | 0 |
+| `burst`   | ms each crack rings: under 1 a tick, long a hiss; also the length of the ring's grain   | 2 |
+| `color`   | bright white crack .. dark thud                                                         | 0 |
+| `misfire` | chance a pulse does not fire                                                            | 0 |
+| `flicker` | slow random wander of the arc's strength                                                | 0 |
+| `snap`    | each crack's click (the pitched part) against its noise (the hash)                      | 0.5 |
+| `divide`  | fire this many octaves under the pitch: 5 or 6 turns a note into single ticks           | 0 |
+| `ring`    | how much of each crack is a damped sine instead (a formant grain): 0 raw spark, 1 synth | 0 |
+| `formant` | where that sine rings, semitones above the pitch                                        | 12 |
+
+Measured at C4: with jitter 0, 57 % of the energy sits on the note's harmonics; 31 % at 0.2, 13 % at 0.3, none by
+0.5, with the level within 2.5 dB across the sweep. So `bind coherence <layer> jitter 0.8 0` is the voltaic idea
+in one line: random sparking until the ratios lock, then the coil sings. The raw arc is faithful and tiring (a
+third of its energy above 4 kHz); `ring` around 0.5 keeps the timing and takes the top off. A ~140 Hz high-pass
+inside the type keeps random firing out of the bass. `regulator/voltaic.sfx` is the first draft without it (saw
+tones behind random gates, sine sparkle); `regulator/voltaic_arc.sfx` is the same family on the arc.

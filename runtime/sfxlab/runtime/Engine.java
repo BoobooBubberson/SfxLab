@@ -327,6 +327,35 @@ public class Engine {
                         sL += s * Math.cos(sp); sR += s * Math.sin(sp);
                     }
                 }
+                case ARC -> {
+                    double jit = p[NCOMMON] * p[NCOMMON], color = p[NCOMMON + 2], snap = p[NCOMMON + 5], flick = p[NCOMMON + 4];
+                    double rate = f0 / (1 << (int) Math.round(p[NCOMMON + 6]));
+                    v.arcPh += rate / SR;
+                    if (v.arcPh >= v.arcTh) {   // fire; the next interval is the period, exponentially spread by jitter squared (mean kept; squared so the slider's middle still has a pitch)
+                        v.arcPh -= v.arcTh;
+                        v.arcTh = (1 - jit) + (jit > 0 ? jit * -Math.log(1 - v.rng.nextDouble()) : 0);
+                        if (v.arcTh < 0.02) v.arcTh = 0.02;
+                        if (p[NCOMMON + 3] <= 0 || v.rng.nextDouble() >= p[NCOMMON + 3]) {
+                            v.arcAmp = jit > 0 ? 1 - 0.4 * jit * v.rng.nextDouble() : 1;   // random sparks differ in strength
+                            v.arcEnv = v.arcAmp; v.arcGr = 0;   // the ring's grain restarts with the crack
+                        }
+                    }
+                    if (flick > 0) {   // a new strength every ~70 ms, eased toward
+                        if (--v.arcFlN <= 0) { v.arcFlN = SR / 14; v.arcFlTo = 1 - flick * v.rng.nextDouble(); }
+                        v.arcFl += (v.arcFlTo - v.arcFl) * 0.002;
+                    } else v.arcFl = 1;
+                    double s = v.arcEnv * (snap + (1 - snap) * 1.6 * (v.rng.nextDouble() * 2 - 1));
+                    double ring = p[NCOMMON + 7];
+                    if (ring > 0) {   // each crack as a damped sine at the formant: the pulse train becomes a voice (FOF synthesis)
+                        v.arcGr += f0 * Math.pow(2, p[NCOMMON + 8] / 12.0) / SR;
+                        s = s * (1 - ring) + ring * 0.5 * v.arcEnv * Math.sin(2 * Math.PI * v.arcGr);
+                    }
+                    v.arcEnv *= Math.exp(-1000.0 / (p[NCOMMON + 1] * SR));
+                    v.arcDc += 0.02 * (s - v.arcDc);   // the clicks are one-sided: a ~140 Hz high-pass takes their DC and the rumble of random firing (the bass stays free)
+                    s -= v.arcDc;
+                    if (color > 0.01) { double k = Math.pow(10, -2.2 * color); v.arcLp += k * (s - v.arcLp); s = v.arcLp * (1 + 2 * color); }
+                    sL = s * 0.8 * v.arcFl; sR = sL;
+                }
                 case PLUCK -> {
                     double damp = p[NCOMMON], sus = p[NCOMMON + 1], pick = p[NCOMMON + 2],
                            itv = p[NCOMMON + 3];

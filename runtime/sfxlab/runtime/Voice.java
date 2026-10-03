@@ -34,6 +34,7 @@ public class Voice {
     public double phFbL, phFbR; public double phAng, lfoAng;   // accumulated phaser / clip-LFO angles (cycles) for live clips                              // phaser feedback
     public double lo1, b1, lo2, b2;                          // stereo SVF state
     public double nextPing;                                  // sparkle spawn clock
+    public double arcGr; public double arcPh, arcTh, arcEnv, arcAmp, arcDc, arcLp, arcFl = 1, arcFlTo = 1; public int arcFlN;   // arc: pulse phase and its next firing point, the crack's envelope and strength, DC and colour filters, flicker
     public final double[] pf = new double[12], pp = new double[12], pa = new double[12], ppan = new double[12];
     public final double[] pm = new double[12];               // sparkle per-ping FM phases
     public double[] pe, sm;                                  // bench: effective params (p + smoothed mod) and the smoother state
@@ -65,6 +66,7 @@ public class Voice {
     public Voice(Clip c) {
         rng = new Random(c.seed);
         if (c.type == PLUCK) { ks = new float[KSN]; ks2 = new float[KSN]; }
+        if (c.type == ARC) arcPh = arcTh = 1;   // the first crack fires on the first sample
         if (c.type == SAMPLE || c.type == CHOIR || c.type == PARTIALS) gref = new double[GK];
         if (c.type == CHOIR) {
             coff = new double[NV]; cgpos = new double[NV][2]; cgage = new int[NV][2]; cgFirst = new boolean[NV];

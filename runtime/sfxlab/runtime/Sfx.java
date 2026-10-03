@@ -147,7 +147,7 @@ public final class Sfx {
         new PSpec("drive",      0,   1,   0),   // added post-v2: exists by name only
     };
 
-    public static final int CLOUD = 0, TONE = 1, NOISE = 2, SPARKLE = 3, PLUCK = 4, SAMPLE = 5, CHOIR = 6, PARTIALS = 7;
+    public static final int CLOUD = 0, TONE = 1, NOISE = 2, SPARKLE = 3, PLUCK = 4, SAMPLE = 5, CHOIR = 6, PARTIALS = 7, ARC = 8;
     // KEY: a global transposition in semitones (GUI: < > keys; --render --key N)
     // applied non-destructively at render time to every clip that opts in.
     // Pitch-keyed clips move their `pitch` (sweeps and LFO ride on top, so a
@@ -159,7 +159,7 @@ public final class Sfx {
     public static final String[] KEY_NAMES = {"off", "pitch", "filter", "pitch+filter"};
     public static final double KEY_U = Math.log(2) / Math.log(250) / 12;   // cutoff units per semitone (fc = 40·250^u)
     public static int defaultKeyed(int type) { return type == SAMPLE || type == CHOIR ? KEY_FILTER : KEY_BOTH; }
-    public static final String[] TYPE_NAMES = {"cloud", "tones", "noise", "sparkle", "pluck", "sample", "choir", "partials"};
+    public static final String[] TYPE_NAMES = {"cloud", "tones", "noise", "sparkle", "pluck", "sample", "choir", "partials", "arc"};
     // choir extras (offsets from NCOMMON). 13 common + 9 + 14 tail = 36: exactly three slider columns.
     public static final int CH_START = 0, CH_SPEED = 1, CH_VOICES = 2, CH_GATHER = 3, CH_DRIFT = 4, CH_CHORD = 5,
                      CH_WANDER = 6, CH_SCATTER = 7, CH_GSWP = 8;
@@ -248,6 +248,18 @@ public final class Sfx {
                 new PSpec("shimmer", 0, 1, 0),       // slow random detune per partial, up to ~±20 cents
                 new PSpec("root shift", -36, 36, 0), // semitones added to the estimated fundamental before classifying (fix octave errors)
                 new PSpec("harm tol", 1, 10, 3)),    // % a partial may miss an integer ratio and still count as a harmonic
+        // arc: electricity. A pulse train at the clip's pitch where every pulse fires a short crack (a click plus a
+        // noise burst), as a singing Tesla coil plays a note by its firing rate. Periodic, it is a buzzing tone;
+        // jittered, sputtering sparks; divided down, single ticks.
+        withLfo(new PSpec("jitter", 0, 1, 0),        // pulse timing: 0 periodic (a pitched buzz) .. 1 random, Geiger-like (same mean rate)
+                new PSpec("burst", 0.2, 30, 2),      // ms each crack rings: under 1 a tick, long a hiss
+                new PSpec("color", 0, 1, 0),         // 0 bright white crack .. 1 dark thud
+                new PSpec("misfire", 0, 1, 0),       // chance a pulse does not fire: sputter
+                new PSpec("flicker", 0, 1, 0),       // slow random wander of the arc's strength
+                new PSpec("snap", 0, 1, 0.5),        // each crack's click (the pitched part) against its noise (the hash)
+                new PSpec("divide", 0, 8, 0),        // the firing rate is the pitch this many octaves down: 5 or 6 turns a note into ticks
+                new PSpec("ring", 0, 1, 0),          // how much of each crack is a damped sine instead (a formant grain): 0 the raw spark, 1 a synth voice with the arc's timing
+                new PSpec("formant", -12, 48, 12)),  // where that sine rings, in semitones above the pitch (burst is its length: longer = purer)
     };
     public static int nParams(int type) { return NCOMMON + EXTRAS[type].length; }
     public static PSpec spec(int type, int i) { return i < NCOMMON ? COMMON[i] : EXTRAS[type][i - NCOMMON]; }
@@ -270,6 +282,7 @@ public final class Sfx {
         {},   // sample too
         {},   // choir too
         {},   // partials too
+        {},   // arc too
     };
     public static final String[] LEGACY_TAIL = {"lfo_rate", "lfo>pitch", "lfo>cut", "lfo>amp", "lfo_shape", "env_curve"};
     public static String legacyName(int type, int i) {
@@ -283,7 +296,7 @@ public final class Sfx {
         String n = spec(type, i).name();
         return n.equals("filter") || n.equals("chord") || n.equals("voices") || n.equals("range")
             || n.equals("lfo shape") || n.equals("loop") || n.equals("pitch mode") || n.equals("duck from")
-            || n.equals("ph stages") || n.equals("floor") || n.equals("min len") || n.equals("root shift");
+            || n.equals("ph stages") || n.equals("floor") || n.equals("min len") || n.equals("root shift") || n.equals("divide");
     }
 
     public static final double MOD_K = 1 - Math.exp(-1.0 / (0.03 * SR));   // live-param smoother: ~30 ms
