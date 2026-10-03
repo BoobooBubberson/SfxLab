@@ -1,0 +1,18 @@
+# approach Rime (X1p0 Y1p1 X7p1r0.35 Y7p3r0.35 Z2p0r0.5): five motions, one every 2.5 s, lock at ~15
+@0 pin rime
+@1 motion 0 0 0.5 0 1
+@1.5 ramp 0 0 1 2
+@4 motion 0 1 0.5 1 1
+@4.5 ramp 0 1 1 2
+@7 motion 1 0 6.5 1 0.35
+@7.5 ramp 1 0 7 2
+@10 motion 1 1 6.5 3 0.35
+@10.5 ramp 1 1 7 2
+@13 motion 2 2 1.5 0 0.5
+@13.5 ramp 2 2 2 2
+@20 off 2 2
+@20.5 off 1 1
+@21 off 1 0
+@21.5 off 0 1
+@22 off 0 0
+@25 end
