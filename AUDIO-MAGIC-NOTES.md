@@ -320,5 +320,9 @@ Measured at C4: with jitter 0, 57 % of the energy sits on the note's harmonics; 
 0.5, with the level within 2.5 dB across the sweep. So `bind coherence <layer> jitter 0.8 0` is the voltaic idea
 in one line: random sparking until the ratios lock, then the coil sings. The raw arc is faithful and tiring (a
 third of its energy above 4 kHz); `ring` around 0.5 keeps the timing and takes the top off. A ~140 Hz high-pass
-inside the type keeps random firing out of the bass. `regulator/voltaic.sfx` is the first draft without it (saw
-tones behind random gates, sine sparkle); `regulator/voltaic_arc.sfx` is the same family on the arc.
+inside the type keeps random firing out of the bass.
+
+Even with ring, an all-arc palette was too grating to sit in for minutes. `regulator/voltaic.sfx` keeps the arcs as
+accents (single sparks, a sputter, a quiet tube buzz, the one-shots) over a lightsaber-style hum: saw oscillators
+doubled a few cents apart (their slow beat is the throb), low-passed around 500-900 Hz, a parked comb or phaser for
+the phasey colour, and the swing as a small pitch bend plus the filter opening with the pen's speed.
