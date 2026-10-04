@@ -54,8 +54,8 @@ Headless, without the GUI:
 The bake writes every partials analysis the families play as a compact pair (the tracks
 quantised far below hearing and deflated, `.ptk`, beside the residual as a mono ogg,
 `.res.ogg`), copies the recordings their sample and choir clips play, and lists what
-each family needs in `manifest.txt`. All six families come to about 27 MB of partials
-and 5 MB of recordings, from 400 MB of raw analyses; rendered from the bake they measure
+each family needs in `manifest.txt`. The eight family files come to about 27 MB of partials
+and 5 MB of recordings, from 390 MB of raw analyses; rendered from the bake they measure
 within 0.01 to 0.07 dB per band of the exact renders (0.7 dB where grains time-stretch a
 residual). `tools/bench/BenchRender --baked forge/baked` renders a family from a bake.
 
@@ -67,10 +67,10 @@ residual). `tools/bench/BenchRender --baked forge/baked` renders a family from a
 | `projects/` | named `.sfx` projects (S stamps here, O opens from here); `examples/` are the notes' recipes |
 | `regulator/` | one file per regulator family, `<family>.sfx`: the palette that plays through the tuning, then a `spell <id>` section per spell (recipe, lock values, binds) |
 | `docs/` | the Harmonic Regulator design handover and its web prototype (the spec for the machine) |
-| `samples/` | recordings; only `pyretic/` is tracked, see `samples/README.md` |
+| `samples/` | recordings; the sets the regulator families play are tracked (`pyretic/`, `gravitic/`, `luminal/`, `aqueous/`, `cryic/`, `resonant/`), see `samples/README.md` |
 | `library.sfx` | the clip library (B banks a clip, Q browses) |
 | `combos.txt` | SynthLab-era parameter combos (, and . browse them, I inserts) |
-| `tools/` | `partials.py` prototype and `sfx_batch.sh` batch cleaner for raw recordings |
+| `tools/` | `padloop.py` (a struck or bowed recording into a level, seamless loop), `bench/` (headless bench renders with measurements; `approach.py` writes an approach script from any recipe), the `partials.py` prototype and the `sfx_batch.sh` batch cleaner for raw recordings |
 | `legacy/` | `SynthLab.java`, the original spellcasting playground, and its presets |
 | `lab.cfg.example` | template for the git-ignored `lab.cfg` |
 | `forge/`, `renders/`, `video-cache/`, `samples/.decoded/` | outputs and caches, git-ignored. `forge/.parts/` (analyses) and `samples/.decoded/` (decoded copies) are rebuilt on demand and can be emptied at any time |
@@ -95,8 +95,8 @@ key. The short version:
 ## The bench
 
 The timeline crafts one-shots. The Harmonic Regulator (`docs/HARMONIC-REGULATOR.md`)
-  How the families were authored (register plan, chord-tone voices, pacing, the
-  subtraction trick, the measurement loop): `docs/REGULATOR-FAMILIES.md`.
+  How the families were authored (notes from oscillators and recordings as texture, the
+  register plan, chord-tone voices, pacing, the measurement loop): `docs/REGULATOR-FAMILIES.md`.
 needs something else: a palette of layers that all sound at once and are steered by
 the machine's signals rather than by time. **H** swaps the timeline for that bench.
 

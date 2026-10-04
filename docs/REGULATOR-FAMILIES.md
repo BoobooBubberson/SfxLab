@@ -1,7 +1,8 @@
 # Authoring regulator families — approach and lessons
 
-Notes written 2026-09-27 after building four families on the bench (pyretic,
-gravitic, luminal, aqueous, plus the aqueous_mystic variant). This is the
+Notes written 2026-09-27 after building the first four families on the bench, and
+revised 2026-10-03 after rebuilding them and adding three (cryic, voltaic, resonant).
+The revision is section 0, which overrules what it contradicts below. This is the
 thought process, not the file format: the format is in HARMONIC-REGULATOR.md
 §5.3, the signals in §4, the engine details in AUDIO-MAGIC-NOTES.md.
 
@@ -9,6 +10,52 @@ Everything below was decided by measurement (tools/bench) and by the user's
 ears in turn. Nothing was judged by my ears, because I have none; where a
 choice could only be made by listening, it is flagged as such in the palette's
 `note` lines.
+
+## 0. What changed on 2026-10-03: notes from oscillators, recordings as texture
+
+The first four families made their notes out of recordings (partials lifted to the
+chord tones, or a stream through band-passes). They had character and they were
+tiring: the user heard clashing and could not say why. Measured, the pitched
+recordings were not on their notes. A flanged wind pad was a cluster (C, D, D#, F#,
+G#, A, many 20 to 40 cents off); a synth loop used as the root was mostly A and E; a
+bed tuned by its estimated fundamental sat a semitone flat. Every family was rebuilt
+on one rule, and each rebuild was the version the user kept:
+
+- **Everything pitched is an oscillator.** Tones, the cloud, the arc. The pitch is
+  exact and the family can be listened to for minutes, which a puzzle needs.
+- **Recordings are texture and accents.** Unpitched ones (fire, stream, crackle)
+  play as they are, on the orb or on stir. Pitched ones come back only gathered:
+  a partials layer with `gather` 1 pulls every partial onto C or G and leaves the
+  noise alone, so the flicker and grit that gave the family its character stay and
+  the wrong notes go. Oscillators alone were exact and generic; the gathered loops
+  are what brought pyretic's fire back.
+- **One synth idiom says the element.** A lightsaber hum for voltaic (doubled saws a
+  few cents apart, low-passed, a parked comb), bowed glass for cryic (sines with a
+  bell-stretched bank), a sample-and-hold resonant low-pass for aqueous (the classic
+  burble), FM growl for pyretic, a throat-sung drone and struck resonators for
+  resonant. Realism was the wrong target: the faithful Tesla-coil arc was painful
+  in seconds and survives only as accents.
+- **Each family has its own way of sounding in tune.** `coherence` slows a beat
+  (voltaic), stops a tremble (cryic), stills a burble (aqueous), cleans an FM growl
+  (pyretic), brings a pitch swing to rest (gravitic), gathers a vocal (luminal),
+  turns random strikes into a ringing tone (resonant). The table is in
+  AUDIO-MAGIC-NOTES.md, section 9.
+- **Check a pitched recording before trusting it.** Take the strongest spectral
+  peaks of the file as tuned and name their pitch classes. One dominant class within
+  a few cents is a note; several is a cluster and wants `gather` 1 or a place among
+  the accents. `tools/padloop.py` prints this for a recording and makes a struck
+  or fading one into a level, seamless loop.
+- **Reach hints.** `fit` and `hand.fit` (HARMONIC-REGULATOR.md, section 4) are read
+  against the recipe the planted stations point to. Bind `fit` so a voice steadies
+  when the reaches are right; bind `hand.fit` as a small highlight that adds nothing
+  at 0.
+- **Recordings a family plays must be `.ogg`.** The game reads nothing else and the
+  bake refuses other formats.
+
+Sections 2 to 6 and 8 still hold. Section 7's recipes for making notes out of
+recordings (lifted partials, the band-pass subtraction) are how the first drafts
+were built and are no longer how a family's notes are made; its level and profiling
+advice still applies to the texture layers.
 
 ## 1. What a family has to do
 

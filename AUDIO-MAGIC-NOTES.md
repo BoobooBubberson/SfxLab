@@ -282,21 +282,18 @@ audio-magic mechanics. With gather at 1, chords can start to peak through,
 but the cloud preset remains the best option for producing full chords if/when 
 they are desired.
 
-  ┌──────────┬──────────────────────────┬─────────────────────────────┬─────────────────────┬────────────┐
-  │  family  │        notes live        │     what makes the note     │        time         │   space    │
-  ├──────────┼──────────────────────────┼─────────────────────────────┼─────────────────────┼────────────┤
-  │ pyretic  │ C3–C4                    │ partials of synth loops     │ steady              │ dry-ish    │
-  ├──────────┼──────────────────────────┼─────────────────────────────┼─────────────────────┼────────────┤
-  │ gravitic │ C1 sub + lifted voices   │ sub throbs, lifted          │ slow throb          │ wide       │
-  ├──────────┼──────────────────────────┼─────────────────────────────┼─────────────────────┼────────────┤
-  │ luminal  │ bass under high textures │ pure sines, vocal           │ drifting            │ drenched   │
-  ├──────────┼──────────────────────────┼─────────────────────────────┼─────────────────────┼────────────┤
-  │ aqueous  │ mid                      │ resonant filtering of noise │ bubbling            │ underwater │
-  ├──────────┼──────────────────────────┼─────────────────────────────┼─────────────────────┼────────────┤
-  │ organic  │ mid-high                 │ plucks, breath, chirps      │ attacks, random     │ close, dry │
-  ├──────────┼──────────────────────────┼─────────────────────────────┼─────────────────────┼────────────┤
-  │ mechanic │ root hum                 │ motor harmonics, clicks     │ ticking, crank-rate │ room       │
-  └──────────┴──────────────────────────┴─────────────────────────────┴─────────────────────┴────────────┘
+The families as they stand (2026-10-03). Every note is made by an oscillator, so its pitch is exact; the recordings
+are texture. Each family has its own way of sounding in tune (what `coherence` does to its voices):
+
+| family   | the notes                                   | in tune                                   | texture and accents                          |
+|----------|---------------------------------------------|-------------------------------------------|----------------------------------------------|
+| pyretic  | FM voices at C4, a warm driven drone        | the FM growl falls away: a clean flame    | the old synth loops gathered onto C and G, fire recordings, arc crackle |
+| gravitic | dark sines at C3, a sine sub at C1          | a slow pitch swing comes to rest          | the bed recording (retuned onto C), tide and wub loops |
+| luminal  | bass voices from one loop, sines            | the treble vocal gathers onto the chord   | synth vocal, shimmer                          |
+| aqueous  | tones through a random-hopping low-pass     | the burble stills                         | rumble, stream, droplets, splashes            |
+| cryic    | bowed-glass sines with a stretched bank     | a tremble stops                           | frozen droplets, ice crackle, wind            |
+| voltaic  | doubled low-passed saws (a blade's hum)     | the beat between the saws slows           | arc sparks, a sputter, a tube buzz            |
+| resonant | resonators: an arc's ring grain at the note | random strikes fall into step, ring longer | throat-sung drone, bowed metal or distorted strings as a roaming choir |
 
 ## 10. The arc primitive (2026-10-03)
 
