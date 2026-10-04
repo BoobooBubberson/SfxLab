@@ -1,0 +1,103 @@
+# SfxLab family v2: layer id name type dur seed key=value... (dur 0 = endless) · range id param lo hi [note] · bind signal id|* param [lo hi] [rel] [steps=N | scale=<chord>] · note text · then `spell <id>` sections: name, recipe, the spell's layers at their lock values, its binds and notes
+bench 1
+root 65.4064
+# resonant: pure anima. A throat-sung drone, four resonators that are struck at random until the ratios lock and then ring pure,
+# an unearthly choir that roams until it is gathered. Raw resonance through a tear in the world: no element, only things that ring.
+layer throat arc 8 0.0000 9001 level=0.40000 attack=1.20000 release=1.80000 pitch=-9.00000 pitch_swp=0.00000 cutoff=0.80000 cutoff_swp=0.00000 resonance=0.00000 filter=0.00000 pan=0.00000 pan_swp=0.00000 echo=0.00000 drive=0.00000 jitter=0.02000 burst=8.00000 color=0.20000 misfire=0.00000 flicker=0.20000 snap=0.50000 divide=0.00000 ring=0.90000 formant=24.00000 lfo_rate=4.00000 lfo>pitch=0.00000 lfo>cut=0.00000 lfo>amp=0.00000 lfo_shape=0.00000 env_curve=0.00000 reverb=0.30000 flange=0.00000 flange_fb=0.50000 duck=0.00000 duck_from=0.00000 phaser=0.00000 phaser_rate=0.40000 ph_stages=4.00000 ph_pos=-1.00000 lfo_pos=-1.00000 flange_pos=-1.00000 keyed=1
+layer sub tones 1 0.0000 9002 level=0.12000 attack=1.20000 release=1.80000 pitch=-9.00000 pitch_swp=0.00000 cutoff=0.40000 cutoff_swp=0.00000 resonance=0.00000 filter=0.00000 pan=0.00000 pan_swp=0.00000 echo=0.00000 drive=0.00000 interval=0.00000 timbre=2.00000 detune=0.50000 shimmer=0.00000 fm_ratio=2.00000 fm_depth=0.00000 bank=0.00000 odd/even=0.00000 tilt=0.00000 stretch=0.00000 gather=0.00000 chord=1.00000 bank_shimmer=0.00000 lfo_rate=4.00000 lfo>pitch=0.00000 lfo>cut=0.00000 lfo>amp=0.00000 lfo_shape=0.00000 env_curve=0.00000 reverb=0.00000 flange=0.00000 flange_fb=0.50000 duck=0.00000 duck_from=0.00000 phaser=0.00000 phaser_rate=0.40000 ph_stages=4.00000 ph_pos=-1.00000 lfo_pos=-1.00000 flange_pos=-1.00000 keyed=1
+layer breath noise 2 0.0000 9003 level=0.00000 attack=1.00000 release=1.50000 pitch=0.00000 pitch_swp=0.00000 cutoff=0.50000 cutoff_swp=0.00000 resonance=0.50000 filter=1.00000 pan=0.00000 pan_swp=0.00000 echo=0.00000 drive=0.00000 color=0.30000 lfo_rate=0.12000 lfo>pitch=0.00000 lfo>cut=0.15000 lfo>amp=0.00000 lfo_shape=0.00000 env_curve=0.00000 reverb=0.50000 flange=0.00000 flange_fb=0.50000 duck=0.00000 duck_from=0.00000 phaser=0.00000 phaser_rate=0.40000 ph_stages=4.00000 ph_pos=-1.00000 lfo_pos=-1.00000 flange_pos=-1.00000 keyed=0
+layer root arc 8 0.0000 9004 level=0.00000 attack=0.40000 release=1.00000 pitch=15.00000 pitch_swp=0.00000 cutoff=0.85000 cutoff_swp=0.00000 resonance=0.00000 filter=0.00000 pan=0.00000 pan_swp=0.00000 echo=0.20000 drive=0.00000 jitter=0.80000 burst=5.00000 color=0.00000 misfire=0.00000 flicker=0.30000 snap=0.50000 divide=0.00000 ring=1.00000 formant=0.00000 lfo_rate=4.00000 lfo>pitch=0.00000 lfo>cut=0.00000 lfo>amp=0.00000 lfo_shape=0.00000 env_curve=0.00000 reverb=0.50000 flange=0.00000 flange_fb=0.50000 duck=0.00000 duck_from=0.00000 phaser=0.50000 phaser_rate=0.40000 ph_stages=4.00000 ph_pos=0.50000 lfo_pos=-1.00000 flange_pos=-1.00000 keyed=1
+layer third arc 8 0.0000 9005 level=0.00000 attack=0.40000 release=1.00000 pitch=18.86000 pitch_swp=0.00000 cutoff=0.85000 cutoff_swp=0.00000 resonance=0.00000 filter=0.00000 pan=0.00000 pan_swp=0.00000 echo=0.20000 drive=0.00000 jitter=0.80000 burst=5.00000 color=0.00000 misfire=0.00000 flicker=0.30000 snap=0.50000 divide=0.00000 ring=1.00000 formant=0.00000 lfo_rate=4.00000 lfo>pitch=0.00000 lfo>cut=0.00000 lfo>amp=0.00000 lfo_shape=0.00000 env_curve=0.00000 reverb=0.50000 flange=0.00000 flange_fb=0.50000 duck=0.00000 duck_from=0.00000 phaser=0.50000 phaser_rate=0.40000 ph_stages=4.00000 ph_pos=0.50000 lfo_pos=-1.00000 flange_pos=-1.00000 keyed=1
+layer fifth arc 8 0.0000 9006 level=0.00000 attack=0.40000 release=1.00000 pitch=22.02000 pitch_swp=0.00000 cutoff=0.85000 cutoff_swp=0.00000 resonance=0.00000 filter=0.00000 pan=0.00000 pan_swp=0.00000 echo=0.20000 drive=0.00000 jitter=0.80000 burst=5.00000 color=0.00000 misfire=0.00000 flicker=0.30000 snap=0.50000 divide=0.00000 ring=1.00000 formant=0.00000 lfo_rate=4.00000 lfo>pitch=0.00000 lfo>cut=0.00000 lfo>amp=0.00000 lfo_shape=0.00000 env_curve=0.00000 reverb=0.50000 flange=0.00000 flange_fb=0.50000 duck=0.00000 duck_from=0.00000 phaser=0.50000 phaser_rate=0.40000 ph_stages=4.00000 ph_pos=0.50000 lfo_pos=-1.00000 flange_pos=-1.00000 keyed=1
+layer seventh arc 8 0.0000 9007 level=0.00000 attack=0.40000 release=1.00000 pitch=24.69000 pitch_swp=0.00000 cutoff=0.85000 cutoff_swp=0.00000 resonance=0.00000 filter=0.00000 pan=0.00000 pan_swp=0.00000 echo=0.20000 drive=0.00000 jitter=0.80000 burst=5.00000 color=0.00000 misfire=0.00000 flicker=0.30000 snap=0.50000 divide=0.00000 ring=1.00000 formant=0.00000 lfo_rate=4.00000 lfo>pitch=0.00000 lfo>cut=0.00000 lfo>amp=0.00000 lfo_shape=0.00000 env_curve=0.00000 reverb=0.50000 flange=0.00000 flange_fb=0.50000 duck=0.00000 duck_from=0.00000 phaser=0.50000 phaser_rate=0.40000 ph_stages=4.00000 ph_pos=0.50000 lfo_pos=-1.00000 flange_pos=-1.00000 keyed=1
+layer choir luminal/luminal__synth_vocal_base_00001 6 0.0000 9008 level=0.00000 attack=1.50000 release=2.50000 pitch=-9.86000 pitch_swp=0.00000 cutoff=0.70000 cutoff_swp=0.00000 resonance=0.00000 filter=0.00000 pan=0.00000 pan_swp=0.00000 echo=0.00000 drive=0.00000 start=0.00000 speed=0.60000 voices=6.00000 gather=0.15000 drift=0.30000 chord=2.00000 wander=5.00000 scatter=0.40000 gather_swp=0.00000 lfo_rate=4.00000 lfo>pitch=0.00000 lfo>cut=0.00000 lfo>amp=0.00000 lfo_shape=0.00000 env_curve=0.00000 reverb=0.70000 flange=0.00000 flange_fb=0.50000 duck=0.00000 duck_from=0.00000 phaser=0.00000 phaser_rate=0.40000 ph_stages=4.00000 ph_pos=-1.00000 lfo_pos=-1.00000 flange_pos=-1.00000 file=luminal/luminal__synth_vocal_base_00001.ogg keyed=1
+layer cloud cloud 0 0.0000 9009 level=0.00000 attack=1.00000 release=1.50000 pitch=15.00000 pitch_swp=0.00000 cutoff=0.80000 cutoff_swp=0.00000 resonance=0.00000 filter=0.00000 pan=0.00000 pan_swp=0.00000 echo=0.00000 drive=0.00000 voices=4.00000 gather=0.50000 drift=0.15000 timbre=1.70000 chord=2.00000 sub=0.00000 gather_swp=0.00000 lfo_rate=4.00000 lfo>pitch=0.00000 lfo>cut=0.00000 lfo>amp=0.00000 lfo_shape=0.00000 env_curve=0.00000 reverb=0.60000 flange=0.00000 flange_fb=0.50000 duck=0.00000 duck_from=0.00000 phaser=0.00000 phaser_rate=0.40000 ph_stages=4.00000 ph_pos=-1.00000 lfo_pos=-1.00000 flange_pos=-1.00000 keyed=1
+layer strike pluck 4 3.0000 9010 level=0.50000 attack=0.00200 release=1.50000 pitch=-9.00000 pitch_swp=0.00000 cutoff=0.80000 cutoff_swp=0.00000 resonance=0.00000 filter=0.00000 pan=0.00000 pan_swp=0.00000 echo=0.00000 drive=0.00000 damp=0.30000 sustain=0.90000 pick=0.70000 interval=7.00000 lfo_rate=4.00000 lfo>pitch=0.00000 lfo>cut=0.00000 lfo>amp=0.00000 lfo_shape=0.00000 env_curve=0.00000 reverb=0.50000 flange=0.00000 flange_fb=0.50000 duck=0.00000 duck_from=0.00000 phaser=0.00000 phaser_rate=0.40000 ph_stages=4.00000 ph_pos=-1.00000 lfo_pos=-1.00000 flange_pos=-1.00000 keyed=1 on=lock
+layer ping pluck 4 1.5000 9011 level=0.35000 attack=0.00200 release=0.80000 pitch=27.00000 pitch_swp=0.00000 cutoff=0.95000 cutoff_swp=0.00000 resonance=0.00000 filter=0.00000 pan=0.00000 pan_swp=0.00000 echo=0.40000 drive=0.00000 damp=0.20000 sustain=0.80000 pick=0.60000 interval=0.00000 lfo_rate=4.00000 lfo>pitch=0.00000 lfo>cut=0.00000 lfo>amp=0.00000 lfo_shape=0.00000 env_curve=0.00000 reverb=0.50000 flange=0.00000 flange_fb=0.50000 duck=0.00000 duck_from=0.00000 phaser=0.00000 phaser_rate=0.40000 ph_stages=4.00000 ph_pos=-1.00000 lfo_pos=-1.00000 flange_pos=-1.00000 keyed=1 on=accept
+layer close tones 1 1.3000 9012 level=0.25000 attack=0.01000 release=0.90000 pitch=15.00000 pitch_swp=-12.00000 cutoff=0.70000 cutoff_swp=0.00000 resonance=0.00000 filter=0.00000 pan=0.00000 pan_swp=0.00000 echo=0.00000 drive=0.00000 interval=7.00000 timbre=2.00000 detune=0.00000 shimmer=0.00000 fm_ratio=2.00000 fm_depth=0.00000 bank=0.30000 odd/even=0.00000 tilt=0.00000 stretch=0.00000 gather=0.00000 chord=1.00000 bank_shimmer=0.00000 lfo_rate=4.00000 lfo>pitch=0.00000 lfo>cut=0.00000 lfo>amp=0.00000 lfo_shape=0.00000 env_curve=0.00000 reverb=0.40000 flange=0.00000 flange_fb=0.50000 duck=0.00000 duck_from=0.00000 phaser=0.00000 phaser_rate=0.40000 ph_stages=4.00000 ph_pos=-1.00000 lfo_pos=-1.00000 flange_pos=-1.00000 keyed=1 on=unlock
+range throat level 0.28 0.4 the tear's voice: a drone at C2 sung like overtone (throat) singing: an arc firing at the note, each pulse a long damped sine at one harmonic
+range throat formant 19 38 which harmonic it sings (3rd to 9th of C2), stepped along the overtone series by the orb's reach
+range sub level 0.084 0.12 a sine at C2 under the throat (the arc type keeps its own energy out of the bass). The only bass.
+range breath level 0.02 0.1 the void's wind: noise through a slowly wandering bandpass, in with stir
+range root level 0 0.24 C4: a resonator. Random impulses ring a damped sine at the note.
+range root jitter 0 0.8 how the resonator is struck: at random at coherence 0 (a grainy shimmer around the note), in step at 1
+range root burst 5 28 how long each strike rings, in ms: short and breathy at coherence 0, long and pure at 1: the resonance takes hold
+range root ph_pos 0 1 the phaser notch, parked by the orb's curl
+range third level 0 0.209 E4
+range fifth level 0 0.209 G4
+range seventh level 0 0.168 Bb4
+range choir level 0 0.5 the synth vocal an octave down as six voices that roam up to 5 st off: an unearthly choir, growing with the machine
+range choir gather 0.15 1 the voices converge on the chord as the ratios come in tune
+range cloud level 0 0.15 a soft chord at C4, growing with the machine; spells raise it and pick the chord
+range cloud voices 4 8
+range cloud gather 0.5 1
+bind stir throat level 0.4 0.28
+bind orb.radius throat formant 19 38 scale=overtones
+bind orb.accel throat flicker 0.2 0.7
+bind stir sub level 0.12 0.084
+bind stir breath level 0.02 0.1
+bind orb.radius breath cutoff 0.4 0.7
+bind tone.root root level 0 0.24
+bind tone.third third level 0 0.209
+bind tone.fifth fifth level 0 0.209
+bind tone.seventh seventh level 0 0.168
+bind coherence root jitter 0.8 0
+bind coherence root burst 5 28
+bind fit root flicker 0.5 0
+bind orb.curl root ph_pos 0 1
+bind orb.radius root cutoff 0.6 1
+bind coherence third jitter 0.8 0
+bind coherence third burst 5 28
+bind fit third flicker 0.5 0
+bind orb.curl third ph_pos 0 1
+bind orb.radius third cutoff 0.6 1
+bind coherence fifth jitter 0.8 0
+bind coherence fifth burst 5 28
+bind fit fifth flicker 0.5 0
+bind orb.curl fifth ph_pos 0 1
+bind orb.radius fifth cutoff 0.6 1
+bind coherence seventh jitter 0.8 0
+bind coherence seventh burst 5 28
+bind fit seventh flicker 0.5 0
+bind orb.curl seventh ph_pos 0 1
+bind orb.radius seventh cutoff 0.6 1
+bind stack choir level 0 0.5
+bind coherence choir gather 0.15 1
+bind radiance choir reverb 0.5 0.9
+bind orb.speed choir speed 0.4 1
+bind stack cloud level 0 0.15
+bind coherence cloud gather 0.5 1
+bind stack cloud voices 4 8
+note resonant v1 (draft, 2026-10-03): pure anima, the family that works the Spire's machines. Raw resonance seeping in through a tear: nothing here is an element,
+note so the idiom is resonance itself. Everything pitched is a resonator being struck, or a voice.
+note alive = the throat: an overtone-singing drone at C2 (the orb's reach steps which harmonic it sings), a sine under it, the void's wind.
+note notes = four resonators at C4 E4 G4 Bb4 (tone.*): an arc with ring 1 and formant 0 is a damped sine at the note, struck by impulses.
+note in tune = the resonance takes hold: the strikes fall into step (jitter 0.8 -> 0) and ring longer (burst 5 -> 28 ms), so a grainy shimmer around the note
+note becomes a pure tone (measured: 9 % of the energy within 50 cents of the note at one end, 100 % at the other, level within 5 dB). fit steadies the flicker.
+note The alien part: a choir made from luminal's synth vocal an octave down, its six voices roaming up to 5 st off the chord until coherence gathers them.
+note One-shots: a plucked low fifth on lock, a plucked C5 on accept (a pluck is a resonator too), a falling fifth on unlock.
+note Spells are placeholders. To try next: a bowed-metal or singing-bowl recording as the choir's source instead of the vocal luminal already uses.
+
+spell overtone
+name Overtone
+recipe tier=2 X1p1 Y2p0 X3p0r0.4 Y4p2r0.4 Z2p1r0.5
+layer throat arc 8 0.0000 9001 level=0.52000 attack=1.20000 release=1.80000 pitch=-9.00000 pitch_swp=0.00000 cutoff=0.80000 cutoff_swp=0.00000 resonance=0.00000 filter=0.00000 pan=0.00000 pan_swp=0.00000 echo=0.00000 drive=0.00000 jitter=0.02000 burst=12.00000 color=0.20000 misfire=0.00000 flicker=0.20000 snap=0.50000 divide=0.00000 ring=1.00000 formant=24.00000 lfo_rate=4.00000 lfo>pitch=0.00000 lfo>cut=0.00000 lfo>amp=0.00000 lfo_shape=0.00000 env_curve=0.00000 reverb=0.30000 flange=0.00000 flange_fb=0.50000 duck=0.00000 duck_from=0.00000 phaser=0.00000 phaser_rate=0.40000 ph_stages=4.00000 ph_pos=-1.00000 lfo_pos=-1.00000 flange_pos=-1.00000 keyed=1
+layer cloud cloud 0 0.0000 9009 level=0.19500 attack=1.00000 release=1.50000 pitch=15.00000 pitch_swp=0.00000 cutoff=0.80000 cutoff_swp=0.00000 resonance=0.00000 filter=0.00000 pan=0.00000 pan_swp=0.00000 echo=0.00000 drive=0.00000 voices=6.00000 gather=1.00000 drift=0.15000 timbre=1.70000 chord=1.00000 sub=0.00000 gather_swp=0.00000 lfo_rate=4.00000 lfo>pitch=0.00000 lfo>cut=0.00000 lfo>amp=0.00000 lfo_shape=0.00000 env_curve=0.00000 reverb=0.60000 flange=0.00000 flange_fb=0.50000 duck=0.00000 duck_from=0.00000 phaser=0.00000 phaser_rate=0.40000 ph_stages=4.00000 ph_pos=-1.00000 lfo_pos=-1.00000 flange_pos=-1.00000 keyed=1
+bind orb.radius throat formant 19 38 scale=overtones
+note Overtone (tier II, placeholder): roots and a fifth: a power chord, and the throat comes forward, its harmonic ringing longer and cleaner.
+
+spell concord
+name Concord
+recipe tier=2 X1p0 Y1p1 X5p1r0.4 Y5p3r0.4 Z3p0r0.6
+layer cloud cloud 0 0.0000 9009 level=0.19500 attack=1.00000 release=1.50000 pitch=15.00000 pitch_swp=0.00000 cutoff=0.80000 cutoff_swp=0.00000 resonance=0.00000 filter=0.00000 pan=0.00000 pan_swp=0.00000 echo=0.00000 drive=0.00000 voices=8.00000 gather=1.00000 drift=0.15000 timbre=1.70000 chord=2.00000 sub=0.00000 gather_swp=0.00000 lfo_rate=4.00000 lfo>pitch=0.00000 lfo>cut=0.00000 lfo>amp=0.00000 lfo_shape=0.00000 env_curve=0.00000 reverb=0.60000 flange=0.00000 flange_fb=0.50000 duck=0.00000 duck_from=0.00000 phaser=0.00000 phaser_rate=0.40000 ph_stages=4.00000 ph_pos=-1.00000 lfo_pos=-1.00000 flange_pos=-1.00000 keyed=1
+layer choir luminal/luminal__synth_vocal_base_00001 6 0.0000 9008 level=0.70000 attack=1.50000 release=2.50000 pitch=-9.86000 pitch_swp=0.00000 cutoff=0.70000 cutoff_swp=0.00000 resonance=0.00000 filter=0.00000 pan=0.00000 pan_swp=0.00000 echo=0.00000 drive=0.00000 start=0.00000 speed=0.60000 voices=6.00000 gather=1.00000 drift=0.30000 chord=2.00000 wander=2.00000 scatter=0.40000 gather_swp=0.00000 lfo_rate=4.00000 lfo>pitch=0.00000 lfo>cut=0.00000 lfo>amp=0.00000 lfo_shape=0.00000 env_curve=0.00000 reverb=0.70000 flange=0.00000 flange_fb=0.50000 duck=0.00000 duck_from=0.00000 phaser=0.00000 phaser_rate=0.40000 ph_stages=4.00000 ph_pos=-1.00000 lfo_pos=-1.00000 flange_pos=-1.00000 file=luminal/luminal__synth_vocal_base_00001.ogg keyed=1
+note Concord (tier II, placeholder): root, third, fifth: the choir stops roaming and holds a major chord.
+
+spell rift
+name Rift
+recipe tier=3 X3p1r0.8 Y1p0 Z2p1r0.7 X7p0r0.3 Y5p2r0.4 Z4p3r0.3
+layer cloud cloud 0 0.0000 9009 level=0.19500 attack=1.00000 release=1.50000 pitch=15.00000 pitch_swp=0.00000 cutoff=0.80000 cutoff_swp=0.00000 resonance=0.00000 filter=0.00000 pan=0.00000 pan_swp=0.00000 echo=0.00000 drive=0.00000 voices=8.00000 gather=1.00000 drift=0.15000 timbre=1.70000 chord=6.00000 sub=0.00000 gather_swp=0.00000 lfo_rate=4.00000 lfo>pitch=0.00000 lfo>cut=0.00000 lfo>amp=0.00000 lfo_shape=0.00000 env_curve=0.00000 reverb=0.60000 flange=0.00000 flange_fb=0.50000 duck=0.00000 duck_from=0.00000 phaser=0.00000 phaser_rate=0.40000 ph_stages=4.00000 ph_pos=-1.00000 lfo_pos=-1.00000 flange_pos=-1.00000 keyed=1
+layer choir luminal/luminal__synth_vocal_base_00001 6 0.0000 9008 level=0.60000 attack=1.50000 release=2.50000 pitch=-9.86000 pitch_swp=0.00000 cutoff=0.70000 cutoff_swp=0.00000 resonance=0.00000 filter=0.00000 pan=0.00000 pan_swp=0.00000 echo=0.00000 drive=0.00000 start=0.00000 speed=0.60000 voices=6.00000 gather=1.00000 drift=0.30000 chord=6.00000 wander=5.00000 scatter=0.40000 gather_swp=0.00000 lfo_rate=4.00000 lfo>pitch=0.00000 lfo>cut=0.00000 lfo>amp=0.00000 lfo_shape=0.00000 env_curve=0.00000 reverb=0.70000 flange=0.00000 flange_fb=0.50000 duck=0.00000 duck_from=0.00000 phaser=0.00000 phaser_rate=0.40000 ph_stages=4.00000 ph_pos=-1.00000 lfo_pos=-1.00000 flange_pos=-1.00000 file=luminal/luminal__synth_vocal_base_00001.ogg keyed=1
+layer breath noise 2 0.0000 9003 level=0.25000 attack=1.00000 release=1.50000 pitch=0.00000 pitch_swp=0.00000 cutoff=0.50000 cutoff_swp=0.00000 resonance=0.80000 filter=1.00000 pan=0.00000 pan_swp=0.00000 echo=0.00000 drive=0.00000 color=0.30000 lfo_rate=0.12000 lfo>pitch=0.00000 lfo>cut=0.15000 lfo>amp=0.00000 lfo_shape=0.00000 env_curve=0.00000 reverb=0.50000 flange=0.00000 flange_fb=0.50000 duck=0.00000 duck_from=0.00000 phaser=0.00000 phaser_rate=0.40000 ph_stages=4.00000 ph_pos=-1.00000 lfo_pos=-1.00000 flange_pos=-1.00000 keyed=0
+bind orb.speed breath level 0.15 0.3
+note Rift (tier III, placeholder): every chord tone including the seventh: a harmonic-seventh chord from pad and choir, and the wind through the tear comes up, whistling.

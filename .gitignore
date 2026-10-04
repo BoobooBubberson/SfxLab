@@ -24,7 +24,7 @@ clips/
 *.bak
 
 # sample library: only the cleared sets are tracked (see samples/README.md): pyretic/, and the in-lab
-# gravitic/, luminal/, aqueous/ and cryic/ sets the regulator families are built on
+# gravitic/, luminal/, aqueous/, cryic/ and resonant/ sets the regulator families are built on
 samples/*
 !samples/README.md
 !samples/CREDITS.md
@@ -33,3 +33,4 @@ samples/*
 !samples/luminal/
 !samples/aqueous/
 !samples/cryic/
+!samples/resonant/
