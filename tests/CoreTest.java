@@ -327,6 +327,24 @@ public class CoreTest {
         RegulatorCore pin = new RegulatorCore(); pin.classic = true; pin.coupling = false; pin.setTarget(fire); pin.power(true);
         check("pinned (the default) is untouched: tier I limits, no best / matched", !pin.free && pin.arms() == 2 && pin.motionsPerArm() == 1 && !pin.selectArm(2) && pin.axisLever(0) && !pin.axisLever(1) && pin.best == null && pin.matched == null);
 
+        // ---- the reach hints: the best recipe by stations, then its reaches
+        RegulatorCore.Comp[] ra = {new RegulatorCore.Comp(0, 1, 0, 1), new RegulatorCore.Comp(0, 7, 1, 0.35), new RegulatorCore.Comp(2, 2, 0, 0.5)};
+        RegulatorCore.Comp[] rb = {new RegulatorCore.Comp(0, 1, 1, 1), new RegulatorCore.Comp(1, 3, 0, 0.6), new RegulatorCore.Comp(2, 2, 1, 0.8), new RegulatorCore.Comp(1, 5, 0, 0.4)};
+        RegulatorCore.Recipe A = new RegulatorCore.Recipe("a", "A", 2, "", false, ra), B = new RegulatorCore.Recipe("b", "B", 2, "", false, rb);
+        RegulatorCore h = new RegulatorCore(new RegulatorCore.Recipe[]{A, B}); h.setFree(3, 3); h.power(true);
+        h.tick(1 / 60.0);
+        check("hints: an empty machine has no hint recipe, fit and hand.fit are 0", h.hint == null && h.signals[RegulatorCore.S_FIT] == 0 && h.signals[RegulatorCore.S_HAND_FIT] == 0);
+        h.comps[0][0].eng = true; h.comps[0][0].r = 7; h.comps[0][0].ph = 1; h.comps[0][0].amp = 0.35; h.tick(1 / 60.0);
+        check("hints: a lone x7 belongs to the recipe that has that station, and its reach reads right; nothing in hand reads 0", h.hint == A && h.signals[RegulatorCore.S_FIT] > 0.999 && h.signals[RegulatorCore.S_HAND_FIT] == 0);
+        h.comps[0][2].eng = true; h.comps[0][2].r = 2; h.comps[0][2].amp = 0.8; h.handArm = 0; h.handAxis = 2; h.tick(1 / 60.0);
+        check("hints: Z2 is in both recipes: the one with more stations matched is read (A, reach 0.5), so B's 0.8 reads low", h.hint == A && Math.abs(h.signals[RegulatorCore.S_HAND_FIT] - Math.exp(-1.8)) < 1e-9);
+        h.comps[1][1].eng = true; h.comps[1][1].r = 3; h.comps[1][1].amp = 0.6; h.comps[2][1].eng = true; h.comps[2][1].r = 5; h.comps[2][1].amp = 0.4; h.comps[0][0].eng = false; h.tick(1 / 60.0);
+        check("hints: three of B's four stations planted, B is read: the same Z2 at 0.8 now reads right", h.hint == B && h.signals[RegulatorCore.S_HAND_FIT] > 0.999 && h.signals[RegulatorCore.S_FIT] > 0.999);
+        h.target = A; h.tick(1 / 60.0);
+        check("hints: a pinned recipe has no say", h.hint == B && h.signals[RegulatorCore.S_HAND_FIT] > 0.999);
+        h.comps[0][2].r = 4; h.tick(1 / 60.0);
+        check("hints: in hand at a ratio the recipe has no station for, hand.fit is 0 and fit leaves it out", h.signals[RegulatorCore.S_HAND_FIT] == 0 && h.signals[RegulatorCore.S_FIT] > 0.999);
+
         System.out.println(fails == 0 ? "ALL PASS" : fails + " FAILED");
         System.exit(fails == 0 ? 0 : 1);
     }

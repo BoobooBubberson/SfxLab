@@ -531,11 +531,11 @@ public final class Sfx {
      *  arm{n}.ratio (12·log2 of the ratio folded into one octave), so it has no slot. tone.* are arm-agnostic: how much
      *  reach sits on each chord tone of the harmonic series, whichever arm carries it (RegulatorCore.computeSignals). */
     public static final String[] SIGNALS = RegulatorCore.SIGNALS;
-    public static final double[] SIG_MAX = {8, 8, 8, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+    public static final double[] SIG_MAX = {8, 8, 8, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
     public static final int SIG_SCORE = 11;
     public static final String[] SIGNAL_CHOICES = {"arm1.ratio", "arm1.pitch", "arm1.reach", "arm2.ratio", "arm2.pitch", "arm2.reach",
                                             "arm3.ratio", "arm3.pitch", "arm3.reach", "radiance", "consonance", "tension", "drive", "coherence", "score",
-                                            "orb.speed", "orb.accel", "orb.curl", "orb.radius", "stir", "tone.root", "tone.third", "tone.fifth", "tone.seventh", "stack", "fit"};
+                                            "orb.speed", "orb.accel", "orb.curl", "orb.radius", "stir", "tone.root", "tone.third", "tone.fifth", "tone.seventh", "stack", "fit", "hand.fit"};
     public static int sigIdx(String name) { for (int i = 0; i < SIGNALS.length; i++) if (SIGNALS[i].equals(name)) return i; return -1; }
 
     /** A chord's pitch classes in semitones (0..12), from its just ratios; null for an unknown name. */

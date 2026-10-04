@@ -85,6 +85,11 @@ public class ConductedTest {
             rest(m, 0.5);
             check("the casts alone build " + rec.name, m.core.matched == rec);
         }
+        ConductedMachine hm = machine();
+        hm.tick(DT);
+        check("hand.fit: nothing in hand reads 0", hm.core.signals[RegulatorCore.S_HAND_FIT] == 0 && hm.core.handArm == -1);
+        hm.reach(0.3); hm.tick(DT);
+        check("hand.fit: a component given reach is the one in hand", hm.selectedExists() && hm.core.handArm == hm.selectedSlot() && hm.core.handAxis == hm.selectedAxis());
         System.out.println(fails == 0 ? "ALL PASS" : fails + " FAILED");
         System.exit(fails == 0 ? 0 : 1);
     }

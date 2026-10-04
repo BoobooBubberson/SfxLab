@@ -396,6 +396,8 @@ public final class ConductedMachine {
 
     /** The machine's tick, then what the crystal does with a motion the hand has left. */
     public void tick(double dt) {
+        boolean sel = selectedExists();   // the selected component, for the core's hand.fit
+        core.handArm = sel ? slot : -1; core.handAxis = sel ? axis : -1;
         core.tick(dt);
         for (int a = 0; a < RegulatorCore.AXES; a++) for (int s = 0; s < RegulatorCore.SLOTS; s++) {
             if (phaseInHand[a][s]) continue;

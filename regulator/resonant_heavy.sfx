@@ -76,6 +76,7 @@ bind orb.radius drone cutoff 0.45 0.8
 bind orb.accel drone drive 0.15 0.4
 bind stack grind level 0 0.14
 bind orb.radius grind cutoff 0.5 0.9
+bind hand.fit grind level 0 0.1 rel
 note resonant_heavy (variant, 2026-10-03): resonant with the user's distorted strings. The heavy cello is the bass under the throat (the sine sub is off), the choir is six
 note cellos roaming up to 6 st off the chord until coherence gathers them, the heavy guitar is a driven wash on C and G that grows with the machine,
 note and the resonators keep a quarter of their crack and are driven. The pads were made from samples/_originals by tools/padloop.py.
@@ -88,10 +89,12 @@ note becomes a pure tone (measured: 9 % of the energy within 50 cents of the not
 note The alien part: a choir made from luminal's synth vocal an octave down, its six voices roaming up to 5 st off the chord until coherence gathers them.
 note One-shots: a plucked low fifth on lock, a plucked C5 on accept (a pluck is a resonator too), a falling fifth on unlock.
 note Spells are placeholders. To try next: a bowed-metal or singing-bowl recording as the choir's source instead of the vocal luminal already uses.
+note Reach hint: hand.fit (the reach of the component in hand against the recipe the stations point to) adds a little to one layer when it is right, and nothing otherwise; fit steadies the voices.
+note Recipes are the sigil generator's (seed 1, 2026-10-03). Spell notes that name ratios or chord tones describe the earlier, hand-made recipes.
 
 spell overtone
 name Overtone
-recipe tier=2 X1p1 Y2p0 X3p0r0.4 Y4p2r0.4 Z2p1r0.5
+recipe tier=2 Z1p1r0.9 Y3p0r0.5 Y4p0r0.4 X6p1r0.6 Y6p2r0.5
 layer throat arc 8 0.0000 9001 level=0.39000 attack=1.20000 release=1.80000 pitch=-9.00000 pitch_swp=0.00000 cutoff=0.80000 cutoff_swp=0.00000 resonance=0.00000 filter=0.00000 pan=0.00000 pan_swp=0.00000 echo=0.00000 drive=0.00000 jitter=0.02000 burst=12.00000 color=0.20000 misfire=0.00000 flicker=0.20000 snap=0.50000 divide=0.00000 ring=1.00000 formant=24.00000 lfo_rate=4.00000 lfo>pitch=0.00000 lfo>cut=0.00000 lfo>amp=0.00000 lfo_shape=0.00000 env_curve=0.00000 reverb=0.30000 flange=0.00000 flange_fb=0.50000 duck=0.00000 duck_from=0.00000 phaser=0.00000 phaser_rate=0.40000 ph_stages=4.00000 ph_pos=-1.00000 lfo_pos=-1.00000 flange_pos=-1.00000 keyed=1
 layer cloud cloud 0 0.0000 9009 level=0.19500 attack=1.00000 release=1.50000 pitch=15.00000 pitch_swp=0.00000 cutoff=0.80000 cutoff_swp=0.00000 resonance=0.00000 filter=0.00000 pan=0.00000 pan_swp=0.00000 echo=0.00000 drive=0.00000 voices=6.00000 gather=1.00000 drift=0.15000 timbre=1.70000 chord=1.00000 sub=0.00000 gather_swp=0.00000 lfo_rate=4.00000 lfo>pitch=0.00000 lfo>cut=0.00000 lfo>amp=0.00000 lfo_shape=0.00000 env_curve=0.00000 reverb=0.60000 flange=0.00000 flange_fb=0.50000 duck=0.00000 duck_from=0.00000 phaser=0.00000 phaser_rate=0.40000 ph_stages=4.00000 ph_pos=-1.00000 lfo_pos=-1.00000 flange_pos=-1.00000 keyed=1
 bind orb.radius throat formant 19 38 scale=overtones
@@ -99,14 +102,14 @@ note Overtone (tier II, placeholder): roots and a fifth: a power chord, and the 
 
 spell concord
 name Concord
-recipe tier=2 X1p0 Y1p1 X5p1r0.4 Y5p3r0.4 Z3p0r0.6
+recipe tier=2 Y1p2r0.7 Z2p2r0.3 X5p3r0.4 X6p3r0.5 Y6p2r0.6
 layer cloud cloud 0 0.0000 9009 level=0.19500 attack=1.00000 release=1.50000 pitch=15.00000 pitch_swp=0.00000 cutoff=0.80000 cutoff_swp=0.00000 resonance=0.00000 filter=0.00000 pan=0.00000 pan_swp=0.00000 echo=0.00000 drive=0.00000 voices=8.00000 gather=1.00000 drift=0.15000 timbre=1.70000 chord=2.00000 sub=0.00000 gather_swp=0.00000 lfo_rate=4.00000 lfo>pitch=0.00000 lfo>cut=0.00000 lfo>amp=0.00000 lfo_shape=0.00000 env_curve=0.00000 reverb=0.60000 flange=0.00000 flange_fb=0.50000 duck=0.00000 duck_from=0.00000 phaser=0.00000 phaser_rate=0.40000 ph_stages=4.00000 ph_pos=-1.00000 lfo_pos=-1.00000 flange_pos=-1.00000 keyed=1
 layer choir resonant/cello_00001_pad 6 0.0000 9008 level=1.40000 attack=1.50000 release=2.50000 pitch=-2.00000 pitch_swp=0.00000 cutoff=0.80000 cutoff_swp=0.00000 resonance=0.00000 filter=0.00000 pan=0.00000 pan_swp=0.00000 echo=0.00000 drive=0.00000 start=0.00000 speed=0.80000 voices=6.00000 gather=1.00000 drift=0.30000 chord=2.00000 wander=2.00000 scatter=0.40000 gather_swp=0.00000 lfo_rate=4.00000 lfo>pitch=0.00000 lfo>cut=0.00000 lfo>amp=0.00000 lfo_shape=0.00000 env_curve=0.00000 reverb=0.70000 flange=0.00000 flange_fb=0.50000 duck=0.00000 duck_from=0.00000 phaser=0.00000 phaser_rate=0.40000 ph_stages=4.00000 ph_pos=-1.00000 lfo_pos=-1.00000 flange_pos=-1.00000 file=resonant/cello_00001_pad.ogg keyed=1
 note Concord (tier II, placeholder): root, third, fifth: the choir stops roaming and holds a major chord.
 
 spell rift
 name Rift
-recipe tier=3 X3p1r0.8 Y1p0 Z2p1r0.7 X7p0r0.3 Y5p2r0.4 Z4p3r0.3
+recipe tier=3 X1p2r0.7 X2p2r0.4 Y2p2r0.5 Z2p2r0.5 Y3p2r0.6 Z3p1r0.4 Y4p1r0.6 X5p0r0.3 Z5p3r0.6
 layer cloud cloud 0 0.0000 9009 level=0.19500 attack=1.00000 release=1.50000 pitch=15.00000 pitch_swp=0.00000 cutoff=0.80000 cutoff_swp=0.00000 resonance=0.00000 filter=0.00000 pan=0.00000 pan_swp=0.00000 echo=0.00000 drive=0.00000 voices=8.00000 gather=1.00000 drift=0.15000 timbre=1.70000 chord=6.00000 sub=0.00000 gather_swp=0.00000 lfo_rate=4.00000 lfo>pitch=0.00000 lfo>cut=0.00000 lfo>amp=0.00000 lfo_shape=0.00000 env_curve=0.00000 reverb=0.60000 flange=0.00000 flange_fb=0.50000 duck=0.00000 duck_from=0.00000 phaser=0.00000 phaser_rate=0.40000 ph_stages=4.00000 ph_pos=-1.00000 lfo_pos=-1.00000 flange_pos=-1.00000 keyed=1
 layer choir resonant/cello_00001_pad 6 0.0000 9008 level=1.20000 attack=1.50000 release=2.50000 pitch=-2.00000 pitch_swp=0.00000 cutoff=0.80000 cutoff_swp=0.00000 resonance=0.00000 filter=0.00000 pan=0.00000 pan_swp=0.00000 echo=0.00000 drive=0.00000 start=0.00000 speed=0.80000 voices=6.00000 gather=1.00000 drift=0.30000 chord=6.00000 wander=6.00000 scatter=0.40000 gather_swp=0.00000 lfo_rate=4.00000 lfo>pitch=0.00000 lfo>cut=0.00000 lfo>amp=0.00000 lfo_shape=0.00000 env_curve=0.00000 reverb=0.70000 flange=0.00000 flange_fb=0.50000 duck=0.00000 duck_from=0.00000 phaser=0.00000 phaser_rate=0.40000 ph_stages=4.00000 ph_pos=-1.00000 lfo_pos=-1.00000 flange_pos=-1.00000 file=resonant/cello_00001_pad.ogg keyed=1
 layer breath noise 2 0.0000 9003 level=0.25000 attack=1.00000 release=1.50000 pitch=0.00000 pitch_swp=0.00000 cutoff=0.50000 cutoff_swp=0.00000 resonance=0.80000 filter=1.00000 pan=0.00000 pan_swp=0.00000 echo=0.00000 drive=0.00000 color=0.30000 lfo_rate=0.12000 lfo>pitch=0.00000 lfo>cut=0.15000 lfo>amp=0.00000 lfo_shape=0.00000 env_curve=0.00000 reverb=0.50000 flange=0.00000 flange_fb=0.50000 duck=0.00000 duck_from=0.00000 phaser=0.00000 phaser_rate=0.40000 ph_stages=4.00000 ph_pos=-1.00000 lfo_pos=-1.00000 flange_pos=-1.00000 keyed=0

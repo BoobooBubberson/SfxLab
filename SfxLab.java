@@ -1396,8 +1396,12 @@ public class SfxLab extends JPanel {
                     + "At the integers 2/4/8 are root, 3/6 fifth, 5 third, 7 seventh; a ratio gliding 1 \u2192 2 lights root, third, fifth, seventh, root in turn.";
             case "stack" -> "<b>stack</b>  0..1 \u2014 engaged motions / 6, clamped: how full the machine is (a tier-III recipe's six motions = 1). "
                     + "A headroom hook: <i>bind stack bed level 0 -0.12 rel</i> steps a bed back as the chord fills.";
-            case "fit" -> "<b>fit</b>  0..1 \u2014 the reach hint: over the pinned recipe's matched components only, e^(\u22126\u00b7|reach \u2212 target|) averaged. 1 when every latched motion's reach is on its target, ~0.5 at the edge of rtol. "
-                    + "Ratio and phase are the score's business; fit isolates reach, so <i>bind fit root shimmer 0.3 0</i> lets a note steady as the reach comes right.";
+            case "fit" -> "<b>fit</b>  0..1 \u2014 the reach hint for the whole figure. The machine takes the family's recipe whose stations (axis and ratio, nothing else) best match "
+                    + "what is planted, and averages e^(\u22126\u00b7|reach \u2212 target|) over the motions on that recipe's stations. 0 when no station matches. "
+                    + "It is an average: in a six-motion recipe one wrong reach moves it little. For the reach being set, bind <b>hand.fit</b>.";
+            case "hand.fit" -> "<b>hand.fit</b>  0..1 \u2014 the reach hint for the component in hand alone (the conducted machine's selected one), against the same best-matching recipe: "
+                    + "e^(\u22126\u00b7|reach \u2212 target|) for its station; 0 with nothing in hand, or when that recipe has no such station. With few motions planted the guess at the recipe "
+                    + "can be wrong; it comes true as the figure fills in. Bind it as a highlight (<i>bind hand.fit root level 0 0.05 rel</i>): at 0 it should add nothing.";
             default -> "<b>" + sig + "</b>";
         };
     }

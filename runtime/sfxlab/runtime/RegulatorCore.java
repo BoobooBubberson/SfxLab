@@ -63,9 +63,9 @@ public class RegulatorCore {
     public static final String[] SIGNALS = {"arm1.ratio", "arm2.ratio", "arm3.ratio", "arm1.reach", "arm2.reach", "arm3.reach",
                                      "radiance", "consonance", "tension", "drive", "coherence", "score",
                                      "orb.speed", "orb.accel", "orb.curl", "orb.radius", "stir",
-                                     "tone.root", "tone.third", "tone.fifth", "tone.seventh", "stack", "fit"};
+                                     "tone.root", "tone.third", "tone.fifth", "tone.seventh", "stack", "fit", "hand.fit"};
     public static final int S_RATIO = 0, S_REACH = 3, S_RADIANCE = 6, S_CONSONANCE = 7, S_TENSION = 8, S_DRIVE = 9, S_COHERENCE = 10, S_SCORE = 11,
-                     S_ORB_SPEED = 12, S_ORB_ACCEL = 13, S_ORB_CURL = 14, S_ORB_RADIUS = 15, S_STIR = 16, S_TONE = 17, S_STACK = 21, S_FIT = 22;
+                     S_ORB_SPEED = 12, S_ORB_ACCEL = 13, S_ORB_CURL = 14, S_ORB_RADIUS = 15, S_STIR = 16, S_TONE = 17, S_STACK = 21, S_FIT = 22, S_HAND_FIT = 23;
     /** The chord tones' pitch classes in semitones (just ratios 1, 5/4, 3/2, 7/4) and how sharply a motion's pitch must sit on one.
      *  Each tone signal sums √reach over the motions on that pitch class, so reach is heard but compressed. */
     public static final double[] TONE_ST = {0, 3.8631, 7.0196, 9.6883};
@@ -128,6 +128,9 @@ public class RegulatorCore {
 
     public final Recipe[] recipes;
     public final Motion[][] comps = new Motion[SLOTS][AXES];
+    /** The component in hand (the conducted machine's selected one), as comps[handArm][handAxis]; -1 when there is none. hand.fit reads it. */
+    public int handArm = -1, handAxis = -1;
+    public Recipe hint;              // the recipe the reach hints are read against (hintRecipe), null when no station is matched
     public final int[] focus = new int[SLOTS]; { java.util.Arrays.fill(focus, -1); }   // per arm: the axis the trim controls act on (the last lever pressed there)
     public Recipe target;
     public int arm;                       // the selected arm the axis levers act on
@@ -461,6 +464,36 @@ public class RegulatorCore {
         } else targetEval = target != null ? eval.get(target.id) : new Eval();
         computeSignals(eng);
     }
+    /** The recipe the machine is nearest to building, judged by stations alone: which of a recipe's axis-and-ratio pairs a
+     *  motion stands on (within half a ratio), reach and phase ignored. The measure is matched / (the recipe's stations +
+     *  the machine's − matched), so a recipe nearly complete beats one barely begun, and motions a recipe has no place
+     *  for count against it. Ties go to the higher score (phase, then reach, decide), then to recipe order. Null with no
+     *  station matched. Every recipe of the family is a candidate: a pinned target has no say. The reach hints read it. */
+    public Recipe hintRecipe(java.util.List<Eng> eng) {
+        boolean[][] held = new boolean[AXES][MAX_N + 1]; int nHeld = 0;
+        for (Eng e : eng) {
+            int n = (int) Math.round(e.r);
+            if (e.axis < 0 || e.axis >= AXES || n < 1 || n > MAX_N || Math.abs(e.r - n) >= 0.5 || held[e.axis][n]) continue;
+            held[e.axis][n] = true; nHeld++;
+        }
+        Recipe bestR = null; double bj = 0, bsc = -1;
+        for (Recipe rec : recipes) {
+            int match = 0;
+            for (Comp c : rec.comps) if (c.axis() >= 0 && c.axis() < AXES && c.n() >= 1 && c.n() <= MAX_N && held[c.axis()][c.n()]) match++;
+            if (match == 0) continue;
+            double j = match / (double) (rec.comps.length + nHeld - match);
+            Eval ev = eval.get(rec.id); double sc = ev != null ? ev.score : 0;
+            if (j > bj + 1e-12 || (Math.abs(j - bj) <= 1e-12 && sc > bsc)) { bestR = rec; bj = j; bsc = sc; }
+        }
+        return bestR;
+    }
+    /** A reach against one recipe's target for the station the motion stands on: e^(−6·|reach − target|); −1 when the recipe has no such station. */
+    public static double reachFit(Comp[] comps, int axis, double r, double amp) {
+        int n = (int) Math.round(r);
+        if (Math.abs(r - n) >= 0.5) return -1;
+        for (Comp c : comps) if (c.axis() == axis && c.n() == n) return Math.exp(-6 * Math.abs(amp - c.amp()));
+        return -1;
+    }
     public void computeSignals(java.util.List<Eng> eng) {
         java.util.Arrays.fill(signals, 0, S_ORB_SPEED, 0);   // the orb envelopes persist (smoothed across ticks)
         for (int a = 0; a < ARMS; a++) {
@@ -495,7 +528,20 @@ public class RegulatorCore {
             signals[S_TONE + t] = Math.min(1, sum);
         }
         signals[S_STACK] = Math.min(1, eng.size() / 6.0);   // how full the machine is: a tier-III recipe's six motions = 1
-        signals[S_FIT] = targetEval.fit;                     // the reach hint: 1 when every matched motion's reach is on the pinned recipe's target
+        // The reach hints, against the recipe the stations say is being built (hintRecipe): fit over every motion on one of
+        // its stations, hand.fit for the component in hand alone, the one whose reach is being moved. With few stations
+        // planted the guess can be wrong and the hints with it; they come true as the figure fills in.
+        hint = hintRecipe(eng);
+        double sum = 0, hf = 0; int nf = 0;
+        if (hint != null) {
+            for (Eng e : eng) { double f = reachFit(hint.comps, e.axis, e.r, e.amp); if (f >= 0) { sum += f; nf++; } }
+            if (handArm >= 0 && handArm < SLOTS && handAxis >= 0 && handAxis < AXES) {
+                Motion m = comps[handArm][handAxis];
+                if (m.eng && m.amp > ENGAGE_AMP && m.r > ENGAGE_R) hf = Math.max(0, reachFit(hint.comps, handAxis, m.r, m.amp));
+            }
+        }
+        signals[S_FIT] = nf > 0 ? sum / nf : 0;
+        signals[S_HAND_FIT] = hf;
         orbSignals();
     }
     // ---- the orb's kinematics, from the oscillators' derivatives (exact, whatever the frame rate), each an
