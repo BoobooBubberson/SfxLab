@@ -16,7 +16,7 @@ wants to find the source.
 | `fire/blazing_fire.ogg` | SoundReality on Pixabay | Pixabay Content License | `soundreality-bliazing-fire-394355.mp3` | |
 | `cryic/frost_synth_base*.ogg` | Ferris (own synthesis, made in-lab) | MIT, with the repo | the cryic family's pad; projects/frost_synth_base*.sfx are its sources |
 | `resonant/*_pad.ogg` | Ferris (own recordings and synthesis) | MIT, with the repo | bowed cymbals, cellos, a guitar and singing bowls, made into level seamless loops by `tools/padloop.py` |
-| `cryic/ice_crunching.mp3` | JesseQuinnMedia on Pixabay | Pixabay Content License | `jessequinnmedia-breaking-ice-crunching-307632.mp3` |
+| `cryic/ice_crunching.ogg` | JesseQuinnMedia on Pixabay | Pixabay Content License | `jessequinnmedia-breaking-ice-crunching-307632.mp3` |
 
 
 

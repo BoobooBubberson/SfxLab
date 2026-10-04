@@ -1140,6 +1140,8 @@ public class SfxLab extends JPanel {
                 } else if (c.type == SAMPLE || c.type == CHOIR) {
                     lines.add("sample " + c.file);
                     if (!done.add("s:" + c.file)) continue;
+                    if (!c.file.toLowerCase(Locale.ROOT).endsWith(".ogg"))   // the game decodes Ogg Vorbis and nothing else (the lab reads anything ffmpeg can)
+                        throw new IllegalStateException(fam + ": layer " + c.id + " plays " + c.file + ", which the game cannot read: convert it to .ogg");
                     Path dst = out.resolve("samples").resolve(c.file);
                     Files.createDirectories(dst.getParent());
                     Files.copy(samplePath(c.file), dst, StandardCopyOption.REPLACE_EXISTING);
