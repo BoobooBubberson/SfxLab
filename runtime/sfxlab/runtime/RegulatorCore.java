@@ -124,7 +124,7 @@ public class RegulatorCore {
     public static final class Motion { public boolean eng, drv, act; public double r = 1, amp = DEFAULT_REACH; public int ph; public double osc; }   // act: the lever is down (coupled-lever model)   // osc: the motion's own accumulated angle (radians), so a changing ratio bends the trace instead of jumping it
     /** A saved motion (voiced crystals, the copy socket). */
     public record Snap(int arm, int axis, double r, int phase, double amp) {}
-    public static final class Eval { public double score; public boolean exact; public double fit; }   // fit: reach agreement of the matched components, e^(−6·|reach − target|) averaged over the recipe
+    public static final class Eval { public double score; public boolean exact; public double fit; }   // fit: reach agreement, e^(−6·|reach − target|) averaged over the recipe's components whose ratio a motion holds (0 when none does)
 
     public final Recipe[] recipes;
     public final Motion[][] comps = new Motion[SLOTS][AXES];
@@ -372,27 +372,38 @@ public class RegulatorCore {
     }
     public static Eval evalOnce(Comp[] comps, java.util.List<Eng> eng) { return evalOnce(comps, eng, DEFAULT_RTOL); }
     public static Eval evalOnce(Comp[] comps, java.util.List<Eng> eng, double rtol) {
-        boolean[] used = new boolean[eng.size()];
-        double sum = 0, fitSum = 0; boolean exact = true; int nUsed = 0;
-        for (Comp t : comps) {
-            int best = -1; double bs = 0; boolean bx = false;
-            for (int i = 0; i < eng.size(); i++) {
-                Eng e = eng.get(i);
-                if (used[i] || e.axis != t.axis) continue;
-                double d = Math.abs(e.r - t.n);
-                boolean reachOk = Math.abs(e.amp - t.amp) <= rtol + 1e-9;
-                double s = Math.exp(-d * 5) * (e.ph == t.phase ? 1 : 0.5) * (reachOk ? 1 : 0.7);
-                if (s > bs) { bs = s; best = i; bx = d < 1e-6 && e.ph == t.phase && reachOk; }
+        // Each recipe component takes one engaged motion on its axis, the pairs made best-first (an axis can hold several
+        // motions: taking them in recipe order would hand a lone ×7 to the recipe's ×1 and leave its ×7 unmatched).
+        int nc = comps.length, ne = eng.size();
+        boolean[] used = new boolean[ne], done = new boolean[nc];
+        double sum = 0, fitSum = 0; boolean exact = true; int nUsed = 0, nFit = 0;
+        while (true) {
+            int bc = -1, bi = -1; double bs = 0; boolean bx = false;
+            for (int c = 0; c < nc; c++) {
+                if (done[c]) continue;
+                Comp t = comps[c];
+                for (int i = 0; i < ne; i++) {
+                    Eng e = eng.get(i);
+                    if (used[i] || e.axis != t.axis) continue;
+                    double d = Math.abs(e.r - t.n);
+                    boolean reachOk = Math.abs(e.amp - t.amp) <= rtol + 1e-9;
+                    double sc = Math.exp(-d * 5) * (e.ph == t.phase ? 1 : 0.5) * (reachOk ? 1 : 0.7);
+                    if (sc > bs) { bs = sc; bc = c; bi = i; bx = d < 1e-6 && e.ph == t.phase && reachOk; }
+                }
             }
-            if (best >= 0) { used[best] = true; nUsed++; sum += bs; if (!bx) exact = false; fitSum += Math.exp(-6 * Math.abs(eng.get(best).amp - t.amp)); }
-            else exact = false;
+            if (bc < 0) break;
+            done[bc] = true; used[bi] = true; nUsed++; sum += bs; if (!bx) exact = false;
+            // the reach hint counts only a motion at (or arriving at) its component's ratio: a motion elsewhere on the axis
+            // says nothing about that component's reach
+            if (Math.abs(eng.get(bi).r - comps[bc].n) < 0.5) { fitSum += Math.exp(-6 * Math.abs(eng.get(bi).amp - comps[bc].amp)); nFit++; }
         }
+        if (nUsed < nc) exact = false;
         int extra = eng.size() - nUsed;
         if (extra > 0) exact = false;
         Eval ev = new Eval();
         ev.score = sum / comps.length * Math.pow(0.6, extra);
         ev.exact = exact;
-        ev.fit = nUsed > 0 ? fitSum / nUsed : 0;   // over the matched components only: reach quality, not recipe progress
+        ev.fit = nFit > 0 ? fitSum / nFit : 0;   // over the components whose ratio is held: reach quality, not recipe progress
         return ev;
     }
     /** The best score over every phase set that traces the recipe's figure (§3.4). */
