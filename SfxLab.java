@@ -5392,28 +5392,30 @@ public class SfxLab extends JPanel {
         // ---- clips (clipped to the track area: they may hang off the left of 0)
         Shape clipArea = g.getClip();
         g.clipRect(tlX(), tracksY(), w - 12 - tlX(), TRACKS * trackH());
-        synchronized (lock) {
-            for (Clip c : clips) {
-                Rectangle r = clipRect(c);
-                if (r.x + r.width < tlX() || r.x > w - 12) continue;
-                Color tc = TYPE_COLORS[c.type];
-                boolean isSel = c == sel;
-                g.setColor(new Color(tc.getRed(), tc.getGreen(), tc.getBlue(), mute[c.track] ? 40 : isSel ? 120 : 70));
-                g.fillRoundRect(r.x, r.y, r.width, r.height, 8, 8);
-                if (sampled(c) && r.width > 12) drawWave(g, c, r, tc, w);
-                g.setColor(isSel ? Color.WHITE : new Color(tc.getRed(), tc.getGreen(), tc.getBlue(), 200));
-                g.drawRoundRect(r.x, r.y, r.width, r.height, 8, 8);
-                if (c.vlink) {   // linked to the video: a lane-blue left edge
-                    g.setColor(new Color(170, 190, 255, 220));
-                    g.fillRect(r.x + 1, r.y + 1, 3, r.height - 1);
-                }
-                if (r.x + r.width - Math.max(r.x, tlX()) > 34) {
-                    g.setColor(isSel ? Color.WHITE : Color.LIGHT_GRAY);
-                    Shape clip0 = g.getClip();
-                    g.clipRect(r.x + 2, r.y, r.width - 4, r.height);
-                    g.drawString(c.name, Math.max(r.x + 6, tlX() + 4), r.y + 16);
-                    g.setClip(clip0);
-                }
+        // drawn from a copy of the list, outside the lock: the audio thread takes the lock every block (5.8 ms), and a
+        // frame of waveforms painted while holding it starved the audio into dropouts
+        List<Clip> shown;
+        synchronized (lock) { shown = new ArrayList<>(clips); }
+        for (Clip c : shown) {
+            Rectangle r = clipRect(c);
+            if (r.x + r.width < tlX() || r.x > w - 12) continue;
+            Color tc = TYPE_COLORS[c.type];
+            boolean isSel = c == sel;
+            g.setColor(new Color(tc.getRed(), tc.getGreen(), tc.getBlue(), mute[c.track] ? 40 : isSel ? 120 : 70));
+            g.fillRoundRect(r.x, r.y, r.width, r.height, 8, 8);
+            if (sampled(c) && r.width > 12) drawWave(g, c, r, tc, w);
+            g.setColor(isSel ? Color.WHITE : new Color(tc.getRed(), tc.getGreen(), tc.getBlue(), 200));
+            g.drawRoundRect(r.x, r.y, r.width, r.height, 8, 8);
+            if (c.vlink) {   // linked to the video: a lane-blue left edge
+                g.setColor(new Color(170, 190, 255, 220));
+                g.fillRect(r.x + 1, r.y + 1, 3, r.height - 1);
+            }
+            if (r.x + r.width - Math.max(r.x, tlX()) > 34) {
+                g.setColor(isSel ? Color.WHITE : Color.LIGHT_GRAY);
+                Shape clip0 = g.getClip();
+                g.clipRect(r.x + 2, r.y, r.width - 4, r.height);
+                g.drawString(c.name, Math.max(r.x + 6, tlX() + 4), r.y + 16);
+                g.setClip(clip0);
             }
         }
         g.setClip(clipArea);
@@ -5588,7 +5590,7 @@ public class SfxLab extends JPanel {
                 m = Math.max(m, pk[bi]);
             }
             int hgt = (int) (m * hh);
-            g.drawLine(x, mid - hgt, x, mid + hgt);
+            g.fillRect(x, mid - hgt, 1, 2 * hgt + 1);   // one-pixel columns as plain fills: antialiased lines here cost most of the frame
         }
     }
 
