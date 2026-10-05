@@ -6,7 +6,7 @@ since been sorted into another subfolder, SfxLab falls back to the first file
 under `samples/` with the same name.
 
 Tracked in git: the sets the regulator families play (`pyretic/`, `gravitic/`,
-`luminal/`, `aqueous/`, `cryic/`, `resonant/`), all cleared for use (see `CREDITS.md`).
+`luminal/`, `aqueous/`, `cryic/`, `resonant/`, `voltaic/`), all cleared for use (see `CREDITS.md`).
 Everything else in the local library is git-ignored until its license has been checked.
 A family layer must play an `.ogg`: the game reads nothing else, and the bake refuses
 other formats.
