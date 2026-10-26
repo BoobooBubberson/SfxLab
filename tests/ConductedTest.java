@@ -85,6 +85,25 @@ public class ConductedTest {
             rest(m, 0.5);
             check("the casts alone build " + rec.name, m.core.matched == rec);
         }
+        // planting is the commit (2026-10-26): the press at the socket discards the component in hand unless it was
+        // planted; a planted one is kept; one motion to an axis at a station
+        m = machine();
+        reachTo(m, 1); aimTo(m, 3);
+        m.nextAxis();
+        check("the next arm discards a component caught on its station but never planted", !m.motion(0, 0).eng && m.selectedAxis() == 1 && m.aim() == 3);
+        m.nextAxis(); m.nextAxis();
+        reachTo(m, 1); aimTo(m, 3); m.plant();
+        m.nextAxis();
+        check("a planted component is kept by the next arm", m.motion(0, 0).eng && m.motion(0, 0).r == 3 && m.planted(0, 0));
+        m.nextAxis(); m.nextAxis();
+        m.select(0, 0);
+        m.nextAxis();
+        check("taken back in hand it is provisional again, and the next arm discards it", !m.motion(0, 0).eng);
+        m = machine();
+        reachTo(m, 1); aimTo(m, 2); m.plant();
+        reachTo(m, 0.5); m.plant();
+        check("a second X planted on the same station replaces the first: one motion to an axis at a station",
+                m.motion(0, 0).eng != m.motion(0, 1).eng && (m.motion(0, 0).eng ? m.motion(0, 0).amp : m.motion(0, 1).amp) == 0.5);
         ConductedMachine hm = machine();
         hm.tick(DT);
         check("hand.fit: nothing in hand reads 0", hm.core.signals[RegulatorCore.S_HAND_FIT] == 0 && hm.core.handArm == -1);

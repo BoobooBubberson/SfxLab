@@ -26,6 +26,13 @@ package sfxlab.runtime;
  * with reach at the zero position is a component, sitting still; it is
  * gone only when its reach is taken to nothing.
  *
+ * <b>Planting is the commit</b> (the mod's field, 2026-10-26). The component in hand is provisional until the
+ * press on the composite plants it: leaving it any other way (the press at the socket turning the array, a
+ * planted component taken back) discards it, caught on its station or not. A planted component taken back in
+ * hand, or touched again (wound, given reach, tilted), is provisional once more. <b>One motion to an axis at a
+ * station</b>: planting onto a station an earlier component of the same axis already holds replaces it; two
+ * motions on one axis at one ratio could not be told apart on the machine or in a reading.
+ *
  * Pure: no game in it, so the tests work it as a hand would.
  */
 public final class ConductedMachine {
@@ -95,6 +102,8 @@ public final class ConductedMachine {
     /** Each component's phase as a continuous tilt, quarters (0..4): what is drawn and turned; the core sees the nearest quarter. */
     private final double[][] phaseAngle = new double[RegulatorCore.AXES][RegulatorCore.SLOTS];
     private final boolean[][] phaseInHand = new boolean[RegulatorCore.AXES][RegulatorCore.SLOTS];
+    /** Committed by the press on the composite; a component that is not is discarded when the hand leaves it. */
+    private final boolean[][] planted = new boolean[RegulatorCore.AXES][RegulatorCore.SLOTS];
     private int axis = 0, slot = 0;
     private boolean inHand;
     /** The array's aim, as a ratio. The machine's own: see the head of the class for what moves it. */
@@ -154,6 +163,7 @@ public final class ConductedMachine {
             m.amp = planReach[a][s];
             phaseAngle[a][s] = planPhase[a][s];
             phaseInHand[a][s] = false;
+            planted[a][s] = false;
         }
     }
 
@@ -181,25 +191,31 @@ public final class ConductedMachine {
         return aim;
     }
 
+    /** Whether a component has been planted (committed by the press on the composite) and not touched since. */
+    public boolean planted(int a, int s) {
+        return has(a, s) && planted[a][s];
+    }
+
     /**
-     * Select a component (the toggle on a planted one, or the next arm's). What was selected is left where it
-     * stands. A component there turns the aim to itself; an empty place leaves the aim alone.
+     * The toggle on a planted component: it is taken back in hand, provisional again, and the aim turns to it.
+     * What was selected is left: discarded unless it had been planted. Selecting an empty place leaves the aim
+     * alone.
      */
     public void select(int newAxis, int newSlot) {
         if (!has(newAxis, newSlot)) return;
         leave();
         arrive(newAxis, newSlot);
+        if (exists(motion(axis, slot))) planted[axis][slot] = false;
     }
 
     /**
-     * The hand off the selected component for good: the crystal takes it if it stands in a station's window,
-     * else it is held where it is. A bare aim (never given reach) is not a component and is not kept.
+     * The hand off the selected component: a planted one stays where it stands; anything else (a bare aim, a
+     * component never planted, caught on its station or not) is discarded. Only {@link #plant} keeps a component.
      */
     private void leave() {
         letGo();
         RegulatorCore.Motion was = motion(axis, slot);
-        if (was.eng && was.drv) core.latch();
-        if (was.eng && !exists(was)) drop(was);
+        if (was.eng && !planted[axis][slot]) drop(axis, slot);
     }
 
     private void arrive(int newAxis, int newSlot) {
@@ -207,14 +223,16 @@ public final class ConductedMachine {
         slot = newSlot;
         RegulatorCore.Motion m = motion(axis, slot);
         if (exists(m)) aim = m.r;
-        else if (m.eng) drop(m);
+        else if (m.eng) drop(axis, slot);
     }
 
-    private static void drop(RegulatorCore.Motion m) {
+    private void drop(int a, int s) {
+        RegulatorCore.Motion m = motion(a, s);
         m.eng = false;
         m.act = false;
         m.drv = false;
         m.amp = 0;
+        planted[a][s] = false;
     }
 
     /**
@@ -224,6 +242,7 @@ public final class ConductedMachine {
     public void resync() {
         for (int a = 0; a < RegulatorCore.AXES; a++) for (int s = 0; s < RegulatorCore.SLOTS; s++) {
             if (!phaseInHand[a][s] && ((int) Math.round(phaseAngle[a][s])) % 4 != core.comps[s][a].ph) phaseAngle[a][s] = core.comps[s][a].ph;
+            planted[a][s] = exists(core.comps[s][a]);   // what another hand left standing is what it kept
         }
         inHand = false;
         RegulatorCore.Motion m = motion(axis, slot);
@@ -231,13 +250,14 @@ public final class ConductedMachine {
     }
 
     /**
-     * The toggle at the socket: the next arm is the aiming arm. Its component in progress is selected if it has
-     * one, else the first empty place on its axis, and the aim carries over. With every place on the axis taken it
-     * is the last component there, and the array turns to it.
+     * The toggle at the socket: the next arm is the aiming arm, and the component in hand, unless it was planted,
+     * is discarded. The next arm's first empty place is selected and the aim carries over. With every place on
+     * the axis taken it is the last component there, still planted, and the array turns to it.
      */
     public void nextAxis() {
         int a = (axis + 1) % RegulatorCore.AXES;
-        select(a, freeSlot(a));
+        leave();
+        arrive(a, freeSlot(a));
     }
 
     /** The first slot of an axis holding no component, else the last slot. */
@@ -250,22 +270,31 @@ public final class ConductedMachine {
 
     /**
      * The toggle on the composite: the selected component is planted where it stands (onto its station, if it
-     * stands in the window), and the next place on its axis is selected. The aim stays on what was planted.
-     * False when there is no component to plant.
+     * stands in the window: the crystal takes it now), and the next place on its axis is selected. An earlier
+     * component of the same axis on that station gives way to it. The aim stays on what was planted. False when
+     * there is no component to plant.
      */
     public boolean plant() {
         if (!selectedExists()) return false;
-        leave();
-        RegulatorCore.Motion planted = motion(axis, slot);
-        if (planted.eng) aim = planted.r;
+        letGo();
+        RegulatorCore.Motion p = motion(axis, slot);
+        if (p.drv) core.latch();   // in a window the crystal takes it (accept); outside, it is held where it is (hold)
+        planted[axis][slot] = true;
+        int n = core.acceptable(p.r);
+        if (n > 0) for (int s = 0; s < core.freeArms; s++) {
+            if (s != slot && motion(axis, s).eng && core.acceptable(motion(axis, s).r) == n) drop(axis, s);
+        }
+        aim = p.r;
         slot = freeSlot(axis);
         RegulatorCore.Motion m = motion(axis, slot);
-        if (m.eng && !exists(m)) drop(m);
+        if (m.eng && !exists(m)) drop(axis, slot);
         return true;
     }
 
-    /** The selected component brought into being if it is not yet: at the aim, with no reach, in its plan's phase. */
+    /** The selected component brought into being if it is not yet: at the aim, with no reach, in its plan's phase.
+     *  Touched, it is in hand and provisional: planted no longer. */
     private RegulatorCore.Motion ensureSelected() {
+        planted[axis][slot] = false;
         RegulatorCore.Motion m = motion(axis, slot);
         if (!m.eng) {
             m.eng = true;
@@ -287,7 +316,7 @@ public final class ConductedMachine {
         m.amp = Math.max(0, Math.min(1, m.amp + delta));
         if (m.amp <= 1e-6) {   // gone, and the aim stays where it is
             if (inHand) letGo();
-            drop(m);
+            drop(axis, slot);
         }
     }
 
@@ -342,12 +371,12 @@ public final class ConductedMachine {
         return core.crankRatio();
     }
 
-    /** Take a motion in hand. One at a time: what was in hand before is left where it stands, beating if detuned. */
+    /** Take a motion in hand, provisional until planted. One at a time: what was in hand before is left, kept only
+     *  if it had been planted. */
     public boolean take(int axis, int slot) {
         if (!has(axis, slot) || !core.powered) return false;
-        if (this.axis != axis || this.slot != slot) {
-            motion(this.axis, this.slot).drv = false;
-        }
+        if (this.axis != axis || this.slot != slot) leave();
+        planted[axis][slot] = false;
         RegulatorCore.Motion m = motion(axis, slot);
         if (!m.eng) {
             m.eng = true;

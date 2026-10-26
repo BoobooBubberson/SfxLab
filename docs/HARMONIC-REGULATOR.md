@@ -640,6 +640,11 @@ one **component** (one motion) at a time. It is the single copy; the mod runs th
 - **The toggle** is one press: on the composite it plants the component in hand and the next place on that axis is
   selected; on a planted component it takes it back; on the seated crystal the next arm aims. The aim is shared, so
   a component begun after another starts at the ratio just left.
+- **Planting is the commit** (2026-10-26, from the mod's field: unplanted components piled up on one station and no
+  recipe would score). The component in hand is provisional until the press on the composite plants it; the next
+  arm, or taking another component back, discards it, caught on its station or not. A planted component taken back
+  or touched again is provisional again. Planting onto a station an earlier component of the same axis holds
+  replaces that component (one motion to an axis at a station, below). `planted(axis, slot)` says which are kept.
 - **A component exists once it has reach.** At the zero position it sits still. Only its reach taken to nothing
   removes it: the machine switches nothing off.
 - **Voicing** is crescendo into the seated crystal while a sigil holds.
