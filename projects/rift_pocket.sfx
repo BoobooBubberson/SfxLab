@@ -1,0 +1,24 @@
+# SfxLab family v2: the rift pocket's palette (docs/quest_sites.md §3, "The voice"). Layers and binds as a family file;
+# no spells. Played by SfxLab's engine with the pocket's own signals in the regulator's names (the lab can audition it
+# with its sliders; authored in the lab, pasted here as is):
+#   arm1..3.ratio  the pen's three integer ratios (1..4), one an axis   arm1..3.pitch  that ratio's pitch class, semitones
+#   arm1..3.reach  how far that axis is in: 1 locked, 0 empty or wrong (settling over the figure's settle)
+#   tension        the mean chaos of the three axes (all wrong 1, all locked 0)   coherence  1 - tension   fit  1 - tension
+#   tone.root      1 - tension   tone.third/fifth/seventh  the three axes' reach, in order
+#   consonance     axes locked / 3   stack  the same   stir  the pen's jitter drive
+#   drive          a tremor, 1 as it hits and gone in two seconds   radiance  the stilling's gathered light, 0..1
+#   score          1 when the site is not broken (the monument, the stilled site), the stilling's progress while it runs, else 0
+#   orb.radius     the pen's reach over its rest reach (0.5 lifted)   orb.speed  the pen's speed, 0..1
+# Events: lock (a pedestal matched), unlock (a matched pedestal emptied), accept (any stone seated).
+#
+# TEST PALETTE (Ferris 2026-10-22): three tones, one a pedestal, silent with no crystal, 0.5 with the right one.
+root 65.4064
+layer axis1 tones 1 0 7104 level=0.0 attack=0.3 release=1.0 pitch=3 interval=0 timbre=1.2 detune=0.1 cutoff=0.7 reverb=0.25 keyed=1
+layer axis2 tones 1 0 7105 level=0.0 attack=0.3 release=1.0 pitch=10 interval=0 timbre=1.2 detune=0.1 cutoff=0.7 reverb=0.25 keyed=1
+layer axis3 tones 1 0 7106 level=0.0 attack=0.3 release=1.0 pitch=19 interval=0 timbre=1.2 detune=0.1 cutoff=0.7 reverb=0.25 keyed=1
+range axis1 level 0 0.5 the first pedestal's tone (C3)
+range axis2 level 0 0.5 the second (G3)
+range axis3 level 0 0.5 the third (E4)
+bind arm1.reach axis1 level 0 0.5
+bind arm2.reach axis2 level 0 0.5
+bind arm3.reach axis3 level 0 0.5

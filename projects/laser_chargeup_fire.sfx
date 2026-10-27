@@ -1,0 +1,13 @@
+# SfxLab project v2: clip name type track start dur seed key=value...
+loop 1
+root 65.4064
+track 0 1.000 0
+track 1 1.000 0
+track 2 1.000 0
+track 3 1.000 0
+track 4 1.000 0
+track 5 1.000 0
+clip luminal/luminal_laserblast_00003 5 0 0.0000 2.0000 6082211674120025588 level=0.80000 attack=0.00200 release=0.96000 pitch=8.09891 pitch_swp=12.00000 cutoff=1.00000 cutoff_swp=0.01333 resonance=0.00000 filter=0.00000 pan=0.00000 pan_swp=0.00000 echo=0.00000 drive=0.00000 loop=0.00000 start=0.00000 pitch_mode=1.00000 speed=1.00000 lfo_rate=4.00000 lfo>pitch=0.00000 lfo>cut=0.00000 lfo>amp=0.00000 lfo_shape=0.00000 env_curve=0.00000 reverb=0.00000 flange=0.07333 flange_fb=0.50000 duck=0.00000 duck_from=0.00000 phaser=0.00000 phaser_rate=0.40000 ph_stages=4.00000 ph_pos=-1.00000 lfo_pos=-1.00000 flange_pos=-1.00000 file=luminal/luminal_laserblast_00003.ogg keyed=2
+clip noise 2 1 0.0000 0.8500 -3596133659745731254 level=0.50000 attack=0.04800 release=0.08000 pitch=0.00000 pitch_swp=0.00000 cutoff=0.00000 cutoff_swp=0.76000 resonance=0.21333 filter=0.00000 pan=0.00000 pan_swp=0.00000 echo=0.00000 drive=0.00000 color=0.00000 lfo_rate=4.00000 lfo>pitch=0.00000 lfo>cut=0.00000 lfo>amp=0.00000 lfo_shape=0.00000 env_curve=0.00000 reverb=0.00000 flange=0.00000 flange_fb=0.50000 duck=0.00000 duck_from=0.00000 phaser=0.00000 phaser_rate=0.40000 ph_stages=4.00000 ph_pos=-1.00000 lfo_pos=-1.00000 flange_pos=-1.00000 keyed=3
+clip sub 1 3 0.0000 0.8500 5996184607870939143 level=0.80000 attack=0.40000 release=0.04200 pitch=-9.00000 pitch_swp=6.40000 cutoff=1.00000 cutoff_swp=0.00000 resonance=0.00000 filter=0.00000 pan=0.00000 pan_swp=0.00000 echo=0.00000 drive=0.00000 interval=7.04000 timbre=2.00000 detune=0.00000 shimmer=0.00000 fm_ratio=2.00000 fm_depth=1.33333 bank=0.00000 odd/even=0.00000 tilt=-0.29333 stretch=0.00000 gather=0.00000 chord=1.00000 bank_shimmer=0.00000 lfo_rate=7.39667 lfo>pitch=0.00000 lfo>cut=0.00000 lfo>amp=0.00000 lfo_shape=0.00000 env_curve=0.00000 reverb=0.00000 flange=0.00000 flange_fb=0.50000 duck=0.00000 duck_from=0.00000 phaser=0.00000 phaser_rate=6.19800 ph_stages=4.00000 ph_pos=-1.00000 lfo_pos=-1.00000 flange_pos=-1.00000 keyed=3
+clip noise 2 2 0.8000 1.2000 8124967585730230264 level=0.12000 attack=0.00000 release=0.25000 pitch=0.00000 pitch_swp=0.00000 cutoff=1.00000 cutoff_swp=-0.61333 resonance=0.00000 filter=0.00000 pan=0.00000 pan_swp=0.00000 echo=0.00000 drive=0.00000 color=0.00000 lfo_rate=4.00000 lfo>pitch=0.00000 lfo>cut=0.00000 lfo>amp=0.00000 lfo_shape=0.00000 env_curve=0.00000 reverb=0.00000 flange=0.00000 flange_fb=0.50000 duck=0.00000 duck_from=0.00000 phaser=0.00000 phaser_rate=0.40000 ph_stages=4.00000 ph_pos=-1.00000 lfo_pos=-1.00000 flange_pos=-1.00000 keyed=3

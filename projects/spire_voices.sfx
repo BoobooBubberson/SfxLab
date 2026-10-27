@@ -1,0 +1,20 @@
+# Spire voice presets: SfxLab clip lines (clip name type track start dur seed key=value...).
+# Same format as ~/synthlab/*.sfx, so a clip dialled in the lab can be pasted here as is.
+# Only the keys that differ from the lab's defaults need listing; the type may be a name or a number.
+# In the game the clip's pitch is the starting pitch; the emitter drives the pitch live after that.
+clip tones tones 0 0 2.0 101 pitch=12
+clip sub tones 0 0 2.0 102 pitch=-12 interval=0 timbre=2
+clip bell tones 0 0 3.0 103 pitch=12 interval=12 timbre=2 fm_ratio=3.5 fm_depth=1.2 reverb=0.35
+clip pad cloud 0 0 4.0 104 pitch=-12 attack=0.8 reverb=0.25
+clip drone cloud 0 0 6.0 105 pitch=-24 voices=8 gather=1 drift=0.05 timbre=0.4 chord=6 sub=0.4 attack=1.5
+clip wind noise 0 0 1.5 106 level=0.5 cutoff=0.7 color=0.5 lfo_rate=0.3 lfo>cut=0.15
+clip rumble noise 0 0 2.0 107 level=0.6 cutoff=0.35 color=0.9
+clip sparkle sparkle 0 0 1.6 108 pitch=39 release=0.5 reverb=0.3
+clip pluck pluck 0 0 1.2 109 pitch=-5 release=0.15
+clip riser tones 0 0 1.8 110 attack=1.4 release=0.3 pitch_swp=36 timbre=1 detune=0.6
+# --- the pillars and the fork (pitch is driven live; the preset sets the character) ---
+clip pillar_drone cloud 0 0 6.0 201 level=0.55 attack=2.5 voices=10 gather=1 drift=0.03 timbre=0.45 chord=7 sub=0.5 reverb=0.3 cutoff=0.75
+clip pillar_roar noise 0 0 4.0 202 level=0.7 attack=1.5 color=0.65 cutoff=0.45 resonance=0.15 lfo_rate=0.17 lfo_shape=3 lfo>cut=0.12 lfo>amp=0.25 drive=0.15
+clip pillar_calm cloud 0 0 8.0 204 level=0.4 attack=3.0 voices=5 gather=1 drift=0.012 timbre=0.3 chord=6 sub=0.6 reverb=0.35 cutoff=0.55
+clip cast_strike tones 0 0 0.7 205 level=0.7 attack=0.005 release=0.45 interval=12 timbre=2 fm_ratio=2.0 fm_depth=0.6 reverb=0.2
+clip fork tones 0 0 2.0 203 level=0.6 attack=0.05 interval=0 timbre=2 detune=0
