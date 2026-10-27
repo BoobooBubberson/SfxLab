@@ -22,11 +22,11 @@ $J SfxLab --render projects/pyretic_synth.sfx "$OUT/tl_pyretic_mono.wav" --mono 
 while read -r fam spell; do
     $J BenchRender "regulator/$fam.sfx" "$fam" "tools/bench/$spell.txt" "$OUT/bench_${fam}_$spell.wav" >"$OUT/bench_${fam}_$spell.log" 2>&1
 done <<LIST
-pyretic firebolt
-pyretic torch_lance
+pyretic ember
+pyretic immolate
 gravitic gravity_well
 gravitic singularity
-luminal prism
+luminal prismatic_beam
 aqueous undertow
 aqueous_mystic undertow
 LIST

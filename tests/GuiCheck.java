@@ -104,8 +104,8 @@ public class GuiCheck {
         ConductedMachine cm = mc.cm;
         check("the machine is the game's: free, on the wells, one motion in hand at a time", c.free && c.wells && !c.classic && !c.coupling && c.arms() == RegulatorCore.SLOTS);
         RegulatorCore.Recipe target = null;
-        for (RegulatorCore.Recipe r : c.recipes) if (r.comps.length == 2) { target = r; break; }
-        check("the family has a two-motion recipe to play", target != null);
+        for (RegulatorCore.Recipe r : c.recipes) if (!r.secret && (target == null || r.comps.length < target.comps.length)) target = r;   // the lightest one
+        check("the family has a recipe to play by hand", target != null);
         if (target == null) { System.out.println(fails + " FAILED"); System.exit(1); }
         mc.pin(target);
         mc.toggle(new SfxLab.Machine.Pick(SfxLab.Machine.On.CRYSTAL, -1, -1, 0, 0, 1, false));

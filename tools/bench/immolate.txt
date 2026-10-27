@@ -1,5 +1,5 @@
-# approach Torch lance (X1p0 Y2p1r0.8 Z3p1r0.7 X4p2r0.4 Y5p0r0.3 Z6p3r0.25): six motions, one every 2.5 s, lock at ~17
-@0 pin torch_lance
+# approach Immolate (X1p0 Y2p1r0.8 Z3p1r0.7 X4p2r0.4 Y5p0r0.3 Z6p3r0.25): six motions, one every 2.5 s, lock at ~17
+@0 pin immolate
 @1 crank 1 20
 @1 motion 0 0 0.5 0 1
 @1.5 ramp 0 0 1 2

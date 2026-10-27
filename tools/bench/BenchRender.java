@@ -5,7 +5,7 @@ import sfxlab.runtime.*;
 
 /** Headless bench render (an authoring aid: measure a palette instead of guessing).
  *    javac -d /tmp/bench $(find runtime -name "*.java") SfxLab.java tools/bench/BenchRender.java
- *    java -Djava.awt.headless=true -cp /tmp/bench BenchRender regulator/pyretic.sfx pyretic tools/bench/firebolt.txt renders/bench/out.wav --layers
+ *    java -Djava.awt.headless=true -cp /tmp/bench BenchRender regulator/pyretic.sfx pyretic tools/bench/ember.txt renders/bench/out.wav --layers
  *  Prints, per second: RMS, peak, % of blocks the master limiter was squashing (sat), energy share in five bands,
  *  the live signals and scores, and (with --layers) each layer's contribution in dB (full mix minus the mix without it).
  *  Rough targets that read as "clear" rather than "mud": sat 0, no band over ~60 %, the notes within ~6 dB of the bed.

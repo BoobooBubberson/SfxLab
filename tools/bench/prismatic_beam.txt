@@ -1,5 +1,5 @@
-# approach Prism (X2p0 Y3p1 X4p2r0.4 Y6p0r0.35 Z1p1r0.5): five motions, one every 2.5 s, lock at ~14
-@0 pin prism
+# approach Prismatic beam (X2p0 Y3p1 X4p2r0.4 Y6p0r0.35 Z1p1r0.5): five motions, one every 2.5 s, lock at ~14
+@0 pin prismatic_beam
 @1 crank 1 20
 @1 motion 0 0 0.5 0 1
 @1.5 ramp 0 0 2 2
