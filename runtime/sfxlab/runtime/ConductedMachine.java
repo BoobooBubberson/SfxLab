@@ -29,8 +29,10 @@ package sfxlab.runtime;
  * <b>Nothing is erased but by the hand</b> (the mod's field, 2026-10-28; before it, from 2026-10-26, the press on
  * the composite was the commit and leaving a component any other way discarded it, which erased work the hand
  * had not meant to lose). A component with reach stands where the hand leaves it, caught on its station or loose
- * between two: the press at the socket (the next arm) and a take-back leave it standing, and the one way a
- * component goes is diminuendo on its reach to nothing. <b>The press on the composite locks</b> (plants) the
+ * between two: a take-back leaves it standing, and the one way a locked component goes is diminuendo on its reach to
+ * nothing. The press at the socket (the next arm) is the one exception, the hand moving on: a component in hand it
+ * has not locked is discarded (the mod's field, 2026-10-28: left standing, every arm swap strewed a provisional
+ * component behind it). <b>The press on the composite locks</b> (plants) the
  * component in hand: its ratio is fixed where it stands, the hand is off it, and the arm is free to begin another
  * at the same aim. A locked component taken back (the press on it, or the grab) is in hand for its reach and its
  * phase; winding the composite leaves it standing and the arm winds a bare aim away from its station. A component
@@ -284,13 +286,15 @@ public final class ConductedMachine {
     }
 
     /**
-     * The toggle at the socket: the next arm is the aiming arm, and the component in hand is left standing. The
-     * next arm's first empty place is selected and the aim carries over. With every place on the axis taken it is
-     * the last component there, and the array turns to it.
+     * The toggle at the socket: the next arm is the aiming arm, and the component in hand is discarded unless it was
+     * locked (the hand moving on without the press is leaving it behind). The next arm's first empty place is
+     * selected and the aim carries over. With every place on the axis taken it is the last component there, and
+     * the array turns to it.
      */
     public void nextAxis() {
         int a = (axis + 1) % RegulatorCore.AXES;
-        leave();
+        letGo();
+        if (motion(axis, slot).eng && !locked[axis][slot]) drop(axis, slot);
         arrive(a, freeSlot(a));
     }
 

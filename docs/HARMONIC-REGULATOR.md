@@ -642,9 +642,11 @@ one **component** (one motion) at a time. It is the single copy; the mod runs th
   is shared, so a component begun after another starts at the ratio just left.
 - **Nothing is erased but by the hand** (2026-10-28, from the mod's field; it replaces "planting is the commit" of
   2026-10-26, under which the next arm and a take-back discarded whatever was in hand unplanted, and the hand kept
-  losing work it had not meant to). A component with reach stands where the hand leaves it, caught or loose: the
-  next arm and a take-back leave it standing; only diminuendo on its reach to nothing removes it. A bare aim (no
-  reach) is nothing and is never kept. **The press on the composite locks** the component in hand (`locked`,
+  losing work it had not meant to). A component with reach stands where the hand leaves it, caught or loose: a
+  take-back leaves it standing; only diminuendo on its reach to nothing removes a locked one. The one exception
+  is the press at the socket (the next arm): a component in hand not yet locked is discarded, the hand having
+  moved on without the press (the mod's field, later the same day: left standing, every arm swap strewed a
+  provisional component behind it). A bare aim (no reach) is nothing and is never kept. **The press on the composite locks** the component in hand (`locked`,
   `planted` is its other name): its ratio is fixed where it stands. Taken back, a locked component is in hand for
   reach and phase; winding the composite leaves it and the arm winds a bare aim away from its station
   (`takeSelected`). Not yet locked, a component goes with the wind, so the overshoot-and-return pulses keep

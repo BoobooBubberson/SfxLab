@@ -86,32 +86,43 @@ public class ConductedTest {
             rest(m, 0.5);
             check("the casts alone build " + rec.name, m.core.matched == rec);
         }
-        // nothing is erased but by the hand (2026-10-28; before: planting was the commit and the next arm discarded
-        // what was not planted): a component stands where the hand leaves it; the press on the composite is the release;
-        // one motion to an axis at a station
+        // nothing is erased but by the hand (2026-10-28; before: planting was the commit and every leaving discarded
+        // what was not planted): a take-back leaves a component standing; the socket press discards what the hand has
+        // not locked; the press on the composite is the lock; one motion to an axis at a station
         m = machine();
         reachTo(m, 1); aimTo(m, 3);
         m.nextAxis();
-        check("the next arm leaves a component caught on its station standing, and the aim is shared", m.motion(0, 0).eng && m.motion(0, 0).r == 3 && m.standing(0, 0) && !m.locked(0, 0) && m.selectedAxis() == 1 && m.aim() == 3);
+        check("the next arm discards a component caught on its station but not locked, and the aim is shared", !m.motion(0, 0).eng && m.selectedAxis() == 1 && m.aim() == 3);
+        m.nextAxis(); m.nextAxis();
+        reachTo(m, 1); aimTo(m, 3); m.plant();
+        m.nextAxis();
+        check("a locked component is kept by the next arm", m.motion(0, 0).eng && m.motion(0, 0).r == 3 && m.locked(0, 0) && m.standing(0, 0));
         m.nextAxis(); m.nextAxis();
         m.select(0, 0);
         check("taken back it is in hand, the aim on it", !m.standing(0, 0) && m.selectedAxis() == 0 && m.aim() == 3);
         m.nextAxis();
-        check("and the next arm leaves it standing again", m.motion(0, 0).eng && m.motion(0, 0).r == 3 && m.standing(0, 0));
+        check("and the next arm leaves it standing again, still locked", m.motion(0, 0).eng && m.motion(0, 0).r == 3 && m.standing(0, 0) && m.locked(0, 0));
+        reachTo(m, 0.5); aimTo(m, 5);
+        m.select(0, 0);
+        check("a take-back leaves a component not locked standing (" + m.motion(1, 0).r + ")", m.motion(1, 0).eng && m.motion(1, 0).r == 5 && m.standing(1, 0) && !m.locked(1, 0));
         m = machine();
         reachTo(m, 1); m.takeSelected();
         { double h = 0; while (m.aim() < 2.6) { h += DT; m.push(up.aim(h, DT)); m.tick(DT); } }
         m.letGo(); rest(m, 3);
-        m.nextAxis();
-        check("a component let go loose between stations stands there too (" + m.motion(0, 0).r + ")", m.motion(0, 0).eng && m.motion(0, 0).r > 2.2 && m.motion(0, 0).r < 2.8 && m.standing(0, 0));
+        m.plant();
+        check("a component let go loose between stations is locked there too, loose (" + m.motion(0, 0).r + ")", m.motion(0, 0).eng && m.motion(0, 0).r > 2.2 && m.motion(0, 0).r < 2.8 && m.standing(0, 0) && m.locked(0, 0));
         m = machine();
         reachTo(m, 1); aimTo(m, 2); m.plant();
         reachTo(m, 0.5); m.plant();
         check("a second X planted on a station the first holds locked gives way: the locked one keeps it, in hand (one motion to an axis at a station)",
                 m.motion(0, 0).eng && !m.motion(0, 1).eng && m.motion(0, 0).amp == 1 && m.locked(0, 0) && m.selectedSlot() == 0);
         m = machine();
-        reachTo(m, 1); aimTo(m, 2);                      // X caught on ×2, never locked
-        m.nextAxis(); m.nextAxis(); m.nextAxis();        // round to X, the next place
+        m.nextAxis(); reachTo(m, 1); aimTo(m, 4); m.plant();   // Y locked on ×4
+        m.nextAxis(); m.nextAxis();                              // round to X
+        reachTo(m, 1); aimTo(m, 2);                              // X caught on ×2, never locked
+        m.select(1, 0);                                          // the take-back of Y leaves it standing unlocked
+        m.nextAxis(); m.nextAxis();                              // Y (locked, kept), Z, X: the next place on X
+        check("left standing by a take-back, unlocked", m.selectedAxis() == 0 && m.selectedSlot() == 1 && m.motion(0, 0).eng && !m.locked(0, 0));
         reachTo(m, 0.5); aimTo(m, 2);
         check("a component caught on a station its axis holds unlocked replaces the earlier one",
                 !m.motion(0, 0).eng && m.motion(0, 1).eng && m.motion(0, 1).r == 2 && m.motion(0, 1).amp == 0.5);
