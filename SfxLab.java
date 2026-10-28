@@ -2649,6 +2649,7 @@ public class SfxLab extends JPanel {
         void endThread() {
             if (thread != null) {
                 if (thread.on() == On.COMPOSITE) cm.letGo();
+                if (thread.on() == On.ARM) cm.reachLetGo();
                 if (thread.on() == On.COMPONENT) cm.phaseLetGo();
             }
             thread = null;
@@ -2773,7 +2774,7 @@ public class SfxLab extends JPanel {
             Step cur; double elapsed;
             Autopilot(long seed) { rng = new Random(seed); }
             void start() { on = true; paused = false; plan.clear(); cur = null; endThread(); cm.clear(); planTarget(); }
-            void stop() { on = false; plan.clear(); cur = null; doing = ""; if (cm != null) { cm.letGo(); cm.phaseLetGo(); } }
+            void stop() { on = false; plan.clear(); cur = null; doing = ""; if (cm != null) { cm.letGo(); cm.reachLetGo(); cm.phaseLetGo(); } }
             double between(double a, double b) { return a + rng.nextDouble() * (b - a); }
             Step wait(String what, double sec) { double[] t = {0}; return new Step(what, dt -> (t[0] += dt) >= sec, sec + 1); }
             Step once(String what, double pause, Runnable r) { double[] t = {0}; return new Step(what, dt -> { if ((t[0] += dt) < pause) return false; r.run(); return true; }, pause + 1); }
@@ -2807,7 +2808,7 @@ public class SfxLab extends JPanel {
                 plan.add(new Step("reach: crescendo on " + ax + "'s crystal", dt -> { h[0] += dt; cm.reach(ConductedMachine.CRESCENDO.reach(h[0], dt)); return cm.selectedReach() >= over - 1e-9; }, 8));
                 double[] h2 = {0};
                 plan.add(new Step(String.format(Locale.ROOT, "reach %.2f: diminuendo back, watching the orb", want), dt -> {
-                    if (cm.selectedReach() <= want + 0.02) return true;
+                    if (cm.selectedReach() <= want + 0.02) { cm.reachLetGo(); return true; }   // the well lands it on the tenth
                     h2[0] += dt;
                     cm.reach(Math.max(want - cm.selectedReach(), ConductedMachine.DIMINUENDO.reach(h2[0], dt)));
                     return false;
@@ -2867,7 +2868,7 @@ public class SfxLab extends JPanel {
             void advance(double dt) {
                 if (cur == null) { cur = plan.poll(); if (cur == null) { on = false; doing = ""; return; } elapsed = 0; doing = cur.what(); }
                 elapsed += dt;
-                if (cur.move().run(dt) || elapsed > cur.timeout()) { if (elapsed > cur.timeout()) { cm.letGo(); cm.phaseLetGo(); } cur = null; }
+                if (cur.move().run(dt) || elapsed > cur.timeout()) { if (elapsed > cur.timeout()) { cm.letGo(); cm.reachLetGo(); cm.phaseLetGo(); } cur = null; }
             }
         }
 

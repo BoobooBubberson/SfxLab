@@ -26,12 +26,18 @@ package sfxlab.runtime;
  * with reach at the zero position is a component, sitting still; it is
  * gone only when its reach is taken to nothing.
  *
- * <b>Planting is the commit</b> (the mod's field, 2026-10-26). The component in hand is provisional until the
- * press on the composite plants it: leaving it any other way (the press at the socket turning the array, a
- * planted component taken back) discards it, caught on its station or not. A planted component taken back in
- * hand, or touched again (wound, given reach, tilted), is provisional once more. <b>One motion to an axis at a
- * station</b>: planting onto a station an earlier component of the same axis already holds replaces it; two
- * motions on one axis at one ratio could not be told apart on the machine or in a reading.
+ * <b>Nothing is erased but by the hand</b> (the mod's field, 2026-10-28; before it, from 2026-10-26, the press on
+ * the composite was the commit and leaving a component any other way discarded it, which erased work the hand
+ * had not meant to lose). A component with reach stands where the hand leaves it, caught on its station or loose
+ * between two: the press at the socket (the next arm) and a take-back leave it standing, and the one way a
+ * component goes is diminuendo on its reach to nothing. Planting (the press on the composite) is only the release:
+ * the hand lets go of the component and the arm is free to begin another at the same aim. A bare aim, a place with
+ * no reach, is nothing and is never kept. <b>One motion to an axis at a station</b>: a component caught, or
+ * planted, on a station an earlier component of the same axis already holds replaces it; two motions on one
+ * axis at one ratio could not be told apart on the machine or in a reading. <b>The grab</b>: the aiming arm
+ * wound with nothing in hand and let go near one of its own axis's standing components takes that component in
+ * hand, with a wider well than the catch's ({@link #GRAB_WINDOW}); while the hand is held the aim passes through
+ * freely. <b>Reach has wells</b> at the tenths ({@link #REACH_STEP}): a reach let go eases onto the nearest one.
  *
  * Pure: no game in it, so the tests work it as a hand would.
  */
@@ -75,12 +81,14 @@ public final class ConductedMachine {
 
     /**
      * A verb of pure anima as the game ships it (the mod's abilities/elements/pure_anima/): how fast it moves the
-     * aim, and at what scale the same curve moves a reach or a phase.
+     * aim, its own steady rate on a reach, and at what scale the same curve moves a phase.
      */
     public record Verb(Curve curve, double reachRate, double phaseRate, int sign) {
         /** The aim's change over a tick ending {@code held} seconds into the channel, in ratio. */
         public double aim(double held, double dt) { return sign * curve.over(held, dt); }
-        public double reach(double held, double dt) { return aim(held, dt) * reachRate / curve.rate(); }
+        /** The reach on the aiming arm's crystal over a tick: steady, its own rate (the mod's field, 2026-10-28: on the
+         *  aim's curve it was too quick, and diminuendo's quickening made it crawl then race). */
+        public double reach(double held, double dt) { return sign * reachRate * dt; }
         /** In quarters. */
         public double phase(double held, double dt) { return aim(held, dt) * phaseRate / curve.rate(); }
     }
@@ -96,14 +104,24 @@ public final class ConductedMachine {
      *  stores quarters, so a tilt never hangs between them the way a ratio hangs between stations. */
     public static final double PHASE_WELL_TAU = 0.3;
 
+    /** The reach well: a reach let go is drawn onto the nearest multiple of REACH_STEP with this time constant,
+     *  seconds. Recipes keep their reaches in tenths, so a reach let go lands exactly; below half a step it is nothing. */
+    public static final double REACH_WELL_TAU = 0.3;
+    public static final int REACH_STEPS = 10;
+    public static final double REACH_STEP = 1.0 / REACH_STEPS;
+
+    /** The grab's window, in ratio: a bare aim let go this near a station where its own axis has a component
+     *  standing is drawn onto it and takes that component in hand (wider than the catch's window, an assist). */
+    public static final double GRAB_WINDOW = 0.2;
+
     public final RegulatorCore core;
     private final int[][] planPhase = new int[RegulatorCore.AXES][RegulatorCore.SLOTS];
     private final double[][] planReach = new double[RegulatorCore.AXES][RegulatorCore.SLOTS];
     /** Each component's phase as a continuous tilt, quarters (0..4): what is drawn and turned; the core sees the nearest quarter. */
     private final double[][] phaseAngle = new double[RegulatorCore.AXES][RegulatorCore.SLOTS];
     private final boolean[][] phaseInHand = new boolean[RegulatorCore.AXES][RegulatorCore.SLOTS];
-    /** Committed by the press on the composite; a component that is not is discarded when the hand leaves it. */
-    private final boolean[][] planted = new boolean[RegulatorCore.AXES][RegulatorCore.SLOTS];
+    /** A reach under a verb: the well lets it be until the hand is off it. */
+    private final boolean[][] reachInHand = new boolean[RegulatorCore.AXES][RegulatorCore.SLOTS];
     private int axis = 0, slot = 0;
     private boolean inHand;
     /** The array's aim, as a ratio. The machine's own: see the head of the class for what moves it. */
@@ -163,7 +181,7 @@ public final class ConductedMachine {
             m.amp = planReach[a][s];
             phaseAngle[a][s] = planPhase[a][s];
             phaseInHand[a][s] = false;
-            planted[a][s] = false;
+            reachInHand[a][s] = false;
         }
     }
 
@@ -191,31 +209,27 @@ public final class ConductedMachine {
         return aim;
     }
 
-    /** Whether a component has been planted (committed by the press on the composite) and not touched since. */
+    /** Whether a component stands planted: it exists and is not the one in hand (the selected). */
     public boolean planted(int a, int s) {
-        return has(a, s) && planted[a][s];
+        return has(a, s) && exists(motion(a, s)) && !(a == axis && s == slot);
     }
 
     /**
-     * The toggle on a planted component: it is taken back in hand, provisional again, and the aim turns to it.
-     * What was selected is left: discarded unless it had been planted. Selecting an empty place leaves the aim
-     * alone.
+     * The toggle on a planted component: it is taken back in hand and the aim turns to it. What was selected is
+     * left standing. Selecting an empty place leaves the aim alone.
      */
     public void select(int newAxis, int newSlot) {
         if (!has(newAxis, newSlot)) return;
         leave();
         arrive(newAxis, newSlot);
-        if (exists(motion(axis, slot))) planted[axis][slot] = false;
     }
 
-    /**
-     * The hand off the selected component: a planted one stays where it stands; anything else (a bare aim, a
-     * component never planted, caught on its station or not) is discarded. Only {@link #plant} keeps a component.
-     */
+    /** The hand off the selected component: it stands where it is, caught or loose; a bare aim (no reach) is nothing
+     *  and is dropped. */
     private void leave() {
         letGo();
         RegulatorCore.Motion was = motion(axis, slot);
-        if (was.eng && !planted[axis][slot]) drop(axis, slot);
+        if (was.eng && !exists(was)) drop(axis, slot);
     }
 
     private void arrive(int newAxis, int newSlot) {
@@ -232,7 +246,7 @@ public final class ConductedMachine {
         m.act = false;
         m.drv = false;
         m.amp = 0;
-        planted[a][s] = false;
+        reachInHand[a][s] = false;
     }
 
     /**
@@ -242,7 +256,6 @@ public final class ConductedMachine {
     public void resync() {
         for (int a = 0; a < RegulatorCore.AXES; a++) for (int s = 0; s < RegulatorCore.SLOTS; s++) {
             if (!phaseInHand[a][s] && ((int) Math.round(phaseAngle[a][s])) % 4 != core.comps[s][a].ph) phaseAngle[a][s] = core.comps[s][a].ph;
-            planted[a][s] = exists(core.comps[s][a]);   // what another hand left standing is what it kept
         }
         inHand = false;
         RegulatorCore.Motion m = motion(axis, slot);
@@ -250,9 +263,9 @@ public final class ConductedMachine {
     }
 
     /**
-     * The toggle at the socket: the next arm is the aiming arm, and the component in hand, unless it was planted,
-     * is discarded. The next arm's first empty place is selected and the aim carries over. With every place on
-     * the axis taken it is the last component there, still planted, and the array turns to it.
+     * The toggle at the socket: the next arm is the aiming arm, and the component in hand is left standing. The
+     * next arm's first empty place is selected and the aim carries over. With every place on the axis taken it is
+     * the last component there, and the array turns to it.
      */
     public void nextAxis() {
         int a = (axis + 1) % RegulatorCore.AXES;
@@ -269,21 +282,17 @@ public final class ConductedMachine {
     }
 
     /**
-     * The toggle on the composite: the selected component is planted where it stands (onto its station, if it
-     * stands in the window: the crystal takes it now), and the next place on its axis is selected. An earlier
-     * component of the same axis on that station gives way to it. The aim stays on what was planted. False when
-     * there is no component to plant.
+     * The toggle on the composite: the release. The selected component is left where it stands (onto its station,
+     * if it stands in the window: the crystal takes it now), and the next place on its axis is selected, at the
+     * same aim, so the arm can begin another. An earlier component of the same axis on that station gives way to
+     * it. False when there is no component to release.
      */
     public boolean plant() {
         if (!selectedExists()) return false;
         letGo();
         RegulatorCore.Motion p = motion(axis, slot);
         if (p.drv) core.latch();   // in a window the crystal takes it (accept); outside, it is held where it is (hold)
-        planted[axis][slot] = true;
-        int n = core.acceptable(p.r);
-        if (n > 0) for (int s = 0; s < core.freeArms; s++) {
-            if (s != slot && motion(axis, s).eng && core.acceptable(motion(axis, s).r) == n) drop(axis, s);
-        }
+        replaceAt(core.acceptable(p.r));
         aim = p.r;
         slot = freeSlot(axis);
         RegulatorCore.Motion m = motion(axis, slot);
@@ -291,10 +300,16 @@ public final class ConductedMachine {
         return true;
     }
 
-    /** The selected component brought into being if it is not yet: at the aim, with no reach, in its plan's phase.
-     *  Touched, it is in hand and provisional: planted no longer. */
+    /** One motion to an axis at a station: the selected component on station n drops any other of its axis there. */
+    private void replaceAt(int n) {
+        if (n <= 0) return;
+        for (int s = 0; s < core.freeArms; s++) {
+            if (s != slot && motion(axis, s).eng && core.acceptable(motion(axis, s).r) == n) drop(axis, s);
+        }
+    }
+
+    /** The selected component brought into being if it is not yet: at the aim, with no reach, in its plan's phase. */
     private RegulatorCore.Motion ensureSelected() {
-        planted[axis][slot] = false;
         RegulatorCore.Motion m = motion(axis, slot);
         if (!m.eng) {
             m.eng = true;
@@ -309,15 +324,23 @@ public final class ConductedMachine {
         return m;
     }
 
-    /** A tick of a verb on the aiming arm's crystal: the selected component's reach moves. At nothing it is gone. */
+    /** A tick of a verb on the aiming arm's crystal: the selected component's reach moves, held off its well until
+     *  {@link #reachLetGo}. At nothing it is gone. */
     public void reach(double delta) {
         if (!core.powered) return;
         RegulatorCore.Motion m = ensureSelected();
         m.amp = Math.max(0, Math.min(1, m.amp + delta));
+        reachInHand[axis][slot] = true;
         if (m.amp <= 1e-6) {   // gone, and the aim stays where it is
             if (inHand) letGo();
             drop(axis, slot);
         }
+    }
+
+    /** The hand off the reach: the well draws it onto the nearest tenth (REACH_STEP) over REACH_WELL_TAU; the tick
+     *  does the drawing. */
+    public void reachLetGo() {
+        reachInHand[axis][slot] = false;
     }
 
     /** The selected component's reach, 0 when it does not exist. */
@@ -376,7 +399,6 @@ public final class ConductedMachine {
     public boolean take(int axis, int slot) {
         if (!has(axis, slot) || !core.powered) return false;
         if (this.axis != axis || this.slot != slot) leave();
-        planted[axis][slot] = false;
         RegulatorCore.Motion m = motion(axis, slot);
         if (!m.eng) {
             m.eng = true;
@@ -438,14 +460,59 @@ public final class ConductedMachine {
                 core.comps[s][a].ph = ((int) Math.round(phaseAngle[a][s])) % 4;
             }
         }
+        for (int a = 0; a < RegulatorCore.AXES; a++) for (int s = 0; s < core.freeArms; s++) {
+            RegulatorCore.Motion c = motion(a, s);
+            if (reachInHand[a][s] || !c.eng || c.amp <= 1e-6) continue;
+            double q = Math.round(c.amp * REACH_STEPS) / (double) REACH_STEPS;   // the reach well: let go, the reach is drawn onto a tenth (exact, as the recipes keep it)
+            if (Math.abs(c.amp - q) < 1e-9) continue;
+            c.amp += (q - c.amp) * Math.min(1, dt / REACH_WELL_TAU);
+            if (Math.abs(c.amp - q) < 2e-3) c.amp = q;
+            if (c.amp <= 1e-6) {   // drawn onto nothing: gone
+                if (a == axis && s == slot && inHand) letGo();
+                drop(a, s);
+            }
+        }
         RegulatorCore.Motion m = motion(axis, slot);
         if (!m.eng || !m.drv) return;
         aim = m.r;   // wound, or drawn in by a well: the aim goes with it
         if (inHand) return;
+        if (!exists(m) && grab(m, dt)) return;
         int n = core.acceptable(m.r);
         if (core.wellDepth() == 1 || (n > 0 && core.slip <= 0 && Math.abs(m.r - n) <= takeWithin)) {
             core.latch();   // drawn onto a resonance: the crystal takes it (accept:<slot>:<axis>:<n>)
             aim = m.r;
+            if (exists(m)) replaceAt(n);   // caught on a station its axis already holds: the earlier one gives way
         }
+    }
+
+    /**
+     * The grab: a bare aim let go within GRAB_WINDOW of a station where its own axis has a component standing is
+     * drawn onto it (over the core's WELL_TAU) and, once within takeWithin, takes that component in hand: the bare
+     * aim is dropped, the component is on the crank at its station, and the crystal takes it again (accept). True
+     * while the grab is drawing, and on the tick it lands.
+     */
+    private boolean grab(RegulatorCore.Motion bare, double dt) {
+        int n = (int) Math.round(bare.r);
+        if (n < 1 || n > RegulatorCore.MAX_N || Math.abs(bare.r - n) > GRAB_WINDOW) return false;
+        int at = -1;
+        for (int s = 0; s < core.freeArms && at < 0; s++) {
+            RegulatorCore.Motion c = motion(axis, s);
+            if (s != slot && exists(c) && !c.drv && Math.abs(c.r - n) < 1e-3) at = s;
+        }
+        if (at < 0) return false;
+        if (Math.abs(bare.r - n) > takeWithin) {
+            double r = bare.r + (n - bare.r) * Math.min(1, dt / RegulatorCore.WELL_TAU);
+            bare.r = r;
+            core.vel = r / 2;
+            aim = r;
+            return true;
+        }
+        drop(axis, slot);
+        take(axis, at);
+        inHand = false;
+        core.slip = 0;
+        core.latch();   // held again on its station: the crystal takes it (accept:<slot>:<axis>:<n>)
+        aim = n;
+        return true;
     }
 }

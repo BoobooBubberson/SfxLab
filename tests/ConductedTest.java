@@ -13,6 +13,7 @@ public class ConductedTest {
     static void reachTo(ConductedMachine m, double want) {
         double h = 0;
         while (m.selectedReach() < want - 1e-9) { h += DT; m.reach(Math.min(want - m.selectedReach(), ConductedMachine.CRESCENDO.reach(h, DT))); m.tick(DT); }
+        m.reachLetGo();
     }
     /** Crescendo past, diminuendo back into the window, let go: the crystal takes it. */
     static void aimTo(ConductedMachine m, int n) {
@@ -85,25 +86,69 @@ public class ConductedTest {
             rest(m, 0.5);
             check("the casts alone build " + rec.name, m.core.matched == rec);
         }
-        // planting is the commit (2026-10-26): the press at the socket discards the component in hand unless it was
-        // planted; a planted one is kept; one motion to an axis at a station
+        // nothing is erased but by the hand (2026-10-28; before: planting was the commit and the next arm discarded
+        // what was not planted): a component stands where the hand leaves it; the press on the composite is the release;
+        // one motion to an axis at a station
         m = machine();
         reachTo(m, 1); aimTo(m, 3);
         m.nextAxis();
-        check("the next arm discards a component caught on its station but never planted", !m.motion(0, 0).eng && m.selectedAxis() == 1 && m.aim() == 3);
-        m.nextAxis(); m.nextAxis();
-        reachTo(m, 1); aimTo(m, 3); m.plant();
-        m.nextAxis();
-        check("a planted component is kept by the next arm", m.motion(0, 0).eng && m.motion(0, 0).r == 3 && m.planted(0, 0));
+        check("the next arm leaves a component caught on its station standing, and the aim is shared", m.motion(0, 0).eng && m.motion(0, 0).r == 3 && m.planted(0, 0) && m.selectedAxis() == 1 && m.aim() == 3);
         m.nextAxis(); m.nextAxis();
         m.select(0, 0);
+        check("taken back it is in hand, no longer planted, the aim on it", !m.planted(0, 0) && m.selectedAxis() == 0 && m.aim() == 3);
         m.nextAxis();
-        check("taken back in hand it is provisional again, and the next arm discards it", !m.motion(0, 0).eng);
+        check("and the next arm leaves it standing again", m.motion(0, 0).eng && m.motion(0, 0).r == 3 && m.planted(0, 0));
+        m = machine();
+        reachTo(m, 1); m.takeSelected();
+        { double h = 0; while (m.aim() < 2.6) { h += DT; m.push(up.aim(h, DT)); m.tick(DT); } }
+        m.letGo(); rest(m, 3);
+        m.nextAxis();
+        check("a component let go loose between stations stands there too (" + m.motion(0, 0).r + ")", m.motion(0, 0).eng && m.motion(0, 0).r > 2.2 && m.motion(0, 0).r < 2.8 && m.planted(0, 0));
         m = machine();
         reachTo(m, 1); aimTo(m, 2); m.plant();
         reachTo(m, 0.5); m.plant();
         check("a second X planted on the same station replaces the first: one motion to an axis at a station",
                 m.motion(0, 0).eng != m.motion(0, 1).eng && (m.motion(0, 0).eng ? m.motion(0, 0).amp : m.motion(0, 1).amp) == 0.5);
+        m = machine();
+        reachTo(m, 1); aimTo(m, 2); m.plant();
+        reachTo(m, 0.5); aimTo(m, 4); m.plant();
+        m.select(0, 1); aimTo(m, 2);
+        check("a component caught on a station its axis already holds replaces the earlier one",
+                !m.motion(0, 0).eng && m.motion(0, 1).eng && m.motion(0, 1).r == 2 && m.motion(0, 1).amp == 0.5);
+        // the grab: the aiming arm wound with nothing in hand and let go near one of its own standing components takes it
+        m = machine();
+        reachTo(m, 0.7); aimTo(m, 3); m.plant();
+        m.nextAxis(); m.nextAxis(); m.nextAxis();   // round to X again, a bare aim at ×3's station
+        check("after the release a bare aim stands at the station, nothing in hand", m.selectedAxis() == 0 && !m.selectedExists() && m.aim() == 3);
+        m.takeSelected();
+        { double h = 0; while (m.aim() < 5.2) { h += DT; m.push(up.aim(h, DT)); m.tick(DT); } }
+        check("held, the bare aim passes through its own station without taking it", m.selectedExists() == false && m.planted(0, 0) && m.motion(0, 0).r == 3 && m.aim() > 5);
+        { double h = 0; while (m.aim() > 3.15) { h += DT; m.push(Math.max(3.14 - m.aim(), down.aim(h, DT))); m.tick(DT); } }
+        m.letGo();
+        int gticks = 0;
+        while (!(m.selectedSlot() == 0 && m.selectedExists()) && gticks < 200) { m.tick(DT); gticks++; }
+        check("let go within the grab's window (wider than the catch's) it is drawn in and the component is in hand (" + String.format(Locale.ROOT, "%.2f s", gticks * DT) + ")",
+                m.selectedAxis() == 0 && m.selectedSlot() == 0 && m.selectedExists() && !m.planted(0, 0) && m.aim() == 3 && m.motion(0, 0).amp == 0.7);
+        rest(m, 1);
+        boolean reaccepted = false;
+        for (String ev : m.core.events()) if (ev.startsWith("accept:0:0:3")) reaccepted = true;
+        check("the crystal takes it again, held exactly on its station", reaccepted && m.motion(0, 0).r == 3 && !m.motion(0, 0).drv);
+        m = machine();
+        reachTo(m, 0.7); aimTo(m, 3); m.plant(); m.nextAxis();
+        m.takeSelected();
+        { double h = 0; while (m.aim() < 3.5) { h += DT; m.push(up.aim(h, DT)); m.tick(DT); } }
+        { double h = 0; while (m.aim() > 3.15) { h += DT; m.push(Math.max(3.14 - m.aim(), down.aim(h, DT))); m.tick(DT); } }
+        m.letGo(); rest(m, 3);
+        check("another axis's bare aim is not grabbed by X's component: it hangs outside the catch's window (" + m.aim() + ")", m.selectedAxis() == 1 && !m.selectedExists() && m.aim() > 3.1 && m.planted(0, 0));
+        // the reach well: let go, a reach is drawn onto the nearest tenth; below half a step it is nothing
+        m = machine();
+        reachTo(m, 0.63); m.reachLetGo(); rest(m, 2);
+        check("a reach let go at 0.63 is drawn onto 0.6", m.selectedReach() == 0.6);
+        { double h = 0; while (m.selectedReach() > 0.04) { h += DT; m.reach(down.reach(h, DT)); m.tick(DT); } }
+        check("under the hand the reach is not drawn (" + m.selectedReach() + ")", m.selectedReach() > 0.02 && m.selectedExists() == false || m.selectedReach() > 0.02);
+        m.reachLetGo(); rest(m, 2);
+        check("let go under half a step it is gone", !m.motion(0, 0).eng);
+        check("a verb's reach is steady, its own rate, up and down", up.reach(0, DT) == up.reach(5, DT) && up.reach(0, DT) > 0 && down.reach(0, DT) == -up.reach(0, DT) && down.reach(3, DT) == down.reach(0, DT));
         ConductedMachine hm = machine();
         hm.tick(DT);
         check("hand.fit: nothing in hand reads 0", hm.core.signals[RegulatorCore.S_HAND_FIT] == 0 && hm.core.handArm == -1);

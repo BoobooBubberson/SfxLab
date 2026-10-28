@@ -637,14 +637,23 @@ one **component** (one motion) at a time. It is the single copy; the mod runs th
 - **Let go inside a station's window** (the acceptance window, the same at every ratio) and the well draws the aim
   onto the station and the crystal takes the component: the `accept` event. Anywhere else it hangs where it is,
   above ×7 and under ×1 alike. The aim winds to ×7.5 and no further.
-- **The toggle** is one press: on the composite it plants the component in hand and the next place on that axis is
-  selected; on a planted component it takes it back; on the seated crystal the next arm aims. The aim is shared, so
-  a component begun after another starts at the ratio just left.
-- **Planting is the commit** (2026-10-26, from the mod's field: unplanted components piled up on one station and no
-  recipe would score). The component in hand is provisional until the press on the composite plants it; the next
-  arm, or taking another component back, discards it, caught on its station or not. A planted component taken back
-  or touched again is provisional again. Planting onto a station an earlier component of the same axis holds
-  replaces that component (one motion to an axis at a station, below). `planted(axis, slot)` says which are kept.
+- **The toggle** is one press: on the composite it releases the component in hand (plants it) and the next place on
+  that axis is selected; on a planted component it takes it back; on the seated crystal the next arm aims. The aim
+  is shared, so a component begun after another starts at the ratio just left.
+- **Nothing is erased but by the hand** (2026-10-28, from the mod's field; it replaces "planting is the commit" of
+  2026-10-26, under which the next arm and a take-back discarded whatever was in hand unplanted, and the hand kept
+  losing work it had not meant to). A component with reach stands where the hand leaves it, caught or loose: the
+  next arm and a take-back leave it standing; only diminuendo on its reach to nothing removes it. A bare aim (no
+  reach) is nothing and is never kept. `planted(axis, slot)` is true of every component but the one in hand. A
+  component caught or planted on a station an earlier component of the same axis holds replaces it (one motion to
+  an axis at a station, below).
+- **The grab** (2026-10-28): the aiming arm wound with nothing in hand and let go within `GRAB_WINDOW` (0.2, twice
+  the catch's window) of a station where its own axis has a component standing is drawn onto it and takes that
+  component in hand, the crystal taking it again. Held, the aim passes through freely. So winding is as good a way
+  back to a component as the take-back.
+- **Reach has wells** (2026-10-28): let go, a reach is drawn onto the nearest tenth (`REACH_STEPS`, `REACH_WELL_TAU`
+  0.3 s); under half a step it is nothing. Recipes keep their reaches in tenths, so a reach let go lands exactly.
+  The verbs' reach is a steady rate of its own (`Verb.reachRate`), no longer the aim's curve scaled.
 - **A component exists once it has reach.** At the zero position it sits still. Only its reach taken to nothing
   removes it: the machine switches nothing off.
 - **Voicing** is crescendo into the seated crystal while a sigil holds.
