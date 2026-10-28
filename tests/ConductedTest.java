@@ -92,29 +92,62 @@ public class ConductedTest {
         m = machine();
         reachTo(m, 1); aimTo(m, 3);
         m.nextAxis();
-        check("the next arm leaves a component caught on its station standing, and the aim is shared", m.motion(0, 0).eng && m.motion(0, 0).r == 3 && m.planted(0, 0) && m.selectedAxis() == 1 && m.aim() == 3);
+        check("the next arm leaves a component caught on its station standing, and the aim is shared", m.motion(0, 0).eng && m.motion(0, 0).r == 3 && m.standing(0, 0) && !m.locked(0, 0) && m.selectedAxis() == 1 && m.aim() == 3);
         m.nextAxis(); m.nextAxis();
         m.select(0, 0);
-        check("taken back it is in hand, no longer planted, the aim on it", !m.planted(0, 0) && m.selectedAxis() == 0 && m.aim() == 3);
+        check("taken back it is in hand, the aim on it", !m.standing(0, 0) && m.selectedAxis() == 0 && m.aim() == 3);
         m.nextAxis();
-        check("and the next arm leaves it standing again", m.motion(0, 0).eng && m.motion(0, 0).r == 3 && m.planted(0, 0));
+        check("and the next arm leaves it standing again", m.motion(0, 0).eng && m.motion(0, 0).r == 3 && m.standing(0, 0));
         m = machine();
         reachTo(m, 1); m.takeSelected();
         { double h = 0; while (m.aim() < 2.6) { h += DT; m.push(up.aim(h, DT)); m.tick(DT); } }
         m.letGo(); rest(m, 3);
         m.nextAxis();
-        check("a component let go loose between stations stands there too (" + m.motion(0, 0).r + ")", m.motion(0, 0).eng && m.motion(0, 0).r > 2.2 && m.motion(0, 0).r < 2.8 && m.planted(0, 0));
+        check("a component let go loose between stations stands there too (" + m.motion(0, 0).r + ")", m.motion(0, 0).eng && m.motion(0, 0).r > 2.2 && m.motion(0, 0).r < 2.8 && m.standing(0, 0));
         m = machine();
         reachTo(m, 1); aimTo(m, 2); m.plant();
         reachTo(m, 0.5); m.plant();
-        check("a second X planted on the same station replaces the first: one motion to an axis at a station",
-                m.motion(0, 0).eng != m.motion(0, 1).eng && (m.motion(0, 0).eng ? m.motion(0, 0).amp : m.motion(0, 1).amp) == 0.5);
+        check("a second X planted on a station the first holds locked gives way: the locked one keeps it, in hand (one motion to an axis at a station)",
+                m.motion(0, 0).eng && !m.motion(0, 1).eng && m.motion(0, 0).amp == 1 && m.locked(0, 0) && m.selectedSlot() == 0);
         m = machine();
-        reachTo(m, 1); aimTo(m, 2); m.plant();
-        reachTo(m, 0.5); aimTo(m, 4); m.plant();
-        m.select(0, 1); aimTo(m, 2);
-        check("a component caught on a station its axis already holds replaces the earlier one",
+        reachTo(m, 1); aimTo(m, 2);                      // X caught on ×2, never locked
+        m.nextAxis(); m.nextAxis(); m.nextAxis();        // round to X, the next place
+        reachTo(m, 0.5); aimTo(m, 2);
+        check("a component caught on a station its axis holds unlocked replaces the earlier one",
                 !m.motion(0, 0).eng && m.motion(0, 1).eng && m.motion(0, 1).r == 2 && m.motion(0, 1).amp == 0.5);
+        // the lock: the press on the composite fixes the ratio; taken back, winding leaves it and the arm winds a bare aim
+        m = machine();
+        reachTo(m, 0.7); aimTo(m, 3); m.plant();
+        check("the press locks it, standing, and the next place is selected", m.locked(0, 0) && m.standing(0, 0) && !m.selectedExists() && m.aim() == 3);
+        m.select(0, 0);
+        check("taken back it is in hand and still locked", !m.standing(0, 0) && m.locked(0, 0) && m.selectedSlot() == 0);
+        { double h = 0; while (m.selectedReach() > 0.5 + 1e-9) { h += DT; m.reach(Math.max(0.5 - m.selectedReach(), down.reach(h, DT))); m.tick(DT); } }
+        m.reachLetGo(); rest(m, 1);
+        check("its reach is the hand's to change in place", m.motion(0, 0).amp == 0.5 && m.motion(0, 0).r == 3 && m.locked(0, 0));
+        m.takeSelected();
+        { double h = 0; while (m.aim() < 5.2) { h += DT; m.push(up.aim(h, DT)); m.tick(DT); } }
+        check("wound, the locked component stays on its station and the arm carries a bare aim away (" + m.aim() + ")",
+                m.motion(0, 0).r == 3 && m.locked(0, 0) && m.standing(0, 0) && m.selectedSlot() == 1 && !m.selectedExists() && m.aim() > 5);
+        m.letGo(); rest(m, 2);
+        m = machine();
+        reachTo(m, 0.7); aimTo(m, 3);
+        m.takeSelected();
+        { double h = 0; while (m.aim() < 4.2) { h += DT; m.push(up.aim(h, DT)); m.tick(DT); } }
+        check("not yet locked, the component goes with the wind (" + m.aim() + ")", m.selectedSlot() == 0 && m.selectedExists() && m.motion(0, 0).r > 4);
+        m.letGo(); rest(m, 3);
+        m = machine();
+        reachTo(m, 0.7); aimTo(m, 3); m.plant();
+        reachTo(m, 0.4); aimTo(m, 3);
+        check("a provisional component caught on a station a locked one of its axis holds gives way, and the arm holds the locked one",
+                m.locked(0, 0) && m.motion(0, 0).amp == 0.7 && m.selectedSlot() == 0 && !m.motion(0, 1).eng && m.core.engaged().size() == 1);
+        m.nextAxis(); m.nextAxis(); m.nextAxis();
+        reachTo(m, 0.4); m.takeSelected();
+        { double h = 0; while (m.aim() < 4.2) { h += DT; m.push(up.aim(h, DT)); m.tick(DT); } }
+        { double h = 0; while (m.aim() > 3.05) { h += DT; m.push(Math.max(3.04 - m.aim(), down.aim(h, DT))); m.tick(DT); } }
+        m.plant();
+        check("planted onto it the same: the lock is never erased but by its reach", m.locked(0, 0) && m.motion(0, 0).amp == 0.7 && m.core.engaged().size() == 1 && m.selectedSlot() == 0);
+        { double h = 0; while (m.motion(0, 0).eng) { h += DT; m.reach(down.reach(h, DT)); m.tick(DT); } }
+        check("diminuendo on its reach to nothing is the one eraser", !m.motion(0, 0).eng && !m.locked(0, 0) && m.aim() == 3);
         // the grab: the aiming arm wound with nothing in hand and let go near one of its own standing components takes it
         m = machine();
         reachTo(m, 0.7); aimTo(m, 3); m.plant();
@@ -122,13 +155,13 @@ public class ConductedTest {
         check("after the release a bare aim stands at the station, nothing in hand", m.selectedAxis() == 0 && !m.selectedExists() && m.aim() == 3);
         m.takeSelected();
         { double h = 0; while (m.aim() < 5.2) { h += DT; m.push(up.aim(h, DT)); m.tick(DT); } }
-        check("held, the bare aim passes through its own station without taking it", m.selectedExists() == false && m.planted(0, 0) && m.motion(0, 0).r == 3 && m.aim() > 5);
+        check("held, the bare aim passes through its own station without taking it", m.selectedExists() == false && m.standing(0, 0) && m.motion(0, 0).r == 3 && m.aim() > 5);
         { double h = 0; while (m.aim() > 3.15) { h += DT; m.push(Math.max(3.14 - m.aim(), down.aim(h, DT))); m.tick(DT); } }
         m.letGo();
         int gticks = 0;
         while (!(m.selectedSlot() == 0 && m.selectedExists()) && gticks < 200) { m.tick(DT); gticks++; }
         check("let go within the grab's window (wider than the catch's) it is drawn in and the component is in hand (" + String.format(Locale.ROOT, "%.2f s", gticks * DT) + ")",
-                m.selectedAxis() == 0 && m.selectedSlot() == 0 && m.selectedExists() && !m.planted(0, 0) && m.aim() == 3 && m.motion(0, 0).amp == 0.7);
+                m.selectedAxis() == 0 && m.selectedSlot() == 0 && m.selectedExists() && !m.standing(0, 0) && m.locked(0, 0) && m.aim() == 3 && m.motion(0, 0).amp == 0.7);
         rest(m, 1);
         boolean reaccepted = false;
         for (String ev : m.core.events()) if (ev.startsWith("accept:0:0:3")) reaccepted = true;
@@ -139,7 +172,7 @@ public class ConductedTest {
         { double h = 0; while (m.aim() < 3.5) { h += DT; m.push(up.aim(h, DT)); m.tick(DT); } }
         { double h = 0; while (m.aim() > 3.15) { h += DT; m.push(Math.max(3.14 - m.aim(), down.aim(h, DT))); m.tick(DT); } }
         m.letGo(); rest(m, 3);
-        check("another axis's bare aim is not grabbed by X's component: it hangs outside the catch's window (" + m.aim() + ")", m.selectedAxis() == 1 && !m.selectedExists() && m.aim() > 3.1 && m.planted(0, 0));
+        check("another axis's bare aim is not grabbed by X's component: it hangs outside the catch's window (" + m.aim() + ")", m.selectedAxis() == 1 && !m.selectedExists() && m.aim() > 3.1 && m.standing(0, 0));
         // the reach well: let go, a reach is drawn onto the nearest tenth; below half a step it is nothing
         m = machine();
         reachTo(m, 0.63); m.reachLetGo(); rest(m, 2);

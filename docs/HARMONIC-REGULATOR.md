@@ -644,9 +644,13 @@ one **component** (one motion) at a time. It is the single copy; the mod runs th
   2026-10-26, under which the next arm and a take-back discarded whatever was in hand unplanted, and the hand kept
   losing work it had not meant to). A component with reach stands where the hand leaves it, caught or loose: the
   next arm and a take-back leave it standing; only diminuendo on its reach to nothing removes it. A bare aim (no
-  reach) is nothing and is never kept. `planted(axis, slot)` is true of every component but the one in hand. A
-  component caught or planted on a station an earlier component of the same axis holds replaces it (one motion to
-  an axis at a station, below).
+  reach) is nothing and is never kept. **The press on the composite locks** the component in hand (`locked`,
+  `planted` is its other name): its ratio is fixed where it stands. Taken back, a locked component is in hand for
+  reach and phase; winding the composite leaves it and the arm winds a bare aim away from its station
+  (`takeSelected`). Not yet locked, a component goes with the wind, so the overshoot-and-return pulses keep
+  dragging the one being placed. `standing(axis, slot)` is every component but the one in hand. One motion to an
+  axis at a station: a station a locked component of the axis holds is its own (a provisional one caught or
+  planted there gives way and the arm holds the locked one); an unlocked standing one is replaced.
 - **The grab** (2026-10-28): the aiming arm wound with nothing in hand and let go within `GRAB_WINDOW` (0.2, twice
   the catch's window) of a station where its own axis has a component standing is drawn onto it and takes that
   component in hand, the crystal taking it again. Held, the aim passes through freely. So winding is as good a way

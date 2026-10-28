@@ -30,14 +30,19 @@ package sfxlab.runtime;
  * the composite was the commit and leaving a component any other way discarded it, which erased work the hand
  * had not meant to lose). A component with reach stands where the hand leaves it, caught on its station or loose
  * between two: the press at the socket (the next arm) and a take-back leave it standing, and the one way a
- * component goes is diminuendo on its reach to nothing. Planting (the press on the composite) is only the release:
- * the hand lets go of the component and the arm is free to begin another at the same aim. A bare aim, a place with
- * no reach, is nothing and is never kept. <b>One motion to an axis at a station</b>: a component caught, or
- * planted, on a station an earlier component of the same axis already holds replaces it; two motions on one
- * axis at one ratio could not be told apart on the machine or in a reading. <b>The grab</b>: the aiming arm
- * wound with nothing in hand and let go near one of its own axis's standing components takes that component in
- * hand, with a wider well than the catch's ({@link #GRAB_WINDOW}); while the hand is held the aim passes through
- * freely. <b>Reach has wells</b> at the tenths ({@link #REACH_STEP}): a reach let go eases onto the nearest one.
+ * component goes is diminuendo on its reach to nothing. <b>The press on the composite locks</b> (plants) the
+ * component in hand: its ratio is fixed where it stands, the hand is off it, and the arm is free to begin another
+ * at the same aim. A locked component taken back (the press on it, or the grab) is in hand for its reach and its
+ * phase; winding the composite leaves it standing and the arm winds a bare aim away from its station. A component
+ * not yet locked goes with the wind (so the overshoot-and-return pulses keep dragging the one being placed). A bare
+ * aim, a place with no reach, is nothing and is never kept. <b>One motion to an axis at a station</b>: a station
+ * holding a locked component of the arm's axis is that component's: a provisional one caught or planted there
+ * gives way and the arm holds the locked one; a standing component not locked is replaced by one caught or
+ * planted on its station; two motions on one axis at one ratio could not be told apart on the machine or in a
+ * reading. <b>The grab</b>: the aiming arm wound with nothing in hand and let go near one of its own axis's
+ * standing components takes that component in hand, with a wider well than the catch's ({@link #GRAB_WINDOW});
+ * while the hand is held the aim passes through freely. <b>Reach has wells</b> at the tenths
+ * ({@link #REACH_STEP}): a reach let go eases onto the nearest one.
  *
  * Pure: no game in it, so the tests work it as a hand would.
  */
@@ -122,6 +127,9 @@ public final class ConductedMachine {
     private final boolean[][] phaseInHand = new boolean[RegulatorCore.AXES][RegulatorCore.SLOTS];
     /** A reach under a verb: the well lets it be until the hand is off it. */
     private final boolean[][] reachInHand = new boolean[RegulatorCore.AXES][RegulatorCore.SLOTS];
+    /** Locked by the press on the composite: the ratio is fixed where it stands; winding leaves it, and only its reach
+     *  taken to nothing removes it. */
+    private final boolean[][] locked = new boolean[RegulatorCore.AXES][RegulatorCore.SLOTS];
     private int axis = 0, slot = 0;
     private boolean inHand;
     /** The array's aim, as a ratio. The machine's own: see the head of the class for what moves it. */
@@ -182,6 +190,7 @@ public final class ConductedMachine {
             phaseAngle[a][s] = planPhase[a][s];
             phaseInHand[a][s] = false;
             reachInHand[a][s] = false;
+            locked[a][s] = false;
         }
     }
 
@@ -209,8 +218,18 @@ public final class ConductedMachine {
         return aim;
     }
 
-    /** Whether a component stands planted: it exists and is not the one in hand (the selected). */
+    /** Whether a component is locked (planted by the press on the composite): its ratio fixed where it stands. */
+    public boolean locked(int a, int s) {
+        return has(a, s) && exists(motion(a, s)) && locked[a][s];
+    }
+
+    /** The press's word for {@link #locked}. */
     public boolean planted(int a, int s) {
+        return locked(a, s);
+    }
+
+    /** Whether a component stands out of hand: it exists and is not the selected one. */
+    public boolean standing(int a, int s) {
         return has(a, s) && exists(motion(a, s)) && !(a == axis && s == slot);
     }
 
@@ -247,6 +266,7 @@ public final class ConductedMachine {
         m.drv = false;
         m.amp = 0;
         reachInHand[a][s] = false;
+        locked[a][s] = false;
     }
 
     /**
@@ -256,6 +276,7 @@ public final class ConductedMachine {
     public void resync() {
         for (int a = 0; a < RegulatorCore.AXES; a++) for (int s = 0; s < RegulatorCore.SLOTS; s++) {
             if (!phaseInHand[a][s] && ((int) Math.round(phaseAngle[a][s])) % 4 != core.comps[s][a].ph) phaseAngle[a][s] = core.comps[s][a].ph;
+            locked[a][s] = exists(core.comps[s][a]);   // what another hand left standing is taken as its committed work
         }
         inHand = false;
         RegulatorCore.Motion m = motion(axis, slot);
@@ -282,17 +303,26 @@ public final class ConductedMachine {
     }
 
     /**
-     * The toggle on the composite: the release. The selected component is left where it stands (onto its station,
+     * The toggle on the composite: the lock. The selected component is locked where it stands (onto its station,
      * if it stands in the window: the crystal takes it now), and the next place on its axis is selected, at the
-     * same aim, so the arm can begin another. An earlier component of the same axis on that station gives way to
-     * it. False when there is no component to release.
+     * same aim, so the arm can begin another. A standing component of the same axis on that station, not locked,
+     * gives way to it; a locked one keeps the station: the component in hand gives way instead and the arm holds
+     * the locked one. False when there is no component to lock.
      */
     public boolean plant() {
         if (!selectedExists()) return false;
         letGo();
         RegulatorCore.Motion p = motion(axis, slot);
         if (p.drv) core.latch();   // in a window the crystal takes it (accept); outside, it is held where it is (hold)
-        replaceAt(core.acceptable(p.r));
+        int n = core.acceptable(p.r);
+        int held = lockedAt(n);
+        if (held >= 0) {   // the station is a locked component's: the duplicate gives way, the arm holds what stands there
+            drop(axis, slot);
+            hold(held, n);
+            return true;
+        }
+        locked[axis][slot] = true;
+        replaceAt(n);
         aim = p.r;
         slot = freeSlot(axis);
         RegulatorCore.Motion m = motion(axis, slot);
@@ -300,12 +330,33 @@ public final class ConductedMachine {
         return true;
     }
 
-    /** One motion to an axis at a station: the selected component on station n drops any other of its axis there. */
+    /** One motion to an axis at a station: the selected component on station n drops any other of its axis standing
+     *  there unlocked (a locked one is never dropped but by its reach: see {@link #lockedAt}). */
     private void replaceAt(int n) {
         if (n <= 0) return;
         for (int s = 0; s < core.freeArms; s++) {
-            if (s != slot && motion(axis, s).eng && core.acceptable(motion(axis, s).r) == n) drop(axis, s);
+            if (s != slot && !locked[axis][s] && motion(axis, s).eng && core.acceptable(motion(axis, s).r) == n) drop(axis, s);
         }
+    }
+
+    /** The slot of a locked component of the selected axis standing on station n (not the selected slot), or -1. */
+    private int lockedAt(int n) {
+        if (n <= 0) return -1;
+        for (int s = 0; s < core.freeArms; s++) {
+            RegulatorCore.Motion c = motion(axis, s);
+            if (s != slot && locked[axis][s] && exists(c) && Math.abs(c.r - n) < 1e-3) return s;
+        }
+        return -1;
+    }
+
+    /** A standing component of the selected axis taken in hand out of the wind: on the crank at its station, the hand
+     *  off it, and the crystal taking it again (accept). */
+    private void hold(int at, int n) {
+        take(axis, at);
+        inHand = false;
+        core.slip = 0;
+        core.latch();
+        aim = n;
     }
 
     /** The selected component brought into being if it is not yet: at the aim, with no reach, in its plan's phase. */
@@ -380,9 +431,20 @@ public final class ConductedMachine {
         return m.amp * Math.min(1, m.r / 0.6) * Math.sin(m.osc + m.r * core.drawRate() * (tauAt - core.tau) + phaseAngle[a][s] * Math.PI / 2);
     }
 
-    /** The aim taken in hand for winding: the selected component (brought into being at the aim if need be). */
+    /** The aim taken in hand for winding: the selected component (brought into being at the aim if need be). A locked
+     *  component is not wound: it stays, and the arm takes a bare aim from its station instead (false when the axis
+     *  has no place left for one). */
     public boolean takeSelected() {
         if (!core.powered) return false;
+        RegulatorCore.Motion sel = motion(axis, slot);
+        if (exists(sel) && locked[axis][slot]) {
+            int free = freeSlot(axis);
+            if (exists(motion(axis, free))) return false;
+            double r = sel.r;
+            slot = free;
+            if (motion(axis, slot).eng) drop(axis, slot);
+            aim = r;
+        }
         ensureSelected();
         return take(axis, slot);
     }
@@ -479,9 +541,15 @@ public final class ConductedMachine {
         if (!exists(m) && grab(m, dt)) return;
         int n = core.acceptable(m.r);
         if (core.wellDepth() == 1 || (n > 0 && core.slip <= 0 && Math.abs(m.r - n) <= takeWithin)) {
+            int held = exists(m) ? lockedAt(n) : -1;
+            if (held >= 0) {   // caught on a station a locked component of its axis holds: it gives way, the arm holds that one
+                drop(axis, slot);
+                hold(held, n);
+                return;
+            }
             core.latch();   // drawn onto a resonance: the crystal takes it (accept:<slot>:<axis>:<n>)
             aim = m.r;
-            if (exists(m)) replaceAt(n);   // caught on a station its axis already holds: the earlier one gives way
+            if (exists(m)) replaceAt(n);   // caught on a station its axis already holds unlocked: the earlier one gives way
         }
     }
 
@@ -508,11 +576,7 @@ public final class ConductedMachine {
             return true;
         }
         drop(axis, slot);
-        take(axis, at);
-        inHand = false;
-        core.slip = 0;
-        core.latch();   // held again on its station: the crystal takes it (accept:<slot>:<axis>:<n>)
-        aim = n;
+        hold(at, n);   // held again on its station: the crystal takes it (accept:<slot>:<axis>:<n>)
         return true;
     }
 }
