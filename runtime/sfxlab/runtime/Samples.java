@@ -9,7 +9,10 @@ import static sfxlab.runtime.SfxFormat.*;
 
 /** Recordings, decoded once to stereo floats at the engine rate (Sfx.SR) and cached by name. Where the audio comes
  *  from is the host's business: the authoring GUI installs a loader that reads samples/ (ffmpeg for anything but
- *  PCM), the mod one that reads its resources. A failed load caches as silence. */
+ *  PCM), the mod one that reads its resources. A failed load caches as silence. Each channel's mean is taken out on
+ *  the way in (2026-11-03): a recording with a DC offset (resonant/singing-bowl_00002_pad.ogg had 14 % of its RMS as
+ *  DC) is summed coherently by a choir's voices, where the audio is not, and the offset then eats the output stage's
+ *  headroom one-sided; the engine's high-pass would take it too, but only after charging on the step at the start. */
 public final class Samples {
     private Samples() {}
     /** Decodes a named recording to {left, right} floats at Sfx.SR. A mono recording arrives on both channels at 1/√2
@@ -21,7 +24,14 @@ public final class Samples {
 
     public static float[][] sample(String name) {
         return SAMPLES.computeIfAbsent(name, nm -> {
-            try { return loader.load(nm); }
+            try {
+                float[][] s = loader.load(nm);
+                for (float[] ch : s) {
+                    double m = 0; for (float x : ch) m += x; m /= Math.max(1, ch.length);
+                    if (Math.abs(m) > 1e-5) for (int i = 0; i < ch.length; i++) ch[i] -= (float) m;
+                }
+                return s;
+            }
             catch (Exception e) {
                 System.err.println("sample load failed: " + nm + " — " + e);
                 return new float[2][1];

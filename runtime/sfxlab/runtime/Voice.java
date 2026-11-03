@@ -33,6 +33,7 @@ public class Voice {
     public final double[] apx = new double[2 * PH_MAX], apy = new double[2 * PH_MAX];   // phaser all-pass states
     public double phFbL, phFbR; public double phAng, lfoAng;   // accumulated phaser / clip-LFO angles (cycles) for live clips                              // phaser feedback
     public double lo1, b1, lo2, b2;                          // stereo SVF state
+    public double hxL1, hxL2, hyL1, hyL2, hxR1, hxR2, hyR1, hyR2;   // the fixed high-pass (Engine.HP_*) on the raw voice, stereo biquad state
     public double nextPing;                                  // sparkle spawn clock
     public double arcGr; public double arcPh, arcTh, arcEnv, arcAmp, arcDc, arcLp, arcFl = 1, arcFlTo = 1; public int arcFlN;   // arc: pulse phase and its next firing point, the crack's envelope and strength, DC and colour filters, flicker
     public final double[] pf = new double[12], pp = new double[12], pa = new double[12], ppan = new double[12];

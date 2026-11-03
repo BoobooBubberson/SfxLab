@@ -9,8 +9,19 @@ import static sfxlab.runtime.Partials.*;
 import static sfxlab.runtime.SfxFormat.*;
 
 /** Renders any clip list sample by sample (or a block at a time, clips in parallel), with the shared echo, room
- *  and limiter. The realtime loop and the offline exporter each own one; the mod's streams own theirs. */
+ *  and limiter. The realtime loop and the offline exporter each own one; the mod's streams own theirs.
+ *  Every voice is high-passed at HP_HZ before its drive and filter (2026-11-03): nothing in a clip is meant to sit
+ *  below 30 Hz, and what did (coloured noise flat down to DC, a recording's DC offset summed coherently by a choir,
+ *  the grain windows wobbling that offset) was felt as pressure on headphones and ate the output stage's headroom
+ *  (the rift pocket's palette, measured). The arc keeps its own 140 Hz pass as well. */
 public class Engine {
+    /** The fixed high-pass: a 2nd-order Butterworth at HP_HZ (-3 dB there, -0.4 dB at 55 Hz, -12 dB at 15 Hz). */
+    public static final double HP_HZ = 30;
+    static final double HP_B0, HP_B1, HP_B2, HP_A1, HP_A2;
+    static {
+        double w = 2 * Math.PI * HP_HZ / SR, cw = Math.cos(w), al = Math.sin(w) / Math.sqrt(2), a0 = 1 + al;
+        HP_B0 = (1 + cw) / 2 / a0; HP_B1 = -(1 + cw) / a0; HP_B2 = HP_B0; HP_A1 = -2 * cw / a0; HP_A2 = (1 - al) / a0;
+    }
     public double t = 0;
     public double key = 0;   // global transposition, semitones (see KEY_*)
     public double inPeak = 0;   // loudest master input since last read (>1 = the tanh limiter is squashing)
@@ -592,6 +603,14 @@ public class Engine {
                         sL += a * amp * Math.cos(pv) * 1.3; sR += b * amp * Math.sin(pv) * 1.3;
                     }
                 }
+            }
+
+            // the fixed high-pass (HP_HZ): DC and infrasound out of every voice before the drive and the filter bite on them
+            {
+                double yL = HP_B0 * sL + HP_B1 * v.hxL1 + HP_B2 * v.hxL2 - HP_A1 * v.hyL1 - HP_A2 * v.hyL2;
+                v.hxL2 = v.hxL1; v.hxL1 = sL; v.hyL2 = v.hyL1; v.hyL1 = yL; sL = yL;
+                double yR = HP_B0 * sR + HP_B1 * v.hxR1 + HP_B2 * v.hxR2 - HP_A1 * v.hyR1 - HP_A2 * v.hyR2;
+                v.hxR2 = v.hxR1; v.hxR1 = sR; v.hyR2 = v.hyR1; v.hyR1 = yR; sR = yR;
             }
 
             // drive: waveshaping distortion ahead of the filter (which then

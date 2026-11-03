@@ -78,12 +78,14 @@ def main():
     f = int(min(fade * SR, len(seg) / 3)); t = np.linspace(0, np.pi / 2, f)[:, None]
     out = seg[:len(seg) - f].copy()
     out[:f] = seg[:f] * np.sin(t) + seg[len(seg) - f:] * np.cos(t)
+    dc = out.mean(axis=0); out = out - dc                          # 4. no DC: the levelling lifts a quiet recording's offset with it (singing-bowl_00002_pad had 14 % of its RMS as DC, 2026-11-03)
     out *= 10 ** (-3 / 20) / np.abs(out).max()
     save(a[1], out)
     lev = 20 * np.log10(envelope(out, 0.5)[::SR // 4])
     print(f"{a[0]} -> {a[1]}")
     print(f"  kept {start / SR:.2f}-{hi / SR:.2f} s of {len(x) / SR:.1f} s"
           f"{' (strike at %.2f s skipped)' % (strike / SR) if start > lo else ' (no strike found)'}; loop {len(out) / SR:.2f} s, crossfade {f / SR:.2f} s")
+    print(f"  DC taken out {' '.join('%+.4f' % v for v in dc)}")
     print(f"  level {20 * np.log10(np.sqrt((out ** 2).mean())):.1f} dB rms, within {lev.max() - lev.min():.1f} dB over the loop; "
           f"step across the seam {np.abs(out[0] - out[-1]).max():.4f} (a typical sample-to-sample step is {np.abs(np.diff(out, axis=0)).mean():.4f})")
     print("  pitches: " + "  ".join(f"{f:.0f} Hz {n}{c:+.0f}c ({d:.0f} dB)" for f, n, c, d in pitches(out)))
