@@ -2,21 +2,21 @@
 # 'Overclock' - F minor, 174 BPM, by Claude. tracks: 1 kick 2 drums 3 bass 4 lead 5 pads/choir 6 fx
 loop 0
 root 110.0000
-track 0 1.000 0
-track 1 0.750 0
-track 2 0.800 0
-track 3 0.750 0
-track 4 0.600 0
+track 0 0.550 0
+track 1 1.000 0
+track 2 0.370 0
+track 3 0.650 0
+track 4 0.750 0
 track 5 0.700 0
-clip coil_hats 8 1 0.0000 1.3793 6921492499213354993 level=0.22 attack=0 release=0.05 pitch=9.0563 pitch_swp=0 divide=4 burst=1.4 snap=0.85 misfire=0.85 filter=2 cutoff=0.72 pan=-0.25 keyed=0
+clip coil_hats 8 1 0.0000 1.3793 6921492499213354993 level=0.396 attack=0 release=0.05 pitch=9.0563 pitch_swp=0 divide=4 burst=1.4 snap=0.85 misfire=0.85 filter=2 cutoff=0.72 pan=-0.25 keyed=0
 clip reese_intro 1 2 0.0000 5.5172 2592327928462645495 level=0.38 attack=1.5 release=0.3 pitch=-16 interval=12 timbre=2 detune=0.5 cutoff=0.2 cutoff_swp=0.25 resonance=0.35 drive=0.3 phaser=0.4 phaser_rate=0.3 lfo_rate=0.725 lfo>cut=0.15
-clip coil_hats 8 1 1.3793 1.3793 5496162753852376770 level=0.25 attack=0 release=0.05 pitch=9.0563 pitch_swp=0 divide=4 burst=1.4 snap=0.85 misfire=0.65 filter=2 cutoff=0.72 pan=-0.25 keyed=0
+clip coil_hats 8 1 1.3793 1.3793 5496162753852376770 level=0.45 attack=0 release=0.05 pitch=9.0563 pitch_swp=0 divide=4 burst=1.4 snap=0.85 misfire=0.65 filter=2 cutoff=0.72 pan=-0.25 keyed=0
 clip glitch 5 5 2.4138 0.0862 4242387839880627194 level=0.4 attack=0 release=0.01 pitch=7.35 file=luminal/luminal__synth_vocal_base_00001.ogg pitch_mode=1 speed=0 start=0.3 cutoff=0.85 pan=0.4 keyed=0
 clip glitch 5 5 2.5000 0.0862 2108741949606470521 level=0.4 attack=0 release=0.01 pitch=7.35 file=luminal/luminal__synth_vocal_base_00001.ogg pitch_mode=1 speed=0 start=0.3 cutoff=0.85 pan=-0.4 keyed=0
 clip glitch 5 5 2.5862 0.0862 2986550567730335797 level=0.4 attack=0 release=0.01 pitch=7.35 file=luminal/luminal__synth_vocal_base_00001.ogg pitch_mode=1 speed=0 start=0.3 cutoff=0.85 pan=0.4 keyed=0
 clip glitch 5 5 2.6724 0.0862 6332087911044800461 level=0.4 attack=0 release=0.01 pitch=7.35 file=luminal/luminal__synth_vocal_base_00001.ogg pitch_mode=1 speed=0 start=0.3 cutoff=0.85 pan=-0.4 keyed=0
-clip coil_hats 8 1 2.7586 1.3793 1941575851100128302 level=0.28 attack=0 release=0.05 pitch=9.0563 pitch_swp=0 divide=4 burst=1.4 snap=0.85 misfire=0.45 filter=2 cutoff=0.72 pan=-0.25 keyed=0
-clip coil_hats 8 1 4.1379 1.3793 5501121310882966895 level=0.31 attack=0 release=0.05 pitch=9.0563 pitch_swp=0 divide=4 burst=1.4 snap=0.85 misfire=0.3 filter=2 cutoff=0.72 pan=-0.25 keyed=0
+clip coil_hats 8 1 2.7586 1.3793 1941575851100128302 level=0.504 attack=0 release=0.05 pitch=9.0563 pitch_swp=0 divide=4 burst=1.4 snap=0.85 misfire=0.45 filter=2 cutoff=0.72 pan=-0.25 keyed=0
+clip coil_hats 8 1 4.1379 1.3793 5501121310882966895 level=0.558 attack=0 release=0.05 pitch=9.0563 pitch_swp=0 divide=4 burst=1.4 snap=0.85 misfire=0.3 filter=2 cutoff=0.72 pan=-0.25 keyed=0
 clip glitch 5 5 4.8276 0.0431 1934160713123047110 level=0.35 attack=0 release=0.01 pitch=7.35 file=luminal/luminal__synth_vocal_base_00001.ogg pitch_mode=1 speed=0 start=0.3 cutoff=0.85 pan=0.4 keyed=0
 clip glitch 5 5 4.8707 0.0431 2661854659091441184 level=0.35 attack=0 release=0.01 pitch=8.35 file=luminal/luminal__synth_vocal_base_00001.ogg pitch_mode=1 speed=0 start=0.3 cutoff=0.85 pan=-0.4 keyed=0
 clip glitch 5 5 4.9138 0.0431 1214288922979794132 level=0.35 attack=0 release=0.01 pitch=9.35 file=luminal/luminal__synth_vocal_base_00001.ogg pitch_mode=1 speed=0 start=0.3 cutoff=0.85 pan=0.4 keyed=0
@@ -25,277 +25,277 @@ clip glitch 5 5 5.0000 0.0431 5614057478589155403 level=0.35 attack=0 release=0.
 clip glitch 5 5 5.0431 0.0431 3031160699681415289 level=0.35 attack=0 release=0.01 pitch=12.35 file=luminal/luminal__synth_vocal_base_00001.ogg pitch_mode=1 speed=0 start=0.3 cutoff=0.85 pan=-0.4 keyed=0
 clip glitch 5 5 5.0862 0.0431 658917171089354205 level=0.35 attack=0 release=0.01 pitch=13.35 file=luminal/luminal__synth_vocal_base_00001.ogg pitch_mode=1 speed=0 start=0.3 cutoff=0.85 pan=0.4 keyed=0
 clip glitch 5 5 5.1293 0.0431 5944285737888479531 level=0.35 attack=0 release=0.01 pitch=14.35 file=luminal/luminal__synth_vocal_base_00001.ogg pitch_mode=1 speed=0 start=0.3 cutoff=0.85 pan=-0.4 keyed=0
-clip coil_hats 8 1 5.5172 5.5172 8193822607001867777 level=0.3 attack=0 release=0.05 pitch=9.0563 pitch_swp=0 divide=4 burst=1.4 snap=0.85 misfire=0.25 filter=2 cutoff=0.72 pan=-0.25 keyed=0
+clip coil_hats 8 1 5.5172 5.5172 8193822607001867777 level=0.54 attack=0 release=0.05 pitch=9.0563 pitch_swp=0 divide=4 burst=1.4 snap=0.85 misfire=0.25 filter=2 cutoff=0.72 pan=-0.25 keyed=0
 clip drone_build 1 2 5.5172 5.3448 6481166353168065400 level=0.3 attack=2 release=0.2 pitch=-16 interval=12 timbre=2 detune=0.5 cutoff=0.45 cutoff_swp=0.3 resonance=0.3 drive=0.35
-clip snare 2 1 5.8621 0.1897 5453825011946746894 level=0.55 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=2 cutoff=0.6
-clip snare_body 1 1 5.8621 0.1034 4712854316856694514 level=0.4 attack=0.001 release=0.22 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
-clip snare 2 1 6.1207 0.1897 6766497278593584656 level=0.2475 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=2 cutoff=0.6
-clip snare 2 1 6.2931 0.1897 4131556709140308224 level=0.3025 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=2 cutoff=0.6
-clip snare_body 1 1 6.2931 0.1034 8419813563429062142 level=0.22 attack=0.001 release=0.22 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
-clip snare 2 1 6.5517 0.1897 4632221698384950013 level=0.55 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=2 cutoff=0.6
-clip snare_body 1 1 6.5517 0.1034 7460792513532960064 level=0.4 attack=0.001 release=0.22 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
-clip snare 2 1 6.8103 0.1897 6239640166943399937 level=0.275 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=2 cutoff=0.6
-clip snare 2 1 7.2414 0.1897 4726301826959574659 level=0.55 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=2 cutoff=0.42
-clip snare_body 1 1 7.2414 0.1034 1137616646637301291 level=0.4 attack=0.001 release=0.22 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
-clip snare 2 1 7.5000 0.1897 7210116731329555472 level=0.2475 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=2 cutoff=0.42
-clip snare 2 1 7.6724 0.1897 5486145231249167297 level=0.3025 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=2 cutoff=0.42
-clip snare_body 1 1 7.6724 0.1034 8591301317474836641 level=0.22 attack=0.001 release=0.22 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
-clip snare 2 1 7.9310 0.1897 2345075355343277101 level=0.55 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=2 cutoff=0.42
-clip snare_body 1 1 7.9310 0.1034 8151131672377731199 level=0.4 attack=0.001 release=0.22 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
-clip snare 2 1 8.1034 0.1897 6407046372233732036 level=0.22 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=2 cutoff=0.42
-clip snare 2 1 8.1897 0.1897 1384627528138071541 level=0.385 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=2 cutoff=0.42
-clip snare_body 1 1 8.1897 0.1034 3939569599727632528 level=0.28 attack=0.001 release=0.22 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
+clip snare 2 1 5.8621 0.1897 5453825011946746894 level=0.55 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=2 cutoff=0.6
+clip snare_body 1 1 5.8621 0.1034 4712854316856694514 level=0.385 attack=0.001 release=0.1024 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
+clip snare 2 1 6.1207 0.1897 6766497278593584656 level=0.2475 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=2 cutoff=0.6
+clip snare 2 1 6.2931 0.1897 4131556709140308224 level=0.3025 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=2 cutoff=0.6
+clip snare_body 1 1 6.2931 0.1034 8419813563429062142 level=0.2118 attack=0.001 release=0.1024 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
+clip snare 2 1 6.5517 0.1897 4632221698384950013 level=0.55 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=2 cutoff=0.6
+clip snare_body 1 1 6.5517 0.1034 7460792513532960064 level=0.385 attack=0.001 release=0.1024 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
+clip snare 2 1 6.8103 0.1897 6239640166943399937 level=0.275 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=2 cutoff=0.6
+clip snare 2 1 7.2414 0.1897 4726301826959574659 level=0.55 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=2 cutoff=0.42
+clip snare_body 1 1 7.2414 0.1034 1137616646637301291 level=0.385 attack=0.001 release=0.1024 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
+clip snare 2 1 7.5000 0.1897 7210116731329555472 level=0.2475 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=2 cutoff=0.42
+clip snare 2 1 7.6724 0.1897 5486145231249167297 level=0.3025 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=2 cutoff=0.42
+clip snare_body 1 1 7.6724 0.1034 8591301317474836641 level=0.2118 attack=0.001 release=0.1024 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
+clip snare 2 1 7.9310 0.1897 2345075355343277101 level=0.55 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=2 cutoff=0.42
+clip snare_body 1 1 7.9310 0.1034 8151131672377731199 level=0.385 attack=0.001 release=0.1024 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
+clip snare 2 1 8.1034 0.1897 6407046372233732036 level=0.22 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=2 cutoff=0.42
+clip snare 2 1 8.1897 0.1897 1384627528138071541 level=0.385 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=2 cutoff=0.42
+clip snare_body 1 1 8.1897 0.1034 3939569599727632528 level=0.2695 attack=0.001 release=0.1024 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
 clip coil_riser 8 5 8.2759 2.7586 7137903861581965073 level=0.33 attack=1.6552 release=0.05 pitch=8 pitch_swp=24 ring=0.3 formant=19 burst=4 jitter=0.15 misfire=0.1 snap=0.5 flicker=0.4 reverb=0.3
-clip snare 2 1 8.6207 0.1897 2170820841706736589 level=0.55 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=2 cutoff=0.24
-clip snare_body 1 1 8.6207 0.1034 1242143030754550263 level=0.4 attack=0.001 release=0.22 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
-clip snare 2 1 8.8793 0.1897 4939547925537112887 level=0.2475 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=2 cutoff=0.24
-clip snare 2 1 9.0517 0.1897 6783592108694946617 level=0.3025 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=2 cutoff=0.24
-clip snare_body 1 1 9.0517 0.1034 6824650540858430821 level=0.22 attack=0.001 release=0.22 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
-clip snare 2 1 9.3103 0.1897 4942650403897141047 level=0.55 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=2 cutoff=0.24
-clip snare_body 1 1 9.3103 0.1034 2958326955981667309 level=0.4 attack=0.001 release=0.22 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
-clip snare 2 1 9.5690 0.1897 5852984499089027695 level=0.275 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=2 cutoff=0.24
-clip snare 2 1 9.6552 0.1897 4789861179214632957 level=0.22 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare_body 1 1 9.6552 0.1034 5195905728947524384 level=0.16 attack=0.001 release=0.22 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
-clip snare 2 1 9.8276 0.1897 5940779931466598268 level=0.275 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare 2 1 10.0000 0.1897 5980009412064313911 level=0.275 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare_body 1 1 10.0000 0.1034 1768535165745586164 level=0.2 attack=0.001 release=0.22 pitch=11 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
-clip snare 2 1 10.0862 0.1897 4746327588092613308 level=0.3117 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare 2 1 10.1724 0.1897 7485547582343259775 level=0.3483 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare_body 1 1 10.1724 0.1034 8626873763868954646 level=0.2533 attack=0.001 release=0.22 pitch=13.6667 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
-clip snare 2 1 10.2586 0.1897 7511986046956439844 level=0.385 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare 2 1 10.3448 0.1897 2242941688206813629 level=0.385 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare_body 1 1 10.3448 0.1034 5511447811259374061 level=0.28 attack=0.001 release=0.22 pitch=15 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
-clip snare 2 1 10.3879 0.1897 5575805219524011392 level=0.4 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare 2 1 10.4310 0.1897 7979637472343163836 level=0.415 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare 2 1 10.4741 0.1897 6889435716671862701 level=0.43 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare_body 1 1 10.4741 0.1034 4240077540568659734 level=0.3127 attack=0.001 release=0.22 pitch=16.6364 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
-clip snare 2 1 10.5172 0.1897 6355184381755210500 level=0.445 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare 2 1 10.5603 0.1897 6509419822377638163 level=0.46 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare 2 1 10.6034 0.1897 7274743333329475723 level=0.475 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare_body 1 1 10.6034 0.1034 4816191947506920539 level=0.3455 attack=0.001 release=0.22 pitch=18.2727 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
-clip snare 2 1 10.6466 0.1897 7123837280272281295 level=0.49 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare 2 1 10.6897 0.1897 5603022042851669816 level=0.505 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare 2 1 10.7328 0.1897 1701359109981477399 level=0.52 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare_body 1 1 10.7328 0.1034 3628965270082340476 level=0.3782 attack=0.001 release=0.22 pitch=19.9091 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
-clip snare 2 1 10.7759 0.1897 2062838477490553952 level=0.535 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare 2 1 10.8190 0.1897 9033910064487070129 level=0.55 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare 2 1 8.6207 0.1897 2170820841706736589 level=0.55 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=2 cutoff=0.24
+clip snare_body 1 1 8.6207 0.1034 1242143030754550263 level=0.385 attack=0.001 release=0.1024 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
+clip snare 2 1 8.8793 0.1897 4939547925537112887 level=0.2475 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=2 cutoff=0.24
+clip snare 2 1 9.0517 0.1897 6783592108694946617 level=0.3025 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=2 cutoff=0.24
+clip snare_body 1 1 9.0517 0.1034 6824650540858430821 level=0.2118 attack=0.001 release=0.1024 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
+clip snare 2 1 9.3103 0.1897 4942650403897141047 level=0.55 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=2 cutoff=0.24
+clip snare_body 1 1 9.3103 0.1034 2958326955981667309 level=0.385 attack=0.001 release=0.1024 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
+clip snare 2 1 9.5690 0.1897 5852984499089027695 level=0.275 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=2 cutoff=0.24
+clip snare 2 1 9.6552 0.1897 4789861179214632957 level=0.22 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare_body 1 1 9.6552 0.1034 5195905728947524384 level=0.154 attack=0.001 release=0.1024 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
+clip snare 2 1 9.8276 0.1897 5940779931466598268 level=0.275 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare 2 1 10.0000 0.1897 5980009412064313911 level=0.275 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare_body 1 1 10.0000 0.1034 1768535165745586164 level=0.1925 attack=0.001 release=0.1024 pitch=11 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
+clip snare 2 1 10.0862 0.1897 4746327588092613308 level=0.3117 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare 2 1 10.1724 0.1897 7485547582343259775 level=0.3483 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare_body 1 1 10.1724 0.1034 8626873763868954646 level=0.2438 attack=0.001 release=0.1024 pitch=13.6667 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
+clip snare 2 1 10.2586 0.1897 7511986046956439844 level=0.385 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare 2 1 10.3448 0.1897 2242941688206813629 level=0.385 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare_body 1 1 10.3448 0.1034 5511447811259374061 level=0.2695 attack=0.001 release=0.1024 pitch=15 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
+clip snare 2 1 10.3879 0.1897 5575805219524011392 level=0.4 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare 2 1 10.4310 0.1897 7979637472343163836 level=0.415 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare 2 1 10.4741 0.1897 6889435716671862701 level=0.43 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare_body 1 1 10.4741 0.1034 4240077540568659734 level=0.301 attack=0.001 release=0.1024 pitch=16.6364 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
+clip snare 2 1 10.5172 0.1897 6355184381755210500 level=0.445 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare 2 1 10.5603 0.1897 6509419822377638163 level=0.46 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare 2 1 10.6034 0.1897 7274743333329475723 level=0.475 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare_body 1 1 10.6034 0.1034 4816191947506920539 level=0.3325 attack=0.001 release=0.1024 pitch=18.2727 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
+clip snare 2 1 10.6466 0.1897 7123837280272281295 level=0.49 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare 2 1 10.6897 0.1897 5603022042851669816 level=0.505 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare 2 1 10.7328 0.1897 1701359109981477399 level=0.52 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare_body 1 1 10.7328 0.1034 3628965270082340476 level=0.364 attack=0.001 release=0.1024 pitch=19.9091 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
+clip snare 2 1 10.7759 0.1897 2062838477490553952 level=0.535 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare 2 1 10.8190 0.1897 9033910064487070129 level=0.55 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
 clip glitch 5 5 10.8621 0.0431 2311762279302129533 level=0.45 attack=0 release=0.01 pitch=7.35 file=luminal/luminal__synth_vocal_base_00001.ogg pitch_mode=1 speed=0 start=0.3 cutoff=0.85 pan=0.4 keyed=0
 clip glitch 5 5 10.9052 0.0431 1475820845048761670 level=0.45 attack=0 release=0.01 pitch=9.35 file=luminal/luminal__synth_vocal_base_00001.ogg pitch_mode=1 speed=0 start=0.3 cutoff=0.85 pan=-0.4 keyed=0
 clip glitch 5 5 10.9483 0.0431 4119983636814052412 level=0.45 attack=0 release=0.01 pitch=11.35 file=luminal/luminal__synth_vocal_base_00001.ogg pitch_mode=1 speed=0 start=0.3 cutoff=0.85 pan=0.4 keyed=0
 clip glitch 5 5 10.9914 0.0431 8546296353301574289 level=0.45 attack=0 release=0.01 pitch=13.35 file=luminal/luminal__synth_vocal_base_00001.ogg pitch_mode=1 speed=0 start=0.3 cutoff=0.85 pan=-0.4 keyed=0
-clip boom 1 0 11.0345 1.0345 929040657020037328 level=0.9 attack=0.001 release=2.8 pitch=0 pitch_swp=-24 interval=0 timbre=0 drive=0.4 env_curve=0.2 reverb=0.3 keyed=0
-clip kick 1 0 11.0345 0.2586 8509514027185217610 level=1 attack=0.001 release=0.5 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
-clip crash 2 1 11.0345 2.0690 8783848934034250797 level=0.35 attack=0.001 release=5.5 filter=2 cutoff=0.8 color=0 env_curve=0.7 reverb=0.45 pan=0.2 keyed=0
-clip coil_hats 8 1 11.0345 11.0345 6865726940342495943 level=0.3 attack=0 release=0.05 pitch=9.0563 pitch_swp=0 divide=4 burst=1.4 snap=0.85 misfire=0.2 filter=2 cutoff=0.72 pan=-0.25 keyed=0
+clip boom 1 0 11.0345 1.0345 929040657020037328 level=0.55 attack=0.001 release=1.0335 pitch=0 pitch_swp=-24 interval=0 timbre=0 drive=0.4 env_curve=0.2 reverb=0.3 keyed=0
+clip kick 1 0 11.0345 0.2586 8509514027185217610 level=0.55 attack=0.001 release=0.2576 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
+clip crash 2 1 11.0345 2.0690 8783848934034250797 level=0.35 attack=0.001 release=2.068 filter=2 cutoff=0.8 color=0 env_curve=0.7 reverb=0.45 pan=0.2 keyed=0
+clip coil_hats 8 1 11.0345 11.0345 6865726940342495943 level=0.54 attack=0 release=0.05 pitch=9.0563 pitch_swp=0 divide=4 burst=1.4 snap=0.85 misfire=0.2 filter=2 cutoff=0.72 pan=-0.25 keyed=0
 clip reese 1 2 11.0345 0.5172 4358621779184043513 level=0.42 attack=0.004 release=0.18 pitch=-16 pitch_swp=0 interval=0 timbre=2 detune=0.45 cutoff=0.42 resonance=0.25 drive=0.45 phaser=0.25 lfo_rate=1.45 lfo>cut=0.2 duck=0.6 duck_from=1
 clip sub 1 2 11.0345 0.5172 7217447708934506935 level=0.45 attack=0.004 release=0.18 pitch=-16 pitch_swp=0 interval=0 timbre=0 duck=0.6 duck_from=1
 clip coil 8 3 11.0345 0.6034 589275301627729805 level=0.42 attack=0.01 release=0.3 pitch=27 pitch_swp=0 ring=0.7 formant=17 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=0.1 lfo>pitch=0.18 lfo_rate=5.5
 clip pad 1 4 11.0345 2.9310 9222367077246424716 level=0.17 attack=0.08 release=0.6 pitch=8 interval=7 timbre=1.6 detune=0.3 shimmer=0.2 cutoff=0.45 pan=-0.35 reverb=0.4 duck=0.6 duck_from=1
 clip pad 1 4 11.0345 2.9310 9222948595646718663 level=0.17 attack=0.08 release=0.6 pitch=11 interval=12 timbre=1.6 detune=0.3 shimmer=0.2 cutoff=0.45 pan=0.35 reverb=0.4 duck=0.6 duck_from=1
-clip impact 5 5 11.0345 2.7586 1860560751165780735 level=0.6 release=3 file=gravitic/gravitic_impact_00001.ogg keyed=0
-clip kick 1 0 11.2069 0.2586 7743110134550877048 level=0.8 attack=0.001 release=0.5 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
-clip snare 2 1 11.3793 0.1897 2455867256029592858 level=0.55 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare_body 1 1 11.3793 0.1034 1776186703525590103 level=0.4 attack=0.001 release=0.22 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
+clip impact 5 5 11.0345 2.7586 1860560751165780735 level=0.6 release=2.5 file=gravitic/gravitic_impact_00001.ogg keyed=0
+clip kick 1 0 11.2069 0.2586 7743110134550877048 level=0.44 attack=0.001 release=0.2576 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
+clip snare 2 1 11.3793 0.1897 2455867256029592858 level=0.55 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare_body 1 1 11.3793 0.1034 1776186703525590103 level=0.385 attack=0.001 release=0.1024 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
 clip reese 1 2 11.5517 0.1724 1182931547605737012 level=0.42 attack=0.004 release=0.06 pitch=-4 pitch_swp=0 interval=0 timbre=2 detune=0.45 cutoff=0.42 resonance=0.25 drive=0.45 phaser=0.25 lfo_rate=1.45 lfo>cut=0.2 duck=0.6 duck_from=1
 clip coil 8 3 11.5517 0.2138 1112372623474568858 level=0.42 attack=0.01 release=0.17 pitch=23 pitch_swp=0 ring=0.7 formant=14 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=0.1
-clip snare 2 1 11.6379 0.1897 6490058522717067307 level=0.2475 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare 2 1 11.6379 0.1897 6490058522717067307 level=0.2475 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
 clip reese 1 2 11.7241 0.5172 8343750696832296221 level=0.42 attack=0.004 release=0.18 pitch=-16 pitch_swp=0 interval=0 timbre=2 detune=0.45 cutoff=0.42 resonance=0.25 drive=0.45 phaser=0.25 lfo_rate=1.45 lfo>cut=0.2 duck=0.6 duck_from=1
 clip sub 1 2 11.7241 0.5172 8240472134027804116 level=0.45 attack=0.004 release=0.18 pitch=-16 pitch_swp=0 interval=0 timbre=0 duck=0.6 duck_from=1
 clip coil 8 3 11.7241 0.4310 2572206113809914194 level=0.42 attack=0.01 release=0.3 pitch=20 pitch_swp=0 ring=0.7 formant=19 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=0.1
-clip snare 2 1 11.8103 0.1897 4380337099501293495 level=0.3025 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare_body 1 1 11.8103 0.1034 8982246694878663222 level=0.22 attack=0.001 release=0.22 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
-clip kick 1 0 11.8966 0.2586 3558730789157154628 level=0.9 attack=0.001 release=0.5 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
-clip kick 1 0 11.9828 0.2586 4913486343967756041 level=0.7 attack=0.001 release=0.5 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
-clip snare 2 1 12.0690 0.1897 6863426933612129781 level=0.55 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare_body 1 1 12.0690 0.1034 6520185514096353926 level=0.4 attack=0.001 release=0.22 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
+clip snare 2 1 11.8103 0.1897 4380337099501293495 level=0.3025 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare_body 1 1 11.8103 0.1034 8982246694878663222 level=0.2118 attack=0.001 release=0.1024 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
+clip kick 1 0 11.8966 0.2586 3558730789157154628 level=0.495 attack=0.001 release=0.2576 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
+clip kick 1 0 11.9828 0.2586 4913486343967756041 level=0.385 attack=0.001 release=0.2576 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
+clip snare 2 1 12.0690 0.1897 6863426933612129781 level=0.55 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare_body 1 1 12.0690 0.1034 6520185514096353926 level=0.385 attack=0.001 release=0.1024 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
 clip coil 8 3 12.0690 0.2138 955693095885242176 level=0.42 attack=0.01 release=0.17 pitch=22 pitch_swp=0 ring=0.7 formant=12 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=0.1
 clip reese 1 2 12.2414 0.1724 7501432410058074809 level=0.42 attack=0.004 release=0.06 pitch=-9 pitch_swp=0 interval=0 timbre=2 detune=0.45 cutoff=0.42 resonance=0.25 drive=0.45 phaser=0.25 lfo_rate=1.45 lfo>cut=0.2 duck=0.6 duck_from=1
 clip coil 8 3 12.2414 0.2138 3307208837877472455 level=0.42 attack=0.01 release=0.17 pitch=23 pitch_swp=0 ring=0.7 formant=14 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=0.1
-clip snare 2 1 12.3276 0.1897 2265035045644452281 level=0.275 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip kick 1 0 12.4138 0.2586 8362591102045189529 level=1 attack=0.001 release=0.5 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
+clip snare 2 1 12.3276 0.1897 2265035045644452281 level=0.275 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip kick 1 0 12.4138 0.2586 8362591102045189529 level=0.55 attack=0.001 release=0.2576 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
 clip reese 1 2 12.4138 0.3448 7342857971667316924 level=0.42 attack=0.004 release=0.12 pitch=-16 pitch_swp=0 interval=0 timbre=2 detune=0.45 cutoff=0.42 resonance=0.25 drive=0.45 phaser=0.25 lfo_rate=1.45 lfo>cut=0.2 duck=0.6 duck_from=1
 clip sub 1 2 12.4138 0.3448 8121199318627296176 level=0.45 attack=0.004 release=0.12 pitch=-16 pitch_swp=0 interval=0 timbre=0 duck=0.6 duck_from=1
 clip coil 8 3 12.4138 0.4310 7730537885315649124 level=0.42 attack=0.01 release=0.3 pitch=27 pitch_swp=0 ring=0.7 formant=17 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=0.1
-clip kick 1 0 12.5862 0.2586 5827581443404815596 level=0.8 attack=0.001 release=0.5 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
-clip snare 2 1 12.7586 0.1897 6809597033534881205 level=0.55 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare_body 1 1 12.7586 0.1034 7585527638858258026 level=0.4 attack=0.001 release=0.22 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
+clip kick 1 0 12.5862 0.2586 5827581443404815596 level=0.44 attack=0.001 release=0.2576 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
+clip snare 2 1 12.7586 0.1897 6809597033534881205 level=0.55 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare_body 1 1 12.7586 0.1034 7585527638858258026 level=0.385 attack=0.001 release=0.1024 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
 clip reese 1 2 12.7586 0.1724 8329202608330938636 level=0.42 attack=0.004 release=0.06 pitch=-4 pitch_swp=0 interval=0 timbre=2 detune=0.45 cutoff=0.42 resonance=0.25 drive=0.45 phaser=0.25 lfo_rate=1.45 lfo>cut=0.2 duck=0.6 duck_from=1
 clip coil 8 3 12.7586 0.2138 531007552103606201 level=0.42 attack=0.01 release=0.17 pitch=28 pitch_swp=0 ring=0.7 formant=14 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=0.1
 clip reese 1 2 12.9310 0.1724 3275897072245369313 level=0.42 attack=0.004 release=0.06 pitch=-9 pitch_swp=0 interval=0 timbre=2 detune=0.45 cutoff=0.42 resonance=0.25 drive=0.45 phaser=0.25 lfo_rate=1.45 lfo>cut=0.2 duck=0.6 duck_from=1
 clip coil 8 3 12.9310 0.2138 2950771827031767427 level=0.42 attack=0.01 release=0.17 pitch=27 pitch_swp=0 ring=0.7 formant=17 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=0.1
-clip snare 2 1 13.0172 0.1897 189673917200552826 level=0.2475 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare 2 1 13.0172 0.1897 189673917200552826 level=0.2475 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
 clip reese 1 2 13.1034 0.5172 3625758410462803510 level=0.42 attack=0.004 release=0.18 pitch=-16 pitch_swp=0 interval=0 timbre=2 detune=0.45 cutoff=0.42 resonance=0.25 drive=0.45 phaser=0.25 lfo_rate=1.45 lfo>cut=0.2 duck=0.6 duck_from=1
 clip sub 1 2 13.1034 0.5172 6267719862166824058 level=0.45 attack=0.004 release=0.18 pitch=-16 pitch_swp=0 interval=0 timbre=0 duck=0.6 duck_from=1
 clip coil 8 3 13.1034 0.7759 4482758008785683851 level=0.42 attack=0.01 release=0.3 pitch=23 pitch_swp=0 ring=0.7 formant=14 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=0.1 lfo>pitch=0.18 lfo_rate=5.5
-clip snare 2 1 13.1897 0.1897 6988609741054413891 level=0.3025 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare_body 1 1 13.1897 0.1034 6676784846582507936 level=0.22 attack=0.001 release=0.22 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
-clip kick 1 0 13.2759 0.2586 1894535727807557987 level=0.9 attack=0.001 release=0.5 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
-clip snare 2 1 13.4483 0.1897 6850362334883034308 level=0.55 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare_body 1 1 13.4483 0.1034 6982445996469983800 level=0.4 attack=0.001 release=0.22 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
-clip snare 2 1 13.6207 0.1897 3490357190674652933 level=0.22 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare 2 1 13.1897 0.1897 6988609741054413891 level=0.3025 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare_body 1 1 13.1897 0.1034 6676784846582507936 level=0.2118 attack=0.001 release=0.1024 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
+clip kick 1 0 13.2759 0.2586 1894535727807557987 level=0.495 attack=0.001 release=0.2576 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
+clip snare 2 1 13.4483 0.1897 6850362334883034308 level=0.55 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare_body 1 1 13.4483 0.1034 6982445996469983800 level=0.385 attack=0.001 release=0.1024 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
+clip snare 2 1 13.6207 0.1897 3490357190674652933 level=0.22 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
 clip reese 1 2 13.6207 0.1724 8386054458069534935 level=0.42 attack=0.004 release=0.06 pitch=-16 pitch_swp=8 interval=0 timbre=2 detune=0.45 cutoff=0.42 resonance=0.25 drive=0.45 phaser=0.25 lfo_rate=1.45 lfo>cut=0.2 duck=0.6 duck_from=1
 clip sub 1 2 13.6207 0.1724 286260449315864584 level=0.45 attack=0.004 release=0.06 pitch=-16 pitch_swp=8 interval=0 timbre=0 duck=0.6 duck_from=1
-clip snare 2 1 13.7069 0.1897 3264196518636811504 level=0.385 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare_body 1 1 13.7069 0.1034 6949588954804537113 level=0.28 attack=0.001 release=0.22 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
-clip kick 1 0 13.7931 0.2586 8926117679096737228 level=1 attack=0.001 release=0.5 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
+clip snare 2 1 13.7069 0.1897 3264196518636811504 level=0.385 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare_body 1 1 13.7069 0.1034 6949588954804537113 level=0.2695 attack=0.001 release=0.1024 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
+clip kick 1 0 13.7931 0.2586 8926117679096737228 level=0.55 attack=0.001 release=0.2576 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
 clip reese 1 2 13.7931 0.5172 8733449797321118045 level=0.42 attack=0.004 release=0.18 pitch=-8 pitch_swp=0 interval=0 timbre=2 detune=0.45 cutoff=0.42 resonance=0.25 drive=0.45 phaser=0.25 lfo_rate=1.45 lfo>cut=0.2 duck=0.6 duck_from=1
 clip sub 1 2 13.7931 0.5172 1665949059137748881 level=0.45 attack=0.004 release=0.18 pitch=-8 pitch_swp=0 interval=0 timbre=0 duck=0.6 duck_from=1
 clip coil 8 3 13.7931 0.6034 1676906830118649006 level=0.42 attack=0.01 release=0.3 pitch=32 pitch_swp=0 ring=0.7 formant=9 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=0.1 lfo>pitch=0.18 lfo_rate=5.5
 clip pad 1 4 13.7931 2.9310 8986369640855690414 level=0.17 attack=0.08 release=0.6 pitch=16 interval=7 timbre=1.6 detune=0.3 shimmer=0.2 cutoff=0.45 pan=-0.35 reverb=0.4 duck=0.6 duck_from=1
 clip pad 1 4 13.7931 2.9310 4982368957134302132 level=0.17 attack=0.08 release=0.6 pitch=20 interval=12 timbre=1.6 detune=0.3 shimmer=0.2 cutoff=0.45 pan=0.35 reverb=0.4 duck=0.6 duck_from=1
-clip kick 1 0 13.9655 0.2586 7443299397218274207 level=0.8 attack=0.001 release=0.5 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
-clip snare 2 1 14.1379 0.1897 1517802306861772876 level=0.55 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare_body 1 1 14.1379 0.1034 2561095353238840218 level=0.4 attack=0.001 release=0.22 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
+clip kick 1 0 13.9655 0.2586 7443299397218274207 level=0.44 attack=0.001 release=0.2576 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
+clip snare 2 1 14.1379 0.1897 1517802306861772876 level=0.55 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare_body 1 1 14.1379 0.1034 2561095353238840218 level=0.385 attack=0.001 release=0.1024 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
 clip reese 1 2 14.3103 0.1724 795288449746878023 level=0.42 attack=0.004 release=0.06 pitch=4 pitch_swp=0 interval=0 timbre=2 detune=0.45 cutoff=0.42 resonance=0.25 drive=0.45 phaser=0.25 lfo_rate=1.45 lfo>cut=0.2 duck=0.6 duck_from=1
 clip coil 8 3 14.3103 0.2138 7405327565847274188 level=0.42 attack=0.01 release=0.17 pitch=30 pitch_swp=0 ring=0.7 formant=14 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=0.1
-clip snare 2 1 14.3966 0.1897 7419801595804587007 level=0.2475 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare 2 1 14.3966 0.1897 7419801595804587007 level=0.2475 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
 clip reese 1 2 14.4828 0.5172 4018252536457749653 level=0.42 attack=0.004 release=0.18 pitch=-8 pitch_swp=0 interval=0 timbre=2 detune=0.45 cutoff=0.42 resonance=0.25 drive=0.45 phaser=0.25 lfo_rate=1.45 lfo>cut=0.2 duck=0.6 duck_from=1
 clip sub 1 2 14.4828 0.5172 2278862793643096828 level=0.45 attack=0.004 release=0.18 pitch=-8 pitch_swp=0 interval=0 timbre=0 duck=0.6 duck_from=1
 clip coil 8 3 14.4828 0.4310 3868605749953931140 level=0.42 attack=0.01 release=0.3 pitch=28 pitch_swp=0 ring=0.7 formant=9 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=0.1
-clip snare 2 1 14.5690 0.1897 5611801742924231291 level=0.3025 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare_body 1 1 14.5690 0.1034 8926675622264144960 level=0.22 attack=0.001 release=0.22 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
-clip kick 1 0 14.6552 0.2586 2880859869385205645 level=0.9 attack=0.001 release=0.5 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
-clip kick 1 0 14.7414 0.2586 710385389916550929 level=0.7 attack=0.001 release=0.5 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
-clip snare 2 1 14.8276 0.1897 1479182708448176542 level=0.55 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare_body 1 1 14.8276 0.1034 4543926686999537384 level=0.4 attack=0.001 release=0.22 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
+clip snare 2 1 14.5690 0.1897 5611801742924231291 level=0.3025 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare_body 1 1 14.5690 0.1034 8926675622264144960 level=0.2118 attack=0.001 release=0.1024 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
+clip kick 1 0 14.6552 0.2586 2880859869385205645 level=0.495 attack=0.001 release=0.2576 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
+clip kick 1 0 14.7414 0.2586 710385389916550929 level=0.385 attack=0.001 release=0.2576 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
+clip snare 2 1 14.8276 0.1897 1479182708448176542 level=0.55 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare_body 1 1 14.8276 0.1034 4543926686999537384 level=0.385 attack=0.001 release=0.1024 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
 clip coil 8 3 14.8276 0.2138 4955797824988986785 level=0.42 attack=0.01 release=0.17 pitch=27 pitch_swp=0 ring=0.7 formant=9 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=0.1
 clip reese 1 2 15.0000 0.1724 4700405475612961953 level=0.42 attack=0.004 release=0.06 pitch=-1 pitch_swp=0 interval=0 timbre=2 detune=0.45 cutoff=0.42 resonance=0.25 drive=0.45 phaser=0.25 lfo_rate=1.45 lfo>cut=0.2 duck=0.6 duck_from=1
 clip coil 8 3 15.0000 0.2138 4665113984394351578 level=0.42 attack=0.01 release=0.17 pitch=28 pitch_swp=0 ring=0.7 formant=19 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=0.1
-clip snare 2 1 15.0862 0.1897 4676886146594200972 level=0.275 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip kick 1 0 15.1724 0.2586 5448574937447894374 level=1 attack=0.001 release=0.5 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
+clip snare 2 1 15.0862 0.1897 4676886146594200972 level=0.275 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip kick 1 0 15.1724 0.2586 5448574937447894374 level=0.55 attack=0.001 release=0.2576 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
 clip reese 1 2 15.1724 0.3448 8057016180688512266 level=0.42 attack=0.004 release=0.12 pitch=-8 pitch_swp=0 interval=0 timbre=2 detune=0.45 cutoff=0.42 resonance=0.25 drive=0.45 phaser=0.25 lfo_rate=1.45 lfo>cut=0.2 duck=0.6 duck_from=1
 clip sub 1 2 15.1724 0.3448 2389634620564928966 level=0.45 attack=0.004 release=0.12 pitch=-8 pitch_swp=0 interval=0 timbre=0 duck=0.6 duck_from=1
 clip coil 8 3 15.1724 0.4310 5960949978119358641 level=0.42 attack=0.01 release=0.3 pitch=30 pitch_swp=0 ring=0.7 formant=9 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=0.1
-clip kick 1 0 15.3448 0.2586 4607126562696996370 level=0.8 attack=0.001 release=0.5 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
-clip snare 2 1 15.5172 0.1897 6642938384641617792 level=0.55 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare_body 1 1 15.5172 0.1034 6001202418277037870 level=0.4 attack=0.001 release=0.22 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
+clip kick 1 0 15.3448 0.2586 4607126562696996370 level=0.44 attack=0.001 release=0.2576 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
+clip snare 2 1 15.5172 0.1897 6642938384641617792 level=0.55 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare_body 1 1 15.5172 0.1034 6001202418277037870 level=0.385 attack=0.001 release=0.1024 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
 clip reese 1 2 15.5172 0.1724 6893187707644006879 level=0.42 attack=0.004 release=0.06 pitch=4 pitch_swp=0 interval=0 timbre=2 detune=0.45 cutoff=0.42 resonance=0.25 drive=0.45 phaser=0.25 lfo_rate=1.45 lfo>cut=0.2 duck=0.6 duck_from=1
 clip coil 8 3 15.5172 0.4310 227033634885558534 level=0.42 attack=0.01 release=0.3 pitch=28 pitch_swp=0 ring=0.7 formant=12 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=0.1
 clip reese 1 2 15.6897 0.1724 6593146831805345372 level=0.42 attack=0.004 release=0.06 pitch=-1 pitch_swp=0 interval=0 timbre=2 detune=0.45 cutoff=0.42 resonance=0.25 drive=0.45 phaser=0.25 lfo_rate=1.45 lfo>cut=0.2 duck=0.6 duck_from=1
-clip snare 2 1 15.7759 0.1897 1796467833190244198 level=0.2475 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare 2 1 15.8621 0.1897 1964577182591076289 level=0.2475 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare_body 1 1 15.8621 0.1034 2422545788988075569 level=0.18 attack=0.001 release=0.22 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
+clip snare 2 1 15.7759 0.1897 1796467833190244198 level=0.2475 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare 2 1 15.8621 0.1897 1964577182591076289 level=0.2475 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare_body 1 1 15.8621 0.1034 2422545788988075569 level=0.1733 attack=0.001 release=0.1024 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
 clip reese 1 2 15.8621 0.5172 1365726424478323575 level=0.42 attack=0.004 release=0.18 pitch=-8 pitch_swp=0 interval=0 timbre=2 detune=0.45 cutoff=0.42 resonance=0.25 drive=0.45 phaser=0.25 lfo_rate=1.45 lfo>cut=0.2 duck=0.6 duck_from=1
 clip sub 1 2 15.8621 0.5172 6865146212054707213 level=0.45 attack=0.004 release=0.18 pitch=-8 pitch_swp=0 interval=0 timbre=0 duck=0.6 duck_from=1
 clip coil 8 3 15.8621 0.7759 719431597387302907 level=0.42 attack=0.01 release=0.3 pitch=20 pitch_swp=0 ring=0.7 formant=19 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=0.1 lfo>pitch=0.18 lfo_rate=5.5
-clip snare 2 1 15.9483 0.1897 185305459818595694 level=0.2907 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare 2 1 16.0345 0.1897 6254645604402054688 level=0.3339 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare_body 1 1 16.0345 0.1034 3896411656862886826 level=0.2429 attack=0.001 release=0.22 pitch=11.2857 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
-clip snare 2 1 16.1207 0.1897 4841326599480774243 level=0.3771 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare 2 1 16.2069 0.1897 1304449990011570916 level=0.4204 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare_body 1 1 16.2069 0.1034 5105102738351124068 level=0.3057 attack=0.001 release=0.22 pitch=13.5714 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
-clip snare 2 1 16.2931 0.1897 8681563549234554020 level=0.4636 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare 2 1 16.3793 0.1897 1033927818350329768 level=0.5068 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare_body 1 1 16.3793 0.1034 9211378891965074011 level=0.3686 attack=0.001 release=0.22 pitch=15.8571 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
+clip snare 2 1 15.9483 0.1897 185305459818595694 level=0.2907 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare 2 1 16.0345 0.1897 6254645604402054688 level=0.3339 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare_body 1 1 16.0345 0.1034 3896411656862886826 level=0.2338 attack=0.001 release=0.1024 pitch=11.2857 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
+clip snare 2 1 16.1207 0.1897 4841326599480774243 level=0.3771 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare 2 1 16.2069 0.1897 1304449990011570916 level=0.4204 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare_body 1 1 16.2069 0.1034 5105102738351124068 level=0.2943 attack=0.001 release=0.1024 pitch=13.5714 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
+clip snare 2 1 16.2931 0.1897 8681563549234554020 level=0.4636 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare 2 1 16.3793 0.1897 1033927818350329768 level=0.5068 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare_body 1 1 16.3793 0.1034 9211378891965074011 level=0.3548 attack=0.001 release=0.1024 pitch=15.8571 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
 clip reese 1 2 16.3793 0.1724 868407399285285041 level=0.42 attack=0.004 release=0.06 pitch=-8 pitch_swp=-3 interval=0 timbre=2 detune=0.45 cutoff=0.42 resonance=0.25 drive=0.45 phaser=0.25 lfo_rate=1.45 lfo>cut=0.2 duck=0.6 duck_from=1
 clip sub 1 2 16.3793 0.1724 8081744323180417970 level=0.45 attack=0.004 release=0.06 pitch=-8 pitch_swp=-3 interval=0 timbre=0 duck=0.6 duck_from=1
-clip snare 2 1 16.4655 0.1897 1172582402922159889 level=0.55 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip kick 1 0 16.5517 0.2586 646237414948866946 level=1 attack=0.001 release=0.5 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
+clip snare 2 1 16.4655 0.1897 1172582402922159889 level=0.55 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip kick 1 0 16.5517 0.2586 646237414948866946 level=0.55 attack=0.001 release=0.2576 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
 clip reese 1 2 16.5517 0.5172 1349053883523794548 level=0.42 attack=0.004 release=0.18 pitch=-11 pitch_swp=0 interval=0 timbre=2 detune=0.45 cutoff=0.42 resonance=0.25 drive=0.45 phaser=0.25 lfo_rate=1.45 lfo>cut=0.2 duck=0.6 duck_from=1
 clip sub 1 2 16.5517 0.5172 1629376538667960886 level=0.45 attack=0.004 release=0.18 pitch=-11 pitch_swp=0 interval=0 timbre=0 duck=0.6 duck_from=1
 clip coil 8 3 16.5517 0.6034 3245853807774634863 level=0.42 attack=0.01 release=0.3 pitch=25 pitch_swp=0 ring=0.7 formant=12 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=0.1 lfo>pitch=0.18 lfo_rate=5.5
 clip pad 1 4 16.5517 2.9310 7181387833622952666 level=0.17 attack=0.08 release=0.6 pitch=13 interval=7 timbre=1.6 detune=0.3 shimmer=0.2 cutoff=0.45 pan=-0.35 reverb=0.4 duck=0.6 duck_from=1
 clip pad 1 4 16.5517 2.9310 2141355359317404478 level=0.17 attack=0.08 release=0.6 pitch=16 interval=12 timbre=1.6 detune=0.3 shimmer=0.2 cutoff=0.45 pan=0.35 reverb=0.4 duck=0.6 duck_from=1
-clip kick 1 0 16.7241 0.2586 454984803846040950 level=0.8 attack=0.001 release=0.5 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
-clip snare 2 1 16.8966 0.1897 670818508355395072 level=0.55 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare_body 1 1 16.8966 0.1034 2538760360667143383 level=0.4 attack=0.001 release=0.22 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
+clip kick 1 0 16.7241 0.2586 454984803846040950 level=0.44 attack=0.001 release=0.2576 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
+clip snare 2 1 16.8966 0.1897 670818508355395072 level=0.55 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare_body 1 1 16.8966 0.1034 2538760360667143383 level=0.385 attack=0.001 release=0.1024 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
 clip reese 1 2 17.0690 0.1724 4961769965862965532 level=0.42 attack=0.004 release=0.06 pitch=1 pitch_swp=0 interval=0 timbre=2 detune=0.45 cutoff=0.42 resonance=0.25 drive=0.45 phaser=0.25 lfo_rate=1.45 lfo>cut=0.2 duck=0.6 duck_from=1
 clip coil 8 3 17.0690 0.2138 4322111781634550618 level=0.42 attack=0.01 release=0.17 pitch=28 pitch_swp=0 ring=0.7 formant=9 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=0.1
-clip snare 2 1 17.1552 0.1897 4683013058228471355 level=0.2475 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare 2 1 17.1552 0.1897 4683013058228471355 level=0.2475 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
 clip reese 1 2 17.2414 0.5172 5923305529989801956 level=0.42 attack=0.004 release=0.18 pitch=-11 pitch_swp=0 interval=0 timbre=2 detune=0.45 cutoff=0.42 resonance=0.25 drive=0.45 phaser=0.25 lfo_rate=1.45 lfo>cut=0.2 duck=0.6 duck_from=1
 clip sub 1 2 17.2414 0.5172 8268661801127571236 level=0.45 attack=0.004 release=0.18 pitch=-11 pitch_swp=0 interval=0 timbre=0 duck=0.6 duck_from=1
 clip coil 8 3 17.2414 0.4310 3199596027644682689 level=0.42 attack=0.01 release=0.3 pitch=32 pitch_swp=0 ring=0.7 formant=12 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=0.1
-clip snare 2 1 17.3276 0.1897 151830896373115722 level=0.3025 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare_body 1 1 17.3276 0.1034 5893640412266799147 level=0.22 attack=0.001 release=0.22 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
-clip kick 1 0 17.4138 0.2586 3431454536007264785 level=0.9 attack=0.001 release=0.5 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
-clip kick 1 0 17.5000 0.2586 3003480272839274419 level=0.7 attack=0.001 release=0.5 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
-clip snare 2 1 17.5862 0.1897 8139730073913330070 level=0.55 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare_body 1 1 17.5862 0.1034 8381618100713329880 level=0.4 attack=0.001 release=0.22 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
+clip snare 2 1 17.3276 0.1897 151830896373115722 level=0.3025 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare_body 1 1 17.3276 0.1034 5893640412266799147 level=0.2118 attack=0.001 release=0.1024 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
+clip kick 1 0 17.4138 0.2586 3431454536007264785 level=0.495 attack=0.001 release=0.2576 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
+clip kick 1 0 17.5000 0.2586 3003480272839274419 level=0.385 attack=0.001 release=0.2576 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
+clip snare 2 1 17.5862 0.1897 8139730073913330070 level=0.55 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare_body 1 1 17.5862 0.1034 8381618100713329880 level=0.385 attack=0.001 release=0.1024 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
 clip coil 8 3 17.5862 0.2138 7692206677858738332 level=0.42 attack=0.01 release=0.17 pitch=30 pitch_swp=0 ring=0.7 formant=19 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=0.1
 clip reese 1 2 17.7586 0.1724 2796107358711371410 level=0.42 attack=0.004 release=0.06 pitch=-4 pitch_swp=0 interval=0 timbre=2 detune=0.45 cutoff=0.42 resonance=0.25 drive=0.45 phaser=0.25 lfo_rate=1.45 lfo>cut=0.2 duck=0.6 duck_from=1
 clip coil 8 3 17.7586 0.2138 5395247767468657879 level=0.42 attack=0.01 release=0.17 pitch=28 pitch_swp=0 ring=0.7 formant=9 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=0.1
-clip snare 2 1 17.8448 0.1897 8314298408956811217 level=0.275 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip kick 1 0 17.9310 0.2586 3278552611565428085 level=1 attack=0.001 release=0.5 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
+clip snare 2 1 17.8448 0.1897 8314298408956811217 level=0.275 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip kick 1 0 17.9310 0.2586 3278552611565428085 level=0.55 attack=0.001 release=0.2576 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
 clip reese 1 2 17.9310 0.3448 6641512304397038488 level=0.42 attack=0.004 release=0.12 pitch=-11 pitch_swp=0 interval=0 timbre=2 detune=0.45 cutoff=0.42 resonance=0.25 drive=0.45 phaser=0.25 lfo_rate=1.45 lfo>cut=0.2 duck=0.6 duck_from=1
 clip sub 1 2 17.9310 0.3448 3448514388880210709 level=0.45 attack=0.004 release=0.12 pitch=-11 pitch_swp=0 interval=0 timbre=0 duck=0.6 duck_from=1
 clip coil 8 3 17.9310 0.4310 4399743463475988111 level=0.42 attack=0.01 release=0.3 pitch=27 pitch_swp=0 ring=0.7 formant=12 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=0.1
-clip kick 1 0 18.1034 0.2586 5043767189119641594 level=0.8 attack=0.001 release=0.5 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
-clip snare 2 1 18.2759 0.1897 1004868873498145966 level=0.55 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare_body 1 1 18.2759 0.1034 8630180246319909597 level=0.4 attack=0.001 release=0.22 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
+clip kick 1 0 18.1034 0.2586 5043767189119641594 level=0.44 attack=0.001 release=0.2576 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
+clip snare 2 1 18.2759 0.1897 1004868873498145966 level=0.55 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare_body 1 1 18.2759 0.1034 8630180246319909597 level=0.385 attack=0.001 release=0.1024 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
 clip reese 1 2 18.2759 0.1724 6934056171371034776 level=0.42 attack=0.004 release=0.06 pitch=1 pitch_swp=0 interval=0 timbre=2 detune=0.45 cutoff=0.42 resonance=0.25 drive=0.45 phaser=0.25 lfo_rate=1.45 lfo>cut=0.2 duck=0.6 duck_from=1
 clip coil 8 3 18.2759 0.4310 2676993315789591327 level=0.42 attack=0.01 release=0.3 pitch=25 pitch_swp=0 ring=0.7 formant=12 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=0.1
 clip reese 1 2 18.4483 0.1724 1618367050041424674 level=0.42 attack=0.004 release=0.06 pitch=-4 pitch_swp=0 interval=0 timbre=2 detune=0.45 cutoff=0.42 resonance=0.25 drive=0.45 phaser=0.25 lfo_rate=1.45 lfo>cut=0.2 duck=0.6 duck_from=1
-clip snare 2 1 18.5345 0.1897 6106690871177014784 level=0.2475 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare 2 1 18.5345 0.1897 6106690871177014784 level=0.2475 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
 clip reese 1 2 18.6207 0.5172 6460443077264625434 level=0.42 attack=0.004 release=0.18 pitch=-11 pitch_swp=0 interval=0 timbre=2 detune=0.45 cutoff=0.42 resonance=0.25 drive=0.45 phaser=0.25 lfo_rate=1.45 lfo>cut=0.2 duck=0.6 duck_from=1
 clip sub 1 2 18.6207 0.5172 987815564303148271 level=0.45 attack=0.004 release=0.18 pitch=-11 pitch_swp=0 interval=0 timbre=0 duck=0.6 duck_from=1
 clip coil 8 3 18.6207 0.7759 978478077521009598 level=0.42 attack=0.01 release=0.3 pitch=28 pitch_swp=0 ring=0.7 formant=12 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=0.1 lfo>pitch=0.18 lfo_rate=5.5
-clip snare 2 1 18.7069 0.1897 4924243004543774722 level=0.3025 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare_body 1 1 18.7069 0.1034 1284345739359381615 level=0.22 attack=0.001 release=0.22 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
-clip kick 1 0 18.7931 0.2586 6790375297967342287 level=0.9 attack=0.001 release=0.5 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
-clip snare 2 1 18.9655 0.1897 4344732095844781602 level=0.55 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare_body 1 1 18.9655 0.1034 5847764023472261726 level=0.4 attack=0.001 release=0.22 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
-clip snare 2 1 19.1379 0.1897 1104112391766062346 level=0.22 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare 2 1 18.7069 0.1897 4924243004543774722 level=0.3025 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare_body 1 1 18.7069 0.1034 1284345739359381615 level=0.2118 attack=0.001 release=0.1024 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
+clip kick 1 0 18.7931 0.2586 6790375297967342287 level=0.495 attack=0.001 release=0.2576 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
+clip snare 2 1 18.9655 0.1897 4344732095844781602 level=0.55 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare_body 1 1 18.9655 0.1034 5847764023472261726 level=0.385 attack=0.001 release=0.1024 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
+clip snare 2 1 19.1379 0.1897 1104112391766062346 level=0.22 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
 clip reese 1 2 19.1379 0.1724 4763733716106855659 level=0.42 attack=0.004 release=0.06 pitch=-11 pitch_swp=2 interval=0 timbre=2 detune=0.45 cutoff=0.42 resonance=0.25 drive=0.45 phaser=0.25 lfo_rate=1.45 lfo>cut=0.2 duck=0.6 duck_from=1
 clip sub 1 2 19.1379 0.1724 308810884881059179 level=0.45 attack=0.004 release=0.06 pitch=-11 pitch_swp=2 interval=0 timbre=0 duck=0.6 duck_from=1
-clip snare 2 1 19.2241 0.1897 5812490616427077616 level=0.385 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare_body 1 1 19.2241 0.1034 5811736733578737392 level=0.28 attack=0.001 release=0.22 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
-clip kick 1 0 19.3103 0.2586 1883106510184838583 level=1 attack=0.001 release=0.5 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
+clip snare 2 1 19.2241 0.1897 5812490616427077616 level=0.385 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare_body 1 1 19.2241 0.1034 5811736733578737392 level=0.2695 attack=0.001 release=0.1024 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
+clip kick 1 0 19.3103 0.2586 1883106510184838583 level=0.55 attack=0.001 release=0.2576 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
 clip reese 1 2 19.3103 0.5172 5576669758569094599 level=0.42 attack=0.004 release=0.18 pitch=-9 pitch_swp=0 interval=0 timbre=2 detune=0.45 cutoff=0.42 resonance=0.25 drive=0.45 phaser=0.25 lfo_rate=1.45 lfo>cut=0.2 duck=0.6 duck_from=1
 clip sub 1 2 19.3103 0.5172 3381942433923461675 level=0.45 attack=0.004 release=0.18 pitch=-9 pitch_swp=0 interval=0 timbre=0 duck=0.6 duck_from=1
 clip coil 8 3 19.3103 0.4310 3219469511465825252 level=0.42 attack=0.01 release=0.3 pitch=27 pitch_swp=0 ring=0.7 formant=17 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=0.1
 clip pad 1 4 19.3103 2.9310 6716154484738675414 level=0.17 attack=0.08 release=0.6 pitch=15 interval=7 timbre=1.6 detune=0.3 shimmer=0.2 cutoff=0.45 pan=-0.35 reverb=0.4 duck=0.6 duck_from=1
 clip pad 1 4 19.3103 2.9310 3013865641848931554 level=0.17 attack=0.08 release=0.6 pitch=19 interval=12 timbre=1.6 detune=0.3 shimmer=0.2 cutoff=0.45 pan=0.35 reverb=0.4 duck=0.6 duck_from=1
-clip kick 1 0 19.4828 0.2586 5910059311890433492 level=0.8 attack=0.001 release=0.5 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
-clip snare 2 1 19.6552 0.1897 4839576428052495223 level=0.55 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare_body 1 1 19.6552 0.1034 3261891023732390052 level=0.4 attack=0.001 release=0.22 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
+clip kick 1 0 19.4828 0.2586 5910059311890433492 level=0.44 attack=0.001 release=0.2576 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
+clip snare 2 1 19.6552 0.1897 4839576428052495223 level=0.55 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare_body 1 1 19.6552 0.1034 3261891023732390052 level=0.385 attack=0.001 release=0.1024 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
 clip coil 8 3 19.6552 0.2138 3526260644961099586 level=0.42 attack=0.01 release=0.17 pitch=31 pitch_swp=0 ring=0.7 formant=12 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=0.1
 clip reese 1 2 19.8276 0.1724 8880635166267536902 level=0.42 attack=0.004 release=0.06 pitch=3 pitch_swp=0 interval=0 timbre=2 detune=0.45 cutoff=0.42 resonance=0.25 drive=0.45 phaser=0.25 lfo_rate=1.45 lfo>cut=0.2 duck=0.6 duck_from=1
 clip coil 8 3 19.8276 0.2138 655202033045671276 level=0.42 attack=0.01 release=0.17 pitch=32 pitch_swp=0 ring=0.7 formant=14 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=0.1
-clip snare 2 1 19.9138 0.1897 1006646875359451577 level=0.2475 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare 2 1 19.9138 0.1897 1006646875359451577 level=0.2475 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
 clip reese 1 2 20.0000 0.5172 2405275990280072361 level=0.42 attack=0.004 release=0.18 pitch=-9 pitch_swp=0 interval=0 timbre=2 detune=0.45 cutoff=0.42 resonance=0.25 drive=0.45 phaser=0.25 lfo_rate=1.45 lfo>cut=0.2 duck=0.6 duck_from=1
 clip sub 1 2 20.0000 0.5172 8364783795364698603 level=0.45 attack=0.004 release=0.18 pitch=-9 pitch_swp=0 interval=0 timbre=0 duck=0.6 duck_from=1
 clip coil 8 3 20.0000 0.4310 238368510874114239 level=0.42 attack=0.01 release=0.3 pitch=34 pitch_swp=0 ring=0.7 formant=12 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=0.1
-clip snare 2 1 20.0862 0.1897 5558387557725494926 level=0.3025 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare_body 1 1 20.0862 0.1034 2585972095023591574 level=0.22 attack=0.001 release=0.22 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
-clip kick 1 0 20.1724 0.2586 971279819586032995 level=0.9 attack=0.001 release=0.5 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
-clip kick 1 0 20.2586 0.2586 8207370538034980722 level=0.7 attack=0.001 release=0.5 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
-clip snare 2 1 20.3448 0.1897 342212223123083528 level=0.55 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare_body 1 1 20.3448 0.1034 5441649962337880745 level=0.4 attack=0.001 release=0.22 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
+clip snare 2 1 20.0862 0.1897 5558387557725494926 level=0.3025 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare_body 1 1 20.0862 0.1034 2585972095023591574 level=0.2118 attack=0.001 release=0.1024 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
+clip kick 1 0 20.1724 0.2586 971279819586032995 level=0.495 attack=0.001 release=0.2576 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
+clip kick 1 0 20.2586 0.2586 8207370538034980722 level=0.385 attack=0.001 release=0.2576 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
+clip snare 2 1 20.3448 0.1897 342212223123083528 level=0.55 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare_body 1 1 20.3448 0.1034 5441649962337880745 level=0.385 attack=0.001 release=0.1024 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
 clip coil 8 3 20.3448 0.2138 4338405416368157227 level=0.42 attack=0.01 release=0.17 pitch=32 pitch_swp=0 ring=0.7 formant=14 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=0.1
 clip reese 1 2 20.5172 0.1724 2488891405853820452 level=0.42 attack=0.004 release=0.06 pitch=-2 pitch_swp=0 interval=0 timbre=2 detune=0.45 cutoff=0.42 resonance=0.25 drive=0.45 phaser=0.25 lfo_rate=1.45 lfo>cut=0.2 duck=0.6 duck_from=1
 clip coil 8 3 20.5172 0.2138 1564208398544672019 level=0.42 attack=0.01 release=0.17 pitch=31 pitch_swp=0 ring=0.7 formant=12 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=0.1
-clip snare 2 1 20.6034 0.1897 7267982781622283362 level=0.275 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip kick 1 0 20.6897 0.2586 4202236880581182350 level=1 attack=0.001 release=0.5 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
+clip snare 2 1 20.6034 0.1897 7267982781622283362 level=0.275 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip kick 1 0 20.6897 0.2586 4202236880581182350 level=0.55 attack=0.001 release=0.2576 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
 clip reese 1 2 20.6897 0.3448 8015951561469018670 level=0.42 attack=0.004 release=0.12 pitch=-9 pitch_swp=0 interval=0 timbre=2 detune=0.45 cutoff=0.42 resonance=0.25 drive=0.45 phaser=0.25 lfo_rate=1.45 lfo>cut=0.2 duck=0.6 duck_from=1
 clip sub 1 2 20.6897 0.3448 2766381043472377353 level=0.45 attack=0.004 release=0.12 pitch=-9 pitch_swp=0 interval=0 timbre=0 duck=0.6 duck_from=1
 clip coil 8 3 20.6897 1.4655 6645928247262865686 level=0.42 attack=0.01 release=0.3 pitch=31 pitch_swp=0 ring=0.7 formant=12 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=0.1 lfo>pitch=0.18 lfo_rate=5.5
-clip kick 1 0 20.8621 0.2586 7843817014130696411 level=0.8 attack=0.001 release=0.5 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
-clip snare 2 1 21.0345 0.1897 6673606007374133417 level=0.55 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare_body 1 1 21.0345 0.1034 6461995635914860668 level=0.4 attack=0.001 release=0.22 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
+clip kick 1 0 20.8621 0.2586 7843817014130696411 level=0.44 attack=0.001 release=0.2576 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
+clip snare 2 1 21.0345 0.1897 6673606007374133417 level=0.55 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare_body 1 1 21.0345 0.1034 6461995635914860668 level=0.385 attack=0.001 release=0.1024 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
 clip reese 1 2 21.0345 0.1724 3159376677976299846 level=0.42 attack=0.004 release=0.06 pitch=3 pitch_swp=0 interval=0 timbre=2 detune=0.45 cutoff=0.42 resonance=0.25 drive=0.45 phaser=0.25 lfo_rate=1.45 lfo>cut=0.2 duck=0.6 duck_from=1
 clip reese 1 2 21.2069 0.1724 7152868179089920010 level=0.42 attack=0.004 release=0.06 pitch=-2 pitch_swp=0 interval=0 timbre=2 detune=0.45 cutoff=0.42 resonance=0.25 drive=0.45 phaser=0.25 lfo_rate=1.45 lfo>cut=0.2 duck=0.6 duck_from=1
-clip snare 2 1 21.2931 0.1897 4073423866524291410 level=0.2475 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare 2 1 21.3793 0.1897 9078656057130167099 level=0.2475 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare_body 1 1 21.3793 0.1034 4102735235840531323 level=0.18 attack=0.001 release=0.22 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
+clip snare 2 1 21.2931 0.1897 4073423866524291410 level=0.2475 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare 2 1 21.3793 0.1897 9078656057130167099 level=0.2475 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare_body 1 1 21.3793 0.1034 4102735235840531323 level=0.1733 attack=0.001 release=0.1024 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
 clip reese 1 2 21.3793 0.5172 2333471666282313022 level=0.42 attack=0.004 release=0.18 pitch=-9 pitch_swp=0 interval=0 timbre=2 detune=0.45 cutoff=0.42 resonance=0.25 drive=0.45 phaser=0.25 lfo_rate=1.45 lfo>cut=0.2 duck=0.6 duck_from=1
 clip sub 1 2 21.3793 0.5172 2835801581324013083 level=0.45 attack=0.004 release=0.18 pitch=-9 pitch_swp=0 interval=0 timbre=0 duck=0.6 duck_from=1
-clip snare 2 1 21.4655 0.1897 5238601945581504185 level=0.2907 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare 2 1 21.5517 0.1897 2267415108228021262 level=0.3339 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare_body 1 1 21.5517 0.1034 9202338995802619604 level=0.2429 attack=0.001 release=0.22 pitch=11.2857 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
-clip snare 2 1 21.6379 0.1897 8345380394024714048 level=0.3771 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare 2 1 21.7241 0.1897 1456839617458594471 level=0.4204 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare_body 1 1 21.7241 0.1034 6538617466182133420 level=0.3057 attack=0.001 release=0.22 pitch=13.5714 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
-clip snare 2 1 21.8103 0.1897 963821348227532218 level=0.4636 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare 2 1 21.8966 0.1897 4781895418378668743 level=0.5068 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare_body 1 1 21.8966 0.1034 6161168003979703719 level=0.3686 attack=0.001 release=0.22 pitch=15.8571 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
+clip snare 2 1 21.4655 0.1897 5238601945581504185 level=0.2907 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare 2 1 21.5517 0.1897 2267415108228021262 level=0.3339 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare_body 1 1 21.5517 0.1034 9202338995802619604 level=0.2338 attack=0.001 release=0.1024 pitch=11.2857 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
+clip snare 2 1 21.6379 0.1897 8345380394024714048 level=0.3771 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare 2 1 21.7241 0.1897 1456839617458594471 level=0.4204 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare_body 1 1 21.7241 0.1034 6538617466182133420 level=0.2943 attack=0.001 release=0.1024 pitch=13.5714 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
+clip snare 2 1 21.8103 0.1897 963821348227532218 level=0.4636 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare 2 1 21.8966 0.1897 4781895418378668743 level=0.5068 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare_body 1 1 21.8966 0.1034 6161168003979703719 level=0.3548 attack=0.001 release=0.1024 pitch=15.8571 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
 clip reese 1 2 21.8966 0.1724 5708326252105897330 level=0.42 attack=0.004 release=0.06 pitch=-9 pitch_swp=-7 interval=0 timbre=2 detune=0.45 cutoff=0.42 resonance=0.25 drive=0.45 phaser=0.25 lfo_rate=1.45 lfo>cut=0.2 duck=0.6 duck_from=1
 clip sub 1 2 21.8966 0.1724 2906892446130600432 level=0.45 attack=0.004 release=0.06 pitch=-9 pitch_swp=-7 interval=0 timbre=0 duck=0.6 duck_from=1
-clip snare 2 1 21.9828 0.1897 5796961270037177934 level=0.55 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip coil_hats 8 1 22.0690 4.1379 2565207473574326467 level=0.2 attack=0 release=0.05 pitch=9.0563 pitch_swp=0 divide=4 burst=1.4 snap=0.85 misfire=0.7 filter=2 cutoff=0.72 pan=-0.25 keyed=0
+clip snare 2 1 21.9828 0.1897 5796961270037177934 level=0.55 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip coil_hats 8 1 22.0690 4.1379 2565207473574326467 level=0.36 attack=0 release=0.05 pitch=9.0563 pitch_swp=0 divide=4 burst=1.4 snap=0.85 misfire=0.7 filter=2 cutoff=0.72 pan=-0.25 keyed=0
 clip reese_hold 1 2 22.0690 5.3448 8972285940039346685 level=0.34 attack=0.02 release=1 pitch=-16 interval=12 timbre=2 detune=0.5 cutoff=0.5 cutoff_swp=-0.3 resonance=0.3 drive=0.3 phaser=0.5 phaser_rate=0.2
 clip sub 1 2 22.0690 5.3448 2196609273318029194 level=0.45 attack=0.004 release=0.3 pitch=-16 pitch_swp=0 interval=0 timbre=0 duck=0.6 duck_from=1
 clip coil 8 3 22.0690 1.1207 5612322990433465731 level=0.3 attack=0.01 release=0.3 pitch=27 pitch_swp=0 ring=0.7 formant=9 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=0.1 lfo>pitch=0.18 lfo_rate=5.5
-clip choir 6 4 22.0690 5.8621 3432650724231115620 level=0.6 attack=2.5 release=1 pitch=-4.65 chord=5 file=luminal/luminal__synth_vocal_base_00001.ogg start=0.2 speed=0.35 voices=8 gather=0 gather_swp=1 drift=0.5 wander=12 scatter=0.4 reverb=0.6 cutoff=0.8
+clip choir 6 4 22.0690 5.8621 3432650724231115620 level=0.6 attack=2 release=1 pitch=-4.65 chord=5 file=luminal/luminal__synth_vocal_base_00001.ogg start=0.2 speed=0.35 voices=8 gather=0 gather_swp=1 drift=0.5 wander=12 scatter=0.4 reverb=0.6 cutoff=0.8
 clip coil 8 3 23.4483 1.1207 1633692184952363638 level=0.3 attack=0.01 release=0.3 pitch=28 pitch_swp=0 ring=0.7 formant=14 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=0.1 lfo>pitch=0.18 lfo_rate=5.5
 clip coil 8 3 24.8276 1.1207 445495938943202087 level=0.3 attack=0.01 release=0.3 pitch=25 pitch_swp=0 ring=0.7 formant=19 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=0.1 lfo>pitch=0.18 lfo_rate=5.5
 clip coil_riser 8 5 24.8276 2.7586 3603366444444119898 level=0.33 attack=1.6552 release=0.05 pitch=8 pitch_swp=24 ring=0.3 formant=19 burst=4 jitter=0.15 misfire=0.1 snap=0.5 flicker=0.4 reverb=0.3
@@ -324,286 +324,286 @@ clip glitch 5 5 27.4138 0.0431 7497127429644245396 level=0.45 attack=0 release=0
 clip glitch 5 5 27.4569 0.0431 4134517678964830824 level=0.45 attack=0 release=0.01 pitch=17.1 file=luminal/luminal__synth_vocal_base_00001.ogg pitch_mode=1 speed=0 start=0.45 cutoff=0.85 pan=-0.4 keyed=0
 clip glitch 5 5 27.5000 0.0431 816845079503673790 level=0.45 attack=0 release=0.01 pitch=17.85 file=luminal/luminal__synth_vocal_base_00001.ogg pitch_mode=1 speed=0 start=0.45 cutoff=0.85 pan=0.4 keyed=0
 clip glitch 5 5 27.5431 0.0431 8014567447708499207 level=0.45 attack=0 release=0.01 pitch=18.6 file=luminal/luminal__synth_vocal_base_00001.ogg pitch_mode=1 speed=0 start=0.45 cutoff=0.85 pan=-0.4 keyed=0
-clip boom 1 0 27.5862 1.0345 1873663882498247638 level=0.9 attack=0.001 release=2.8 pitch=0 pitch_swp=-24 interval=0 timbre=0 drive=0.4 env_curve=0.2 reverb=0.3 keyed=0
-clip kick 1 0 27.5862 0.2586 4467098967540679816 level=1 attack=0.001 release=0.5 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
-clip crash 2 1 27.5862 2.0690 6429677167170209962 level=0.35 attack=0.001 release=5.5 filter=2 cutoff=0.8 color=0 env_curve=0.7 reverb=0.45 pan=0.2 keyed=0
-clip coil_hats 8 1 27.5862 5.5172 3936716141886982020 level=0.25 attack=0 release=0.05 pitch=21.0563 pitch_swp=0 divide=4 burst=1.4 snap=0.85 misfire=0.5 filter=2 cutoff=0.72 pan=-0.25 keyed=0
+clip boom 1 0 27.5862 1.0345 1873663882498247638 level=0.55 attack=0.001 release=1.0335 pitch=0 pitch_swp=-24 interval=0 timbre=0 drive=0.4 env_curve=0.2 reverb=0.3 keyed=0
+clip kick 1 0 27.5862 0.2586 4467098967540679816 level=0.55 attack=0.001 release=0.2576 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
+clip crash 2 1 27.5862 2.0690 6429677167170209962 level=0.35 attack=0.001 release=2.068 filter=2 cutoff=0.8 color=0 env_curve=0.7 reverb=0.45 pan=0.2 keyed=0
+clip coil_hats 8 1 27.5862 5.5172 3936716141886982020 level=0.45 attack=0 release=0.05 pitch=21.0563 pitch_swp=0 divide=4 burst=1.4 snap=0.85 misfire=0.5 filter=2 cutoff=0.72 pan=-0.25 keyed=0
 clip reese 1 2 27.5862 0.5172 1887758172521295548 level=0.42 attack=0.004 release=0.18 pitch=-16 pitch_swp=0 interval=0 timbre=2 detune=0.45 cutoff=0.42 resonance=0.25 drive=0.65 phaser=0.25 lfo_rate=1.45 lfo>cut=0.2 duck=0.6 duck_from=1
 clip sub 1 2 27.5862 0.5172 5171780042594752040 level=0.45 attack=0.004 release=0.18 pitch=-16 pitch_swp=0 interval=0 timbre=0 duck=0.6 duck_from=1
 clip coil 8 3 27.5862 0.6034 1041840109736195997 level=0.42 attack=0.01 release=0.3 pitch=27 pitch_swp=0 ring=0.7 formant=9 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=0.1 lfo>pitch=0.18 lfo_rate=5.5
 clip coil 8 3 27.5862 0.6034 8930355566529460120 level=0.3 attack=0.01 release=0.3 pitch=23 pitch_swp=0 ring=0.7 formant=9 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=-0.3 lfo>pitch=0.18 lfo_rate=5.5
 clip pad 1 4 27.5862 2.9310 3348318233909504709 level=0.15 attack=0.08 release=0.6 pitch=8 interval=7 timbre=1.6 detune=0.3 shimmer=0.2 cutoff=0.45 pan=-0.35 reverb=0.4 duck=0.6 duck_from=1
 clip pad 1 4 27.5862 2.9310 9101709976679071587 level=0.15 attack=0.08 release=0.6 pitch=11 interval=12 timbre=1.6 detune=0.3 shimmer=0.2 cutoff=0.45 pan=0.35 reverb=0.4 duck=0.6 duck_from=1
-clip impact 5 5 27.5862 2.7586 1443989035136259724 level=0.6 release=3 file=gravitic/gravitic_impact_00001.ogg keyed=0
-clip kick 1 0 27.7586 0.2586 2907201633520350427 level=0.8 attack=0.001 release=0.5 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
-clip snare 2 1 27.9310 0.1897 6397134723756833498 level=0.55 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare_body 1 1 27.9310 0.1034 2313419691234554073 level=0.4 attack=0.001 release=0.22 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
+clip impact 5 5 27.5862 2.7586 1443989035136259724 level=0.6 release=2.5 file=gravitic/gravitic_impact_00001.ogg keyed=0
+clip kick 1 0 27.7586 0.2586 2907201633520350427 level=0.44 attack=0.001 release=0.2576 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
+clip snare 2 1 27.9310 0.1897 6397134723756833498 level=0.55 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare_body 1 1 27.9310 0.1034 2313419691234554073 level=0.385 attack=0.001 release=0.1024 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
 clip reese 1 2 28.1034 0.1724 3271648803842463549 level=0.42 attack=0.004 release=0.06 pitch=-4 pitch_swp=0 interval=0 timbre=2 detune=0.45 cutoff=0.42 resonance=0.25 drive=0.65 phaser=0.25 lfo_rate=1.45 lfo>cut=0.2 duck=0.6 duck_from=1
 clip coil 8 3 28.1034 0.2138 5328616644340392511 level=0.42 attack=0.01 release=0.17 pitch=23 pitch_swp=0 ring=0.7 formant=19 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=0.1
 clip coil 8 3 28.1034 0.2138 386950041918181355 level=0.3 attack=0.01 release=0.17 pitch=20 pitch_swp=0 ring=0.7 formant=19 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=-0.3
-clip snare 2 1 28.1897 0.1897 5525309210929720772 level=0.2475 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare 2 1 28.1897 0.1897 5525309210929720772 level=0.2475 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
 clip reese 1 2 28.2759 0.5172 8348027273493507223 level=0.42 attack=0.004 release=0.18 pitch=-16 pitch_swp=0 interval=0 timbre=2 detune=0.45 cutoff=0.42 resonance=0.25 drive=0.65 phaser=0.25 lfo_rate=1.45 lfo>cut=0.2 duck=0.6 duck_from=1
 clip sub 1 2 28.2759 0.5172 8233686687715924621 level=0.45 attack=0.004 release=0.18 pitch=-16 pitch_swp=0 interval=0 timbre=0 duck=0.6 duck_from=1
 clip coil 8 3 28.2759 0.4310 3287617187711349867 level=0.42 attack=0.01 release=0.3 pitch=20 pitch_swp=0 ring=0.7 formant=19 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=0.1
 clip coil 8 3 28.2759 0.4310 6636533305843182213 level=0.3 attack=0.01 release=0.3 pitch=16 pitch_swp=0 ring=0.7 formant=19 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=-0.3
-clip snare 2 1 28.3621 0.1897 1039596642634488314 level=0.3025 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare_body 1 1 28.3621 0.1034 5962621685506492666 level=0.22 attack=0.001 release=0.22 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
-clip kick 1 0 28.4483 0.2586 6222375801514217202 level=0.9 attack=0.001 release=0.5 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
-clip kick 1 0 28.5345 0.2586 3562257451721457155 level=0.7 attack=0.001 release=0.5 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
-clip snare 2 1 28.6207 0.1897 375151603980160390 level=0.55 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare_body 1 1 28.6207 0.1034 1585185549195938809 level=0.4 attack=0.001 release=0.22 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
+clip snare 2 1 28.3621 0.1897 1039596642634488314 level=0.3025 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare_body 1 1 28.3621 0.1034 5962621685506492666 level=0.2118 attack=0.001 release=0.1024 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
+clip kick 1 0 28.4483 0.2586 6222375801514217202 level=0.495 attack=0.001 release=0.2576 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
+clip kick 1 0 28.5345 0.2586 3562257451721457155 level=0.385 attack=0.001 release=0.2576 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
+clip snare 2 1 28.6207 0.1897 375151603980160390 level=0.55 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare_body 1 1 28.6207 0.1034 1585185549195938809 level=0.385 attack=0.001 release=0.1024 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
 clip coil 8 3 28.6207 0.2138 6965558036424653687 level=0.42 attack=0.01 release=0.17 pitch=22 pitch_swp=0 ring=0.7 formant=14 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=0.1
 clip coil 8 3 28.6207 0.2138 1481629741415417059 level=0.3 attack=0.01 release=0.17 pitch=18 pitch_swp=0 ring=0.7 formant=14 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=-0.3
 clip reese 1 2 28.7931 0.1724 6779484784836568961 level=0.42 attack=0.004 release=0.06 pitch=-9 pitch_swp=0 interval=0 timbre=2 detune=0.45 cutoff=0.42 resonance=0.25 drive=0.65 phaser=0.25 lfo_rate=1.45 lfo>cut=0.2 duck=0.6 duck_from=1
 clip coil 8 3 28.7931 0.2138 730346199809450640 level=0.42 attack=0.01 release=0.17 pitch=23 pitch_swp=0 ring=0.7 formant=12 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=0.1
 clip coil 8 3 28.7931 0.2138 7812803683410459961 level=0.3 attack=0.01 release=0.17 pitch=20 pitch_swp=0 ring=0.7 formant=12 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=-0.3
-clip snare 2 1 28.8793 0.1897 5734663309005683062 level=0.275 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip kick 1 0 28.9655 0.2586 6231360894749712402 level=1 attack=0.001 release=0.5 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
+clip snare 2 1 28.8793 0.1897 5734663309005683062 level=0.275 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip kick 1 0 28.9655 0.2586 6231360894749712402 level=0.55 attack=0.001 release=0.2576 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
 clip reese 1 2 28.9655 0.3448 3451443282862316732 level=0.42 attack=0.004 release=0.12 pitch=-16 pitch_swp=0 interval=0 timbre=2 detune=0.45 cutoff=0.42 resonance=0.25 drive=0.65 phaser=0.25 lfo_rate=1.45 lfo>cut=0.2 duck=0.6 duck_from=1
 clip sub 1 2 28.9655 0.3448 5263394703407737765 level=0.45 attack=0.004 release=0.12 pitch=-16 pitch_swp=0 interval=0 timbre=0 duck=0.6 duck_from=1
 clip coil 8 3 28.9655 0.4310 3313499110325930465 level=0.42 attack=0.01 release=0.3 pitch=27 pitch_swp=0 ring=0.7 formant=19 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=0.1
 clip coil 8 3 28.9655 0.4310 8320313563080818366 level=0.3 attack=0.01 release=0.3 pitch=23 pitch_swp=0 ring=0.7 formant=19 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=-0.3
-clip kick 1 0 29.1379 0.2586 447934952248186077 level=0.8 attack=0.001 release=0.5 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
-clip snare 2 1 29.3103 0.1897 8612116880078792044 level=0.55 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare_body 1 1 29.3103 0.1034 2733008429970985737 level=0.4 attack=0.001 release=0.22 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
+clip kick 1 0 29.1379 0.2586 447934952248186077 level=0.44 attack=0.001 release=0.2576 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
+clip snare 2 1 29.3103 0.1897 8612116880078792044 level=0.55 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare_body 1 1 29.3103 0.1034 2733008429970985737 level=0.385 attack=0.001 release=0.1024 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
 clip reese 1 2 29.3103 0.1724 461107141893007660 level=0.42 attack=0.004 release=0.06 pitch=-4 pitch_swp=0 interval=0 timbre=2 detune=0.45 cutoff=0.42 resonance=0.25 drive=0.65 phaser=0.25 lfo_rate=1.45 lfo>cut=0.2 duck=0.6 duck_from=1
 clip coil 8 3 29.3103 0.2138 3110952089495757023 level=0.42 attack=0.01 release=0.17 pitch=28 pitch_swp=0 ring=0.7 formant=17 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=0.1
 clip coil 8 3 29.3103 0.2138 6545225139151925872 level=0.3 attack=0.01 release=0.17 pitch=25 pitch_swp=0 ring=0.7 formant=17 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=-0.3
 clip reese 1 2 29.4828 0.1724 5956016745769095644 level=0.42 attack=0.004 release=0.06 pitch=-9 pitch_swp=0 interval=0 timbre=2 detune=0.45 cutoff=0.42 resonance=0.25 drive=0.65 phaser=0.25 lfo_rate=1.45 lfo>cut=0.2 duck=0.6 duck_from=1
 clip coil 8 3 29.4828 0.2138 6012619796614909920 level=0.42 attack=0.01 release=0.17 pitch=27 pitch_swp=0 ring=0.7 formant=9 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=0.1
 clip coil 8 3 29.4828 0.2138 3091766358331226563 level=0.3 attack=0.01 release=0.17 pitch=23 pitch_swp=0 ring=0.7 formant=9 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=-0.3
-clip snare 2 1 29.5690 0.1897 4445930963859672426 level=0.2475 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip kick 1 0 29.6552 0.2586 277776529029209911 level=0.55 attack=0.001 release=0.5 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
+clip snare 2 1 29.5690 0.1897 4445930963859672426 level=0.2475 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip kick 1 0 29.6552 0.2586 277776529029209911 level=0.3025 attack=0.001 release=0.2576 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
 clip reese 1 2 29.6552 0.5172 8931805356217223342 level=0.42 attack=0.004 release=0.18 pitch=-16 pitch_swp=0 interval=0 timbre=2 detune=0.45 cutoff=0.42 resonance=0.25 drive=0.65 phaser=0.25 lfo_rate=1.45 lfo>cut=0.2 duck=0.6 duck_from=1
 clip sub 1 2 29.6552 0.5172 8367254060255810742 level=0.45 attack=0.004 release=0.18 pitch=-16 pitch_swp=0 interval=0 timbre=0 duck=0.6 duck_from=1
 clip coil 8 3 29.6552 0.7759 2667109527920727864 level=0.42 attack=0.01 release=0.3 pitch=23 pitch_swp=0 ring=0.7 formant=9 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=0.1 lfo>pitch=0.18 lfo_rate=5.5
 clip coil 8 3 29.6552 0.7759 552433189642232352 level=0.3 attack=0.01 release=0.3 pitch=20 pitch_swp=0 ring=0.7 formant=9 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=-0.3 lfo>pitch=0.18 lfo_rate=5.5
-clip kick 1 0 29.6983 0.2586 8249155805711230090 level=0.62 attack=0.001 release=0.5 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
-clip kick 1 0 29.7414 0.2586 5662285365133886468 level=0.69 attack=0.001 release=0.5 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
-clip kick 1 0 29.7845 0.2586 3140956949680308231 level=0.76 attack=0.001 release=0.5 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
-clip kick 1 0 29.8276 0.2586 7230013288044924013 level=0.83 attack=0.001 release=0.5 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
-clip kick 1 0 29.8707 0.2586 572938677307714494 level=0.9 attack=0.001 release=0.5 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
-clip snare 2 1 30.0000 0.1897 5506001059070391995 level=0.55 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare_body 1 1 30.0000 0.1034 2107485253591761438 level=0.4 attack=0.001 release=0.22 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
-clip snare 2 1 30.1724 0.1897 5220175697833958300 level=0.495 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare_body 1 1 30.1724 0.1034 8738590597392966438 level=0.36 attack=0.001 release=0.22 pitch=12 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
+clip kick 1 0 29.6983 0.2586 8249155805711230090 level=0.341 attack=0.001 release=0.2576 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
+clip kick 1 0 29.7414 0.2586 5662285365133886468 level=0.3795 attack=0.001 release=0.2576 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
+clip kick 1 0 29.7845 0.2586 3140956949680308231 level=0.418 attack=0.001 release=0.2576 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
+clip kick 1 0 29.8276 0.2586 7230013288044924013 level=0.4565 attack=0.001 release=0.2576 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
+clip kick 1 0 29.8707 0.2586 572938677307714494 level=0.495 attack=0.001 release=0.2576 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
+clip snare 2 1 30.0000 0.1897 5506001059070391995 level=0.55 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare_body 1 1 30.0000 0.1034 2107485253591761438 level=0.385 attack=0.001 release=0.1024 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
+clip snare 2 1 30.1724 0.1897 5220175697833958300 level=0.495 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare_body 1 1 30.1724 0.1034 8738590597392966438 level=0.3465 attack=0.001 release=0.1024 pitch=12 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
 clip reese 1 2 30.1724 0.1724 2894511685207464958 level=0.42 attack=0.004 release=0.06 pitch=-16 pitch_swp=8 interval=0 timbre=2 detune=0.45 cutoff=0.42 resonance=0.25 drive=0.65 phaser=0.25 lfo_rate=1.45 lfo>cut=0.2 duck=0.6 duck_from=1
 clip sub 1 2 30.1724 0.1724 2884479554743260520 level=0.45 attack=0.004 release=0.06 pitch=-16 pitch_swp=8 interval=0 timbre=0 duck=0.6 duck_from=1
-clip kick 1 0 30.3448 0.2586 2978156469013585110 level=1 attack=0.001 release=0.5 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
+clip kick 1 0 30.3448 0.2586 2978156469013585110 level=0.55 attack=0.001 release=0.2576 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
 clip reese 1 2 30.3448 0.5172 5743267009897447033 level=0.42 attack=0.004 release=0.18 pitch=-8 pitch_swp=0 interval=0 timbre=2 detune=0.45 cutoff=0.42 resonance=0.25 drive=0.65 phaser=0.25 lfo_rate=1.45 lfo>cut=0.2 duck=0.6 duck_from=1
 clip sub 1 2 30.3448 0.5172 4811269410289576130 level=0.45 attack=0.004 release=0.18 pitch=-8 pitch_swp=0 interval=0 timbre=0 duck=0.6 duck_from=1
 clip coil 8 3 30.3448 0.6034 9194762178138477007 level=0.42 attack=0.01 release=0.3 pitch=32 pitch_swp=0 ring=0.7 formant=9 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=0.1 lfo>pitch=0.18 lfo_rate=5.5
 clip coil 8 3 30.3448 0.6034 5275755339906165668 level=0.3 attack=0.01 release=0.3 pitch=28 pitch_swp=0 ring=0.7 formant=9 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=-0.3 lfo>pitch=0.18 lfo_rate=5.5
 clip pad 1 4 30.3448 2.9310 3894259280625604911 level=0.15 attack=0.08 release=0.6 pitch=16 interval=7 timbre=1.6 detune=0.3 shimmer=0.2 cutoff=0.45 pan=-0.35 reverb=0.4 duck=0.6 duck_from=1
 clip pad 1 4 30.3448 2.9310 3737529908751255735 level=0.15 attack=0.08 release=0.6 pitch=20 interval=12 timbre=1.6 detune=0.3 shimmer=0.2 cutoff=0.45 pan=0.35 reverb=0.4 duck=0.6 duck_from=1
-clip kick 1 0 30.5172 0.2586 3985885460360481879 level=0.8 attack=0.001 release=0.5 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
-clip snare 2 1 30.6897 0.1897 4823614543456270148 level=0.55 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare_body 1 1 30.6897 0.1034 8619581085000532758 level=0.4 attack=0.001 release=0.22 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
+clip kick 1 0 30.5172 0.2586 3985885460360481879 level=0.44 attack=0.001 release=0.2576 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
+clip snare 2 1 30.6897 0.1897 4823614543456270148 level=0.55 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare_body 1 1 30.6897 0.1034 8619581085000532758 level=0.385 attack=0.001 release=0.1024 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
 clip reese 1 2 30.8621 0.1724 5465147142553321300 level=0.42 attack=0.004 release=0.06 pitch=4 pitch_swp=0 interval=0 timbre=2 detune=0.45 cutoff=0.42 resonance=0.25 drive=0.65 phaser=0.25 lfo_rate=1.45 lfo>cut=0.2 duck=0.6 duck_from=1
 clip coil 8 3 30.8621 0.2138 4081217370419279317 level=0.42 attack=0.01 release=0.17 pitch=30 pitch_swp=0 ring=0.7 formant=9 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=0.1
 clip coil 8 3 30.8621 0.2138 4644571120356498877 level=0.3 attack=0.01 release=0.17 pitch=27 pitch_swp=0 ring=0.7 formant=9 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=-0.3
-clip snare 2 1 30.9483 0.1897 5517115093318087126 level=0.2475 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare 2 1 31.0345 0.1897 3315368017006406522 level=0.495 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare_body 1 1 31.0345 0.1034 1429074860129195284 level=0.36 attack=0.001 release=0.22 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
+clip snare 2 1 30.9483 0.1897 5517115093318087126 level=0.2475 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare 2 1 31.0345 0.1897 3315368017006406522 level=0.495 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare_body 1 1 31.0345 0.1034 1429074860129195284 level=0.3465 attack=0.001 release=0.1024 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
 clip reese 1 2 31.0345 0.5172 9157118154427429665 level=0.42 attack=0.004 release=0.18 pitch=-8 pitch_swp=0 interval=0 timbre=2 detune=0.45 cutoff=0.42 resonance=0.25 drive=0.65 phaser=0.25 lfo_rate=1.45 lfo>cut=0.2 duck=0.6 duck_from=1
 clip sub 1 2 31.0345 0.5172 7218956210006619488 level=0.45 attack=0.004 release=0.18 pitch=-8 pitch_swp=0 interval=0 timbre=0 duck=0.6 duck_from=1
 clip coil 8 3 31.0345 0.4310 8443763078108108194 level=0.42 attack=0.01 release=0.3 pitch=28 pitch_swp=0 ring=0.7 formant=17 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=0.1
 clip coil 8 3 31.0345 0.4310 1805052265332746462 level=0.3 attack=0.01 release=0.3 pitch=25 pitch_swp=0 ring=0.7 formant=17 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=-0.3
-clip snare 2 1 31.1207 0.1897 8797101711275072033 level=0.4675 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare_body 1 1 31.1207 0.1034 2923276116982390459 level=0.34 attack=0.001 release=0.22 pitch=7.5 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
-clip snare 2 1 31.2069 0.1897 3551378253938949939 level=0.44 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare_body 1 1 31.2069 0.1034 8843291274010845503 level=0.32 attack=0.001 release=0.22 pitch=6 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
-clip snare 2 1 31.2931 0.1897 131967916320076636 level=0.4125 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare_body 1 1 31.2931 0.1034 5747934454893833108 level=0.3 attack=0.001 release=0.22 pitch=4.5 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
-clip snare 2 1 31.3793 0.1897 6422913379265884358 level=0.385 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare_body 1 1 31.3793 0.1034 1942074359389157762 level=0.28 attack=0.001 release=0.22 pitch=3 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
+clip snare 2 1 31.1207 0.1897 8797101711275072033 level=0.4675 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare_body 1 1 31.1207 0.1034 2923276116982390459 level=0.3272 attack=0.001 release=0.1024 pitch=7.5 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
+clip snare 2 1 31.2069 0.1897 3551378253938949939 level=0.44 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare_body 1 1 31.2069 0.1034 8843291274010845503 level=0.308 attack=0.001 release=0.1024 pitch=6 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
+clip snare 2 1 31.2931 0.1897 131967916320076636 level=0.4125 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare_body 1 1 31.2931 0.1034 5747934454893833108 level=0.2888 attack=0.001 release=0.1024 pitch=4.5 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
+clip snare 2 1 31.3793 0.1897 6422913379265884358 level=0.385 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare_body 1 1 31.3793 0.1034 1942074359389157762 level=0.2695 attack=0.001 release=0.1024 pitch=3 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
 clip coil 8 3 31.3793 0.2138 5059507372638433003 level=0.42 attack=0.01 release=0.17 pitch=27 pitch_swp=0 ring=0.7 formant=9 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=0.1
 clip coil 8 3 31.3793 0.2138 3954055337299182862 level=0.3 attack=0.01 release=0.17 pitch=23 pitch_swp=0 ring=0.7 formant=9 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=-0.3
-clip snare 2 1 31.4655 0.1897 6001702872371707091 level=0.3575 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare_body 1 1 31.4655 0.1034 2187828989060714376 level=0.26 attack=0.001 release=0.22 pitch=1.5 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
-clip snare 2 1 31.5517 0.1897 4623603944469502832 level=0.33 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare_body 1 1 31.5517 0.1034 6219823042178398867 level=0.24 attack=0.001 release=0.22 pitch=0 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
+clip snare 2 1 31.4655 0.1897 6001702872371707091 level=0.3575 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare_body 1 1 31.4655 0.1034 2187828989060714376 level=0.2503 attack=0.001 release=0.1024 pitch=1.5 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
+clip snare 2 1 31.5517 0.1897 4623603944469502832 level=0.33 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare_body 1 1 31.5517 0.1034 6219823042178398867 level=0.231 attack=0.001 release=0.1024 pitch=0 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
 clip reese 1 2 31.5517 0.1724 5391933406878635138 level=0.42 attack=0.004 release=0.06 pitch=-1 pitch_swp=0 interval=0 timbre=2 detune=0.45 cutoff=0.42 resonance=0.25 drive=0.65 phaser=0.25 lfo_rate=1.45 lfo>cut=0.2 duck=0.6 duck_from=1
 clip coil 8 3 31.5517 0.2138 1979765031828339144 level=0.42 attack=0.01 release=0.17 pitch=28 pitch_swp=0 ring=0.7 formant=9 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=0.1
 clip coil 8 3 31.5517 0.2138 3326083500841224221 level=0.3 attack=0.01 release=0.17 pitch=25 pitch_swp=0 ring=0.7 formant=9 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=-0.3
-clip snare 2 1 31.6379 0.1897 7509702493129053081 level=0.3025 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare_body 1 1 31.6379 0.1034 3960189939684372822 level=0.22 attack=0.001 release=0.22 pitch=-1.5 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
-clip kick 1 0 31.7241 0.2586 3002619340883426047 level=1 attack=0.001 release=0.5 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
+clip snare 2 1 31.6379 0.1897 7509702493129053081 level=0.3025 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare_body 1 1 31.6379 0.1034 3960189939684372822 level=0.2118 attack=0.001 release=0.1024 pitch=-1.5 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
+clip kick 1 0 31.7241 0.2586 3002619340883426047 level=0.55 attack=0.001 release=0.2576 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
 clip reese 1 2 31.7241 0.3448 95189810819544929 level=0.42 attack=0.004 release=0.12 pitch=-8 pitch_swp=0 interval=0 timbre=2 detune=0.45 cutoff=0.42 resonance=0.25 drive=0.65 phaser=0.25 lfo_rate=1.45 lfo>cut=0.2 duck=0.6 duck_from=1
 clip sub 1 2 31.7241 0.3448 2707642592203471661 level=0.45 attack=0.004 release=0.12 pitch=-8 pitch_swp=0 interval=0 timbre=0 duck=0.6 duck_from=1
 clip coil 8 3 31.7241 0.4310 6402212714045979832 level=0.42 attack=0.01 release=0.3 pitch=30 pitch_swp=0 ring=0.7 formant=14 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=0.1
 clip coil 8 3 31.7241 0.4310 2713697618731002755 level=0.3 attack=0.01 release=0.3 pitch=27 pitch_swp=0 ring=0.7 formant=14 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=-0.3
-clip kick 1 0 31.8966 0.2586 1037623173299728590 level=0.8 attack=0.001 release=0.5 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
-clip snare 2 1 32.0690 0.1897 5240440861418156499 level=0.55 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare_body 1 1 32.0690 0.1034 3202967392791861183 level=0.4 attack=0.001 release=0.22 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
+clip kick 1 0 31.8966 0.2586 1037623173299728590 level=0.44 attack=0.001 release=0.2576 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
+clip snare 2 1 32.0690 0.1897 5240440861418156499 level=0.55 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare_body 1 1 32.0690 0.1034 3202967392791861183 level=0.385 attack=0.001 release=0.1024 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
 clip reese 1 2 32.0690 0.1724 8119024496008623038 level=0.42 attack=0.004 release=0.06 pitch=4 pitch_swp=0 interval=0 timbre=2 detune=0.45 cutoff=0.42 resonance=0.25 drive=0.65 phaser=0.25 lfo_rate=1.45 lfo>cut=0.2 duck=0.6 duck_from=1
 clip coil 8 3 32.0690 0.4310 6976752222108388849 level=0.42 attack=0.01 release=0.3 pitch=28 pitch_swp=0 ring=0.7 formant=14 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=0.1
 clip coil 8 3 32.0690 0.4310 6671784375311718268 level=0.3 attack=0.01 release=0.3 pitch=25 pitch_swp=0 ring=0.7 formant=14 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=-0.3
 clip reese 1 2 32.2414 0.1724 3184820235647528755 level=0.42 attack=0.004 release=0.06 pitch=-1 pitch_swp=0 interval=0 timbre=2 detune=0.45 cutoff=0.42 resonance=0.25 drive=0.65 phaser=0.25 lfo_rate=1.45 lfo>cut=0.2 duck=0.6 duck_from=1
-clip snare 2 1 32.3276 0.1897 6056912262351430161 level=0.2475 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip kick 1 0 32.4138 0.2586 4855194313025110968 level=1 attack=0.001 release=0.5 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
+clip snare 2 1 32.3276 0.1897 6056912262351430161 level=0.2475 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip kick 1 0 32.4138 0.2586 4855194313025110968 level=0.55 attack=0.001 release=0.2576 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
 clip reese 1 2 32.4138 0.5172 6431772755996137524 level=0.42 attack=0.004 release=0.18 pitch=-8 pitch_swp=0 interval=0 timbre=2 detune=0.45 cutoff=0.42 resonance=0.25 drive=0.65 phaser=0.25 lfo_rate=1.45 lfo>cut=0.2 duck=0.6 duck_from=1
 clip sub 1 2 32.4138 0.5172 3696137624642835627 level=0.45 attack=0.004 release=0.18 pitch=-8 pitch_swp=0 interval=0 timbre=0 duck=0.6 duck_from=1
 clip coil 8 3 32.4138 0.7759 8847546910470953381 level=0.42 attack=0.01 release=0.3 pitch=20 pitch_swp=0 ring=0.7 formant=14 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=0.1 lfo>pitch=0.18 lfo_rate=5.5
 clip coil 8 3 32.4138 0.7759 4253807229684121438 level=0.3 attack=0.01 release=0.3 pitch=16 pitch_swp=0 ring=0.7 formant=14 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=-0.3 lfo>pitch=0.18 lfo_rate=5.5
-clip snare 2 1 32.7586 0.1897 2469155471959677751 level=0.55 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare_body 1 1 32.7586 0.1034 3997189063502503178 level=0.4 attack=0.001 release=0.22 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
+clip snare 2 1 32.7586 0.1897 2469155471959677751 level=0.55 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare_body 1 1 32.7586 0.1034 3997189063502503178 level=0.385 attack=0.001 release=0.1024 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
 clip glitch 5 5 32.7586 0.0431 5950264021800391947 level=0.3 attack=0 release=0.01 pitch=19.35 file=luminal/luminal__synth_vocal_base_00001.ogg pitch_mode=1 speed=0 start=0.3 cutoff=0.85 pan=0.4 keyed=0
 clip glitch 5 5 32.8017 0.0431 352633029181543700 level=0.3 attack=0 release=0.01 pitch=18.35 file=luminal/luminal__synth_vocal_base_00001.ogg pitch_mode=1 speed=0 start=0.3 cutoff=0.85 pan=-0.4 keyed=0
 clip glitch 5 5 32.8448 0.0431 4722754988946558788 level=0.3 attack=0 release=0.01 pitch=17.35 file=luminal/luminal__synth_vocal_base_00001.ogg pitch_mode=1 speed=0 start=0.3 cutoff=0.85 pan=0.4 keyed=0
 clip glitch 5 5 32.8879 0.0431 8414390991513278546 level=0.3 attack=0 release=0.01 pitch=16.35 file=luminal/luminal__synth_vocal_base_00001.ogg pitch_mode=1 speed=0 start=0.3 cutoff=0.85 pan=-0.4 keyed=0
-clip kick 1 0 32.9310 0.2586 604636250579461753 level=0.7 attack=0.001 release=0.5 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
+clip kick 1 0 32.9310 0.2586 604636250579461753 level=0.385 attack=0.001 release=0.2576 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
 clip reese 1 2 32.9310 0.1724 3823258248980422100 level=0.42 attack=0.004 release=0.06 pitch=-8 pitch_swp=-3 interval=0 timbre=2 detune=0.45 cutoff=0.42 resonance=0.25 drive=0.65 phaser=0.25 lfo_rate=1.45 lfo>cut=0.2 duck=0.6 duck_from=1
 clip sub 1 2 32.9310 0.1724 1588736498096532205 level=0.45 attack=0.004 release=0.06 pitch=-8 pitch_swp=-3 interval=0 timbre=0 duck=0.6 duck_from=1
 clip glitch 5 5 32.9310 0.0431 9189723287731519895 level=0.3 attack=0 release=0.01 pitch=15.35 file=luminal/luminal__synth_vocal_base_00001.ogg pitch_mode=1 speed=0 start=0.3 cutoff=0.85 pan=0.4 keyed=0
 clip glitch 5 5 32.9741 0.0431 6471413150588181239 level=0.3 attack=0 release=0.01 pitch=14.35 file=luminal/luminal__synth_vocal_base_00001.ogg pitch_mode=1 speed=0 start=0.3 cutoff=0.85 pan=-0.4 keyed=0
 clip glitch 5 5 33.0172 0.0431 5423169748493483841 level=0.3 attack=0 release=0.01 pitch=13.35 file=luminal/luminal__synth_vocal_base_00001.ogg pitch_mode=1 speed=0 start=0.3 cutoff=0.85 pan=0.4 keyed=0
 clip glitch 5 5 33.0603 0.0431 461548436321836094 level=0.3 attack=0 release=0.01 pitch=12.35 file=luminal/luminal__synth_vocal_base_00001.ogg pitch_mode=1 speed=0 start=0.3 cutoff=0.85 pan=-0.4 keyed=0
-clip kick 1 0 33.1034 0.2586 3289777677846310237 level=1 attack=0.001 release=0.5 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
-clip coil_hats 8 1 33.1034 5.5172 4202159362514110312 level=0.27 attack=0 release=0.05 pitch=21.0563 pitch_swp=0 divide=4 burst=1.4 snap=0.85 misfire=0.25 filter=2 cutoff=0.72 pan=-0.25 keyed=0
+clip kick 1 0 33.1034 0.2586 3289777677846310237 level=0.55 attack=0.001 release=0.2576 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
+clip coil_hats 8 1 33.1034 5.5172 4202159362514110312 level=0.486 attack=0 release=0.05 pitch=21.0563 pitch_swp=0 divide=4 burst=1.4 snap=0.85 misfire=0.25 filter=2 cutoff=0.72 pan=-0.25 keyed=0
 clip reese 1 2 33.1034 0.5172 7788063765291787979 level=0.42 attack=0.004 release=0.18 pitch=-11 pitch_swp=0 interval=0 timbre=2 detune=0.45 cutoff=0.42 resonance=0.25 drive=0.65 phaser=0.25 lfo_rate=1.45 lfo>cut=0.2 duck=0.6 duck_from=1
 clip sub 1 2 33.1034 0.5172 6917837203389657647 level=0.45 attack=0.004 release=0.18 pitch=-11 pitch_swp=0 interval=0 timbre=0 duck=0.6 duck_from=1
 clip coil 8 3 33.1034 0.6034 7940941254265614521 level=0.42 attack=0.01 release=0.3 pitch=25 pitch_swp=0 ring=0.7 formant=9 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=0.1 lfo>pitch=0.18 lfo_rate=5.5
 clip coil 8 3 33.1034 0.6034 2446986588030610377 level=0.3 attack=0.01 release=0.3 pitch=22 pitch_swp=0 ring=0.7 formant=9 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=-0.3 lfo>pitch=0.18 lfo_rate=5.5
 clip pad 1 4 33.1034 2.9310 984039446302562290 level=0.15 attack=0.08 release=0.6 pitch=13 interval=7 timbre=1.6 detune=0.3 shimmer=0.2 cutoff=0.45 pan=-0.35 reverb=0.4 duck=0.6 duck_from=1
 clip pad 1 4 33.1034 2.9310 5548545899459992856 level=0.15 attack=0.08 release=0.6 pitch=16 interval=12 timbre=1.6 detune=0.3 shimmer=0.2 cutoff=0.45 pan=0.35 reverb=0.4 duck=0.6 duck_from=1
-clip kick 1 0 33.2759 0.2586 3738276147214751487 level=0.8 attack=0.001 release=0.5 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
-clip snare 2 1 33.4483 0.1897 2860690486276625238 level=0.55 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare_body 1 1 33.4483 0.1034 3653338315440660814 level=0.4 attack=0.001 release=0.22 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
+clip kick 1 0 33.2759 0.2586 3738276147214751487 level=0.44 attack=0.001 release=0.2576 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
+clip snare 2 1 33.4483 0.1897 2860690486276625238 level=0.55 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare_body 1 1 33.4483 0.1034 3653338315440660814 level=0.385 attack=0.001 release=0.1024 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
 clip reese 1 2 33.6207 0.1724 3773191605909057499 level=0.42 attack=0.004 release=0.06 pitch=1 pitch_swp=0 interval=0 timbre=2 detune=0.45 cutoff=0.42 resonance=0.25 drive=0.65 phaser=0.25 lfo_rate=1.45 lfo>cut=0.2 duck=0.6 duck_from=1
 clip coil 8 3 33.6207 0.2138 6179593811031327960 level=0.42 attack=0.01 release=0.17 pitch=28 pitch_swp=0 ring=0.7 formant=9 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=0.1
 clip coil 8 3 33.6207 0.2138 505735998394928182 level=0.3 attack=0.01 release=0.17 pitch=25 pitch_swp=0 ring=0.7 formant=9 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=-0.3
-clip snare 2 1 33.7069 0.1897 4263394743181589431 level=0.2475 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare 2 1 33.7069 0.1897 4263394743181589431 level=0.2475 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
 clip reese 1 2 33.7931 0.5172 6895926436513364608 level=0.42 attack=0.004 release=0.18 pitch=-11 pitch_swp=0 interval=0 timbre=2 detune=0.45 cutoff=0.42 resonance=0.25 drive=0.65 phaser=0.25 lfo_rate=1.45 lfo>cut=0.2 duck=0.6 duck_from=1
 clip sub 1 2 33.7931 0.5172 8789524366258547710 level=0.45 attack=0.004 release=0.18 pitch=-11 pitch_swp=0 interval=0 timbre=0 duck=0.6 duck_from=1
 clip coil 8 3 33.7931 0.4310 862249123207283950 level=0.42 attack=0.01 release=0.3 pitch=32 pitch_swp=0 ring=0.7 formant=12 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=0.1
 clip coil 8 3 33.7931 0.4310 5193478875080784146 level=0.3 attack=0.01 release=0.3 pitch=28 pitch_swp=0 ring=0.7 formant=12 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=-0.3
-clip snare 2 1 33.8793 0.1897 2331389081143377180 level=0.3025 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare_body 1 1 33.8793 0.1034 2198851767334798022 level=0.22 attack=0.001 release=0.22 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
-clip kick 1 0 33.9655 0.2586 8843288443126059253 level=0.9 attack=0.001 release=0.5 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
-clip kick 1 0 34.0517 0.2586 1853673674909653924 level=0.7 attack=0.001 release=0.5 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
-clip snare 2 1 34.1379 0.1897 6112459409265285839 level=0.55 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare_body 1 1 34.1379 0.1034 7988512002542233030 level=0.4 attack=0.001 release=0.22 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
+clip snare 2 1 33.8793 0.1897 2331389081143377180 level=0.3025 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare_body 1 1 33.8793 0.1034 2198851767334798022 level=0.2118 attack=0.001 release=0.1024 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
+clip kick 1 0 33.9655 0.2586 8843288443126059253 level=0.495 attack=0.001 release=0.2576 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
+clip kick 1 0 34.0517 0.2586 1853673674909653924 level=0.385 attack=0.001 release=0.2576 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
+clip snare 2 1 34.1379 0.1897 6112459409265285839 level=0.55 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare_body 1 1 34.1379 0.1034 7988512002542233030 level=0.385 attack=0.001 release=0.1024 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
 clip coil 8 3 34.1379 0.2138 4736826509769000845 level=0.42 attack=0.01 release=0.17 pitch=30 pitch_swp=0 ring=0.7 formant=19 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=0.1
 clip coil 8 3 34.1379 0.2138 8065299718284186153 level=0.3 attack=0.01 release=0.17 pitch=27 pitch_swp=0 ring=0.7 formant=19 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=-0.3
 clip reese 1 2 34.3103 0.1724 1523483745117901731 level=0.42 attack=0.004 release=0.06 pitch=-4 pitch_swp=0 interval=0 timbre=2 detune=0.45 cutoff=0.42 resonance=0.25 drive=0.65 phaser=0.25 lfo_rate=1.45 lfo>cut=0.2 duck=0.6 duck_from=1
 clip coil 8 3 34.3103 0.2138 1633243638282633644 level=0.42 attack=0.01 release=0.17 pitch=28 pitch_swp=0 ring=0.7 formant=9 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=0.1
 clip coil 8 3 34.3103 0.2138 1523538159837494026 level=0.3 attack=0.01 release=0.17 pitch=25 pitch_swp=0 ring=0.7 formant=9 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=-0.3
-clip snare 2 1 34.3966 0.1897 6642912631879970082 level=0.275 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip kick 1 0 34.4828 0.2586 7072392751790425594 level=1 attack=0.001 release=0.5 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
+clip snare 2 1 34.3966 0.1897 6642912631879970082 level=0.275 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip kick 1 0 34.4828 0.2586 7072392751790425594 level=0.55 attack=0.001 release=0.2576 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
 clip reese 1 2 34.4828 0.3448 1208945023247486647 level=0.42 attack=0.004 release=0.12 pitch=-11 pitch_swp=0 interval=0 timbre=2 detune=0.45 cutoff=0.42 resonance=0.25 drive=0.65 phaser=0.25 lfo_rate=1.45 lfo>cut=0.2 duck=0.6 duck_from=1
 clip sub 1 2 34.4828 0.3448 6439807051987086411 level=0.45 attack=0.004 release=0.12 pitch=-11 pitch_swp=0 interval=0 timbre=0 duck=0.6 duck_from=1
 clip coil 8 3 34.4828 0.4310 2614136823488022461 level=0.42 attack=0.01 release=0.3 pitch=27 pitch_swp=0 ring=0.7 formant=14 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=0.1
 clip coil 8 3 34.4828 0.4310 2719532171068941534 level=0.3 attack=0.01 release=0.3 pitch=23 pitch_swp=0 ring=0.7 formant=14 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=-0.3
-clip kick 1 0 34.6552 0.2586 7174131658542222265 level=0.8 attack=0.001 release=0.5 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
-clip snare 2 1 34.8276 0.1897 6679046113931808270 level=0.55 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare_body 1 1 34.8276 0.1034 6855341584543198381 level=0.4 attack=0.001 release=0.22 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
+clip kick 1 0 34.6552 0.2586 7174131658542222265 level=0.44 attack=0.001 release=0.2576 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
+clip snare 2 1 34.8276 0.1897 6679046113931808270 level=0.55 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare_body 1 1 34.8276 0.1034 6855341584543198381 level=0.385 attack=0.001 release=0.1024 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
 clip reese 1 2 34.8276 0.1724 5440013502871436585 level=0.42 attack=0.004 release=0.06 pitch=1 pitch_swp=0 interval=0 timbre=2 detune=0.45 cutoff=0.42 resonance=0.25 drive=0.65 phaser=0.25 lfo_rate=1.45 lfo>cut=0.2 duck=0.6 duck_from=1
 clip coil 8 3 34.8276 0.4310 5488678935887936867 level=0.42 attack=0.01 release=0.3 pitch=25 pitch_swp=0 ring=0.7 formant=14 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=0.1
 clip coil 8 3 34.8276 0.4310 7713005265850939394 level=0.3 attack=0.01 release=0.3 pitch=22 pitch_swp=0 ring=0.7 formant=14 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=-0.3
 clip reese 1 2 35.0000 0.1724 8929607404523967811 level=0.42 attack=0.004 release=0.06 pitch=-4 pitch_swp=0 interval=0 timbre=2 detune=0.45 cutoff=0.42 resonance=0.25 drive=0.65 phaser=0.25 lfo_rate=1.45 lfo>cut=0.2 duck=0.6 duck_from=1
-clip snare 2 1 35.0862 0.1897 6256377173842720890 level=0.2475 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare 2 1 35.1724 0.1897 8674758961225619792 level=0.1925 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare_body 1 1 35.1724 0.1034 4668300508867507937 level=0.14 attack=0.001 release=0.22 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
+clip snare 2 1 35.0862 0.1897 6256377173842720890 level=0.2475 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare 2 1 35.1724 0.1897 8674758961225619792 level=0.1925 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare_body 1 1 35.1724 0.1034 4668300508867507937 level=0.1347 attack=0.001 release=0.1024 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
 clip reese 1 2 35.1724 0.5172 7627685819507803630 level=0.42 attack=0.004 release=0.18 pitch=-11 pitch_swp=0 interval=0 timbre=2 detune=0.45 cutoff=0.42 resonance=0.25 drive=0.65 phaser=0.25 lfo_rate=1.45 lfo>cut=0.2 duck=0.6 duck_from=1
 clip sub 1 2 35.1724 0.5172 1590234568815446448 level=0.45 attack=0.004 release=0.18 pitch=-11 pitch_swp=0 interval=0 timbre=0 duck=0.6 duck_from=1
 clip coil 8 3 35.1724 0.7759 2729025307946942225 level=0.42 attack=0.01 release=0.3 pitch=28 pitch_swp=0 ring=0.7 formant=14 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=0.1 lfo>pitch=0.18 lfo_rate=5.5
 clip coil 8 3 35.1724 0.7759 988494287005989199 level=0.3 attack=0.01 release=0.3 pitch=25 pitch_swp=0 ring=0.7 formant=14 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=-0.3 lfo>pitch=0.18 lfo_rate=5.5
-clip snare 2 1 35.2155 0.1897 4151852560319785868 level=0.2163 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare 2 1 35.2586 0.1897 1196725456369394637 level=0.2402 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare 2 1 35.3017 0.1897 201582704283998650 level=0.264 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare 2 1 35.3448 0.1897 3803738884905562519 level=0.2878 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare_body 1 1 35.3448 0.1034 6511705998027556595 level=0.2093 attack=0.001 release=0.22 pitch=11.4 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
-clip snare 2 1 35.3879 0.1897 2955608426436488332 level=0.3117 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare 2 1 35.4310 0.1897 103595077448148761 level=0.3355 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare 2 1 35.4741 0.1897 764407960635808029 level=0.3593 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare 2 1 35.5172 0.1897 4245061090790508283 level=0.3832 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare_body 1 1 35.5172 0.1034 5612352964626736239 level=0.2787 attack=0.001 release=0.22 pitch=13.8 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
-clip snare 2 1 35.5603 0.1897 6674583444404318469 level=0.407 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare 2 1 35.6034 0.1897 1191232714392848324 level=0.4308 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare 2 1 35.6466 0.1897 6361446663347223974 level=0.4547 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare 2 1 35.6897 0.1897 8104980803949825290 level=0.4785 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare_body 1 1 35.6897 0.1034 6244231713440638623 level=0.348 attack=0.001 release=0.22 pitch=16.2 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
+clip snare 2 1 35.2155 0.1897 4151852560319785868 level=0.2163 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare 2 1 35.2586 0.1897 1196725456369394637 level=0.2402 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare 2 1 35.3017 0.1897 201582704283998650 level=0.264 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare 2 1 35.3448 0.1897 3803738884905562519 level=0.2878 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare_body 1 1 35.3448 0.1034 6511705998027556595 level=0.2015 attack=0.001 release=0.1024 pitch=11.4 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
+clip snare 2 1 35.3879 0.1897 2955608426436488332 level=0.3117 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare 2 1 35.4310 0.1897 103595077448148761 level=0.3355 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare 2 1 35.4741 0.1897 764407960635808029 level=0.3593 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare 2 1 35.5172 0.1897 4245061090790508283 level=0.3832 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare_body 1 1 35.5172 0.1034 5612352964626736239 level=0.2682 attack=0.001 release=0.1024 pitch=13.8 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
+clip snare 2 1 35.5603 0.1897 6674583444404318469 level=0.407 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare 2 1 35.6034 0.1897 1191232714392848324 level=0.4308 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare 2 1 35.6466 0.1897 6361446663347223974 level=0.4547 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare 2 1 35.6897 0.1897 8104980803949825290 level=0.4785 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare_body 1 1 35.6897 0.1034 6244231713440638623 level=0.335 attack=0.001 release=0.1024 pitch=16.2 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
 clip reese 1 2 35.6897 0.1724 4419539164111308836 level=0.42 attack=0.004 release=0.06 pitch=-11 pitch_swp=2 interval=0 timbre=2 detune=0.45 cutoff=0.42 resonance=0.25 drive=0.65 phaser=0.25 lfo_rate=1.45 lfo>cut=0.2 duck=0.6 duck_from=1
 clip sub 1 2 35.6897 0.1724 3889352233468521406 level=0.45 attack=0.004 release=0.06 pitch=-11 pitch_swp=2 interval=0 timbre=0 duck=0.6 duck_from=1
-clip snare 2 1 35.7328 0.1897 1526146898151272433 level=0.5023 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare 2 1 35.7759 0.1897 2789761906612491935 level=0.5262 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare 2 1 35.8190 0.1897 4379992443880013370 level=0.55 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip kick 1 0 35.8621 0.2586 7050595861198731033 level=1 attack=0.001 release=0.5 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
+clip snare 2 1 35.7328 0.1897 1526146898151272433 level=0.5023 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare 2 1 35.7759 0.1897 2789761906612491935 level=0.5262 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare 2 1 35.8190 0.1897 4379992443880013370 level=0.55 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip kick 1 0 35.8621 0.2586 7050595861198731033 level=0.55 attack=0.001 release=0.2576 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
 clip reese 1 2 35.8621 0.5172 1036409377298503122 level=0.42 attack=0.004 release=0.18 pitch=-9 pitch_swp=0 interval=0 timbre=2 detune=0.45 cutoff=0.42 resonance=0.25 drive=0.65 phaser=0.25 lfo_rate=1.45 lfo>cut=0.2 duck=0.6 duck_from=1
 clip sub 1 2 35.8621 0.5172 2553825212715523461 level=0.45 attack=0.004 release=0.18 pitch=-9 pitch_swp=0 interval=0 timbre=0 duck=0.6 duck_from=1
 clip coil 8 3 35.8621 0.4310 4227606285956495302 level=0.42 attack=0.01 release=0.3 pitch=27 pitch_swp=0 ring=0.7 formant=9 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=0.1
 clip coil 8 3 35.8621 0.4310 1395075139516521268 level=0.3 attack=0.01 release=0.3 pitch=23 pitch_swp=0 ring=0.7 formant=9 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=-0.3
 clip pad 1 4 35.8621 2.9310 7303979279025331694 level=0.15 attack=0.08 release=0.6 pitch=15 interval=7 timbre=1.6 detune=0.3 shimmer=0.2 cutoff=0.45 pan=-0.35 reverb=0.4 duck=0.6 duck_from=1
 clip pad 1 4 35.8621 2.9310 2564549809850980180 level=0.15 attack=0.08 release=0.6 pitch=19 interval=12 timbre=1.6 detune=0.3 shimmer=0.2 cutoff=0.45 pan=0.35 reverb=0.4 duck=0.6 duck_from=1
-clip kick 1 0 36.0345 0.2586 2586320774361918131 level=0.8 attack=0.001 release=0.5 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
-clip snare 2 1 36.2069 0.1897 677294393184450078 level=0.55 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare_body 1 1 36.2069 0.1034 3740415875974275189 level=0.4 attack=0.001 release=0.22 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
+clip kick 1 0 36.0345 0.2586 2586320774361918131 level=0.44 attack=0.001 release=0.2576 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
+clip snare 2 1 36.2069 0.1897 677294393184450078 level=0.55 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare_body 1 1 36.2069 0.1034 3740415875974275189 level=0.385 attack=0.001 release=0.1024 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
 clip coil 8 3 36.2069 0.2138 5196000978837199209 level=0.42 attack=0.01 release=0.17 pitch=31 pitch_swp=0 ring=0.7 formant=12 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=0.1
 clip coil 8 3 36.2069 0.2138 5292602730767890145 level=0.3 attack=0.01 release=0.17 pitch=28 pitch_swp=0 ring=0.7 formant=12 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=-0.3
 clip reese 1 2 36.3793 0.1724 4413014312285470306 level=0.42 attack=0.004 release=0.06 pitch=3 pitch_swp=0 interval=0 timbre=2 detune=0.45 cutoff=0.42 resonance=0.25 drive=0.65 phaser=0.25 lfo_rate=1.45 lfo>cut=0.2 duck=0.6 duck_from=1
 clip coil 8 3 36.3793 0.2138 4139241341409974964 level=0.42 attack=0.01 release=0.17 pitch=32 pitch_swp=0 ring=0.7 formant=12 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=0.1
 clip coil 8 3 36.3793 0.2138 1117442517512590294 level=0.3 attack=0.01 release=0.17 pitch=28 pitch_swp=0 ring=0.7 formant=12 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=-0.3
-clip snare 2 1 36.4655 0.1897 1049580718494012291 level=0.2475 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip kick 1 0 36.5517 0.2586 1579889083809822337 level=1 attack=0.001 release=0.5 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
+clip snare 2 1 36.4655 0.1897 1049580718494012291 level=0.2475 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip kick 1 0 36.5517 0.2586 1579889083809822337 level=0.55 attack=0.001 release=0.2576 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
 clip reese 1 2 36.5517 0.5172 4304543281900268037 level=0.42 attack=0.004 release=0.18 pitch=-9 pitch_swp=0 interval=0 timbre=2 detune=0.45 cutoff=0.42 resonance=0.25 drive=0.65 phaser=0.25 lfo_rate=1.45 lfo>cut=0.2 duck=0.6 duck_from=1
 clip sub 1 2 36.5517 0.5172 5327378249230951585 level=0.45 attack=0.004 release=0.18 pitch=-9 pitch_swp=0 interval=0 timbre=0 duck=0.6 duck_from=1
 clip coil 8 3 36.5517 0.4310 5464890797886880972 level=0.42 attack=0.01 release=0.3 pitch=34 pitch_swp=0 ring=0.7 formant=17 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=0.1
 clip coil 8 3 36.5517 0.4310 4188803220916097530 level=0.3 attack=0.01 release=0.3 pitch=31 pitch_swp=0 ring=0.7 formant=17 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=-0.3
-clip snare 2 1 36.8966 0.1897 6934756457987424071 level=0.55 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare_body 1 1 36.8966 0.1034 1470377316105999723 level=0.4 attack=0.001 release=0.22 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
+clip snare 2 1 36.8966 0.1897 6934756457987424071 level=0.55 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare_body 1 1 36.8966 0.1034 1470377316105999723 level=0.385 attack=0.001 release=0.1024 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
 clip coil 8 3 36.8966 0.2138 2188405751527822535 level=0.42 attack=0.01 release=0.17 pitch=32 pitch_swp=0 ring=0.7 formant=19 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=0.1
 clip coil 8 3 36.8966 0.2138 7642729291968487074 level=0.3 attack=0.01 release=0.17 pitch=28 pitch_swp=0 ring=0.7 formant=19 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=-0.3
-clip kick 1 0 37.0690 0.2586 7773805657255176222 level=0.7 attack=0.001 release=0.5 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
+clip kick 1 0 37.0690 0.2586 7773805657255176222 level=0.385 attack=0.001 release=0.2576 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
 clip reese 1 2 37.0690 0.1724 1898350263975686496 level=0.42 attack=0.004 release=0.06 pitch=-2 pitch_swp=0 interval=0 timbre=2 detune=0.45 cutoff=0.42 resonance=0.25 drive=0.65 phaser=0.25 lfo_rate=1.45 lfo>cut=0.2 duck=0.6 duck_from=1
 clip coil 8 3 37.0690 0.2138 4758909439762862769 level=0.42 attack=0.01 release=0.17 pitch=31 pitch_swp=0 ring=0.7 formant=19 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=0.1
 clip coil 8 3 37.0690 0.2138 7705077372605676733 level=0.3 attack=0.01 release=0.17 pitch=28 pitch_swp=0 ring=0.7 formant=19 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=-0.3
-clip kick 1 0 37.2414 0.2586 4669730775411111532 level=1 attack=0.001 release=0.5 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
+clip kick 1 0 37.2414 0.2586 4669730775411111532 level=0.55 attack=0.001 release=0.2576 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
 clip reese 1 2 37.2414 0.3448 1657339353954608793 level=0.42 attack=0.004 release=0.12 pitch=-9 pitch_swp=0 interval=0 timbre=2 detune=0.45 cutoff=0.42 resonance=0.25 drive=0.65 phaser=0.25 lfo_rate=1.45 lfo>cut=0.2 duck=0.6 duck_from=1
 clip sub 1 2 37.2414 0.3448 5424474627677804705 level=0.45 attack=0.004 release=0.12 pitch=-9 pitch_swp=0 interval=0 timbre=0 duck=0.6 duck_from=1
 clip coil 8 3 37.2414 1.4655 797677359153768636 level=0.42 attack=0.01 release=0.3 pitch=31 pitch_swp=0 ring=0.7 formant=14 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=0.1 lfo>pitch=0.18 lfo_rate=5.5
 clip coil 8 3 37.2414 1.4655 5628680910755897718 level=0.3 attack=0.01 release=0.3 pitch=28 pitch_swp=0 ring=0.7 formant=14 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=-0.3 lfo>pitch=0.18 lfo_rate=5.5
-clip kick 1 0 37.4138 0.2586 7322916810083077513 level=0.8 attack=0.001 release=0.5 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
-clip snare 2 1 37.5862 0.1897 3189925361438116013 level=0.55 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare_body 1 1 37.5862 0.1034 3328471934985119314 level=0.4 attack=0.001 release=0.22 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
+clip kick 1 0 37.4138 0.2586 7322916810083077513 level=0.44 attack=0.001 release=0.2576 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
+clip snare 2 1 37.5862 0.1897 3189925361438116013 level=0.55 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare_body 1 1 37.5862 0.1034 3328471934985119314 level=0.385 attack=0.001 release=0.1024 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
 clip reese 1 2 37.5862 0.1724 7668975632891441229 level=0.42 attack=0.004 release=0.06 pitch=3 pitch_swp=0 interval=0 timbre=2 detune=0.45 cutoff=0.42 resonance=0.25 drive=0.65 phaser=0.25 lfo_rate=1.45 lfo>cut=0.2 duck=0.6 duck_from=1
 clip reese 1 2 37.7586 0.1724 2123007002737785267 level=0.42 attack=0.004 release=0.06 pitch=-2 pitch_swp=0 interval=0 timbre=2 detune=0.45 cutoff=0.42 resonance=0.25 drive=0.65 phaser=0.25 lfo_rate=1.45 lfo>cut=0.2 duck=0.6 duck_from=1
-clip snare 2 1 37.8448 0.1897 4096798687646325013 level=0.2475 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare 2 1 37.9310 0.1897 3282124479785602350 level=0.495 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare_body 1 1 37.9310 0.1034 981137265516193294 level=0.36 attack=0.001 release=0.22 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
+clip snare 2 1 37.8448 0.1897 4096798687646325013 level=0.2475 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare 2 1 37.9310 0.1897 3282124479785602350 level=0.495 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare_body 1 1 37.9310 0.1034 981137265516193294 level=0.3465 attack=0.001 release=0.1024 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
 clip reese 1 2 37.9310 0.5172 2567630636195825420 level=0.42 attack=0.004 release=0.18 pitch=-9 pitch_swp=0 interval=0 timbre=2 detune=0.45 cutoff=0.42 resonance=0.25 drive=0.65 phaser=0.25 lfo_rate=1.45 lfo>cut=0.2 duck=0.6 duck_from=1
 clip sub 1 2 37.9310 0.5172 7656077871574081831 level=0.45 attack=0.004 release=0.18 pitch=-9 pitch_swp=0 interval=0 timbre=0 duck=0.6 duck_from=1
-clip snare 2 1 38.0172 0.1897 4683152986997311813 level=0.4675 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare_body 1 1 38.0172 0.1034 2197242266980203114 level=0.34 attack=0.001 release=0.22 pitch=7.5 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
-clip snare 2 1 38.1034 0.1897 8029055868484242966 level=0.44 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare_body 1 1 38.1034 0.1034 6796861317361592542 level=0.32 attack=0.001 release=0.22 pitch=6 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
-clip snare 2 1 38.1897 0.1897 4383076870828076773 level=0.4125 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare_body 1 1 38.1897 0.1034 5581561591678100167 level=0.3 attack=0.001 release=0.22 pitch=4.5 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
-clip snare 2 1 38.2759 0.1897 6205509137795424862 level=0.385 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare_body 1 1 38.2759 0.1034 7149694449981620165 level=0.28 attack=0.001 release=0.22 pitch=3 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
+clip snare 2 1 38.0172 0.1897 4683152986997311813 level=0.4675 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare_body 1 1 38.0172 0.1034 2197242266980203114 level=0.3272 attack=0.001 release=0.1024 pitch=7.5 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
+clip snare 2 1 38.1034 0.1897 8029055868484242966 level=0.44 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare_body 1 1 38.1034 0.1034 6796861317361592542 level=0.308 attack=0.001 release=0.1024 pitch=6 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
+clip snare 2 1 38.1897 0.1897 4383076870828076773 level=0.4125 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare_body 1 1 38.1897 0.1034 5581561591678100167 level=0.2888 attack=0.001 release=0.1024 pitch=4.5 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
+clip snare 2 1 38.2759 0.1897 6205509137795424862 level=0.385 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare_body 1 1 38.2759 0.1034 7149694449981620165 level=0.2695 attack=0.001 release=0.1024 pitch=3 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
 clip glitch 5 5 38.2759 0.0431 5473524793286245478 level=0.3 attack=0 release=0.01 pitch=19.35 file=luminal/luminal__synth_vocal_base_00001.ogg pitch_mode=1 speed=0 start=0.3 cutoff=0.85 pan=0.4 keyed=0
 clip glitch 5 5 38.3190 0.0431 1022553927884433099 level=0.3 attack=0 release=0.01 pitch=18.35 file=luminal/luminal__synth_vocal_base_00001.ogg pitch_mode=1 speed=0 start=0.3 cutoff=0.85 pan=-0.4 keyed=0
-clip snare 2 1 38.3621 0.1897 9016498543798813534 level=0.3575 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare_body 1 1 38.3621 0.1034 6061286786476930346 level=0.26 attack=0.001 release=0.22 pitch=1.5 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
+clip snare 2 1 38.3621 0.1897 9016498543798813534 level=0.3575 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare_body 1 1 38.3621 0.1034 6061286786476930346 level=0.2503 attack=0.001 release=0.1024 pitch=1.5 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
 clip glitch 5 5 38.3621 0.0431 8567914868723699618 level=0.3 attack=0 release=0.01 pitch=17.35 file=luminal/luminal__synth_vocal_base_00001.ogg pitch_mode=1 speed=0 start=0.3 cutoff=0.85 pan=0.4 keyed=0
 clip glitch 5 5 38.4052 0.0431 3730182468067219593 level=0.3 attack=0 release=0.01 pitch=16.35 file=luminal/luminal__synth_vocal_base_00001.ogg pitch_mode=1 speed=0 start=0.3 cutoff=0.85 pan=-0.4 keyed=0
-clip snare 2 1 38.4483 0.1897 1171722765357678419 level=0.33 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare_body 1 1 38.4483 0.1034 4192289295321607475 level=0.24 attack=0.001 release=0.22 pitch=0 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
+clip snare 2 1 38.4483 0.1897 1171722765357678419 level=0.33 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare_body 1 1 38.4483 0.1034 4192289295321607475 level=0.231 attack=0.001 release=0.1024 pitch=0 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
 clip reese 1 2 38.4483 0.1724 4326879656479425616 level=0.42 attack=0.004 release=0.06 pitch=-9 pitch_swp=-7 interval=0 timbre=2 detune=0.45 cutoff=0.42 resonance=0.25 drive=0.65 phaser=0.25 lfo_rate=1.45 lfo>cut=0.2 duck=0.6 duck_from=1
 clip sub 1 2 38.4483 0.1724 8803308421590970969 level=0.45 attack=0.004 release=0.06 pitch=-9 pitch_swp=-7 interval=0 timbre=0 duck=0.6 duck_from=1
 clip glitch 5 5 38.4483 0.0431 4004901065912831042 level=0.3 attack=0 release=0.01 pitch=15.35 file=luminal/luminal__synth_vocal_base_00001.ogg pitch_mode=1 speed=0 start=0.3 cutoff=0.85 pan=0.4 keyed=0
 clip glitch 5 5 38.4914 0.0431 205858187402085718 level=0.3 attack=0 release=0.01 pitch=14.35 file=luminal/luminal__synth_vocal_base_00001.ogg pitch_mode=1 speed=0 start=0.3 cutoff=0.85 pan=-0.4 keyed=0
-clip snare 2 1 38.5345 0.1897 4586478585020850845 level=0.3025 attack=0.001 release=0.45 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
-clip snare_body 1 1 38.5345 0.1034 4119103301684676915 level=0.22 attack=0.001 release=0.22 pitch=-1.5 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
+clip snare 2 1 38.5345 0.1897 4586478585020850845 level=0.3025 attack=0.001 release=0.1887 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.2 pan=0.05 keyed=0 filter=1 cutoff=0.74
+clip snare_body 1 1 38.5345 0.1034 4119103301684676915 level=0.2118 attack=0.001 release=0.1024 pitch=-1.5 pitch_swp=-7 interval=7 timbre=0.8 drive=0.35 env_curve=0.5 keyed=0
 clip glitch 5 5 38.5345 0.0431 1246134793472646812 level=0.3 attack=0 release=0.01 pitch=13.35 file=luminal/luminal__synth_vocal_base_00001.ogg pitch_mode=1 speed=0 start=0.3 cutoff=0.85 pan=0.4 keyed=0
 clip glitch 5 5 38.5776 0.0431 6446227512213483989 level=0.3 attack=0 release=0.01 pitch=12.35 file=luminal/luminal__synth_vocal_base_00001.ogg pitch_mode=1 speed=0 start=0.3 cutoff=0.85 pan=-0.4 keyed=0
-clip boom 1 0 38.6207 1.0345 5703723433801933637 level=0.9 attack=0.001 release=2.8 pitch=0 pitch_swp=-24 interval=0 timbre=0 drive=0.4 env_curve=0.2 reverb=0.3 keyed=0
-clip kick 1 0 38.6207 0.2586 1604078946698070184 level=1 attack=0.001 release=0.5 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
-clip crash 2 1 38.6207 2.0690 1966408978924100685 level=0.4 attack=0.001 release=5.5 filter=2 cutoff=0.8 color=0 env_curve=0.7 reverb=0.45 pan=0.2 keyed=0
-clip coil_hats 8 1 38.6207 1.3793 5638290536674709319 level=0.27 attack=0 release=0.05 pitch=21.0563 pitch_swp=-30 divide=4 burst=1.4 snap=0.85 misfire=0.2 filter=2 cutoff=0.72 pan=-0.25 keyed=0
+clip boom 1 0 38.6207 1.0345 5703723433801933637 level=0.55 attack=0.001 release=1.0335 pitch=0 pitch_swp=-24 interval=0 timbre=0 drive=0.4 env_curve=0.2 reverb=0.3 keyed=0
+clip kick 1 0 38.6207 0.2586 1604078946698070184 level=0.55 attack=0.001 release=0.2576 pitch=3 pitch_swp=-22 interval=0 timbre=0 drive=0.65 env_curve=0.35 keyed=0
+clip crash 2 1 38.6207 2.0690 1966408978924100685 level=0.4 attack=0.001 release=2.068 filter=2 cutoff=0.8 color=0 env_curve=0.7 reverb=0.45 pan=0.2 keyed=0
+clip coil_hats 8 1 38.6207 1.3793 5638290536674709319 level=0.486 attack=0 release=0.05 pitch=21.0563 pitch_swp=-30 divide=4 burst=1.4 snap=0.85 misfire=0.2 filter=2 cutoff=0.72 pan=-0.25 keyed=0
 clip reese_stop 1 2 38.6207 1.3793 112742553433299443 level=0.42 attack=0.004 release=0.6 pitch=-4 pitch_swp=-24 interval=12 timbre=2 detune=0.45 cutoff=0.5 cutoff_swp=-0.3 drive=0.5
 clip sub_stop 1 2 38.6207 1.3793 7786798398491091348 level=0.45 attack=0.004 release=0.6 pitch=-16 pitch_swp=-12 interval=0 timbre=0
 clip coil 8 3 38.6207 1.4655 4331102097487757886 level=0.42 attack=0.01 release=0.3 pitch=32 pitch_swp=-24 ring=0.7 formant=12 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=0.1 lfo>pitch=0.18 lfo_rate=5.5
 clip coil 8 3 38.6207 1.4655 989033641020520926 level=0.3 attack=0.01 release=0.3 pitch=27 pitch_swp=-24 ring=0.7 formant=19 burst=8 jitter=0.05 snap=0.4 flicker=0.25 drive=0.25 echo=0.2 reverb=0.3 pan=-0.3 lfo>pitch=0.18 lfo_rate=5.5
-clip choir_end 6 4 38.6207 3.4483 8301558933607868235 level=0.45 attack=0.02 release=4 pitch=7.35 chord=5 file=luminal/luminal__synth_vocal_base_00001.ogg start=0.2 speed=0.35 voices=8 gather=1 gather_swp=-1 drift=0.5 wander=12 scatter=0.4 reverb=0.6 cutoff=0.8
-clip impact 5 5 38.6207 2.7586 5638022365712604156 level=0.6 release=3 file=gravitic/gravitic_impact_00001.ogg keyed=0
+clip choir_end 6 4 38.6207 3.4483 8301558933607868235 level=0.45 attack=0.02 release=3 pitch=7.35 chord=5 file=luminal/luminal__synth_vocal_base_00001.ogg start=0.2 speed=0.35 voices=8 gather=1 gather_swp=-1 drift=0.5 wander=12 scatter=0.4 reverb=0.6 cutoff=0.8
+clip impact 5 5 38.6207 2.7586 5638022365712604156 level=0.6 release=2.5 file=gravitic/gravitic_impact_00001.ogg keyed=0

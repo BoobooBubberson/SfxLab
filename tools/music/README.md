@@ -8,7 +8,12 @@ choir grown from any recording, partials resynthesis, a bendable tuning) make un
 |---|---|
 | `hymn_for_a_dead_coil.py` | D phrygian, 170 BPM, breakbeat + choir + Tesla-coil lead. `--riff pluck\|twin\|glitch\|swarm` picks the guitar (swarm the favourite, glitch close; pluck sounded 8-bit) |
 | `tritave_signal.py` | alien: Bohlen-Pierce tuning (13 steps per 3:1, no octaves), 7/8, arc voice forming vowels |
+| `overclock.py` | drum and bass into breakcore, F minor, 174 BPM: amen break, reese, vowel coil lead, choir gathering in the breakdown, tape-stop ending (combat) |
+| `cathedral_of_rust.py` | half-time doom, D minor, 66 BPM: the D-major cello turned minor through partials `gather`, chanting coil, anvil, clockwork ticker (dread / boss) |
+| `lantern_market.py` | G major in just intonation, 96 BPM swung, loops: FM kalimba, swung plucks, tuned FM toks, a 7/4 seventh on the V7 (hub / safe room) |
+| `sfxsong.py` | the helper the three above use: `Song.clip()` in beats, keys checked per clip type against `Sfx.java`, slider ranges and short envelopes reported |
 | `probe.py` | measure recordings before using them: pitch, envelope, a timeline, section levels of a render |
+| `listen.py` | look at a render: solo stems per track, RMS per track and section, spectrograms with bar lines, pitch classes per bar |
 
 ```sh
 python3 tools/music/tritave_signal.py > projects/tritave_signal.sfx
@@ -36,9 +41,16 @@ clip kick 1 0 0.0000 0.2500 812345 level=0.8 pitch=-1 pitch_swp=-19 interval=0 t
 - **track**: 0-5 in the file; the GUI numbers them 1-6
 - **start, dur**: seconds. **The release fades inside `dur`**: a clip is silent at start + dur, so a
   note that should ring needs the ring added to its length
+- **release is the last `release` seconds of `dur`, and the envelope is `min(t/attack, (dur-t)/release)`
+  raised to `8^env_curve`.** A release longer than the clip means it starts partway down its fade and never
+  reaches its level: a 0.19 s snare with `release=0.45 env_curve=0.6` peaks about 26 dB down. For a hit, make
+  the release the whole clip (`sfxsong`: `release="full"`) and shape it with `env_curve`. The hymn's snares
+  sit ~26 dB and its kicks ~13 dB under their `level` for this reason
 - **seed**: any 64-bit integer; the clip's random state (noise, voice offsets, jitter). Same seed, same sound
 - **key=value**: any parameter left out takes its default, so lines only need what they change
 
+Keys belong to a clip type: a tones clip has no `voices`, an arc no `interval`, and a key the type lacks is
+skipped like a typo. Slider ranges are not enforced on load (attack 0-2 s, release 0-3 s).
 Parameter keys are the slider names with spaces turned to `_`: `pitch_swp`, `env_curve`, `gather_swp`.
 Some contain other characters: `lfo>pitch`, `lfo>cut`, `lfo>amp`, `odd/even` (in Python pass them as
 `**{"lfo>pitch": 0.2}`). **An unknown key is skipped without a word**: the coil's vibrato was a typo
@@ -52,6 +64,12 @@ for a whole session. The scripts check every key against the `PSpec` names in
   microtones and other tunings are just numbers (`tritave_signal.py`: a Bohlen-Pierce step is 1.463)
 - on a recording (sample, choir, partials) `pitch` is a shift from the recording's own pitch, so measure
   it first (`probe.py pitch`) and shift by the difference, cents included
+- arc `formant` does not detune the note: each pulse restarts the formant grain (FOF), so the output stays
+  periodic and only the harmonics near the formant get louder. A pitch-class check of an arc lead reads
+  bright harmonics (a 5th above for formant 19), not wrong notes
+- resonant band-passed noise (`filter=1 resonance=0.9`) is pitched only roughly: in a short hit its peak lands
+  anywhere within about ±1.5 semitones of the cutoff. For percussion that must be in key, put a short FM
+  ping (tones, `fm_ratio=3`) on the note and keep the noise for the knock (`lantern_market.py drip()`)
 - `pitch_swp` adds that many semitones linearly over the clip: kicks, risers, glides, tape stops
 - the scripts write times in beats (or eighths) and convert to seconds in `clip()`
 - `keyed`: 3 (default for synths) lets the project key (`< >`, `--key`) transpose the clip; set
@@ -107,6 +125,17 @@ Only the cleared sample sets are in git (see `samples/README.md`); the hymn also
 ## Checking a piece without ears
 
 Measure, then listen: the numbers catch a buried kick, not a bad melody.
+
+```sh
+python3 tools/music/listen.py stems  projects/x.sfx /tmp/x              # mix.wav + one solo render per used track
+python3 tools/music/listen.py report /tmp/x 1.379 intro:0:4 drop:8:16   # RMS per track x section, lows, highs, peaks
+python3 tools/music/listen.py draw   /tmp/x 1.379 /tmp/x.png 4 12       # spectrograms of mix and stems, bars 4-12
+python3 tools/music/listen.py chroma /tmp/x/t5.wav 1.379 8 16           # pitch classes per bar: are the chords right?
+```
+
+The master is `tanh(1.1 x) * 0.85`: a mix that drives it squashes everything at once, so balance the
+tracks (track volume is the fader) before adding level. The duck keys on the key track's level after its
+fader, reaching full depth at -12 dBFS.
 
 ```sh
 # solo track N (0-5): mute every other track line, render, measure per section
