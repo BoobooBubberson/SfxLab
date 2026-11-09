@@ -1,0 +1,661 @@
+# SfxLab project v2: clip name type track start dur seed key=value...
+# 'Sunfall' - D minor -> D major, 84 BPM, by Claude. tracks: 1 taiko/timpani 2 ostinato 3 braam/low strings 4 horns 5 strings/choir 6 deep note/fx
+loop 0
+root 110.0000
+track 0 0.800 0
+track 1 1.000 0
+track 2 0.220 0
+track 3 0.900 0
+track 4 0.800 0
+track 5 0.700 0
+clip deep_note 0 5 0.0000 10.0000 3008928843771573007 level=0.5 attack=2 release=0.8 pitch=-7 voices=14 gather=0 gather_swp=1 drift=0.6 timbre=1.3 chord=1 sub=0.15 cutoff=0.55 cutoff_swp=0.15 reverb=0.45
+clip timpani 1 0 5.7143 0.4286 682633578598870453 level=0.09 attack=0.003 release=0.4256 pitch=-7 pitch_swp=0.15 interval=12 timbre=0.05 fm_ratio=2 fm_depth=0.5 env_curve=0.35 reverb=0.4
+clip cymbal_swell 2 5 5.7143 5.7143 9132489599127548806 level=0.13 attack=2 release=0.05 filter=1 cutoff=0.68 cutoff_swp=0.22 resonance=0.1 color=0 env_curve=-0.3 reverb=0.5 keyed=0
+clip timpani 1 0 5.8929 0.4286 7414259668583696509 level=0.1055 attack=0.003 release=0.4256 pitch=-7 pitch_swp=0.15 interval=12 timbre=0.05 fm_ratio=2 fm_depth=0.5 env_curve=0.35 reverb=0.4
+clip timpani 1 0 6.0714 0.4286 7409188124186562379 level=0.121 attack=0.003 release=0.4256 pitch=-7 pitch_swp=0.15 interval=12 timbre=0.05 fm_ratio=2 fm_depth=0.5 env_curve=0.35 reverb=0.4
+clip timpani 1 0 6.2500 0.4286 581582421959512548 level=0.1366 attack=0.003 release=0.4256 pitch=-7 pitch_swp=0.15 interval=12 timbre=0.05 fm_ratio=2 fm_depth=0.5 env_curve=0.35 reverb=0.4
+clip timpani 1 0 6.4286 0.4286 6186526699687159809 level=0.1521 attack=0.003 release=0.4256 pitch=-7 pitch_swp=0.15 interval=12 timbre=0.05 fm_ratio=2 fm_depth=0.5 env_curve=0.35 reverb=0.4
+clip timpani 1 0 6.6071 0.4286 5015778015924226790 level=0.1676 attack=0.003 release=0.4256 pitch=-7 pitch_swp=0.15 interval=12 timbre=0.05 fm_ratio=2 fm_depth=0.5 env_curve=0.35 reverb=0.4
+clip timpani 1 0 6.7857 0.4286 465977118903983336 level=0.1831 attack=0.003 release=0.4256 pitch=-7 pitch_swp=0.15 interval=12 timbre=0.05 fm_ratio=2 fm_depth=0.5 env_curve=0.35 reverb=0.4
+clip timpani 1 0 6.9643 0.4286 420741906534375645 level=0.1986 attack=0.003 release=0.4256 pitch=-7 pitch_swp=0.15 interval=12 timbre=0.05 fm_ratio=2 fm_depth=0.5 env_curve=0.35 reverb=0.4
+clip timpani 1 0 7.1429 0.4286 339979390856334104 level=0.2141 attack=0.003 release=0.4256 pitch=-7 pitch_swp=0.15 interval=12 timbre=0.05 fm_ratio=2 fm_depth=0.5 env_curve=0.35 reverb=0.4
+clip timpani 1 0 7.3214 0.4286 8007075758482102503 level=0.2297 attack=0.003 release=0.4256 pitch=-7 pitch_swp=0.15 interval=12 timbre=0.05 fm_ratio=2 fm_depth=0.5 env_curve=0.35 reverb=0.4
+clip timpani 1 0 7.5000 0.4286 3240908166365862219 level=0.2452 attack=0.003 release=0.4256 pitch=-7 pitch_swp=0.15 interval=12 timbre=0.05 fm_ratio=2 fm_depth=0.5 env_curve=0.35 reverb=0.4
+clip timpani 1 0 7.6786 0.4286 4216058349978964043 level=0.2607 attack=0.003 release=0.4256 pitch=-7 pitch_swp=0.15 interval=12 timbre=0.05 fm_ratio=2 fm_depth=0.5 env_curve=0.35 reverb=0.4
+clip timpani 1 0 7.8571 0.4286 3099825897215262117 level=0.2762 attack=0.003 release=0.4256 pitch=-7 pitch_swp=0.15 interval=12 timbre=0.05 fm_ratio=2 fm_depth=0.5 env_curve=0.35 reverb=0.4
+clip timpani 1 0 8.0357 0.4286 4112190317219349874 level=0.2917 attack=0.003 release=0.4256 pitch=-7 pitch_swp=0.15 interval=12 timbre=0.05 fm_ratio=2 fm_depth=0.5 env_curve=0.35 reverb=0.4
+clip timpani 1 0 8.2143 0.4286 8231781167330324716 level=0.3072 attack=0.003 release=0.4256 pitch=-7 pitch_swp=0.15 interval=12 timbre=0.05 fm_ratio=2 fm_depth=0.5 env_curve=0.35 reverb=0.4
+clip timpani 1 0 8.3929 0.4286 2732432005988828454 level=0.3228 attack=0.003 release=0.4256 pitch=-7 pitch_swp=0.15 interval=12 timbre=0.05 fm_ratio=2 fm_depth=0.5 env_curve=0.35 reverb=0.4
+clip timpani 1 0 8.5714 0.4286 1076387423741474125 level=0.3383 attack=0.003 release=0.4256 pitch=-7 pitch_swp=0.15 interval=12 timbre=0.05 fm_ratio=2 fm_depth=0.5 env_curve=0.35 reverb=0.4
+clip timpani 1 0 8.7500 0.4286 3535623327098239560 level=0.3538 attack=0.003 release=0.4256 pitch=-7 pitch_swp=0.15 interval=12 timbre=0.05 fm_ratio=2 fm_depth=0.5 env_curve=0.35 reverb=0.4
+clip timpani 1 0 8.9286 0.4286 1046115842439321307 level=0.3693 attack=0.003 release=0.4256 pitch=-7 pitch_swp=0.15 interval=12 timbre=0.05 fm_ratio=2 fm_depth=0.5 env_curve=0.35 reverb=0.4
+clip timpani 1 0 9.1071 0.4286 7836949953217946597 level=0.3848 attack=0.003 release=0.4256 pitch=-7 pitch_swp=0.15 interval=12 timbre=0.05 fm_ratio=2 fm_depth=0.5 env_curve=0.35 reverb=0.4
+clip timpani 1 0 9.2857 0.4286 1118026288223305215 level=0.4003 attack=0.003 release=0.4256 pitch=-7 pitch_swp=0.15 interval=12 timbre=0.05 fm_ratio=2 fm_depth=0.5 env_curve=0.35 reverb=0.4
+clip deep_hold 0 5 9.2857 5.0000 8245020287732316796 level=0.5 attack=0.7 release=2.5 pitch=-7 voices=14 gather=1 drift=0.05 timbre=1.3 chord=1 sub=0.15 cutoff=0.7 reverb=0.45
+clip timpani 1 0 9.4643 0.4286 4330316940913136619 level=0.4159 attack=0.003 release=0.4256 pitch=-7 pitch_swp=0.15 interval=12 timbre=0.05 fm_ratio=2 fm_depth=0.5 env_curve=0.35 reverb=0.4
+clip timpani 1 0 9.6429 0.4286 4609934086486334216 level=0.4314 attack=0.003 release=0.4256 pitch=-7 pitch_swp=0.15 interval=12 timbre=0.05 fm_ratio=2 fm_depth=0.5 env_curve=0.35 reverb=0.4
+clip timpani 1 0 9.8214 0.4286 6640667224484054533 level=0.4469 attack=0.003 release=0.4256 pitch=-7 pitch_swp=0.15 interval=12 timbre=0.05 fm_ratio=2 fm_depth=0.5 env_curve=0.35 reverb=0.4
+clip timpani 1 0 10.0000 0.4286 7657131794956954878 level=0.4624 attack=0.003 release=0.4256 pitch=-7 pitch_swp=0.15 interval=12 timbre=0.05 fm_ratio=2 fm_depth=0.5 env_curve=0.35 reverb=0.4
+clip timpani 1 0 10.1786 0.4286 3933081858903994953 level=0.4779 attack=0.003 release=0.4256 pitch=-7 pitch_swp=0.15 interval=12 timbre=0.05 fm_ratio=2 fm_depth=0.5 env_curve=0.35 reverb=0.4
+clip timpani 1 0 10.3571 0.4286 4791099607998972814 level=0.4934 attack=0.003 release=0.4256 pitch=-7 pitch_swp=0.15 interval=12 timbre=0.05 fm_ratio=2 fm_depth=0.5 env_curve=0.35 reverb=0.4
+clip timpani 1 0 10.5357 0.4286 6952158136850423295 level=0.509 attack=0.003 release=0.4256 pitch=-7 pitch_swp=0.15 interval=12 timbre=0.05 fm_ratio=2 fm_depth=0.5 env_curve=0.35 reverb=0.4
+clip timpani 1 0 10.7143 0.4286 5881761878565708156 level=0.5245 attack=0.003 release=0.4256 pitch=-7 pitch_swp=0.15 interval=12 timbre=0.05 fm_ratio=2 fm_depth=0.5 env_curve=0.35 reverb=0.4
+clip timpani 1 0 10.8929 0.4286 3042995729712689382 level=0.54 attack=0.003 release=0.4256 pitch=-7 pitch_swp=0.15 interval=12 timbre=0.05 fm_ratio=2 fm_depth=0.5 env_curve=0.35 reverb=0.4
+clip taiko 1 0 11.4286 1.4286 2707177371355597051 level=0.65 attack=0.002 release=1.4266 pitch=-6 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 11.4286 0.2857 2842876235006847704 level=0.5 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip timpani 1 0 11.4286 2.1429 4641937421039265017 level=0.6 attack=0.003 release=2.1399 pitch=-7 pitch_swp=0.15 interval=12 timbre=0.05 fm_ratio=2 fm_depth=0.5 env_curve=0.35 reverb=0.4
+clip taiko 1 0 11.4286 1.4286 6618327519301288460 level=0.4875 attack=0.002 release=1.4266 pitch=-6 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 11.4286 0.2857 1112465739928094566 level=0.375 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip ostinato 0 1 11.4286 0.3214 8251132515640271427 level=0.825 pitch=-7 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.3154 env_curve=0.35 reverb=0.3 pan=-0.25
+clip braam 0 2 11.4286 5.7143 7565299580075833835 level=0.5 attack=0.03 release=2 pitch=-7 voices=8 gather=1 drift=0.05 timbre=2 chord=1 sub=0.45 cutoff=0.26 cutoff_swp=0.32 drive=0.4 reverb=0.4
+clip low_strings 0 2 11.4286 6.0714 4594756863579790439 level=0.42 attack=0.4 release=1 pitch=-7 voices=6 gather=1 drift=0.05 timbre=1.2 chord=5 sub=0.25 cutoff=0.42 reverb=0.35 duck=0.25 duck_from=1
+clip crash 2 5 11.4286 5.7143 2475193759247003020 level=0.12 attack=0.002 release=5.7123 filter=2 cutoff=0.82 color=0 env_curve=0.75 reverb=0.55 pan=0.15 keyed=0
+clip impact 5 5 11.4286 4.2857 6981284863484786502 level=0.6 release=2.5 file=gravitic/gravitic_impact_00001.ogg keyed=0
+clip ostinato 0 1 11.7857 0.3214 4929033812952123651 level=0.6188 pitch=-7 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.3154 env_curve=0.35 reverb=0.3 pan=0.25
+clip ostinato 0 1 12.1429 0.3214 7670160625070821633 level=0.825 pitch=0 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.3154 env_curve=0.35 reverb=0.3 pan=-0.25
+clip ostinato 0 1 12.5000 0.3214 7177776613232728879 level=0.6188 pitch=-7 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.3154 env_curve=0.35 reverb=0.3 pan=0.25
+clip ostinato 0 1 12.8571 0.3214 4016724682547709668 level=0.825 pitch=5 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.3154 env_curve=0.35 reverb=0.3 pan=-0.25
+clip taiko 1 0 13.2143 1.4286 7999061000779025470 level=0.2925 attack=0.002 release=1.4266 pitch=-6 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 13.2143 0.2857 7049802466641032607 level=0.225 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip ostinato 0 1 13.2143 0.3214 3588183307240920042 level=0.6188 pitch=-7 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.3154 env_curve=0.35 reverb=0.3 pan=0.25
+clip ostinato 0 1 13.5714 0.3214 5535089636982438119 level=0.825 pitch=0 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.3154 env_curve=0.35 reverb=0.3 pan=-0.25
+clip ostinato 0 1 13.9286 0.3214 5285348611451370573 level=0.6188 pitch=8 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.3154 env_curve=0.35 reverb=0.3 pan=0.25
+clip taiko 1 0 14.2857 1.4286 1593392963505716242 level=0.4875 attack=0.002 release=1.4266 pitch=-6 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 14.2857 0.2857 8320534845333943912 level=0.375 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip ostinato 0 1 14.2857 0.3214 1156534477792506116 level=0.825 pitch=-7 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.3154 env_curve=0.35 reverb=0.3 pan=-0.25
+clip ostinato 0 1 14.6429 0.3214 8747896381691641307 level=0.6188 pitch=-7 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.3154 env_curve=0.35 reverb=0.3 pan=0.25
+clip ostinato 0 1 15.0000 0.3214 8800092695349251453 level=0.825 pitch=0 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.3154 env_curve=0.35 reverb=0.3 pan=-0.25
+clip ostinato 0 1 15.3571 0.3214 5819004226640090589 level=0.6188 pitch=-7 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.3154 env_curve=0.35 reverb=0.3 pan=0.25
+clip ostinato 0 1 15.7143 0.3214 8056103208526632904 level=0.825 pitch=5 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.3154 env_curve=0.35 reverb=0.3 pan=-0.25
+clip taiko 1 0 16.0714 1.4286 3373396663269621115 level=0.2925 attack=0.002 release=1.4266 pitch=-6 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 16.0714 0.2857 928287169560052534 level=0.225 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip ostinato 0 1 16.0714 0.3214 3056502378437717694 level=0.6188 pitch=-7 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.3154 env_curve=0.35 reverb=0.3 pan=0.25
+clip ostinato 0 1 16.4286 0.3214 646754146925804266 level=0.825 pitch=0 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.3154 env_curve=0.35 reverb=0.3 pan=-0.25
+clip ostinato 0 1 16.7857 0.3214 7396489720393986530 level=0.6188 pitch=8 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.3154 env_curve=0.35 reverb=0.3 pan=0.25
+clip taiko 1 0 17.1429 1.4286 3759757163913081344 level=0.4875 attack=0.002 release=1.4266 pitch=-6 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 17.1429 0.2857 5654939190543254244 level=0.375 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip ostinato 0 1 17.1429 0.3214 8281230871254748199 level=0.825 pitch=-11 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.3154 env_curve=0.35 reverb=0.3 pan=-0.25
+clip low_strings 0 2 17.1429 6.0714 7987460370114538094 level=0.42 attack=0.4 release=1 pitch=-11 voices=6 gather=1 drift=0.05 timbre=1.2 chord=2 sub=0.25 cutoff=0.42 reverb=0.35 duck=0.25 duck_from=1
+clip ostinato 0 1 17.5000 0.3214 6188367563966240967 level=0.6188 pitch=-11 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.3154 env_curve=0.35 reverb=0.3 pan=0.25
+clip ostinato 0 1 17.8571 0.3214 7329855278659618384 level=0.825 pitch=-4 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.3154 env_curve=0.35 reverb=0.3 pan=-0.25
+clip ostinato 0 1 18.2143 0.3214 687824735711467285 level=0.6188 pitch=-11 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.3154 env_curve=0.35 reverb=0.3 pan=0.25
+clip ostinato 0 1 18.5714 0.3214 3977015061423647491 level=0.825 pitch=1 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.3154 env_curve=0.35 reverb=0.3 pan=-0.25
+clip taiko 1 0 18.9286 1.4286 6287414492460059521 level=0.2925 attack=0.002 release=1.4266 pitch=-6 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 18.9286 0.2857 357587443115955390 level=0.225 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip ostinato 0 1 18.9286 0.3214 6179542875128127186 level=0.6188 pitch=-11 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.3154 env_curve=0.35 reverb=0.3 pan=0.25
+clip ostinato 0 1 19.2857 0.3214 5921686648599660833 level=0.825 pitch=-4 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.3154 env_curve=0.35 reverb=0.3 pan=-0.25
+clip ostinato 0 1 19.6429 0.3214 5449387624857014053 level=0.6188 pitch=5 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.3154 env_curve=0.35 reverb=0.3 pan=0.25
+clip taiko 1 0 20.0000 1.4286 6584145342978328196 level=0.4875 attack=0.002 release=1.4266 pitch=-6 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 20.0000 0.2857 4811369137566610140 level=0.375 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip ostinato 0 1 20.0000 0.3214 5772641246823808213 level=0.825 pitch=-11 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.3154 env_curve=0.35 reverb=0.3 pan=-0.25
+clip ostinato 0 1 20.3571 0.3214 7308885447095632239 level=0.6188 pitch=-11 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.3154 env_curve=0.35 reverb=0.3 pan=0.25
+clip ostinato 0 1 20.7143 0.3214 3243769469329653800 level=0.825 pitch=-4 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.3154 env_curve=0.35 reverb=0.3 pan=-0.25
+clip ostinato 0 1 21.0714 0.3214 7919591976580270858 level=0.6188 pitch=-11 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.3154 env_curve=0.35 reverb=0.3 pan=0.25
+clip ostinato 0 1 21.4286 0.3214 2796236671131787167 level=0.825 pitch=1 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.3154 env_curve=0.35 reverb=0.3 pan=-0.25
+clip taiko 1 0 21.7857 1.4286 5064376475412940645 level=0.2925 attack=0.002 release=1.4266 pitch=-6 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 21.7857 0.2857 6666710861128611934 level=0.225 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip ostinato 0 1 21.7857 0.3214 8776101758988289326 level=0.6188 pitch=-11 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.3154 env_curve=0.35 reverb=0.3 pan=0.25
+clip ostinato 0 1 22.1429 0.3214 2742768020424500801 level=0.825 pitch=-4 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.3154 env_curve=0.35 reverb=0.3 pan=-0.25
+clip ostinato 0 1 22.5000 0.3214 1905372967016087980 level=0.6188 pitch=5 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.3154 env_curve=0.35 reverb=0.3 pan=0.25
+clip taiko 1 0 22.8571 1.4286 4669239585951051623 level=0.4875 attack=0.002 release=1.4266 pitch=-6 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 22.8571 0.2857 7456259852026848351 level=0.375 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip ostinato 0 1 22.8571 0.3214 7959114403468044012 level=0.825 pitch=-4 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.3154 env_curve=0.35 reverb=0.3 pan=-0.25
+clip low_strings 0 2 22.8571 6.0714 6532782481354834879 level=0.42 attack=0.4 release=1 pitch=-4 voices=6 gather=1 drift=0.05 timbre=1.2 chord=2 sub=0.25 cutoff=0.42 reverb=0.35 duck=0.25 duck_from=1
+clip horn 0 3 22.8571 1.3214 3883437811224810169 level=0.42 pitch=24 voices=3 gather=1 drift=0.08 timbre=1.25 chord=3 sub=0 cutoff=0.52 attack=0.07 release=0.6 cutoff_swp=0.08 reverb=0.45 pan=0
+clip strings 0 4 22.8571 11.7857 2457762313065201090 level=0.22 attack=2 release=1.5 pitch=8 pitch_swp=0 voices=14 gather=1 gather_swp=0 drift=0.15 timbre=1 chord=2 sub=0 cutoff=0.72 reverb=0.5 duck=0.25 duck_from=1
+clip ostinato 0 1 23.2143 0.3214 5691414154136601492 level=0.6188 pitch=-4 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.3154 env_curve=0.35 reverb=0.3 pan=0.25
+clip ostinato 0 1 23.5714 0.3214 3790416627804645952 level=0.825 pitch=3 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.3154 env_curve=0.35 reverb=0.3 pan=-0.25
+clip ostinato 0 1 23.9286 0.3214 5733592046587461764 level=0.6188 pitch=-4 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.3154 env_curve=0.35 reverb=0.3 pan=0.25
+clip horn 0 3 23.9286 0.6071 4643381460752126718 level=0.42 pitch=27 voices=3 gather=1 drift=0.08 timbre=1.25 chord=3 sub=0 cutoff=0.52 attack=0.07 release=0.3036 cutoff_swp=0.08 reverb=0.45 pan=0
+clip ostinato 0 1 24.2857 0.3214 2084745180658477420 level=0.825 pitch=8 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.3154 env_curve=0.35 reverb=0.3 pan=-0.25
+clip horn 0 3 24.2857 1.6786 7823888517441595593 level=0.42 pitch=27 voices=3 gather=1 drift=0.08 timbre=1.25 chord=3 sub=0 cutoff=0.52 attack=0.07 release=0.6 cutoff_swp=0.08 reverb=0.45 pan=0 lfo_rate=4.8 lfo>pitch=0.1
+clip taiko 1 0 24.6429 1.4286 4631504980762556456 level=0.2925 attack=0.002 release=1.4266 pitch=-6 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 24.6429 0.2857 262171825347753146 level=0.225 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip ostinato 0 1 24.6429 0.3214 7985766192148382770 level=0.6188 pitch=-4 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.3154 env_curve=0.35 reverb=0.3 pan=0.25
+clip ostinato 0 1 25.0000 0.3214 2665436768662667896 level=0.825 pitch=3 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.3154 env_curve=0.35 reverb=0.3 pan=-0.25
+clip ostinato 0 1 25.3571 0.3214 3446550134815850944 level=0.6188 pitch=12 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.3154 env_curve=0.35 reverb=0.3 pan=0.25
+clip taiko 1 0 25.7143 1.4286 272993220746964082 level=0.4875 attack=0.002 release=1.4266 pitch=-6 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 25.7143 0.2857 2811541205813171745 level=0.375 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip ostinato 0 1 25.7143 0.3214 256397648774371970 level=0.825 pitch=-4 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.3154 env_curve=0.35 reverb=0.3 pan=-0.25
+clip horn 0 3 25.7143 0.9643 8483843674883170587 level=0.42 pitch=25 voices=3 gather=1 drift=0.08 timbre=1.25 chord=3 sub=0 cutoff=0.52 attack=0.07 release=0.4821 cutoff_swp=0.08 reverb=0.45 pan=0
+clip ostinato 0 1 26.0714 0.3214 4186152094000165726 level=0.6188 pitch=-4 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.3154 env_curve=0.35 reverb=0.3 pan=0.25
+clip ostinato 0 1 26.4286 0.3214 5570844948885358078 level=0.825 pitch=3 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.3154 env_curve=0.35 reverb=0.3 pan=-0.25
+clip horn 0 3 26.4286 0.9643 5380665821174353034 level=0.42 pitch=24 voices=3 gather=1 drift=0.08 timbre=1.25 chord=3 sub=0 cutoff=0.52 attack=0.07 release=0.4821 cutoff_swp=0.08 reverb=0.45 pan=0
+clip ostinato 0 1 26.7857 0.3214 6288503531004937191 level=0.6188 pitch=-4 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.3154 env_curve=0.35 reverb=0.3 pan=0.25
+clip ostinato 0 1 27.1429 0.3214 2567972022970305611 level=0.825 pitch=8 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.3154 env_curve=0.35 reverb=0.3 pan=-0.25
+clip horn 0 3 27.1429 0.9643 8668522915152147040 level=0.42 pitch=22 voices=3 gather=1 drift=0.08 timbre=1.25 chord=3 sub=0 cutoff=0.52 attack=0.07 release=0.4821 cutoff_swp=0.08 reverb=0.45 pan=0
+clip taiko 1 0 27.5000 1.4286 7334135496274463206 level=0.2925 attack=0.002 release=1.4266 pitch=-6 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 27.5000 0.2857 697129971359948163 level=0.225 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip ostinato 0 1 27.5000 0.3214 7712114148573310780 level=0.6188 pitch=-4 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.3154 env_curve=0.35 reverb=0.3 pan=0.25
+clip ostinato 0 1 27.8571 0.3214 620186921102810287 level=0.825 pitch=3 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.3154 env_curve=0.35 reverb=0.3 pan=-0.25
+clip horn 0 3 27.8571 0.9643 7017178247420603780 level=0.42 pitch=20 voices=3 gather=1 drift=0.08 timbre=1.25 chord=3 sub=0 cutoff=0.52 attack=0.07 release=0.4821 cutoff_swp=0.08 reverb=0.45 pan=0
+clip ostinato 0 1 28.2143 0.3214 4544230942950855946 level=0.6188 pitch=12 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.3154 env_curve=0.35 reverb=0.3 pan=0.25
+clip taiko 1 0 28.5714 1.4286 1930160846463126288 level=0.4875 attack=0.002 release=1.4266 pitch=-6 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 28.5714 0.2857 8169123454439414528 level=0.375 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip ostinato 0 1 28.5714 0.3214 8929079015003014626 level=0.825 pitch=-9 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.3154 env_curve=0.35 reverb=0.3 pan=-0.25
+clip low_strings 0 2 28.5714 6.0714 2618816980485028074 level=0.42 attack=0.4 release=1 pitch=-9 voices=6 gather=1 drift=0.05 timbre=1.2 chord=2 sub=0.25 cutoff=0.42 reverb=0.35 duck=0.25 duck_from=1
+clip horn 0 3 28.5714 2.3929 4360730901050685864 level=0.42 pitch=19 voices=3 gather=1 drift=0.08 timbre=1.25 chord=3 sub=0 cutoff=0.52 attack=0.07 release=0.6 cutoff_swp=0.08 reverb=0.45 pan=0 lfo_rate=4.8 lfo>pitch=0.1
+clip ostinato 0 1 28.9286 0.3214 8520273019876228385 level=0.6188 pitch=-9 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.3154 env_curve=0.35 reverb=0.3 pan=0.25
+clip ostinato 0 1 29.2857 0.3214 3097934538093955594 level=0.825 pitch=-2 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.3154 env_curve=0.35 reverb=0.3 pan=-0.25
+clip ostinato 0 1 29.6429 0.3214 1039797190373938447 level=0.6188 pitch=-9 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.3154 env_curve=0.35 reverb=0.3 pan=0.25
+clip ostinato 0 1 30.0000 0.3214 6646373492605380917 level=0.825 pitch=3 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.3154 env_curve=0.35 reverb=0.3 pan=-0.25
+clip taiko 1 0 30.3571 1.4286 4086902748160187655 level=0.2925 attack=0.002 release=1.4266 pitch=-6 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 30.3571 0.2857 5261973233262573154 level=0.225 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip ostinato 0 1 30.3571 0.3214 1190017484587785569 level=0.6188 pitch=-9 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.3154 env_curve=0.35 reverb=0.3 pan=0.25
+clip ostinato 0 1 30.7143 0.3214 8253460945991434027 level=0.825 pitch=-2 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.3154 env_curve=0.35 reverb=0.3 pan=-0.25
+clip horn 0 3 30.7143 0.6071 6896545434620742444 level=0.42 pitch=20 voices=3 gather=1 drift=0.08 timbre=1.25 chord=3 sub=0 cutoff=0.52 attack=0.07 release=0.3036 cutoff_swp=0.08 reverb=0.45 pan=0
+clip ostinato 0 1 31.0714 0.3214 7233067123775117205 level=0.6188 pitch=7 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.3154 env_curve=0.35 reverb=0.3 pan=0.25
+clip horn 0 3 31.0714 0.6071 1492635553073230498 level=0.42 pitch=22 voices=3 gather=1 drift=0.08 timbre=1.25 chord=3 sub=0 cutoff=0.52 attack=0.07 release=0.3036 cutoff_swp=0.08 reverb=0.45 pan=0
+clip taiko 1 0 31.4286 1.4286 1825052666698707427 level=0.4875 attack=0.002 release=1.4266 pitch=-6 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 31.4286 0.2857 8704424537407201669 level=0.375 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip ostinato 0 1 31.4286 0.3214 2491025320978063537 level=0.825 pitch=-9 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.3154 env_curve=0.35 reverb=0.3 pan=-0.25
+clip horn 0 3 31.4286 3.1071 2691035524008208599 level=0.42 pitch=19 voices=3 gather=1 drift=0.08 timbre=1.25 chord=3 sub=0 cutoff=0.52 attack=0.07 release=0.6 cutoff_swp=0.08 reverb=0.45 pan=0 lfo_rate=4.8 lfo>pitch=0.1
+clip cymbal_swell 2 5 31.4286 2.8571 790993755702955378 level=0.1 attack=2 release=0.05 filter=1 cutoff=0.68 cutoff_swp=0.22 resonance=0.1 color=0 env_curve=-0.3 reverb=0.5 keyed=0
+clip ostinato 0 1 31.7857 0.3214 1892782093798896039 level=0.6188 pitch=-9 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.3154 env_curve=0.35 reverb=0.3 pan=0.25
+clip ostinato 0 1 32.1429 0.3214 2002998834710258197 level=0.825 pitch=-2 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.3154 env_curve=0.35 reverb=0.3 pan=-0.25
+clip ostinato 0 1 32.5000 0.3214 4202532198242425350 level=0.6188 pitch=-9 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.3154 env_curve=0.35 reverb=0.3 pan=0.25
+clip ostinato 0 1 32.8571 0.3214 6871687108085195474 level=0.825 pitch=3 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.3154 env_curve=0.35 reverb=0.3 pan=-0.25
+clip taiko 1 0 33.2143 1.4286 179018196130550333 level=0.2925 attack=0.002 release=1.4266 pitch=-6 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 33.2143 0.2857 8104232348855773510 level=0.225 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip ostinato 0 1 33.2143 0.3214 6974923972292433968 level=0.6188 pitch=-9 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.3154 env_curve=0.35 reverb=0.3 pan=0.25
+clip ostinato 0 1 33.5714 0.3214 1491542123492928823 level=0.825 pitch=-2 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.3154 env_curve=0.35 reverb=0.3 pan=-0.25
+clip ostinato 0 1 33.9286 0.3214 8005248188829234733 level=0.6188 pitch=7 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.3154 env_curve=0.35 reverb=0.3 pan=0.25
+clip taiko 1 0 34.2857 1.4286 8470370830314712546 level=0.65 attack=0.002 release=1.4266 pitch=-6 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 34.2857 0.2857 298836684852286358 level=0.5 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip timpani 1 0 34.2857 1.0714 9169043511823544031 level=0.54 attack=0.003 release=1.0684 pitch=-7 pitch_swp=0.15 interval=12 timbre=0.05 fm_ratio=2 fm_depth=0.5 env_curve=0.35 reverb=0.4
+clip ostinato 0 1 34.2857 0.1607 8124704432909620205 level=0.75 pitch=-7 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip braam 0 2 34.2857 5.7143 3240947974920916919 level=0.55 attack=0.03 release=2 pitch=-7 voices=8 gather=1 drift=0.05 timbre=2 chord=1 sub=0.45 cutoff=0.26 cutoff_swp=0.32 drive=0.4 reverb=0.4
+clip low_strings 0 2 34.2857 6.0714 7556990216435455011 level=0.42 attack=0.4 release=1 pitch=-7 voices=6 gather=1 drift=0.05 timbre=1.2 chord=5 sub=0.25 cutoff=0.42 reverb=0.35 duck=0.25 duck_from=1
+clip horn 0 3 34.2857 1.3214 6116462138140743742 level=0.5 pitch=17 voices=3 gather=1 drift=0.08 timbre=1.25 chord=3 sub=0 cutoff=0.52 attack=0.07 release=0.6 cutoff_swp=0.08 reverb=0.45 pan=0.1
+clip horn 0 3 34.2857 1.3214 7517791859263154815 level=0.35 pitch=5 voices=3 gather=1 drift=0.08 timbre=1.25 chord=3 sub=0 cutoff=0.52 attack=0.07 release=0.6 cutoff_swp=0.08 reverb=0.45 pan=-0.15
+clip strings 0 4 34.2857 6.0714 2334933069445381983 level=0.36 attack=0.4 release=1.5 pitch=5 pitch_swp=0 voices=14 gather=1 gather_swp=0 drift=0.15 timbre=1 chord=5 sub=0 cutoff=0.72 reverb=0.5 duck=0.25 duck_from=1
+clip choir 6 4 34.2857 6.0714 2774835386856564272 level=0.5 attack=0.8 release=1.5 pitch=2.06 chord=5 file=luminal/luminal_synth_vocal_treble_00004.ogg start=0.2 speed=0.3 voices=8 gather=1 drift=0.5 wander=2 scatter=0.4 reverb=0.6 cutoff=0.8
+clip crash 2 5 34.2857 5.7143 2230314822798296838 level=0.12 attack=0.002 release=5.7123 filter=2 cutoff=0.82 color=0 env_curve=0.75 reverb=0.55 pan=0.15 keyed=0
+clip ostinato 0 1 34.4643 0.1607 2304633166049729349 level=0.5625 pitch=-7 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip ostinato 0 1 34.6429 0.1607 5023882523933104623 level=0.5625 pitch=0 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip ostinato 0 1 34.8214 0.1607 5072671574004723629 level=0.5625 pitch=-7 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip ostinato 0 1 35.0000 0.1607 1238043955486420193 level=0.75 pitch=5 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip ostinato 0 1 35.1786 0.1607 4505439460380059481 level=0.5625 pitch=-7 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip taiko 1 0 35.3571 1.4286 4764991527957407467 level=0.3575 attack=0.002 release=1.4266 pitch=-6 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 35.3571 0.2857 7679298774286157282 level=0.275 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip ostinato 0 1 35.3571 0.1607 4950443144288083068 level=0.5625 pitch=0 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip horn 0 3 35.3571 0.6071 3405267689506468878 level=0.5 pitch=24 voices=3 gather=1 drift=0.08 timbre=1.25 chord=3 sub=0 cutoff=0.52 attack=0.07 release=0.3036 cutoff_swp=0.08 reverb=0.45 pan=0.1
+clip horn 0 3 35.3571 0.6071 917269578596539942 level=0.35 pitch=12 voices=3 gather=1 drift=0.08 timbre=1.25 chord=3 sub=0 cutoff=0.52 attack=0.07 release=0.3036 cutoff_swp=0.08 reverb=0.45 pan=-0.15
+clip ostinato 0 1 35.5357 0.1607 2274957378250361117 level=0.5625 pitch=8 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip taiko 1 0 35.7143 1.4286 4176943006327558243 level=0.52 attack=0.002 release=1.4266 pitch=-6 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 35.7143 0.2857 873694456637512724 level=0.4 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip ostinato 0 1 35.7143 0.1607 9066823175328944437 level=0.75 pitch=-7 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip horn 0 3 35.7143 1.6786 6619697810920432086 level=0.5 pitch=24 voices=3 gather=1 drift=0.08 timbre=1.25 chord=3 sub=0 cutoff=0.52 attack=0.07 release=0.6 cutoff_swp=0.08 reverb=0.45 pan=0.1 lfo_rate=4.8 lfo>pitch=0.1
+clip horn 0 3 35.7143 1.6786 5678707806150858828 level=0.35 pitch=12 voices=3 gather=1 drift=0.08 timbre=1.25 chord=3 sub=0 cutoff=0.52 attack=0.07 release=0.6 cutoff_swp=0.08 reverb=0.45 pan=-0.15 lfo_rate=4.8 lfo>pitch=0.1
+clip ostinato 0 1 35.8929 0.1607 3730432232094638216 level=0.5625 pitch=-7 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip ostinato 0 1 36.0714 0.1607 1356619449418597593 level=0.5625 pitch=0 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip ostinato 0 1 36.2500 0.1607 2936401415099544372 level=0.5625 pitch=-7 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip taiko 1 0 36.4286 1.4286 857675252763806018 level=0.39 attack=0.002 release=1.4266 pitch=-6 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 36.4286 0.2857 5081957632876472899 level=0.3 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip ostinato 0 1 36.4286 0.1607 1885342533635311312 level=0.75 pitch=5 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip ostinato 0 1 36.6071 0.1607 4022243910664196316 level=0.5625 pitch=-7 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip taiko 1 0 36.7857 1.4286 3406210113639714680 level=0.5525 attack=0.002 release=1.4266 pitch=-6 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 36.7857 0.2857 8680587351850431140 level=0.425 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip ostinato 0 1 36.7857 0.1607 8455976261882557781 level=0.5625 pitch=0 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip ostinato 0 1 36.9643 0.1607 5166174215888343897 level=0.5625 pitch=8 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip taiko 1 0 37.1429 1.4286 8858063773155355811 level=0.65 attack=0.002 release=1.4266 pitch=-6 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 37.1429 0.2857 3828701606019060398 level=0.5 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip ostinato 0 1 37.1429 0.1607 3991225747271011664 level=0.75 pitch=-7 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip horn 0 3 37.1429 0.9643 4493576432482651604 level=0.5 pitch=22 voices=3 gather=1 drift=0.08 timbre=1.25 chord=3 sub=0 cutoff=0.52 attack=0.07 release=0.4821 cutoff_swp=0.08 reverb=0.45 pan=0.1
+clip horn 0 3 37.1429 0.9643 5592781568001793508 level=0.35 pitch=10 voices=3 gather=1 drift=0.08 timbre=1.25 chord=3 sub=0 cutoff=0.52 attack=0.07 release=0.4821 cutoff_swp=0.08 reverb=0.45 pan=-0.15
+clip ostinato 0 1 37.3214 0.1607 3037273500158769452 level=0.5625 pitch=-7 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip ostinato 0 1 37.5000 0.1607 1052613540593198998 level=0.5625 pitch=0 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip ostinato 0 1 37.6786 0.1607 4935203275623878583 level=0.5625 pitch=-7 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip ostinato 0 1 37.8571 0.1607 7467963137654844197 level=0.75 pitch=5 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip horn 0 3 37.8571 0.9643 1162907139697015765 level=0.5 pitch=20 voices=3 gather=1 drift=0.08 timbre=1.25 chord=3 sub=0 cutoff=0.52 attack=0.07 release=0.4821 cutoff_swp=0.08 reverb=0.45 pan=0.1
+clip horn 0 3 37.8571 0.9643 4270701874381755793 level=0.35 pitch=8 voices=3 gather=1 drift=0.08 timbre=1.25 chord=3 sub=0 cutoff=0.52 attack=0.07 release=0.4821 cutoff_swp=0.08 reverb=0.45 pan=-0.15
+clip ostinato 0 1 38.0357 0.1607 8243974184270063569 level=0.5625 pitch=-7 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip taiko 1 0 38.2143 1.4286 3655340783428224423 level=0.3575 attack=0.002 release=1.4266 pitch=-6 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 38.2143 0.2857 41732603737065950 level=0.275 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip ostinato 0 1 38.2143 0.1607 4470292841142145829 level=0.5625 pitch=0 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip ostinato 0 1 38.3929 0.1607 7130772493533061063 level=0.5625 pitch=8 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip taiko 1 0 38.5714 1.4286 8294745244754642042 level=0.52 attack=0.002 release=1.4266 pitch=-6 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 38.5714 0.2857 5381821823273226070 level=0.4 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip ostinato 0 1 38.5714 0.1607 2097601988389302317 level=0.75 pitch=-7 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip horn 0 3 38.5714 0.9643 4802429040577461691 level=0.5 pitch=22 voices=3 gather=1 drift=0.08 timbre=1.25 chord=3 sub=0 cutoff=0.52 attack=0.07 release=0.4821 cutoff_swp=0.08 reverb=0.45 pan=0.1
+clip horn 0 3 38.5714 0.9643 6717587956600768110 level=0.35 pitch=10 voices=3 gather=1 drift=0.08 timbre=1.25 chord=3 sub=0 cutoff=0.52 attack=0.07 release=0.4821 cutoff_swp=0.08 reverb=0.45 pan=-0.15
+clip ostinato 0 1 38.7500 0.1607 786169373027651138 level=0.5625 pitch=-7 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip ostinato 0 1 38.9286 0.1607 8427674836398704439 level=0.5625 pitch=0 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip ostinato 0 1 39.1071 0.1607 6768971558237025568 level=0.5625 pitch=-7 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip taiko 1 0 39.2857 1.4286 2362376538221018853 level=0.39 attack=0.002 release=1.4266 pitch=-6 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 39.2857 0.2857 585080673814285852 level=0.3 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip ostinato 0 1 39.2857 0.1607 774443950949038215 level=0.75 pitch=5 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip horn 0 3 39.2857 0.9643 8066706126386165668 level=0.5 pitch=24 voices=3 gather=1 drift=0.08 timbre=1.25 chord=3 sub=0 cutoff=0.52 attack=0.07 release=0.4821 cutoff_swp=0.08 reverb=0.45 pan=0.1
+clip horn 0 3 39.2857 0.9643 8028905334265785622 level=0.35 pitch=12 voices=3 gather=1 drift=0.08 timbre=1.25 chord=3 sub=0 cutoff=0.52 attack=0.07 release=0.4821 cutoff_swp=0.08 reverb=0.45 pan=-0.15
+clip ostinato 0 1 39.4643 0.1607 4336394713444548441 level=0.5625 pitch=-7 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip taiko 1 0 39.6429 1.4286 1425449537473299478 level=0.5525 attack=0.002 release=1.4266 pitch=-6 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 39.6429 0.2857 5313468964762521177 level=0.425 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip ostinato 0 1 39.6429 0.1607 4619246247717363606 level=0.5625 pitch=0 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip ostinato 0 1 39.8214 0.1607 7269959770288124108 level=0.5625 pitch=8 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip taiko 1 0 40.0000 1.4286 3855806186568940014 level=0.65 attack=0.002 release=1.4266 pitch=-6 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 40.0000 0.2857 6396258666989517646 level=0.5 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip timpani 1 0 40.0000 1.0714 1251376589047508195 level=0.54 attack=0.003 release=1.0684 pitch=-11 pitch_swp=0.15 interval=12 timbre=0.05 fm_ratio=2 fm_depth=0.5 env_curve=0.35 reverb=0.4
+clip ostinato 0 1 40.0000 0.1607 5249323741142051163 level=0.75 pitch=-11 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip braam 0 2 40.0000 5.7143 8967258130902003238 level=0.55 attack=0.03 release=2 pitch=-11 voices=8 gather=1 drift=0.05 timbre=2 chord=1 sub=0.45 cutoff=0.26 cutoff_swp=0.32 drive=0.4 reverb=0.4
+clip low_strings 0 2 40.0000 6.0714 8457945633405416336 level=0.42 attack=0.4 release=1 pitch=-11 voices=6 gather=1 drift=0.05 timbre=1.2 chord=2 sub=0.25 cutoff=0.42 reverb=0.35 duck=0.25 duck_from=1
+clip horn 0 3 40.0000 2.3929 3895840419071913424 level=0.5 pitch=25 voices=3 gather=1 drift=0.08 timbre=1.25 chord=3 sub=0 cutoff=0.52 attack=0.07 release=0.6 cutoff_swp=0.08 reverb=0.45 pan=0.1 lfo_rate=4.8 lfo>pitch=0.1
+clip horn 0 3 40.0000 2.3929 3385735466858698657 level=0.35 pitch=13 voices=3 gather=1 drift=0.08 timbre=1.25 chord=3 sub=0 cutoff=0.52 attack=0.07 release=0.6 cutoff_swp=0.08 reverb=0.45 pan=-0.15 lfo_rate=4.8 lfo>pitch=0.1
+clip strings 0 4 40.0000 6.0714 204199724425875831 level=0.36 attack=0.4 release=1.5 pitch=1 pitch_swp=0 voices=14 gather=1 gather_swp=0 drift=0.15 timbre=1 chord=2 sub=0 cutoff=0.72 reverb=0.5 duck=0.25 duck_from=1
+clip choir 6 4 40.0000 6.0714 2462089380587009056 level=0.5 attack=0.8 release=1.5 pitch=-1.94 chord=2 file=luminal/luminal_synth_vocal_treble_00004.ogg start=0.2 speed=0.3 voices=8 gather=1 drift=0.5 wander=2 scatter=0.4 reverb=0.6 cutoff=0.8
+clip ostinato 0 1 40.1786 0.1607 6508116530754633780 level=0.5625 pitch=-11 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip ostinato 0 1 40.3571 0.1607 583440986655198044 level=0.5625 pitch=-4 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip ostinato 0 1 40.5357 0.1607 4962821273884176994 level=0.5625 pitch=-11 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip ostinato 0 1 40.7143 0.1607 1828055883801118722 level=0.75 pitch=1 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip ostinato 0 1 40.8929 0.1607 3989807089129780084 level=0.5625 pitch=-11 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip taiko 1 0 41.0714 1.4286 2785836797133605510 level=0.3575 attack=0.002 release=1.4266 pitch=-6 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 41.0714 0.2857 8128531852579838656 level=0.275 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip ostinato 0 1 41.0714 0.1607 6912386230101543256 level=0.5625 pitch=-4 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip ostinato 0 1 41.2500 0.1607 1190501276012259522 level=0.5625 pitch=5 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip taiko 1 0 41.4286 1.4286 1569511097941397410 level=0.52 attack=0.002 release=1.4266 pitch=-6 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 41.4286 0.2857 9172032829921898186 level=0.4 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip ostinato 0 1 41.4286 0.1607 7081573411392098925 level=0.75 pitch=-11 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip ostinato 0 1 41.6071 0.1607 4468088678930762130 level=0.5625 pitch=-11 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip ostinato 0 1 41.7857 0.1607 7678480453292010491 level=0.5625 pitch=-4 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip ostinato 0 1 41.9643 0.1607 4146668639913230456 level=0.5625 pitch=-11 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip taiko 1 0 42.1429 1.4286 102292000211924543 level=0.39 attack=0.002 release=1.4266 pitch=-6 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 42.1429 0.2857 354906284875488117 level=0.3 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip ostinato 0 1 42.1429 0.1607 669722078620830476 level=0.75 pitch=1 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip horn 0 3 42.1429 0.9643 8150013512738723883 level=0.5 pitch=24 voices=3 gather=1 drift=0.08 timbre=1.25 chord=3 sub=0 cutoff=0.52 attack=0.07 release=0.4821 cutoff_swp=0.08 reverb=0.45 pan=0.1
+clip horn 0 3 42.1429 0.9643 4270048267661660855 level=0.35 pitch=12 voices=3 gather=1 drift=0.08 timbre=1.25 chord=3 sub=0 cutoff=0.52 attack=0.07 release=0.4821 cutoff_swp=0.08 reverb=0.45 pan=-0.15
+clip ostinato 0 1 42.3214 0.1607 8027699311588327440 level=0.5625 pitch=-11 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip taiko 1 0 42.5000 1.4286 987862434689195613 level=0.5525 attack=0.002 release=1.4266 pitch=-6 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 42.5000 0.2857 8286037998118219997 level=0.425 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip ostinato 0 1 42.5000 0.1607 514702216982331388 level=0.5625 pitch=-4 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip ostinato 0 1 42.6786 0.1607 2021685756559813855 level=0.5625 pitch=5 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip taiko 1 0 42.8571 1.4286 4729925109891964212 level=0.65 attack=0.002 release=1.4266 pitch=-6 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 42.8571 0.2857 1138349159324482302 level=0.5 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip ostinato 0 1 42.8571 0.1607 5136572960851850276 level=0.75 pitch=-11 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip horn 0 3 42.8571 2.3929 3796495150441261178 level=0.5 pitch=20 voices=3 gather=1 drift=0.08 timbre=1.25 chord=3 sub=0 cutoff=0.52 attack=0.07 release=0.6 cutoff_swp=0.08 reverb=0.45 pan=0.1 lfo_rate=4.8 lfo>pitch=0.1
+clip horn 0 3 42.8571 2.3929 3342072822783942765 level=0.35 pitch=8 voices=3 gather=1 drift=0.08 timbre=1.25 chord=3 sub=0 cutoff=0.52 attack=0.07 release=0.6 cutoff_swp=0.08 reverb=0.45 pan=-0.15 lfo_rate=4.8 lfo>pitch=0.1
+clip ostinato 0 1 43.0357 0.1607 7916775371475565321 level=0.5625 pitch=-11 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip ostinato 0 1 43.2143 0.1607 5506968718294713824 level=0.5625 pitch=-4 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip ostinato 0 1 43.3929 0.1607 765170272168818777 level=0.5625 pitch=-11 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip ostinato 0 1 43.5714 0.1607 6744686513532791197 level=0.75 pitch=1 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip ostinato 0 1 43.7500 0.1607 2121791295504688269 level=0.5625 pitch=-11 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip taiko 1 0 43.9286 1.4286 8476110363140400790 level=0.3575 attack=0.002 release=1.4266 pitch=-6 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 43.9286 0.2857 257675985168916096 level=0.275 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip ostinato 0 1 43.9286 0.1607 8330750056853023623 level=0.5625 pitch=-4 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip ostinato 0 1 44.1071 0.1607 3461164131852004859 level=0.5625 pitch=5 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip taiko 1 0 44.2857 1.4286 3930394943911795504 level=0.52 attack=0.002 release=1.4266 pitch=-6 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 44.2857 0.2857 5892978447523950570 level=0.4 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip ostinato 0 1 44.2857 0.1607 9181418800777490484 level=0.75 pitch=-11 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip ostinato 0 1 44.4643 0.1607 1293908872448735386 level=0.5625 pitch=-11 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip ostinato 0 1 44.6429 0.1607 4920971744234736686 level=0.5625 pitch=-4 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip ostinato 0 1 44.8214 0.1607 8887682402948210252 level=0.5625 pitch=-11 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip taiko 1 0 45.0000 1.4286 4118489212185102520 level=0.2145 attack=0.002 release=1.4266 pitch=1 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 45.0000 0.2857 6906249716107063822 level=0.165 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip ostinato 0 1 45.0000 0.1607 7676048261773086684 level=0.75 pitch=1 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip horn 0 3 45.0000 0.9643 4250435533303389492 level=0.5 pitch=22 voices=3 gather=1 drift=0.08 timbre=1.25 chord=3 sub=0 cutoff=0.52 attack=0.07 release=0.4821 cutoff_swp=0.08 reverb=0.45 pan=0.1
+clip horn 0 3 45.0000 0.9643 1745326952754218923 level=0.35 pitch=10 voices=3 gather=1 drift=0.08 timbre=1.25 chord=3 sub=0 cutoff=0.52 attack=0.07 release=0.4821 cutoff_swp=0.08 reverb=0.45 pan=-0.15
+clip taiko 1 0 45.1786 1.4286 7973804077076515852 level=0.2574 attack=0.002 release=1.4266 pitch=1 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 45.1786 0.2857 6261965489789290090 level=0.198 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip ostinato 0 1 45.1786 0.1607 3140177935681415812 level=0.5625 pitch=-11 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip taiko 1 0 45.3571 1.4286 6915974751478497027 level=0.3003 attack=0.002 release=1.4266 pitch=1 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 45.3571 0.2857 3086616287719902280 level=0.231 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip ostinato 0 1 45.3571 0.1607 4474482814543089765 level=0.5625 pitch=-4 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip taiko 1 0 45.5357 1.4286 2237929032758586008 level=0.3432 attack=0.002 release=1.4266 pitch=1 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 45.5357 0.2857 4938750445864209688 level=0.264 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip ostinato 0 1 45.5357 0.1607 8591719890453053735 level=0.5625 pitch=5 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip taiko 1 0 45.7143 1.4286 2120720102129794678 level=0.65 attack=0.002 release=1.4266 pitch=-6 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 45.7143 0.2857 2732556562327633662 level=0.5 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip timpani 1 0 45.7143 1.0714 492101030258803675 level=0.54 attack=0.003 release=1.0684 pitch=-4 pitch_swp=0.15 interval=12 timbre=0.05 fm_ratio=2 fm_depth=0.5 env_curve=0.35 reverb=0.4
+clip ostinato 0 1 45.7143 0.1607 8736978528018670438 level=0.75 pitch=-4 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip braam 0 2 45.7143 5.7143 4857055215485284914 level=0.55 attack=0.03 release=2 pitch=-4 voices=8 gather=1 drift=0.05 timbre=2 chord=1 sub=0.45 cutoff=0.26 cutoff_swp=0.32 drive=0.4 reverb=0.4
+clip low_strings 0 2 45.7143 6.0714 7264475837989669738 level=0.42 attack=0.4 release=1 pitch=-4 voices=6 gather=1 drift=0.05 timbre=1.2 chord=2 sub=0.25 cutoff=0.42 reverb=0.35 duck=0.25 duck_from=1
+clip horn 0 3 45.7143 1.3214 7568575463646904097 level=0.5 pitch=24 voices=3 gather=1 drift=0.08 timbre=1.25 chord=3 sub=0 cutoff=0.52 attack=0.07 release=0.6 cutoff_swp=0.08 reverb=0.45 pan=0.1
+clip horn 0 3 45.7143 1.3214 6271085857515269626 level=0.35 pitch=12 voices=3 gather=1 drift=0.08 timbre=1.25 chord=3 sub=0 cutoff=0.52 attack=0.07 release=0.6 cutoff_swp=0.08 reverb=0.45 pan=-0.15
+clip strings 0 4 45.7143 6.0714 369694085368136705 level=0.36 attack=0.4 release=1.5 pitch=8 pitch_swp=0 voices=14 gather=1 gather_swp=0 drift=0.15 timbre=1 chord=2 sub=0 cutoff=0.72 reverb=0.5 duck=0.25 duck_from=1
+clip choir 6 4 45.7143 6.0714 7165422420438930715 level=0.5 attack=0.8 release=1.5 pitch=5.06 chord=2 file=luminal/luminal_synth_vocal_treble_00004.ogg start=0.2 speed=0.3 voices=8 gather=1 drift=0.5 wander=2 scatter=0.4 reverb=0.6 cutoff=0.8
+clip crash 2 5 45.7143 5.7143 5736224607224190933 level=0.1 attack=0.002 release=5.7123 filter=2 cutoff=0.82 color=0 env_curve=0.75 reverb=0.55 pan=0.15 keyed=0
+clip ostinato 0 1 45.8929 0.1607 2092786122210623364 level=0.5625 pitch=-4 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip ostinato 0 1 46.0714 0.1607 6786096190582536694 level=0.5625 pitch=3 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip ostinato 0 1 46.2500 0.1607 5245146407014281560 level=0.5625 pitch=-4 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip ostinato 0 1 46.4286 0.1607 8927708377500811083 level=0.75 pitch=8 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip ostinato 0 1 46.6071 0.1607 3154133371195400496 level=0.5625 pitch=-4 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip taiko 1 0 46.7857 1.4286 7094148379161957786 level=0.3575 attack=0.002 release=1.4266 pitch=-6 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 46.7857 0.2857 6682088208542007667 level=0.275 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip ostinato 0 1 46.7857 0.1607 984101501245252215 level=0.5625 pitch=3 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip horn 0 3 46.7857 0.6071 5191265669408017746 level=0.5 pitch=27 voices=3 gather=1 drift=0.08 timbre=1.25 chord=3 sub=0 cutoff=0.52 attack=0.07 release=0.3036 cutoff_swp=0.08 reverb=0.45 pan=0.1
+clip horn 0 3 46.7857 0.6071 2828214140133930397 level=0.35 pitch=15 voices=3 gather=1 drift=0.08 timbre=1.25 chord=3 sub=0 cutoff=0.52 attack=0.07 release=0.3036 cutoff_swp=0.08 reverb=0.45 pan=-0.15
+clip ostinato 0 1 46.9643 0.1607 6284621078715627671 level=0.5625 pitch=12 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip taiko 1 0 47.1429 1.4286 1214620339524865206 level=0.52 attack=0.002 release=1.4266 pitch=-6 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 47.1429 0.2857 3382665123625111011 level=0.4 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip ostinato 0 1 47.1429 0.1607 3494676560734145137 level=0.75 pitch=-4 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip horn 0 3 47.1429 1.6786 3948929714899521422 level=0.5 pitch=27 voices=3 gather=1 drift=0.08 timbre=1.25 chord=3 sub=0 cutoff=0.52 attack=0.07 release=0.6 cutoff_swp=0.08 reverb=0.45 pan=0.1 lfo_rate=4.8 lfo>pitch=0.1
+clip horn 0 3 47.1429 1.6786 9190715583444412080 level=0.35 pitch=15 voices=3 gather=1 drift=0.08 timbre=1.25 chord=3 sub=0 cutoff=0.52 attack=0.07 release=0.6 cutoff_swp=0.08 reverb=0.45 pan=-0.15 lfo_rate=4.8 lfo>pitch=0.1
+clip ostinato 0 1 47.3214 0.1607 3445686789066992466 level=0.5625 pitch=-4 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip ostinato 0 1 47.5000 0.1607 3111015890129062919 level=0.5625 pitch=3 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip ostinato 0 1 47.6786 0.1607 8609192369067256472 level=0.5625 pitch=-4 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip taiko 1 0 47.8571 1.4286 6094361917323539354 level=0.39 attack=0.002 release=1.4266 pitch=-6 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 47.8571 0.2857 2892609041152271005 level=0.3 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip ostinato 0 1 47.8571 0.1607 7796098784202230604 level=0.75 pitch=8 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip ostinato 0 1 48.0357 0.1607 2723275002361886194 level=0.5625 pitch=-4 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip taiko 1 0 48.2143 1.4286 8866098380392626568 level=0.5525 attack=0.002 release=1.4266 pitch=-6 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 48.2143 0.2857 4909796979807903970 level=0.425 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip ostinato 0 1 48.2143 0.1607 890214939540904038 level=0.5625 pitch=3 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip ostinato 0 1 48.3929 0.1607 7813262832538853230 level=0.5625 pitch=12 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip taiko 1 0 48.5714 1.4286 5264177233136429513 level=0.65 attack=0.002 release=1.4266 pitch=-6 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 48.5714 0.2857 7570798975987710895 level=0.5 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip ostinato 0 1 48.5714 0.1607 5220442719822349599 level=0.75 pitch=-4 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip horn 0 3 48.5714 0.9643 1408877222120914221 level=0.5 pitch=25 voices=3 gather=1 drift=0.08 timbre=1.25 chord=3 sub=0 cutoff=0.52 attack=0.07 release=0.4821 cutoff_swp=0.08 reverb=0.45 pan=0.1
+clip horn 0 3 48.5714 0.9643 8205776635013315268 level=0.35 pitch=13 voices=3 gather=1 drift=0.08 timbre=1.25 chord=3 sub=0 cutoff=0.52 attack=0.07 release=0.4821 cutoff_swp=0.08 reverb=0.45 pan=-0.15
+clip ostinato 0 1 48.7500 0.1607 1469557514683910359 level=0.5625 pitch=-4 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip ostinato 0 1 48.9286 0.1607 2968230819753263694 level=0.5625 pitch=3 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip ostinato 0 1 49.1071 0.1607 866766040259496142 level=0.5625 pitch=-4 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip ostinato 0 1 49.2857 0.1607 2902107092152971149 level=0.75 pitch=8 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip horn 0 3 49.2857 0.9643 6141875885350820468 level=0.5 pitch=24 voices=3 gather=1 drift=0.08 timbre=1.25 chord=3 sub=0 cutoff=0.52 attack=0.07 release=0.4821 cutoff_swp=0.08 reverb=0.45 pan=0.1
+clip horn 0 3 49.2857 0.9643 7631102224514303267 level=0.35 pitch=12 voices=3 gather=1 drift=0.08 timbre=1.25 chord=3 sub=0 cutoff=0.52 attack=0.07 release=0.4821 cutoff_swp=0.08 reverb=0.45 pan=-0.15
+clip ostinato 0 1 49.4643 0.1607 4229153366529591568 level=0.5625 pitch=-4 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip taiko 1 0 49.6429 1.4286 6038221055701005453 level=0.3575 attack=0.002 release=1.4266 pitch=-6 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 49.6429 0.2857 1098891592848238399 level=0.275 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip ostinato 0 1 49.6429 0.1607 5206363587394749565 level=0.5625 pitch=3 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip ostinato 0 1 49.8214 0.1607 5338111009783253984 level=0.5625 pitch=12 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip taiko 1 0 50.0000 1.4286 5417524901952151333 level=0.52 attack=0.002 release=1.4266 pitch=-6 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 50.0000 0.2857 2633548159620214276 level=0.4 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip ostinato 0 1 50.0000 0.1607 1834660991374422239 level=0.75 pitch=-4 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip horn 0 3 50.0000 0.9643 8712025407927800178 level=0.5 pitch=22 voices=3 gather=1 drift=0.08 timbre=1.25 chord=3 sub=0 cutoff=0.52 attack=0.07 release=0.4821 cutoff_swp=0.08 reverb=0.45 pan=0.1
+clip horn 0 3 50.0000 0.9643 3731665337536062622 level=0.35 pitch=10 voices=3 gather=1 drift=0.08 timbre=1.25 chord=3 sub=0 cutoff=0.52 attack=0.07 release=0.4821 cutoff_swp=0.08 reverb=0.45 pan=-0.15
+clip ostinato 0 1 50.1786 0.1607 6689034016531817519 level=0.5625 pitch=-4 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip ostinato 0 1 50.3571 0.1607 9110207750247217536 level=0.5625 pitch=3 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip ostinato 0 1 50.5357 0.1607 3877743821231373752 level=0.5625 pitch=-4 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip taiko 1 0 50.7143 1.4286 6934397218680114362 level=0.39 attack=0.002 release=1.4266 pitch=-6 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 50.7143 0.2857 2264909501803181049 level=0.3 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip ostinato 0 1 50.7143 0.1607 7630392986057367057 level=0.75 pitch=8 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip horn 0 3 50.7143 0.9643 6753805593572504479 level=0.5 pitch=20 voices=3 gather=1 drift=0.08 timbre=1.25 chord=3 sub=0 cutoff=0.52 attack=0.07 release=0.4821 cutoff_swp=0.08 reverb=0.45 pan=0.1
+clip horn 0 3 50.7143 0.9643 1969985799161769230 level=0.35 pitch=8 voices=3 gather=1 drift=0.08 timbre=1.25 chord=3 sub=0 cutoff=0.52 attack=0.07 release=0.4821 cutoff_swp=0.08 reverb=0.45 pan=-0.15
+clip ostinato 0 1 50.8929 0.1607 628001683090869094 level=0.5625 pitch=-4 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip taiko 1 0 51.0714 1.4286 3158998637135085373 level=0.5525 attack=0.002 release=1.4266 pitch=-6 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 51.0714 0.2857 8279294910177912488 level=0.425 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip ostinato 0 1 51.0714 0.1607 5253144174511480518 level=0.5625 pitch=3 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip ostinato 0 1 51.2500 0.1607 2679120596465726796 level=0.5625 pitch=12 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip taiko 1 0 51.4286 1.4286 4995311590710863959 level=0.65 attack=0.002 release=1.4266 pitch=-6 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 51.4286 0.2857 1563905982972052017 level=0.5 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip timpani 1 0 51.4286 1.0714 2280296766311929824 level=0.54 attack=0.003 release=1.0684 pitch=-9 pitch_swp=0.15 interval=12 timbre=0.05 fm_ratio=2 fm_depth=0.5 env_curve=0.35 reverb=0.4
+clip ostinato 0 1 51.4286 0.1607 7572307216010553231 level=0.75 pitch=-9 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip braam 0 2 51.4286 5.7143 2456991328486462675 level=0.55 attack=0.03 release=2 pitch=-9 voices=8 gather=1 drift=0.05 timbre=2 chord=1 sub=0.45 cutoff=0.26 cutoff_swp=0.32 drive=0.4 reverb=0.4
+clip low_strings 0 2 51.4286 6.0714 160727701573562869 level=0.42 attack=0.4 release=1 pitch=-9 voices=6 gather=1 drift=0.05 timbre=1.2 chord=2 sub=0.25 cutoff=0.42 reverb=0.35 duck=0.25 duck_from=1
+clip horn 0 3 51.4286 2.3929 1210691882004905391 level=0.5 pitch=19 voices=3 gather=1 drift=0.08 timbre=1.25 chord=3 sub=0 cutoff=0.52 attack=0.07 release=0.6 cutoff_swp=0.08 reverb=0.45 pan=0.1 lfo_rate=4.8 lfo>pitch=0.1
+clip horn 0 3 51.4286 2.3929 5366358183189297619 level=0.35 pitch=7 voices=3 gather=1 drift=0.08 timbre=1.25 chord=3 sub=0 cutoff=0.52 attack=0.07 release=0.6 cutoff_swp=0.08 reverb=0.45 pan=-0.15 lfo_rate=4.8 lfo>pitch=0.1
+clip strings 0 4 51.4286 6.0714 6237801619507257010 level=0.36 attack=0.4 release=1.5 pitch=3 pitch_swp=0 voices=14 gather=1 gather_swp=0 drift=0.15 timbre=1 chord=2 sub=0 cutoff=0.72 reverb=0.5 duck=0.25 duck_from=1
+clip choir 6 4 51.4286 6.0714 129564839740617072 level=0.5 attack=0.8 release=1.5 pitch=0.06 chord=2 file=luminal/luminal_synth_vocal_treble_00004.ogg start=0.2 speed=0.3 voices=8 gather=1 drift=0.5 wander=2 scatter=0.4 reverb=0.6 cutoff=0.8
+clip ostinato 0 1 51.6071 0.1607 2688218519672745489 level=0.5625 pitch=-9 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip ostinato 0 1 51.7857 0.1607 836086840889094100 level=0.5625 pitch=-2 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip ostinato 0 1 51.9643 0.1607 5945465704319247393 level=0.5625 pitch=-9 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip ostinato 0 1 52.1429 0.1607 8879767140307837020 level=0.75 pitch=3 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip ostinato 0 1 52.3214 0.1607 3350691916826595003 level=0.5625 pitch=-9 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip taiko 1 0 52.5000 1.4286 8098420093878536235 level=0.3575 attack=0.002 release=1.4266 pitch=-6 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 52.5000 0.2857 1454458645688326321 level=0.275 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip ostinato 0 1 52.5000 0.1607 4366094792185728642 level=0.5625 pitch=-2 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip ostinato 0 1 52.6786 0.1607 874838047165223285 level=0.5625 pitch=7 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip taiko 1 0 52.8571 1.4286 8013438822978325875 level=0.52 attack=0.002 release=1.4266 pitch=-6 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 52.8571 0.2857 3092376344016337807 level=0.4 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip ostinato 0 1 52.8571 0.1607 1602475873878170040 level=0.75 pitch=-9 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip ostinato 0 1 53.0357 0.1607 8389702536783147844 level=0.5625 pitch=-9 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip ostinato 0 1 53.2143 0.1607 6236639965824226186 level=0.5625 pitch=-2 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip ostinato 0 1 53.3929 0.1607 1138989659132227840 level=0.5625 pitch=-9 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip taiko 1 0 53.5714 1.4286 3397561115372473912 level=0.39 attack=0.002 release=1.4266 pitch=-6 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 53.5714 0.2857 8151937560631799630 level=0.3 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip ostinato 0 1 53.5714 0.1607 7343854530577925018 level=0.75 pitch=3 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip horn 0 3 53.5714 0.6071 8197284477714780997 level=0.5 pitch=20 voices=3 gather=1 drift=0.08 timbre=1.25 chord=3 sub=0 cutoff=0.52 attack=0.07 release=0.3036 cutoff_swp=0.08 reverb=0.45 pan=0.1
+clip horn 0 3 53.5714 0.6071 2515984877070331984 level=0.35 pitch=8 voices=3 gather=1 drift=0.08 timbre=1.25 chord=3 sub=0 cutoff=0.52 attack=0.07 release=0.3036 cutoff_swp=0.08 reverb=0.45 pan=-0.15
+clip ostinato 0 1 53.7500 0.1607 6966601137666624785 level=0.5625 pitch=-9 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip taiko 1 0 53.9286 1.4286 5459202826253936249 level=0.5525 attack=0.002 release=1.4266 pitch=-6 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 53.9286 0.2857 3403702284754050523 level=0.425 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip ostinato 0 1 53.9286 0.1607 9028373111004122383 level=0.5625 pitch=-2 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip horn 0 3 53.9286 0.6071 8587190434927651478 level=0.5 pitch=22 voices=3 gather=1 drift=0.08 timbre=1.25 chord=3 sub=0 cutoff=0.52 attack=0.07 release=0.3036 cutoff_swp=0.08 reverb=0.45 pan=0.1
+clip horn 0 3 53.9286 0.6071 961078790913648430 level=0.35 pitch=10 voices=3 gather=1 drift=0.08 timbre=1.25 chord=3 sub=0 cutoff=0.52 attack=0.07 release=0.3036 cutoff_swp=0.08 reverb=0.45 pan=-0.15
+clip ostinato 0 1 54.1071 0.1607 8770289210217409441 level=0.5625 pitch=7 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip taiko 1 0 54.2857 1.4286 3389069042603184834 level=0.65 attack=0.002 release=1.4266 pitch=-6 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 54.2857 0.2857 6571225934264618739 level=0.5 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip ostinato 0 1 54.2857 0.1607 2238614623289515744 level=0.75 pitch=-9 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip horn 0 3 54.2857 3.1071 5638411295142329315 level=0.5 pitch=19 voices=3 gather=1 drift=0.08 timbre=1.25 chord=3 sub=0 cutoff=0.52 attack=0.07 release=0.6 cutoff_swp=0.08 reverb=0.45 pan=0.1 lfo_rate=4.8 lfo>pitch=0.1
+clip horn 0 3 54.2857 3.1071 7336740064496742347 level=0.35 pitch=7 voices=3 gather=1 drift=0.08 timbre=1.25 chord=3 sub=0 cutoff=0.52 attack=0.07 release=0.6 cutoff_swp=0.08 reverb=0.45 pan=-0.15 lfo_rate=4.8 lfo>pitch=0.1
+clip ostinato 0 1 54.4643 0.1607 6326403232653480937 level=0.5625 pitch=-9 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip ostinato 0 1 54.6429 0.1607 6644800012119386747 level=0.5625 pitch=-2 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip ostinato 0 1 54.8214 0.1607 2242981458963290809 level=0.5625 pitch=-9 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip ostinato 0 1 55.0000 0.1607 8077487224594349247 level=0.75 pitch=3 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip ostinato 0 1 55.1786 0.1607 7454459987890767899 level=0.5625 pitch=-9 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip taiko 1 0 55.3571 1.4286 1079160974985884131 level=0.3575 attack=0.002 release=1.4266 pitch=-6 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 55.3571 0.2857 766498156909467545 level=0.275 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip ostinato 0 1 55.3571 0.1607 3452797607003714008 level=0.5625 pitch=-2 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip ostinato 0 1 55.5357 0.1607 8892188281050684849 level=0.5625 pitch=7 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip taiko 1 0 55.7143 1.4286 8449133827410660911 level=0.52 attack=0.002 release=1.4266 pitch=-6 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 55.7143 0.2857 5369135511350057906 level=0.4 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip ostinato 0 1 55.7143 0.1607 1522414181297260704 level=0.75 pitch=-9 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip ostinato 0 1 55.8929 0.1607 2624665399294493777 level=0.5625 pitch=-9 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip ostinato 0 1 56.0714 0.1607 3712756887625093040 level=0.5625 pitch=-2 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip ostinato 0 1 56.2500 0.1607 8951435524907694237 level=0.5625 pitch=-9 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip taiko 1 0 56.4286 1.4286 4843465108422980517 level=0.2145 attack=0.002 release=1.4266 pitch=1 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 56.4286 0.2857 1515756672440270576 level=0.165 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip ostinato 0 1 56.4286 0.1607 6780631319827964335 level=0.75 pitch=3 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip taiko 1 0 56.6071 1.4286 7287927565718252714 level=0.2574 attack=0.002 release=1.4266 pitch=1 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 56.6071 0.2857 6507319104372626038 level=0.198 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip ostinato 0 1 56.6071 0.1607 8774085132603462364 level=0.5625 pitch=-9 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip taiko 1 0 56.7857 1.4286 8274091755838570583 level=0.3003 attack=0.002 release=1.4266 pitch=1 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 56.7857 0.2857 2115281758308872146 level=0.231 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip ostinato 0 1 56.7857 0.1607 4993762751860537226 level=0.5625 pitch=-2 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip taiko 1 0 56.9643 1.4286 8803537987850442562 level=0.3432 attack=0.002 release=1.4266 pitch=1 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 56.9643 0.2857 8439717187273420960 level=0.264 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip ostinato 0 1 56.9643 0.1607 6075409398160171275 level=0.5625 pitch=7 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip taiko 1 0 57.1429 1.4286 7593835284472316960 level=0.585 attack=0.002 release=1.4266 pitch=-6 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 57.1429 0.2857 5336897950890911605 level=0.45 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip timpani 1 0 57.1429 2.1429 6497827632927317535 level=0.48 attack=0.003 release=2.1399 pitch=-7 pitch_swp=0.15 interval=12 timbre=0.05 fm_ratio=2 fm_depth=0.5 env_curve=0.35 reverb=0.4
+clip horn 0 3 57.1429 2.3929 8981347848878244739 level=0.4 pitch=24 voices=3 gather=1 drift=0.08 timbre=1.25 chord=3 sub=0 cutoff=0.52 attack=0.07 release=0.6 cutoff_swp=0.08 reverb=0.45 pan=0 lfo_rate=4.8 lfo>pitch=0.1
+clip strings 0 4 57.1429 11.7857 1297494558474018887 level=0.4 attack=0.05 release=0.3 pitch=5 pitch_swp=12 voices=14 gather=1 gather_swp=-1 drift=0.15 timbre=1 chord=5 sub=0 cutoff=0.72 reverb=0.5 duck=0.25 duck_from=1
+clip choir 6 4 57.1429 6.0714 159065398840304867 level=0.45 attack=0.8 release=1 pitch=2.06 chord=5 file=luminal/luminal_synth_vocal_treble_00004.ogg start=0.2 speed=0.3 voices=8 gather=1 drift=0.5 wander=2 scatter=0.4 reverb=0.6 cutoff=0.8
+clip horn 0 3 59.2857 0.9643 645499648703773897 level=0.4 pitch=22 voices=3 gather=1 drift=0.08 timbre=1.25 chord=3 sub=0 cutoff=0.52 attack=0.07 release=0.4821 cutoff_swp=0.08 reverb=0.45 pan=0
+clip horn 0 3 60.0000 3.1071 1087963475652089603 level=0.4 pitch=20 voices=3 gather=1 drift=0.08 timbre=1.25 chord=3 sub=0 cutoff=0.52 attack=0.07 release=0.6 cutoff_swp=0.08 reverb=0.45 pan=0 lfo_rate=4.8 lfo>pitch=0.1
+clip riser 0 5 62.8571 5.0000 5518351505162153310 level=0.4 attack=2 release=0.05 pitch=-7 pitch_swp=12 voices=12 gather=0.4 gather_swp=0.6 drift=0.5 timbre=1.8 chord=0 sub=0 cutoff=0.4 cutoff_swp=0.5 reverb=0.3
+clip cymbal_swell 2 5 62.8571 5.0000 225404226246009607 level=0.2 attack=2 release=0.05 filter=1 cutoff=0.68 cutoff_swp=0.22 resonance=0.1 color=0 env_curve=-0.3 reverb=0.5 keyed=0
+clip timpani 1 0 65.7143 0.4286 2163517639355533474 level=0.15 attack=0.003 release=0.4256 pitch=-7 pitch_swp=0.15 interval=12 timbre=0.05 fm_ratio=2 fm_depth=0.5 env_curve=0.35 reverb=0.4
+clip timpani 1 0 65.8929 0.4286 966310964267644248 level=0.1909 attack=0.003 release=0.4256 pitch=-7 pitch_swp=0.15 interval=12 timbre=0.05 fm_ratio=2 fm_depth=0.5 env_curve=0.35 reverb=0.4
+clip timpani 1 0 66.0714 0.4286 5052928245103152899 level=0.2318 attack=0.003 release=0.4256 pitch=-7 pitch_swp=0.15 interval=12 timbre=0.05 fm_ratio=2 fm_depth=0.5 env_curve=0.35 reverb=0.4
+clip timpani 1 0 66.2500 0.4286 8102676983351653287 level=0.2727 attack=0.003 release=0.4256 pitch=-7 pitch_swp=0.15 interval=12 timbre=0.05 fm_ratio=2 fm_depth=0.5 env_curve=0.35 reverb=0.4
+clip timpani 1 0 66.4286 0.4286 5236091143810630922 level=0.3136 attack=0.003 release=0.4256 pitch=-7 pitch_swp=0.15 interval=12 timbre=0.05 fm_ratio=2 fm_depth=0.5 env_curve=0.35 reverb=0.4
+clip timpani 1 0 66.6071 0.4286 5794918186223257052 level=0.3545 attack=0.003 release=0.4256 pitch=-7 pitch_swp=0.15 interval=12 timbre=0.05 fm_ratio=2 fm_depth=0.5 env_curve=0.35 reverb=0.4
+clip timpani 1 0 66.7857 0.4286 256136248486298092 level=0.3955 attack=0.003 release=0.4256 pitch=-7 pitch_swp=0.15 interval=12 timbre=0.05 fm_ratio=2 fm_depth=0.5 env_curve=0.35 reverb=0.4
+clip timpani 1 0 66.9643 0.4286 3806634722358214608 level=0.4364 attack=0.003 release=0.4256 pitch=-7 pitch_swp=0.15 interval=12 timbre=0.05 fm_ratio=2 fm_depth=0.5 env_curve=0.35 reverb=0.4
+clip timpani 1 0 67.1429 0.4286 7187231387334201907 level=0.4773 attack=0.003 release=0.4256 pitch=-7 pitch_swp=0.15 interval=12 timbre=0.05 fm_ratio=2 fm_depth=0.5 env_curve=0.35 reverb=0.4
+clip timpani 1 0 67.3214 0.4286 5328638345106988583 level=0.5182 attack=0.003 release=0.4256 pitch=-7 pitch_swp=0.15 interval=12 timbre=0.05 fm_ratio=2 fm_depth=0.5 env_curve=0.35 reverb=0.4
+clip timpani 1 0 67.5000 0.4286 3306246673014654083 level=0.5591 attack=0.003 release=0.4256 pitch=-7 pitch_swp=0.15 interval=12 timbre=0.05 fm_ratio=2 fm_depth=0.5 env_curve=0.35 reverb=0.4
+clip timpani 1 0 67.6786 0.4286 4221390347488177242 level=0.6 attack=0.003 release=0.4256 pitch=-7 pitch_swp=0.15 interval=12 timbre=0.05 fm_ratio=2 fm_depth=0.5 env_curve=0.35 reverb=0.4
+clip taiko 1 0 68.5714 1.4286 7029067413833322812 level=0.65 attack=0.002 release=1.4266 pitch=-6 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 68.5714 0.2857 8277609660408367971 level=0.5 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip timpani 1 0 68.5714 1.0714 212278253413030323 level=0.6 attack=0.003 release=1.0684 pitch=-11 pitch_swp=0.15 interval=12 timbre=0.05 fm_ratio=2 fm_depth=0.5 env_curve=0.35 reverb=0.4
+clip ostinato 0 1 68.5714 0.1607 430906430615443932 level=0.75 pitch=-11 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip braam 0 2 68.5714 5.7143 500893226225207920 level=0.6 attack=0.03 release=2 pitch=-11 voices=8 gather=1 drift=0.05 timbre=2 chord=1 sub=0.45 cutoff=0.26 cutoff_swp=0.32 drive=0.4 reverb=0.4
+clip low_strings 0 2 68.5714 6.0714 8941901733043048546 level=0.42 attack=0.4 release=1 pitch=-11 voices=6 gather=1 drift=0.05 timbre=1.2 chord=2 sub=0.25 cutoff=0.42 reverb=0.35 duck=0.25 duck_from=1
+clip horn 0 3 68.5714 1.3214 6282691684403217342 level=0.5 pitch=20 voices=3 gather=1 drift=0.08 timbre=1.25 chord=3 sub=0 cutoff=0.52 attack=0.07 release=0.6 cutoff_swp=0.08 reverb=0.45 pan=0.1
+clip horn 0 3 68.5714 1.3214 5307870868500276269 level=0.35 pitch=8 voices=3 gather=1 drift=0.08 timbre=1.25 chord=3 sub=0 cutoff=0.52 attack=0.07 release=0.6 cutoff_swp=0.08 reverb=0.45 pan=-0.15
+clip strings 0 4 68.5714 6.0714 7593198728762791282 level=0.4 attack=0.3 release=1.5 pitch=1 pitch_swp=0 voices=14 gather=1 gather_swp=0 drift=0.15 timbre=1 chord=2 sub=0 cutoff=0.72 reverb=0.5 duck=0.25 duck_from=1
+clip choir 6 4 68.5714 6.0714 3718060903459838900 level=0.55 attack=0.8 release=1.5 pitch=-1.94 chord=2 file=luminal/luminal_synth_vocal_treble_00004.ogg start=0.2 speed=0.3 voices=8 gather=1 drift=0.5 wander=2 scatter=0.4 reverb=0.6 cutoff=0.8
+clip impact 5 5 68.5714 4.2857 1108575795503757559 level=0.7 release=2.5 file=gravitic/gravitic_impact_00001.ogg keyed=0
+clip crash 2 5 68.5714 5.7143 4250510415012107437 level=0.15 attack=0.002 release=5.7123 filter=2 cutoff=0.82 color=0 env_curve=0.75 reverb=0.55 pan=0.15 keyed=0
+clip ostinato 0 1 68.7500 0.1607 2058189849726622877 level=0.5625 pitch=-11 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip ostinato 0 1 68.9286 0.1607 2304539485275967116 level=0.5625 pitch=-4 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip ostinato 0 1 69.1071 0.1607 5389777991069672341 level=0.5625 pitch=-11 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip ostinato 0 1 69.2857 0.1607 6142396822164856452 level=0.75 pitch=1 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip ostinato 0 1 69.4643 0.1607 308599715726962551 level=0.5625 pitch=-11 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip taiko 1 0 69.6429 1.4286 2634236899372231329 level=0.3575 attack=0.002 release=1.4266 pitch=-6 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 69.6429 0.2857 6507439289786495384 level=0.275 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip ostinato 0 1 69.6429 0.1607 7329669947799077784 level=0.5625 pitch=-4 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip horn 0 3 69.6429 0.6071 4626380872499436987 level=0.5 pitch=25 voices=3 gather=1 drift=0.08 timbre=1.25 chord=3 sub=0 cutoff=0.52 attack=0.07 release=0.3036 cutoff_swp=0.08 reverb=0.45 pan=0.1
+clip horn 0 3 69.6429 0.6071 5350777829981953690 level=0.35 pitch=13 voices=3 gather=1 drift=0.08 timbre=1.25 chord=3 sub=0 cutoff=0.52 attack=0.07 release=0.3036 cutoff_swp=0.08 reverb=0.45 pan=-0.15
+clip ostinato 0 1 69.8214 0.1607 7621235022887350686 level=0.5625 pitch=5 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip taiko 1 0 70.0000 1.4286 540592057944286988 level=0.52 attack=0.002 release=1.4266 pitch=-6 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 70.0000 0.2857 484272467111706312 level=0.4 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip ostinato 0 1 70.0000 0.1607 6203103057448365675 level=0.75 pitch=-11 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip horn 0 3 70.0000 1.6786 7559427147972575314 level=0.5 pitch=29 voices=3 gather=1 drift=0.08 timbre=1.25 chord=3 sub=0 cutoff=0.52 attack=0.07 release=0.6 cutoff_swp=0.08 reverb=0.45 pan=0.1 lfo_rate=4.8 lfo>pitch=0.1
+clip horn 0 3 70.0000 1.6786 2047882015662603008 level=0.35 pitch=17 voices=3 gather=1 drift=0.08 timbre=1.25 chord=3 sub=0 cutoff=0.52 attack=0.07 release=0.6 cutoff_swp=0.08 reverb=0.45 pan=-0.15 lfo_rate=4.8 lfo>pitch=0.1
+clip ostinato 0 1 70.1786 0.1607 3201246300089892499 level=0.5625 pitch=-11 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip ostinato 0 1 70.3571 0.1607 7761016484927973245 level=0.5625 pitch=-4 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip ostinato 0 1 70.5357 0.1607 6324845905858918781 level=0.5625 pitch=-11 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip taiko 1 0 70.7143 1.4286 2526011115108655500 level=0.39 attack=0.002 release=1.4266 pitch=-6 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 70.7143 0.2857 4989844528773703284 level=0.3 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip ostinato 0 1 70.7143 0.1607 2831608183830844536 level=0.75 pitch=1 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip ostinato 0 1 70.8929 0.1607 1312521747141146191 level=0.5625 pitch=-11 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip taiko 1 0 71.0714 1.4286 268261678575488134 level=0.5525 attack=0.002 release=1.4266 pitch=-6 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 71.0714 0.2857 421618490850998954 level=0.425 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip ostinato 0 1 71.0714 0.1607 2568494680444289293 level=0.5625 pitch=-4 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip ostinato 0 1 71.2500 0.1607 1750975258323965950 level=0.5625 pitch=5 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip taiko 1 0 71.4286 1.4286 2279103459045195140 level=0.65 attack=0.002 release=1.4266 pitch=-6 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 71.4286 0.2857 9119904447784897174 level=0.5 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip ostinato 0 1 71.4286 0.1607 225803733797135917 level=0.75 pitch=-11 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip horn 0 3 71.4286 0.9643 381134505951101282 level=0.5 pitch=27 voices=3 gather=1 drift=0.08 timbre=1.25 chord=3 sub=0 cutoff=0.52 attack=0.07 release=0.4821 cutoff_swp=0.08 reverb=0.45 pan=0.1
+clip horn 0 3 71.4286 0.9643 606813104369432653 level=0.35 pitch=15 voices=3 gather=1 drift=0.08 timbre=1.25 chord=3 sub=0 cutoff=0.52 attack=0.07 release=0.4821 cutoff_swp=0.08 reverb=0.45 pan=-0.15
+clip ostinato 0 1 71.6071 0.1607 5601004295888338311 level=0.5625 pitch=-11 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip ostinato 0 1 71.7857 0.1607 5541153568598942635 level=0.5625 pitch=-4 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip ostinato 0 1 71.9643 0.1607 7476668495754823487 level=0.5625 pitch=-11 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip ostinato 0 1 72.1429 0.1607 7294251892955250567 level=0.75 pitch=1 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip horn 0 3 72.1429 0.9643 6633134777171361896 level=0.5 pitch=25 voices=3 gather=1 drift=0.08 timbre=1.25 chord=3 sub=0 cutoff=0.52 attack=0.07 release=0.4821 cutoff_swp=0.08 reverb=0.45 pan=0.1
+clip horn 0 3 72.1429 0.9643 8885645640850185474 level=0.35 pitch=13 voices=3 gather=1 drift=0.08 timbre=1.25 chord=3 sub=0 cutoff=0.52 attack=0.07 release=0.4821 cutoff_swp=0.08 reverb=0.45 pan=-0.15
+clip ostinato 0 1 72.3214 0.1607 5394512414018023715 level=0.5625 pitch=-11 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip taiko 1 0 72.5000 1.4286 6872456841282301583 level=0.3575 attack=0.002 release=1.4266 pitch=-6 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 72.5000 0.2857 6440446424580985864 level=0.275 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip ostinato 0 1 72.5000 0.1607 2492271150347236719 level=0.5625 pitch=-4 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip ostinato 0 1 72.6786 0.1607 7075526982490537563 level=0.5625 pitch=5 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip taiko 1 0 72.8571 1.4286 4462264858861427013 level=0.52 attack=0.002 release=1.4266 pitch=-6 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 72.8571 0.2857 1522077347294292502 level=0.4 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip ostinato 0 1 72.8571 0.1607 8133947852333538642 level=0.75 pitch=-11 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip horn 0 3 72.8571 0.9643 4367290008010127907 level=0.5 pitch=27 voices=3 gather=1 drift=0.08 timbre=1.25 chord=3 sub=0 cutoff=0.52 attack=0.07 release=0.4821 cutoff_swp=0.08 reverb=0.45 pan=0.1
+clip horn 0 3 72.8571 0.9643 5743792932864551652 level=0.35 pitch=15 voices=3 gather=1 drift=0.08 timbre=1.25 chord=3 sub=0 cutoff=0.52 attack=0.07 release=0.4821 cutoff_swp=0.08 reverb=0.45 pan=-0.15
+clip ostinato 0 1 73.0357 0.1607 1809852039096405586 level=0.5625 pitch=-11 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip ostinato 0 1 73.2143 0.1607 3767784959340613887 level=0.5625 pitch=-4 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip ostinato 0 1 73.3929 0.1607 1377785903191379675 level=0.5625 pitch=-11 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip taiko 1 0 73.5714 1.4286 6231759267872827852 level=0.39 attack=0.002 release=1.4266 pitch=-6 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 73.5714 0.2857 5515376204651098107 level=0.3 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip ostinato 0 1 73.5714 0.1607 7665439886205162335 level=0.75 pitch=1 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip horn 0 3 73.5714 0.9643 6777051844282457332 level=0.5 pitch=29 voices=3 gather=1 drift=0.08 timbre=1.25 chord=3 sub=0 cutoff=0.52 attack=0.07 release=0.4821 cutoff_swp=0.08 reverb=0.45 pan=0.1
+clip horn 0 3 73.5714 0.9643 1660347270388992031 level=0.35 pitch=17 voices=3 gather=1 drift=0.08 timbre=1.25 chord=3 sub=0 cutoff=0.52 attack=0.07 release=0.4821 cutoff_swp=0.08 reverb=0.45 pan=-0.15
+clip ostinato 0 1 73.7500 0.1607 3990830621545212226 level=0.5625 pitch=-11 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip taiko 1 0 73.9286 1.4286 466992263975733663 level=0.5525 attack=0.002 release=1.4266 pitch=-6 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 73.9286 0.2857 1211281167773223712 level=0.425 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip ostinato 0 1 73.9286 0.1607 5314386604922961228 level=0.5625 pitch=-4 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip ostinato 0 1 74.1071 0.1607 6317229368941762791 level=0.5625 pitch=5 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip taiko 1 0 74.2857 1.4286 8369761687511818847 level=0.65 attack=0.002 release=1.4266 pitch=-6 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 74.2857 0.2857 2356641963343937794 level=0.5 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip timpani 1 0 74.2857 1.0714 2735061286364791611 level=0.6 attack=0.003 release=1.0684 pitch=-9 pitch_swp=0.15 interval=12 timbre=0.05 fm_ratio=2 fm_depth=0.5 env_curve=0.35 reverb=0.4
+clip ostinato 0 1 74.2857 0.1607 3983869568158174961 level=0.75 pitch=-9 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip braam 0 2 74.2857 5.7143 8029914020156622749 level=0.6 attack=0.03 release=2 pitch=-9 voices=8 gather=1 drift=0.05 timbre=2 chord=1 sub=0.45 cutoff=0.26 cutoff_swp=0.32 drive=0.4 reverb=0.4
+clip low_strings 0 2 74.2857 6.0714 802032474890901732 level=0.42 attack=0.4 release=1 pitch=-9 voices=6 gather=1 drift=0.05 timbre=1.2 chord=2 sub=0.25 cutoff=0.42 reverb=0.35 duck=0.25 duck_from=1
+clip horn 0 3 74.2857 2.3929 1185170168851871600 level=0.5 pitch=31 voices=3 gather=1 drift=0.08 timbre=1.25 chord=3 sub=0 cutoff=0.52 attack=0.07 release=0.6 cutoff_swp=0.08 reverb=0.45 pan=0.1 lfo_rate=4.8 lfo>pitch=0.1
+clip horn 0 3 74.2857 2.3929 3282129489249879315 level=0.35 pitch=19 voices=3 gather=1 drift=0.08 timbre=1.25 chord=3 sub=0 cutoff=0.52 attack=0.07 release=0.6 cutoff_swp=0.08 reverb=0.45 pan=-0.15 lfo_rate=4.8 lfo>pitch=0.1
+clip strings 0 4 74.2857 6.0714 5073827057384536758 level=0.4 attack=0.3 release=1.5 pitch=3 pitch_swp=0 voices=14 gather=1 gather_swp=0 drift=0.15 timbre=1 chord=2 sub=0 cutoff=0.72 reverb=0.5 duck=0.25 duck_from=1
+clip choir 6 4 74.2857 6.0714 5061888610746318658 level=0.55 attack=0.8 release=1.5 pitch=0.06 chord=2 file=luminal/luminal_synth_vocal_treble_00004.ogg start=0.2 speed=0.3 voices=8 gather=1 drift=0.5 wander=2 scatter=0.4 reverb=0.6 cutoff=0.8
+clip ostinato 0 1 74.4643 0.1607 5672112757373044100 level=0.5625 pitch=-9 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip ostinato 0 1 74.6429 0.1607 5250246778369546568 level=0.5625 pitch=-2 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip ostinato 0 1 74.8214 0.1607 4064676964668789041 level=0.5625 pitch=-9 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip ostinato 0 1 75.0000 0.1607 4450071088688124345 level=0.75 pitch=3 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip ostinato 0 1 75.1786 0.1607 3924536335959989190 level=0.5625 pitch=-9 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip taiko 1 0 75.3571 1.4286 7151394711877423502 level=0.3575 attack=0.002 release=1.4266 pitch=-6 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 75.3571 0.2857 5144492540280099689 level=0.275 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip ostinato 0 1 75.3571 0.1607 5957390558423960386 level=0.5625 pitch=-2 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip ostinato 0 1 75.5357 0.1607 8817140026326724223 level=0.5625 pitch=7 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip taiko 1 0 75.7143 1.4286 6954137377335114992 level=0.52 attack=0.002 release=1.4266 pitch=-6 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 75.7143 0.2857 217411987801764297 level=0.4 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip ostinato 0 1 75.7143 0.1607 5515094099134318642 level=0.75 pitch=-9 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip ostinato 0 1 75.8929 0.1607 6004905036940046661 level=0.5625 pitch=-9 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip ostinato 0 1 76.0714 0.1607 1965594373266440401 level=0.5625 pitch=-2 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip ostinato 0 1 76.2500 0.1607 682933023946964070 level=0.5625 pitch=-9 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip taiko 1 0 76.4286 1.4286 7049282933122999745 level=0.39 attack=0.002 release=1.4266 pitch=-6 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 76.4286 0.2857 2383620822565884222 level=0.3 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip ostinato 0 1 76.4286 0.1607 7164364121754686692 level=0.75 pitch=3 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip horn 0 3 76.4286 0.9643 8864248078656144298 level=0.5 pitch=29 voices=3 gather=1 drift=0.08 timbre=1.25 chord=3 sub=0 cutoff=0.52 attack=0.07 release=0.4821 cutoff_swp=0.08 reverb=0.45 pan=0.1
+clip horn 0 3 76.4286 0.9643 4353567975514590932 level=0.35 pitch=17 voices=3 gather=1 drift=0.08 timbre=1.25 chord=3 sub=0 cutoff=0.52 attack=0.07 release=0.4821 cutoff_swp=0.08 reverb=0.45 pan=-0.15
+clip ostinato 0 1 76.6071 0.1607 1029646125789662709 level=0.5625 pitch=-9 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip taiko 1 0 76.7857 1.4286 4449209259781945664 level=0.5525 attack=0.002 release=1.4266 pitch=-6 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 76.7857 0.2857 923311928991728733 level=0.425 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip ostinato 0 1 76.7857 0.1607 3672743356727928495 level=0.5625 pitch=-2 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip ostinato 0 1 76.9643 0.1607 1998998357698764381 level=0.5625 pitch=7 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip taiko 1 0 77.1429 1.4286 5990185945572116864 level=0.65 attack=0.002 release=1.4266 pitch=-6 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 77.1429 0.2857 4393740504484793935 level=0.5 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip ostinato 0 1 77.1429 0.1607 8268456104870089878 level=0.75 pitch=-9 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip horn 0 3 77.1429 0.9643 2386723637917831534 level=0.5 pitch=27 voices=3 gather=1 drift=0.08 timbre=1.25 chord=3 sub=0 cutoff=0.52 attack=0.07 release=0.4821 cutoff_swp=0.08 reverb=0.45 pan=0.1
+clip horn 0 3 77.1429 0.9643 91505645507016497 level=0.35 pitch=15 voices=3 gather=1 drift=0.08 timbre=1.25 chord=3 sub=0 cutoff=0.52 attack=0.07 release=0.4821 cutoff_swp=0.08 reverb=0.45 pan=-0.15
+clip ostinato 0 1 77.3214 0.1607 3577961965147814441 level=0.5625 pitch=-9 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip ostinato 0 1 77.5000 0.1607 596156946756507721 level=0.5625 pitch=-2 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip ostinato 0 1 77.6786 0.1607 2811047154932127458 level=0.5625 pitch=-9 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip ostinato 0 1 77.8571 0.1607 6096250958415819882 level=0.75 pitch=3 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip horn 0 3 77.8571 0.9643 2721760351993666692 level=0.5 pitch=22 voices=3 gather=1 drift=0.08 timbre=1.25 chord=3 sub=0 cutoff=0.52 attack=0.07 release=0.4821 cutoff_swp=0.08 reverb=0.45 pan=0.1
+clip horn 0 3 77.8571 0.9643 8742968522980058270 level=0.35 pitch=10 voices=3 gather=1 drift=0.08 timbre=1.25 chord=3 sub=0 cutoff=0.52 attack=0.07 release=0.4821 cutoff_swp=0.08 reverb=0.45 pan=-0.15
+clip ostinato 0 1 78.0357 0.1607 8852370819353468932 level=0.5625 pitch=-9 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip taiko 1 0 78.2143 1.4286 4774455865557707138 level=0.3575 attack=0.002 release=1.4266 pitch=-6 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 78.2143 0.2857 672067602650436874 level=0.275 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip ostinato 0 1 78.2143 0.1607 1896345766234980825 level=0.5625 pitch=-2 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip ostinato 0 1 78.3929 0.1607 1365871532770128838 level=0.5625 pitch=7 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip taiko 1 0 78.5714 1.4286 2079677515962090778 level=0.52 attack=0.002 release=1.4266 pitch=-6 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 78.5714 0.2857 5196458502650802642 level=0.4 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip ostinato 0 1 78.5714 0.1607 3033040966275733023 level=0.75 pitch=-9 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip horn 0 3 78.5714 0.9643 5516876410545858788 level=0.5 pitch=27 voices=3 gather=1 drift=0.08 timbre=1.25 chord=3 sub=0 cutoff=0.52 attack=0.07 release=0.4821 cutoff_swp=0.08 reverb=0.45 pan=0.1
+clip horn 0 3 78.5714 0.9643 6383222793230869458 level=0.35 pitch=15 voices=3 gather=1 drift=0.08 timbre=1.25 chord=3 sub=0 cutoff=0.52 attack=0.07 release=0.4821 cutoff_swp=0.08 reverb=0.45 pan=-0.15
+clip ostinato 0 1 78.7500 0.1607 2863229151104296158 level=0.5625 pitch=-9 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip ostinato 0 1 78.9286 0.1607 6488703781850178483 level=0.5625 pitch=-2 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip ostinato 0 1 79.1071 0.1607 5477336202083206073 level=0.5625 pitch=-9 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip taiko 1 0 79.2857 1.4286 485622661602859632 level=0.39 attack=0.002 release=1.4266 pitch=-6 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 79.2857 0.2857 6094517569171952376 level=0.3 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip ostinato 0 1 79.2857 0.1607 3036183889698422084 level=0.75 pitch=3 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip horn 0 3 79.2857 0.9643 1862809758168738678 level=0.5 pitch=31 voices=3 gather=1 drift=0.08 timbre=1.25 chord=3 sub=0 cutoff=0.52 attack=0.07 release=0.4821 cutoff_swp=0.08 reverb=0.45 pan=0.1
+clip horn 0 3 79.2857 0.9643 1245132350677388671 level=0.35 pitch=19 voices=3 gather=1 drift=0.08 timbre=1.25 chord=3 sub=0 cutoff=0.52 attack=0.07 release=0.4821 cutoff_swp=0.08 reverb=0.45 pan=-0.15
+clip ostinato 0 1 79.4643 0.1607 269813344662357690 level=0.5625 pitch=-9 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip taiko 1 0 79.6429 1.4286 6833792229856208818 level=0.5525 attack=0.002 release=1.4266 pitch=-6 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 79.6429 0.2857 8530962276982366913 level=0.425 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip ostinato 0 1 79.6429 0.1607 1108207762647776793 level=0.5625 pitch=-2 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip ostinato 0 1 79.8214 0.1607 2266133326127611719 level=0.5625 pitch=7 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip taiko 1 0 80.0000 1.4286 2612136138374865703 level=0.65 attack=0.002 release=1.4266 pitch=-6 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 80.0000 0.2857 1534295300350850519 level=0.5 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip timpani 1 0 80.0000 1.0714 1780423658681944645 level=0.6 attack=0.003 release=1.0684 pitch=-7 pitch_swp=0.15 interval=12 timbre=0.05 fm_ratio=2 fm_depth=0.5 env_curve=0.35 reverb=0.4
+clip ostinato 0 1 80.0000 0.1607 6963729318185003322 level=0.675 pitch=-7 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip braam 0 2 80.0000 5.7143 1308697632878377714 level=0.6 attack=0.03 release=2 pitch=-7 voices=8 gather=1 drift=0.05 timbre=2 chord=1 sub=0.45 cutoff=0.26 cutoff_swp=0.32 drive=0.4 reverb=0.4
+clip low_strings 0 2 80.0000 6.0714 3500278207226430953 level=0.42 attack=0.4 release=1 pitch=-7 voices=6 gather=1 drift=0.05 timbre=1.2 chord=2 sub=0.25 cutoff=0.42 reverb=0.35 duck=0.25 duck_from=1
+clip horn 0 3 80.0000 2.3929 7152477042770884684 level=0.5 pitch=33 voices=3 gather=1 drift=0.08 timbre=1.25 chord=3 sub=0 cutoff=0.52 attack=0.07 release=0.6 cutoff_swp=0.08 reverb=0.45 pan=0.1 lfo_rate=4.8 lfo>pitch=0.1
+clip horn 0 3 80.0000 2.3929 1227951193018659889 level=0.35 pitch=21 voices=3 gather=1 drift=0.08 timbre=1.25 chord=3 sub=0 cutoff=0.52 attack=0.07 release=0.6 cutoff_swp=0.08 reverb=0.45 pan=-0.15 lfo_rate=4.8 lfo>pitch=0.1
+clip strings 0 4 80.0000 11.7857 7134416218997963596 level=0.4 attack=0.3 release=1.5 pitch=5 pitch_swp=0 voices=14 gather=1 gather_swp=0 drift=0.15 timbre=1 chord=2 sub=0 cutoff=0.72 reverb=0.5 duck=0.25 duck_from=1
+clip choir 6 4 80.0000 11.7857 1053142796878595892 level=0.55 attack=0.8 release=1.5 pitch=2.06 chord=2 file=luminal/luminal_synth_vocal_treble_00004.ogg start=0.2 speed=0.3 voices=8 gather=1 drift=0.5 wander=2 scatter=0.4 reverb=0.6 cutoff=0.8
+clip ostinato 0 1 80.1786 0.1607 2494229950112240452 level=0.5063 pitch=-7 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip ostinato 0 1 80.3571 0.1607 1263998081127610225 level=0.5063 pitch=0 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip ostinato 0 1 80.5357 0.1607 1468946678946252155 level=0.5063 pitch=-7 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip ostinato 0 1 80.7143 0.1607 270065967224293084 level=0.675 pitch=5 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip ostinato 0 1 80.8929 0.1607 3720085316699510156 level=0.5063 pitch=-7 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip taiko 1 0 81.0714 1.4286 2355913347657773913 level=0.3575 attack=0.002 release=1.4266 pitch=-6 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 81.0714 0.2857 6855183138353155825 level=0.275 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip ostinato 0 1 81.0714 0.1607 5879594861184651654 level=0.5063 pitch=0 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip ostinato 0 1 81.2500 0.1607 2940879116969454151 level=0.5063 pitch=9 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip taiko 1 0 81.4286 1.4286 5168277025834893096 level=0.52 attack=0.002 release=1.4266 pitch=-6 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 81.4286 0.2857 2228689002876901022 level=0.4 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip ostinato 0 1 81.4286 0.1607 2437436213300985796 level=0.675 pitch=-7 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip ostinato 0 1 81.6071 0.1607 1151141975886899668 level=0.5063 pitch=-7 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip ostinato 0 1 81.7857 0.1607 3802293325704180244 level=0.5063 pitch=0 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip ostinato 0 1 81.9643 0.1607 7539107538030486980 level=0.5063 pitch=-7 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip taiko 1 0 82.1429 1.4286 3109881152918844637 level=0.39 attack=0.002 release=1.4266 pitch=-6 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 82.1429 0.2857 1866527071381680863 level=0.3 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip ostinato 0 1 82.1429 0.1607 1031388585582382534 level=0.675 pitch=5 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip horn 0 3 82.1429 0.9643 2667367841480081285 level=0.5 pitch=31 voices=3 gather=1 drift=0.08 timbre=1.25 chord=3 sub=0 cutoff=0.52 attack=0.07 release=0.4821 cutoff_swp=0.08 reverb=0.45 pan=0.1
+clip horn 0 3 82.1429 0.9643 8437262475260471245 level=0.35 pitch=19 voices=3 gather=1 drift=0.08 timbre=1.25 chord=3 sub=0 cutoff=0.52 attack=0.07 release=0.4821 cutoff_swp=0.08 reverb=0.45 pan=-0.15
+clip ostinato 0 1 82.3214 0.1607 2427807119133914131 level=0.5063 pitch=-7 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip taiko 1 0 82.5000 1.4286 9099873481757312689 level=0.5525 attack=0.002 release=1.4266 pitch=-6 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 82.5000 0.2857 707959921377463645 level=0.425 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip ostinato 0 1 82.5000 0.1607 1679232645070869319 level=0.5063 pitch=0 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=-0.25
+clip ostinato 0 1 82.6786 0.1607 9091687529756873185 level=0.5063 pitch=9 voices=4 gather=1 drift=0.08 timbre=1.6 chord=3 sub=0 cutoff=0.64 attack=0.006 release=0.1547 env_curve=0.35 reverb=0.3 pan=0.25
+clip taiko 1 0 82.8571 1.4286 4557426400464998250 level=0.65 attack=0.002 release=1.4266 pitch=-6 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 82.8571 0.2857 1103367294443588051 level=0.5 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip taiko 1 0 82.8571 1.4286 1087151373228573556 level=0.65 attack=0.002 release=1.4266 pitch=-6 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 82.8571 0.2857 1408647641768570929 level=0.5 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip timpani 1 0 82.8571 2.8571 715573242385331978 level=0.6 attack=0.003 release=2.8541 pitch=-7 pitch_swp=0.15 interval=12 timbre=0.05 fm_ratio=2 fm_depth=0.5 env_curve=0.35 reverb=0.4
+clip horn 0 3 82.8571 5.9643 5874169234178341242 level=0.5 pitch=29 voices=3 gather=1 drift=0.08 timbre=1.25 chord=3 sub=0 cutoff=0.52 attack=0.07 release=0.6 cutoff_swp=0.08 reverb=0.45 pan=0.1 lfo_rate=4.8 lfo>pitch=0.1
+clip horn 0 3 82.8571 5.9643 8216552951067748758 level=0.35 pitch=17 voices=3 gather=1 drift=0.08 timbre=1.25 chord=3 sub=0 cutoff=0.52 attack=0.07 release=0.6 cutoff_swp=0.08 reverb=0.45 pan=-0.15 lfo_rate=4.8 lfo>pitch=0.1
+clip impact 5 5 82.8571 4.2857 4120296072949704316 level=0.55 release=2.5 file=gravitic/gravitic_impact_00001.ogg keyed=0
+clip crash 2 5 82.8571 5.7143 7148079881338268435 level=0.15 attack=0.002 release=5.7123 filter=2 cutoff=0.82 color=0 env_curve=0.75 reverb=0.55 pan=0.15 keyed=0
+clip final_chord 0 5 82.8571 8.5714 1842302952216390775 level=0.45 attack=0.05 release=3 pitch=5 voices=14 gather=1 drift=0.1 timbre=1.1 chord=2 sub=0.2 cutoff=0.6 cutoff_swp=-0.25 reverb=0.6
+clip taiko 1 0 83.9286 1.4286 937658905725685301 level=0.3575 attack=0.002 release=1.4266 pitch=-6 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 83.9286 0.2857 8786481194986365433 level=0.275 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip taiko 1 0 84.2857 1.4286 4755617962179624733 level=0.52 attack=0.002 release=1.4266 pitch=-6 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 84.2857 0.2857 8857393421453789423 level=0.4 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip taiko 1 0 85.0000 1.4286 8186499357037585360 level=0.39 attack=0.002 release=1.4266 pitch=-6 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 85.0000 0.2857 3468160523945333564 level=0.3 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0
+clip taiko 1 0 85.3571 1.4286 5431087417786704239 level=0.5525 attack=0.002 release=1.4266 pitch=-6 pitch_swp=-4 interval=0 timbre=0.1 fm_ratio=1.4 fm_depth=1.6 env_curve=0.55 reverb=0.35 keyed=0
+clip taiko_skin 2 0 85.3571 0.2857 4021493883485319135 level=0.425 attack=0.001 release=0.2847 filter=1 cutoff=0.32 resonance=0.4 color=0.6 env_curve=0.6 reverb=0.3 keyed=0

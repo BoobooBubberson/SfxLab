@@ -11,6 +11,8 @@ choir grown from any recording, partials resynthesis, a bendable tuning) make un
 | `overclock.py` | drum and bass into breakcore, F minor, 174 BPM: amen break, reese, vowel coil lead, choir gathering in the breakdown, tape-stop ending (combat) |
 | `cathedral_of_rust.py` | half-time doom, D minor, 66 BPM: the D-major cello turned minor through partials `gather`, chanting coil, anvil, clockwork ticker (dread / boss) |
 | `lantern_market.py` | G major in just intonation, 96 BPM swung, loops: FM kalimba, swung plucks, tuned FM toks, a 7/4 seventh on the V7 (hub / safe room) |
+| `sunfall.py` | cinematic, D minor to D major, 84 BPM: a cloud Deep Note, cloud sections as string ostinato and horns, braams, taiko and timpani, the strings melting back to cloud in the bridge |
+| `hoarfrost.py` | ambient exploration loop, D major pentatonic, 72 BPM, no drums: clouds gathering into and out of focus, struck singing bowl, a random-firing arc as frost crackle, blizzard wind |
 | `sfxsong.py` | the helper the three above use: `Song.clip()` in beats, keys checked per clip type against `Sfx.java`, slider ranges and short envelopes reported |
 | `probe.py` | measure recordings before using them: pitch, envelope, a timeline, section levels of a render |
 | `listen.py` | look at a render: solo stems per track, RMS per track and section, spectrograms with bar lines, pitch classes per bar |
@@ -89,6 +91,7 @@ Every voice is high-passed at 30 Hz, so a fundamental under ~35 Hz thins out.
 
 | type | what it is | parameters that matter |
 |---|---|---|
+| 0 cloud | up to 14 oscillators; ungathered each wanders 0.35x..12x the pitch, `gather` pulls voice i onto slot i of the chord table (slots span 3-4 octaves, first voices loudest) | `voices`, `gather`/`gather_swp` (0 to 1: a Deep Note), `drift` (wander speed), `timbre`, `chord`, `sub` (a saw an octave down). 3-4 voices on `unison` (3) are a section, each carrying its own ±0.6% detune; 14 on a chord a wide orchestral voicing; 8 on `power` with saw, drive and an opening cutoff a braam. Gather reaches 1 only at the clip's end: hold the chord in a second clip |
 | 1 tones | two oscillators | `interval` (semitones to the second, continuous: 19.02 is a tritave), `timbre` 0 sine .. 2 saw, `detune`, `shimmer`, `fm_ratio`/`fm_depth`; an additive bank: `bank`, `odd/even` (-1 odd only: hollow), `tilt`, `stretch` (bell). Kicks: `pitch=-1 pitch_swp=-19 timbre=0` |
 | 2 noise | coloured noise | `color`; with `filter=1 resonance=0.9` and the cutoff on a note it is a pitched drip (`tritave_signal.py drip()`) |
 | 4 pluck | Karplus-Strong string | `damp`, `sustain`, `pick`, `interval` (a second string, summed before the drive: power chords, or -3/-4 for thirds, liked). Through `drive` it sounds 8-bit; an amp stage is wanted |
@@ -132,6 +135,9 @@ python3 tools/music/listen.py report /tmp/x 1.379 intro:0:4 drop:8:16   # RMS pe
 python3 tools/music/listen.py draw   /tmp/x 1.379 /tmp/x.png 4 12       # spectrograms of mix and stems, bars 4-12
 python3 tools/music/listen.py chroma /tmp/x/t5.wav 1.379 8 16           # pitch classes per bar: are the chords right?
 ```
+
+`chroma` smears short low notes: a 16th at 65 Hz is ten cycles long and reads a semitone either side
+of itself. Check a doubtful one alone, rendered long.
 
 The master is `tanh(1.1 x) * 0.85`: a mix that drives it squashes everything at once, so balance the
 tracks (track volume is the fader) before adding level. The duck keys on the key track's level after its

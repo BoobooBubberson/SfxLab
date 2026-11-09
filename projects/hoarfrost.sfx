@@ -1,0 +1,55 @@
+# SfxLab project v2: clip name type track start dur seed key=value...
+# 'Hoarfrost' - D major pentatonic, 72 BPM, loops, by Claude. tracks: 1 - 2 crackle/glints 3 sub 4 bowls 5 clouds 6 wind
+loop 1
+root 110.0000
+track 0 1.000 0
+track 1 1.000 0
+track 2 0.800 0
+track 3 1.000 0
+track 4 1.000 0
+track 5 1.000 0
+clip crackle 8 1 0.0000 13.3333 5572022463668013397 level=0.25 attack=1 release=1 pitch=24 divide=3 jitter=1 burst=0.3 snap=0.9 misfire=0.85 color=0 filter=2 cutoff=0.75 pan=-0.4 pan_swp=0.8 reverb=0.4 keyed=0
+clip sub 1 2 0.0000 14.1667 4905101136853134111 level=0.4 attack=1.5 release=1.5 pitch=-7 interval=12 timbre=0 cutoff=0.3 lfo_rate=0.15 lfo>amp=0.35
+clip cloud 0 4 0.0000 15.0000 4251192469612746854 level=0.48 attack=2 release=2 pitch=5 voices=10 gather=0.5 gather_swp=0.47 drift=0.15 timbre=0.45 chord=9 sub=0 cutoff=0.6 reverb=0.65 echo=0.15 pan_swp=0
+clip cloud 0 4 0.0000 6.6667 8547594083676706822 level=0.3 attack=0.01 release=2 pitch=0 voices=10 gather=0.97 gather_swp=-0.47 drift=0.15 timbre=0.45 chord=9 sub=0 cutoff=0.6 reverb=0.65 echo=0.15 pan_swp=0
+clip wind 5 5 0.0000 53.3333 299907711999500717 level=0.3 attack=2 release=2 file=cryic/blizzard_1.ogg loop=1 cutoff=0.45 lfo_rate=0.1 lfo>cut=0.12 keyed=0
+clip bowl 5 3 0.8333 4.1667 8436429386139943921 level=0.7068 attack=0.005 release=4.1617 pitch=2 env_curve=0.45 file=resonant/singing-bowl_00002_pad.ogg reverb=0.55 echo=0.2 pan=0.4431
+clip bowl 5 3 3.3333 4.1667 3593296752341685981 level=0.6168 attack=0.005 release=4.1617 pitch=0 env_curve=0.45 file=resonant/singing-bowl_00002_pad.ogg reverb=0.55 echo=0.2 pan=-0.2855
+clip glint 3 1 5.0000 5.0000 6046445100583092158 level=0.16 attack=1 release=2 pitch=29 density=5 ping_decay=0.25 spread=1 reverb=0.6 echo=0.3
+clip bowl 5 3 5.0000 4.1667 4110667413542748298 level=0.7507 attack=0.005 release=4.1617 pitch=2 env_curve=0.45 file=resonant/singing-bowl_00002_pad.ogg reverb=0.55 echo=0.2 pan=0.1559
+clip halo 0 4 6.6667 6.6667 6907025669605340263 level=0.14 attack=2 release=2 pitch=17 voices=8 gather=0.6 gather_swp=0.35 drift=0.5 timbre=0.1 chord=9 cutoff=0.8 reverb=0.7 echo=0.3
+clip bowl 5 3 10.0000 4.1667 4710014105064996573 level=0.6109 attack=0.005 release=4.1617 pitch=4 env_curve=0.45 file=resonant/singing-bowl_00002_pad.ogg reverb=0.55 echo=0.2 pan=-0.0192
+clip cloud 0 4 11.6667 8.3333 4161068638100811308 level=0.3 attack=0.5 release=2 pitch=5 voices=10 gather=0.97 gather_swp=-0.47 drift=0.15 timbre=0.45 chord=9 sub=0 cutoff=0.6 reverb=0.65 echo=0.15 pan_swp=0
+clip bowl 5 3 12.5000 4.1667 543512608785877594 level=0.8276 attack=0.005 release=4.1617 pitch=7 env_curve=0.45 file=resonant/singing-bowl_00002_pad.ogg reverb=0.55 echo=0.2 pan=0.0158
+clip crackle 8 1 13.3333 13.3333 1619125241382842160 level=0.25 attack=1 release=1 pitch=24 divide=3 jitter=1 burst=0.3 snap=0.9 misfire=0.85 color=0 filter=2 cutoff=0.75 pan=-0.4 pan_swp=0.8 reverb=0.4 keyed=0
+clip sub 1 2 13.3333 14.1667 5148781534382427863 level=0.4 attack=1.5 release=1.5 pitch=-2 interval=12 timbre=0 cutoff=0.3 lfo_rate=0.15 lfo>amp=0.35
+clip cloud 0 4 13.3333 15.0000 9039198609688691424 level=0.48 attack=2 release=2 pitch=10 voices=10 gather=0.5 gather_swp=0.47 drift=0.15 timbre=0.45 chord=9 sub=0 cutoff=0.6 reverb=0.65 echo=0.15 pan_swp=0
+clip bowl 5 3 13.7500 4.1667 2091054164072127512 level=0.8441 attack=0.005 release=4.1617 pitch=4 env_curve=0.45 file=resonant/singing-bowl_00002_pad.ogg reverb=0.55 echo=0.2 pan=0.4331
+clip bowl 5 3 15.4167 4.1667 3898466550001688083 level=0.6197 attack=0.005 release=4.1617 pitch=2 env_curve=0.45 file=resonant/singing-bowl_00002_pad.ogg reverb=0.55 echo=0.2 pan=-0.4428
+clip glint 3 1 18.3333 5.0000 376176537412523379 level=0.16 attack=1 release=2 pitch=34 density=5 ping_decay=0.25 spread=1 reverb=0.6 echo=0.3
+clip halo 0 4 20.0000 6.6667 1445822637397678039 level=0.14 attack=2 release=2 pitch=22 voices=8 gather=0.6 gather_swp=0.35 drift=0.5 timbre=0.1 chord=9 cutoff=0.8 reverb=0.7 echo=0.3
+clip bowl 5 3 20.4167 4.1667 8121227039018447046 level=0.6281 attack=0.005 release=4.1617 pitch=12 env_curve=0.45 file=resonant/singing-bowl_00002_pad.ogg reverb=0.55 echo=0.2 pan=-0.0324
+clip bowl 5 3 21.6667 4.1667 4370209287542169959 level=0.7301 attack=0.005 release=4.1617 pitch=7 env_curve=0.45 file=resonant/singing-bowl_00002_pad.ogg reverb=0.55 echo=0.2 pan=0.4801
+clip bowl 5 3 22.9167 4.1667 8103839960377709669 level=0.6939 attack=0.005 release=4.1617 pitch=12 env_curve=0.45 file=resonant/singing-bowl_00002_pad.ogg reverb=0.55 echo=0.2 pan=0.2466
+clip cloud 0 4 25.0000 8.3333 7370497687503240786 level=0.3 attack=0.5 release=2 pitch=10 voices=10 gather=0.97 gather_swp=-0.47 drift=0.15 timbre=0.45 chord=9 sub=0 cutoff=0.6 reverb=0.65 echo=0.15 pan_swp=0
+clip crackle 8 1 26.6667 13.3333 3478840124457350607 level=0.25 attack=1 release=1 pitch=24 divide=3 jitter=1 burst=0.3 snap=0.9 misfire=0.85 color=0 filter=2 cutoff=0.75 pan=-0.4 pan_swp=0.8 reverb=0.4 keyed=0
+clip sub 1 2 26.6667 14.1667 596258278372478423 level=0.4 attack=1.5 release=1.5 pitch=-7 interval=12 timbre=0 cutoff=0.3 lfo_rate=0.15 lfo>amp=0.35
+clip cloud 0 4 26.6667 15.0000 6229447272970113553 level=0.48 attack=2 release=2 pitch=5 voices=10 gather=0.5 gather_swp=0.47 drift=0.15 timbre=0.45 chord=9 sub=0 cutoff=0.6 reverb=0.65 echo=0.15 pan_swp=0
+clip bowl 5 3 27.5000 4.1667 6823639980227038248 level=0.7154 attack=0.005 release=4.1617 pitch=4 env_curve=0.45 file=resonant/singing-bowl_00002_pad.ogg reverb=0.55 echo=0.2 pan=0.1244
+clip bowl 5 3 28.7500 4.1667 2819900052574259386 level=0.8973 attack=0.005 release=4.1617 pitch=2 env_curve=0.45 file=resonant/singing-bowl_00002_pad.ogg reverb=0.55 echo=0.2 pan=-0.219
+clip bowl 5 3 30.4167 4.1667 112456917844100301 level=0.7585 attack=0.005 release=4.1617 pitch=4 env_curve=0.45 file=resonant/singing-bowl_00002_pad.ogg reverb=0.55 echo=0.2 pan=0.431
+clip glint 3 1 31.6667 5.0000 4857632291995238033 level=0.16 attack=1 release=2 pitch=29 density=5 ping_decay=0.25 spread=1 reverb=0.6 echo=0.3
+clip bowl 5 3 32.0833 4.1667 1671976917389270914 level=0.7576 attack=0.005 release=4.1617 pitch=0 env_curve=0.45 file=resonant/singing-bowl_00002_pad.ogg reverb=0.55 echo=0.2 pan=-0.1268
+clip halo 0 4 33.3333 6.6667 5361585035753360381 level=0.14 attack=2 release=2 pitch=17 voices=8 gather=0.6 gather_swp=0.35 drift=0.5 timbre=0.1 chord=9 cutoff=0.8 reverb=0.7 echo=0.3
+clip bowl 5 3 36.2500 4.1667 4038761416978745594 level=0.727 attack=0.005 release=4.1617 pitch=7 env_curve=0.45 file=resonant/singing-bowl_00002_pad.ogg reverb=0.55 echo=0.2 pan=-0.2124
+clip bowl 5 3 37.9167 4.1667 1863557831722420364 level=0.6664 attack=0.005 release=4.1617 pitch=9 env_curve=0.45 file=resonant/singing-bowl_00002_pad.ogg reverb=0.55 echo=0.2 pan=-0.1734
+clip cloud 0 4 38.3333 8.3333 8325779765494916797 level=0.3 attack=0.5 release=2 pitch=5 voices=10 gather=0.97 gather_swp=-0.47 drift=0.15 timbre=0.45 chord=9 sub=0 cutoff=0.6 reverb=0.65 echo=0.15 pan_swp=0
+clip bowl 5 3 39.5833 4.1667 5381488599952784452 level=0.8532 attack=0.005 release=4.1617 pitch=7 env_curve=0.45 file=resonant/singing-bowl_00002_pad.ogg reverb=0.55 echo=0.2 pan=-0.431
+clip crackle 8 1 40.0000 13.3333 1107455464944017106 level=0.25 attack=1 release=1 pitch=24 divide=3 jitter=1 burst=0.3 snap=0.9 misfire=0.85 color=0 filter=2 cutoff=0.75 pan=-0.4 pan_swp=0.8 reverb=0.4 keyed=0
+clip sub 1 2 40.0000 13.3333 3226017667322615394 level=0.4 attack=1.5 release=1.5 pitch=-12 interval=12 timbre=0 cutoff=0.3 lfo_rate=0.15 lfo>amp=0.35
+clip cloud 0 4 40.0000 13.3333 8346360284565810791 level=0.48 attack=2 release=2 pitch=0 voices=10 gather=0.5 gather_swp=0.47 drift=0.15 timbre=0.45 chord=9 sub=0 cutoff=0.6 reverb=0.65 echo=0.15 pan_swp=0
+clip bowl 5 3 41.2500 4.1667 138848106096931795 level=0.6128 attack=0.005 release=4.1617 pitch=4 env_curve=0.45 file=resonant/singing-bowl_00002_pad.ogg reverb=0.55 echo=0.2 pan=-0.3636
+clip glint 3 1 45.0000 5.0000 7971855089031044220 level=0.16 attack=1 release=2 pitch=24 density=5 ping_decay=0.25 spread=1 reverb=0.6 echo=0.3
+clip bowl 5 3 46.2500 4.1667 5230056618904398180 level=0.6835 attack=0.005 release=4.1617 pitch=7 env_curve=0.45 file=resonant/singing-bowl_00002_pad.ogg reverb=0.55 echo=0.2 pan=0.0564
+clip halo 0 4 46.6667 6.6667 949106223934307225 level=0.14 attack=2 release=2 pitch=12 voices=8 gather=0.6 gather_swp=0.35 drift=0.5 timbre=0.1 chord=9 cutoff=0.8 reverb=0.7 echo=0.3
+clip bowl 5 3 48.7500 4.1667 9180174645376388983 level=0.7996 attack=0.005 release=4.1617 pitch=9 env_curve=0.45 file=resonant/singing-bowl_00002_pad.ogg reverb=0.55 echo=0.2 pan=0.2257
