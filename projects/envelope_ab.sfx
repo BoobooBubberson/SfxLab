@@ -1,0 +1,122 @@
+# SfxLab project v2: clip name type track start dur seed key=value...
+# 'Envelope A/B' - each instrument twice: before, then with the envelope controls, by Claude
+loop 0
+root 110.0000
+track 0 1.000 0
+track 1 1.000 0
+track 2 1.000 0
+track 3 1.000 0
+track 4 1.000 0
+track 5 1.000 0
+clip felt_piano 1 0 0.0000 2.0000 1880959655652054480 level=0.6069 attack=0.004 release=1.996 pitch=12 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.4
+clip felt_piano 1 0 0.6667 1.6667 8365634388304616961 level=0.6069 attack=0.004 release=1.6627 pitch=15 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.4
+clip felt_piano 1 0 1.0000 1.6667 8899977027806837434 level=0.6069 attack=0.004 release=1.6627 pitch=19 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.4
+clip felt_piano 1 0 1.3333 2.0000 6084839512489452935 level=0.6069 attack=0.004 release=1.996 pitch=24 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.4
+clip felt_piano 1 0 2.0000 1.6667 1132184231205790442 level=0.6069 attack=0.004 release=1.6627 pitch=22 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.4
+clip felt_piano 1 0 2.3333 1.6667 1336946744037492772 level=0.6069 attack=0.004 release=1.6627 pitch=19 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.4
+clip felt_piano 1 0 2.6667 2.0000 7330946682302349444 level=0.6069 attack=0.004 release=1.996 pitch=17 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.4
+clip felt_piano 1 0 3.3333 3.3333 6824943841176781327 level=0.6069 attack=0.004 release=3.3293 pitch=19 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.4
+clip felt_piano 1 0 6.6667 2.0000 6854302561851780211 level=0.4877 attack=0.004 release=1.996 pitch=12 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=1.1 env_curve=0.45 cutoff=0.5 env>cut=0.3 mod_decay=0.45 reverb=0.4
+clip felt_piano 1 0 7.3333 1.6667 7722475929593085741 level=0.4877 attack=0.004 release=1.6627 pitch=15 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=1.1 env_curve=0.45 cutoff=0.5 env>cut=0.3 mod_decay=0.45 reverb=0.4
+clip felt_piano 1 0 7.6667 1.6667 5599841810954428949 level=0.4877 attack=0.004 release=1.6627 pitch=19 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=1.1 env_curve=0.45 cutoff=0.5 env>cut=0.3 mod_decay=0.45 reverb=0.4
+clip felt_piano 1 0 8.0000 2.0000 839337766607227285 level=0.4877 attack=0.004 release=1.996 pitch=24 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=1.1 env_curve=0.45 cutoff=0.5 env>cut=0.3 mod_decay=0.45 reverb=0.4
+clip felt_piano 1 0 8.6667 1.6667 3362725848435004642 level=0.4877 attack=0.004 release=1.6627 pitch=22 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=1.1 env_curve=0.45 cutoff=0.5 env>cut=0.3 mod_decay=0.45 reverb=0.4
+clip felt_piano 1 0 9.0000 1.6667 3069770052397173359 level=0.4877 attack=0.004 release=1.6627 pitch=19 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=1.1 env_curve=0.45 cutoff=0.5 env>cut=0.3 mod_decay=0.45 reverb=0.4
+clip felt_piano 1 0 9.3333 2.0000 8165542832095167800 level=0.4877 attack=0.004 release=1.996 pitch=17 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=1.1 env_curve=0.45 cutoff=0.5 env>cut=0.3 mod_decay=0.45 reverb=0.4
+clip felt_piano 1 0 10.0000 3.3333 6900370861700977693 level=0.4877 attack=0.004 release=3.3293 pitch=19 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=1.1 env_curve=0.45 cutoff=0.5 env>cut=0.3 mod_decay=0.45 reverb=0.4
+clip marimba 1 0 13.3333 0.8000 837766221745417327 level=0.6155 attack=0.002 release=0.798 pitch=12 interval=0 timbre=2 fm_ratio=4 fm_depth=0.55 env_curve=0.9 reverb=0.3
+clip marimba 1 0 14.0000 0.8000 602514592064900116 level=0.6155 attack=0.002 release=0.798 pitch=15 interval=0 timbre=2 fm_ratio=4 fm_depth=0.55 env_curve=0.9 reverb=0.3
+clip marimba 1 0 14.3333 0.8000 5863236802748078244 level=0.6155 attack=0.002 release=0.798 pitch=19 interval=0 timbre=2 fm_ratio=4 fm_depth=0.55 env_curve=0.9 reverb=0.3
+clip marimba 1 0 14.6667 0.8000 60763655615067863 level=0.6155 attack=0.002 release=0.798 pitch=24 interval=0 timbre=2 fm_ratio=4 fm_depth=0.55 env_curve=0.9 reverb=0.3
+clip marimba 1 0 15.3333 0.8000 5246837735430418735 level=0.6155 attack=0.002 release=0.798 pitch=22 interval=0 timbre=2 fm_ratio=4 fm_depth=0.55 env_curve=0.9 reverb=0.3
+clip marimba 1 0 15.6667 0.8000 3019003801235255434 level=0.6155 attack=0.002 release=0.798 pitch=19 interval=0 timbre=2 fm_ratio=4 fm_depth=0.55 env_curve=0.9 reverb=0.3
+clip marimba 1 0 16.0000 0.8000 2481460837999950671 level=0.6155 attack=0.002 release=0.798 pitch=17 interval=0 timbre=2 fm_ratio=4 fm_depth=0.55 env_curve=0.9 reverb=0.3
+clip marimba 1 0 16.6667 0.8000 2877693925084084074 level=0.6155 attack=0.002 release=0.798 pitch=19 interval=0 timbre=2 fm_ratio=4 fm_depth=0.55 env_curve=0.9 reverb=0.3
+clip marimba 1 0 20.0000 0.9333 6146273446409528244 level=0.4723 attack=0.002 release=0.9313 pitch=12 interval=0 timbre=2 fm_ratio=4 fm_depth=0.9 env_curve=0.7 mod_decay=0.05 reverb=0.3
+clip marimba 1 0 20.6667 0.9333 2414177598662717465 level=0.4723 attack=0.002 release=0.9313 pitch=15 interval=0 timbre=2 fm_ratio=4 fm_depth=0.9 env_curve=0.7 mod_decay=0.05 reverb=0.3
+clip marimba 1 0 21.0000 0.9333 4851642783197612435 level=0.4723 attack=0.002 release=0.9313 pitch=19 interval=0 timbre=2 fm_ratio=4 fm_depth=0.9 env_curve=0.7 mod_decay=0.05 reverb=0.3
+clip marimba 1 0 21.3333 0.9333 2652794432198055022 level=0.4723 attack=0.002 release=0.9313 pitch=24 interval=0 timbre=2 fm_ratio=4 fm_depth=0.9 env_curve=0.7 mod_decay=0.05 reverb=0.3
+clip marimba 1 0 22.0000 0.9333 4225005413084736625 level=0.4723 attack=0.002 release=0.9313 pitch=22 interval=0 timbre=2 fm_ratio=4 fm_depth=0.9 env_curve=0.7 mod_decay=0.05 reverb=0.3
+clip marimba 1 0 22.3333 0.9333 3214618380491383148 level=0.4723 attack=0.002 release=0.9313 pitch=19 interval=0 timbre=2 fm_ratio=4 fm_depth=0.9 env_curve=0.7 mod_decay=0.05 reverb=0.3
+clip marimba 1 0 22.6667 0.9333 5128781086841130230 level=0.4723 attack=0.002 release=0.9313 pitch=17 interval=0 timbre=2 fm_ratio=4 fm_depth=0.9 env_curve=0.7 mod_decay=0.05 reverb=0.3
+clip marimba 1 0 23.3333 0.9333 8769435191774579794 level=0.4723 attack=0.002 release=0.9313 pitch=19 interval=0 timbre=2 fm_ratio=4 fm_depth=0.9 env_curve=0.7 mod_decay=0.05 reverb=0.3
+clip e_piano 1 0 26.6667 1.6667 919556352531194434 level=0.256 attack=0.003 release=1.6637 pitch=12 interval=0 timbre=2 detune=0.02 fm_ratio=1 fm_depth=0.45 env_curve=0.35 cutoff=0.7 lfo_rate=4.5 lfo>amp=0.35 phaser=0.2 reverb=0.3
+clip e_piano 1 0 27.3333 1.3333 1230927252978142532 level=0.256 attack=0.003 release=1.3303 pitch=15 interval=0 timbre=2 detune=0.02 fm_ratio=1 fm_depth=0.45 env_curve=0.35 cutoff=0.7 lfo_rate=4.5 lfo>amp=0.35 phaser=0.2 reverb=0.3
+clip e_piano 1 0 27.6667 1.3333 6014632488108375941 level=0.256 attack=0.003 release=1.3303 pitch=19 interval=0 timbre=2 detune=0.02 fm_ratio=1 fm_depth=0.45 env_curve=0.35 cutoff=0.7 lfo_rate=4.5 lfo>amp=0.35 phaser=0.2 reverb=0.3
+clip e_piano 1 0 28.0000 1.6667 4283924649090450407 level=0.256 attack=0.003 release=1.6637 pitch=24 interval=0 timbre=2 detune=0.02 fm_ratio=1 fm_depth=0.45 env_curve=0.35 cutoff=0.7 lfo_rate=4.5 lfo>amp=0.35 phaser=0.2 reverb=0.3
+clip e_piano 1 0 28.6667 1.3333 6067094028664411341 level=0.256 attack=0.003 release=1.3303 pitch=22 interval=0 timbre=2 detune=0.02 fm_ratio=1 fm_depth=0.45 env_curve=0.35 cutoff=0.7 lfo_rate=4.5 lfo>amp=0.35 phaser=0.2 reverb=0.3
+clip e_piano 1 0 29.0000 1.3333 8367457735054887797 level=0.256 attack=0.003 release=1.3303 pitch=19 interval=0 timbre=2 detune=0.02 fm_ratio=1 fm_depth=0.45 env_curve=0.35 cutoff=0.7 lfo_rate=4.5 lfo>amp=0.35 phaser=0.2 reverb=0.3
+clip e_piano 1 0 29.3333 1.6667 5024815494849581301 level=0.256 attack=0.003 release=1.6637 pitch=17 interval=0 timbre=2 detune=0.02 fm_ratio=1 fm_depth=0.45 env_curve=0.35 cutoff=0.7 lfo_rate=4.5 lfo>amp=0.35 phaser=0.2 reverb=0.3
+clip e_piano 1 0 30.0000 3.0000 6569450513291947741 level=0.256 attack=0.003 release=2.997 pitch=19 interval=0 timbre=2 detune=0.02 fm_ratio=1 fm_depth=0.45 env_curve=0.35 cutoff=0.7 lfo_rate=4.5 lfo>amp=0.35 phaser=0.2 reverb=0.3
+clip e_piano 1 0 33.3333 1.6667 7878269718575614339 level=0.1964 attack=0.003 release=0.4 pitch=12 interval=0 timbre=2 detune=0.02 fm_ratio=1 fm_depth=3 mod_decay=0.12 decay=0.8 sus_level=0.35 cutoff=0.75 lfo_rate=4.5 lfo>amp=0.35 phaser=0.2 reverb=0.3
+clip e_piano 1 0 34.0000 1.3333 9202046695672893883 level=0.1964 attack=0.003 release=0.4 pitch=15 interval=0 timbre=2 detune=0.02 fm_ratio=1 fm_depth=3 mod_decay=0.12 decay=0.8 sus_level=0.35 cutoff=0.75 lfo_rate=4.5 lfo>amp=0.35 phaser=0.2 reverb=0.3
+clip e_piano 1 0 34.3333 1.3333 5172491333069136691 level=0.1964 attack=0.003 release=0.4 pitch=19 interval=0 timbre=2 detune=0.02 fm_ratio=1 fm_depth=3 mod_decay=0.12 decay=0.8 sus_level=0.35 cutoff=0.75 lfo_rate=4.5 lfo>amp=0.35 phaser=0.2 reverb=0.3
+clip e_piano 1 0 34.6667 1.6667 7437944975375096607 level=0.1964 attack=0.003 release=0.4 pitch=24 interval=0 timbre=2 detune=0.02 fm_ratio=1 fm_depth=3 mod_decay=0.12 decay=0.8 sus_level=0.35 cutoff=0.75 lfo_rate=4.5 lfo>amp=0.35 phaser=0.2 reverb=0.3
+clip e_piano 1 0 35.3333 1.3333 4820178435820308986 level=0.1964 attack=0.003 release=0.4 pitch=22 interval=0 timbre=2 detune=0.02 fm_ratio=1 fm_depth=3 mod_decay=0.12 decay=0.8 sus_level=0.35 cutoff=0.75 lfo_rate=4.5 lfo>amp=0.35 phaser=0.2 reverb=0.3
+clip e_piano 1 0 35.6667 1.3333 4112059745279108091 level=0.1964 attack=0.003 release=0.4 pitch=19 interval=0 timbre=2 detune=0.02 fm_ratio=1 fm_depth=3 mod_decay=0.12 decay=0.8 sus_level=0.35 cutoff=0.75 lfo_rate=4.5 lfo>amp=0.35 phaser=0.2 reverb=0.3
+clip e_piano 1 0 36.0000 1.6667 8018126272167618465 level=0.1964 attack=0.003 release=0.4 pitch=17 interval=0 timbre=2 detune=0.02 fm_ratio=1 fm_depth=3 mod_decay=0.12 decay=0.8 sus_level=0.35 cutoff=0.75 lfo_rate=4.5 lfo>amp=0.35 phaser=0.2 reverb=0.3
+clip e_piano 1 0 36.6667 3.0000 295744408618799740 level=0.1964 attack=0.003 release=0.4 pitch=19 interval=0 timbre=2 detune=0.02 fm_ratio=1 fm_depth=3 mod_decay=0.12 decay=0.8 sus_level=0.35 cutoff=0.75 lfo_rate=4.5 lfo>amp=0.35 phaser=0.2 reverb=0.3
+clip violin 1 2 40.0000 0.6667 2901824799339824855 level=0.2116 attack=0.1 release=0.2 pitch=24 interval=0 timbre=1 detune=0.03 cutoff=0.74 resonance=0.35 lfo_rate=5.6 lfo>pitch=0.13 reverb=0.45
+clip violin 1 2 40.6667 0.3333 6832067714635778268 level=0.2116 attack=0.1 release=0.175 pitch=27 interval=0 timbre=1 detune=0.03 cutoff=0.74 resonance=0.35 lfo_rate=5.6 lfo>pitch=0.13 reverb=0.45
+clip violin 1 2 41.0000 0.3333 5420124686863828882 level=0.2116 attack=0.1 release=0.175 pitch=31 interval=0 timbre=1 detune=0.03 cutoff=0.74 resonance=0.35 lfo_rate=5.6 lfo>pitch=0.13 reverb=0.45
+clip violin 1 2 41.3333 0.6667 855491523009547984 level=0.2116 attack=0.1 release=0.2 pitch=36 interval=0 timbre=1 detune=0.03 cutoff=0.74 resonance=0.35 lfo_rate=5.6 lfo>pitch=0.13 reverb=0.45
+clip violin 1 2 42.0000 0.3333 4917160309033392356 level=0.2116 attack=0.1 release=0.175 pitch=34 interval=0 timbre=1 detune=0.03 cutoff=0.74 resonance=0.35 lfo_rate=5.6 lfo>pitch=0.13 reverb=0.45
+clip violin 1 2 42.3333 0.3333 501404036332461897 level=0.2116 attack=0.1 release=0.175 pitch=31 interval=0 timbre=1 detune=0.03 cutoff=0.74 resonance=0.35 lfo_rate=5.6 lfo>pitch=0.13 reverb=0.45
+clip violin 1 2 42.6667 0.6667 5622030808899573384 level=0.2116 attack=0.1 release=0.2 pitch=29 interval=0 timbre=1 detune=0.03 cutoff=0.74 resonance=0.35 lfo_rate=5.6 lfo>pitch=0.13 reverb=0.45
+clip violin 1 2 43.3333 2.0000 9077057221138942472 level=0.2116 attack=0.1 release=0.2 pitch=31 interval=0 timbre=1 detune=0.03 cutoff=0.74 resonance=0.35 lfo_rate=5.6 lfo>pitch=0.13 reverb=0.45
+clip violin 1 2 46.6667 0.6667 7659494168355799940 level=0.2241 attack=0.06 release=0.2 pitch=24 interval=0 timbre=1 detune=0.03 cutoff=0.62 resonance=0.35 env>cut=0.14 decay=0.25 sus_level=0.8 lfo_rate=5.6 lfo>pitch=0.13 reverb=0.45
+clip violin 1 2 47.3333 0.3333 5122219213645364554 level=0.2241 attack=0.06 release=0.175 pitch=27 interval=0 timbre=1 detune=0.03 cutoff=0.62 resonance=0.35 env>cut=0.14 decay=0.25 sus_level=0.8 lfo_rate=5.6 lfo>pitch=0.13 reverb=0.45
+clip violin 1 2 47.6667 0.3333 1189448025097981382 level=0.2241 attack=0.06 release=0.175 pitch=31 interval=0 timbre=1 detune=0.03 cutoff=0.62 resonance=0.35 env>cut=0.14 decay=0.25 sus_level=0.8 lfo_rate=5.6 lfo>pitch=0.13 reverb=0.45
+clip violin 1 2 48.0000 0.6667 5272174275137387697 level=0.2241 attack=0.06 release=0.2 pitch=36 interval=0 timbre=1 detune=0.03 cutoff=0.62 resonance=0.35 env>cut=0.14 decay=0.25 sus_level=0.8 lfo_rate=5.6 lfo>pitch=0.13 reverb=0.45
+clip violin 1 2 48.6667 0.3333 8463648246840267933 level=0.2241 attack=0.06 release=0.175 pitch=34 interval=0 timbre=1 detune=0.03 cutoff=0.62 resonance=0.35 env>cut=0.14 decay=0.25 sus_level=0.8 lfo_rate=5.6 lfo>pitch=0.13 reverb=0.45
+clip violin 1 2 49.0000 0.3333 5591692683210833664 level=0.2241 attack=0.06 release=0.175 pitch=31 interval=0 timbre=1 detune=0.03 cutoff=0.62 resonance=0.35 env>cut=0.14 decay=0.25 sus_level=0.8 lfo_rate=5.6 lfo>pitch=0.13 reverb=0.45
+clip violin 1 2 49.3333 0.6667 262699734778231030 level=0.2241 attack=0.06 release=0.2 pitch=29 interval=0 timbre=1 detune=0.03 cutoff=0.62 resonance=0.35 env>cut=0.14 decay=0.25 sus_level=0.8 lfo_rate=5.6 lfo>pitch=0.13 reverb=0.45
+clip violin 1 2 50.0000 2.0000 686039991919269725 level=0.2241 attack=0.06 release=0.2 pitch=31 interval=0 timbre=1 detune=0.03 cutoff=0.62 resonance=0.35 env>cut=0.14 decay=0.25 sus_level=0.8 lfo_rate=5.6 lfo>pitch=0.13 reverb=0.45
+clip brass 1 2 53.3333 0.6667 810346591783834151 level=0.1205 attack=0.05 release=0.15 pitch=12 interval=0 timbre=1 detune=0.15 resonance=0.15 drive=0.15 lfo_rate=5 lfo>pitch=0.05 reverb=0.4 cutoff=0.51
+clip brass 1 2 54.0000 0.3333 2022706162979979789 level=0.1205 attack=0.05 release=0.15 pitch=15 interval=0 timbre=1 detune=0.15 resonance=0.15 drive=0.15 lfo_rate=5 lfo>pitch=0.05 reverb=0.4 cutoff=0.51
+clip brass 1 2 54.3333 0.3333 7089348706111641158 level=0.1205 attack=0.05 release=0.15 pitch=19 interval=0 timbre=1 detune=0.15 resonance=0.15 drive=0.15 lfo_rate=5 lfo>pitch=0.05 reverb=0.4 cutoff=0.51
+clip brass 1 2 54.6667 0.6667 9049734413510699357 level=0.1205 attack=0.05 release=0.15 pitch=24 interval=0 timbre=1 detune=0.15 resonance=0.15 drive=0.15 lfo_rate=5 lfo>pitch=0.05 reverb=0.4 cutoff=0.51
+clip brass 1 2 55.3333 0.3333 2206407217752027918 level=0.1205 attack=0.05 release=0.15 pitch=22 interval=0 timbre=1 detune=0.15 resonance=0.15 drive=0.15 lfo_rate=5 lfo>pitch=0.05 reverb=0.4 cutoff=0.51
+clip brass 1 2 55.6667 0.3333 2513936741685334463 level=0.1205 attack=0.05 release=0.15 pitch=19 interval=0 timbre=1 detune=0.15 resonance=0.15 drive=0.15 lfo_rate=5 lfo>pitch=0.05 reverb=0.4 cutoff=0.51
+clip brass 1 2 56.0000 0.6667 7915824784463237068 level=0.1205 attack=0.05 release=0.15 pitch=17 interval=0 timbre=1 detune=0.15 resonance=0.15 drive=0.15 lfo_rate=5 lfo>pitch=0.05 reverb=0.4 cutoff=0.51
+clip brass 1 2 56.6667 2.0000 5309972261115823240 level=0.1205 attack=0.05 release=0.15 pitch=19 interval=0 timbre=1 detune=0.15 resonance=0.15 drive=0.15 lfo_rate=5 lfo>pitch=0.05 reverb=0.4 cutoff=0.51
+clip brass 1 2 60.0000 0.6667 568888114309662467 level=0.14 attack=0.05 release=0.15 pitch=12 interval=0 timbre=1 detune=0.15 resonance=0.15 drive=0.15 lfo_rate=5 lfo>pitch=0.05 reverb=0.4 cutoff=0.3 env>cut=0.42 decay=0.35 sus_level=0.7
+clip brass 1 2 60.6667 0.3333 6390767136531167666 level=0.14 attack=0.05 release=0.15 pitch=15 interval=0 timbre=1 detune=0.15 resonance=0.15 drive=0.15 lfo_rate=5 lfo>pitch=0.05 reverb=0.4 cutoff=0.3 env>cut=0.42 decay=0.35 sus_level=0.7
+clip brass 1 2 61.0000 0.3333 1555569903487208858 level=0.14 attack=0.05 release=0.15 pitch=19 interval=0 timbre=1 detune=0.15 resonance=0.15 drive=0.15 lfo_rate=5 lfo>pitch=0.05 reverb=0.4 cutoff=0.3 env>cut=0.42 decay=0.35 sus_level=0.7
+clip brass 1 2 61.3333 0.6667 5229405100767426817 level=0.14 attack=0.05 release=0.15 pitch=24 interval=0 timbre=1 detune=0.15 resonance=0.15 drive=0.15 lfo_rate=5 lfo>pitch=0.05 reverb=0.4 cutoff=0.3 env>cut=0.42 decay=0.35 sus_level=0.7
+clip brass 1 2 62.0000 0.3333 7759142321957187792 level=0.14 attack=0.05 release=0.15 pitch=22 interval=0 timbre=1 detune=0.15 resonance=0.15 drive=0.15 lfo_rate=5 lfo>pitch=0.05 reverb=0.4 cutoff=0.3 env>cut=0.42 decay=0.35 sus_level=0.7
+clip brass 1 2 62.3333 0.3333 82732081344621464 level=0.14 attack=0.05 release=0.15 pitch=19 interval=0 timbre=1 detune=0.15 resonance=0.15 drive=0.15 lfo_rate=5 lfo>pitch=0.05 reverb=0.4 cutoff=0.3 env>cut=0.42 decay=0.35 sus_level=0.7
+clip brass 1 2 62.6667 0.6667 7223534090113816905 level=0.14 attack=0.05 release=0.15 pitch=17 interval=0 timbre=1 detune=0.15 resonance=0.15 drive=0.15 lfo_rate=5 lfo>pitch=0.05 reverb=0.4 cutoff=0.3 env>cut=0.42 decay=0.35 sus_level=0.7
+clip brass 1 2 63.3333 2.0000 2066127364533616228 level=0.14 attack=0.05 release=0.15 pitch=19 interval=0 timbre=1 detune=0.15 resonance=0.15 drive=0.15 lfo_rate=5 lfo>pitch=0.05 reverb=0.4 cutoff=0.3 env>cut=0.42 decay=0.35 sus_level=0.7
+clip synth_pluck 1 3 66.6667 1.3333 3694065339736765841 level=0.5459 attack=0.002 release=1.3313 pitch=24 interval=12 timbre=1 detune=0.25 resonance=0.45 env_curve=0.4 echo=0.25 reverb=0.3 cutoff=0.55
+clip synth_pluck 1 3 67.3333 1.0000 6650928261979462603 level=0.5459 attack=0.002 release=0.998 pitch=27 interval=12 timbre=1 detune=0.25 resonance=0.45 env_curve=0.4 echo=0.25 reverb=0.3 cutoff=0.55
+clip synth_pluck 1 3 67.6667 1.0000 5438555689270461018 level=0.5459 attack=0.002 release=0.998 pitch=31 interval=12 timbre=1 detune=0.25 resonance=0.45 env_curve=0.4 echo=0.25 reverb=0.3 cutoff=0.55
+clip synth_pluck 1 3 68.0000 1.3333 975412578108811185 level=0.5459 attack=0.002 release=1.3313 pitch=36 interval=12 timbre=1 detune=0.25 resonance=0.45 env_curve=0.4 echo=0.25 reverb=0.3 cutoff=0.55
+clip synth_pluck 1 3 68.6667 1.0000 7141234162182356547 level=0.5459 attack=0.002 release=0.998 pitch=34 interval=12 timbre=1 detune=0.25 resonance=0.45 env_curve=0.4 echo=0.25 reverb=0.3 cutoff=0.55
+clip synth_pluck 1 3 69.0000 1.0000 2279593528149159466 level=0.5459 attack=0.002 release=0.998 pitch=31 interval=12 timbre=1 detune=0.25 resonance=0.45 env_curve=0.4 echo=0.25 reverb=0.3 cutoff=0.55
+clip synth_pluck 1 3 69.3333 1.3333 5486926950566184124 level=0.5459 attack=0.002 release=1.3313 pitch=29 interval=12 timbre=1 detune=0.25 resonance=0.45 env_curve=0.4 echo=0.25 reverb=0.3 cutoff=0.55
+clip synth_pluck 1 3 70.0000 2.6667 2200163615341521605 level=0.5459 attack=0.002 release=2.6647 pitch=31 interval=12 timbre=1 detune=0.25 resonance=0.45 env_curve=0.4 echo=0.25 reverb=0.3 cutoff=0.55
+clip synth_pluck 1 3 73.3333 1.3333 1406010344297898123 level=0.5095 attack=0.002 release=1.3313 pitch=24 interval=12 timbre=1 detune=0.25 resonance=0.45 env_curve=0.4 echo=0.25 reverb=0.3 cutoff=0.28 env>cut=0.55 mod_decay=0.12
+clip synth_pluck 1 3 74.0000 1.0000 7978718325233140026 level=0.5095 attack=0.002 release=0.998 pitch=27 interval=12 timbre=1 detune=0.25 resonance=0.45 env_curve=0.4 echo=0.25 reverb=0.3 cutoff=0.28 env>cut=0.55 mod_decay=0.12
+clip synth_pluck 1 3 74.3333 1.0000 7302767719329424491 level=0.5095 attack=0.002 release=0.998 pitch=31 interval=12 timbre=1 detune=0.25 resonance=0.45 env_curve=0.4 echo=0.25 reverb=0.3 cutoff=0.28 env>cut=0.55 mod_decay=0.12
+clip synth_pluck 1 3 74.6667 1.3333 3201022484100737606 level=0.5095 attack=0.002 release=1.3313 pitch=36 interval=12 timbre=1 detune=0.25 resonance=0.45 env_curve=0.4 echo=0.25 reverb=0.3 cutoff=0.28 env>cut=0.55 mod_decay=0.12
+clip synth_pluck 1 3 75.3333 1.0000 8381698004542635850 level=0.5095 attack=0.002 release=0.998 pitch=34 interval=12 timbre=1 detune=0.25 resonance=0.45 env_curve=0.4 echo=0.25 reverb=0.3 cutoff=0.28 env>cut=0.55 mod_decay=0.12
+clip synth_pluck 1 3 75.6667 1.0000 4671149140061260785 level=0.5095 attack=0.002 release=0.998 pitch=31 interval=12 timbre=1 detune=0.25 resonance=0.45 env_curve=0.4 echo=0.25 reverb=0.3 cutoff=0.28 env>cut=0.55 mod_decay=0.12
+clip synth_pluck 1 3 76.0000 1.3333 6654663623674990351 level=0.5095 attack=0.002 release=1.3313 pitch=29 interval=12 timbre=1 detune=0.25 resonance=0.45 env_curve=0.4 echo=0.25 reverb=0.3 cutoff=0.28 env>cut=0.55 mod_decay=0.12
+clip synth_pluck 1 3 76.6667 2.6667 7040810854179312441 level=0.5095 attack=0.002 release=2.6647 pitch=31 interval=12 timbre=1 detune=0.25 resonance=0.45 env_curve=0.4 echo=0.25 reverb=0.3 cutoff=0.28 env>cut=0.55 mod_decay=0.12
+clip acid 1 4 80.0000 0.6000 4953386868482797845 level=0.1146 attack=0.003 release=0.08 pitch=0 interval=0 timbre=1 resonance=0.8 drive=0.35 cutoff=0.43
+clip acid 1 4 80.6667 0.3000 7263692706361522291 level=0.1146 attack=0.003 release=0.08 pitch=3 interval=0 timbre=1 resonance=0.8 drive=0.35 cutoff=0.43
+clip acid 1 4 81.0000 0.3000 5188323264759414383 level=0.1146 attack=0.003 release=0.08 pitch=7 interval=0 timbre=1 resonance=0.8 drive=0.35 cutoff=0.43
+clip acid 1 4 81.3333 0.6000 685676218717822043 level=0.1146 attack=0.003 release=0.08 pitch=12 interval=0 timbre=1 resonance=0.8 drive=0.35 cutoff=0.43
+clip acid 1 4 82.0000 0.3000 2253736216429023994 level=0.1146 attack=0.003 release=0.08 pitch=10 interval=0 timbre=1 resonance=0.8 drive=0.35 cutoff=0.43
+clip acid 1 4 82.3333 0.3000 2728178414011068767 level=0.1146 attack=0.003 release=0.08 pitch=7 interval=0 timbre=1 resonance=0.8 drive=0.35 cutoff=0.43
+clip acid 1 4 82.6667 0.6000 5388588436426121814 level=0.1146 attack=0.003 release=0.08 pitch=5 interval=0 timbre=1 resonance=0.8 drive=0.35 cutoff=0.43
+clip acid 1 4 83.3333 1.8000 1881906062162570053 level=0.1146 attack=0.003 release=0.08 pitch=7 interval=0 timbre=1 resonance=0.8 drive=0.35 cutoff=0.43
+clip acid 1 4 86.6667 0.6000 7135509278140842416 level=0.16 attack=0.003 release=0.08 pitch=0 interval=0 timbre=1 resonance=0.8 drive=0.35 cutoff=0.18 env>cut=0.5 mod_decay=0.16
+clip acid 1 4 87.3333 0.3000 6208058707555378435 level=0.16 attack=0.003 release=0.08 pitch=3 interval=0 timbre=1 resonance=0.8 drive=0.35 cutoff=0.18 env>cut=0.5 mod_decay=0.16
+clip acid 1 4 87.6667 0.3000 8671054600706706580 level=0.16 attack=0.003 release=0.08 pitch=7 interval=0 timbre=1 resonance=0.8 drive=0.35 cutoff=0.18 env>cut=0.5 mod_decay=0.16
+clip acid 1 4 88.0000 0.6000 1319787649432303350 level=0.16 attack=0.003 release=0.08 pitch=12 interval=0 timbre=1 resonance=0.8 drive=0.35 cutoff=0.18 env>cut=0.5 mod_decay=0.16
+clip acid 1 4 88.6667 0.3000 5932986714929423929 level=0.16 attack=0.003 release=0.08 pitch=10 interval=0 timbre=1 resonance=0.8 drive=0.35 cutoff=0.18 env>cut=0.5 mod_decay=0.16
+clip acid 1 4 89.0000 0.3000 616380751128629860 level=0.16 attack=0.003 release=0.08 pitch=7 interval=0 timbre=1 resonance=0.8 drive=0.35 cutoff=0.18 env>cut=0.5 mod_decay=0.16
+clip acid 1 4 89.3333 0.6000 3988757766066000699 level=0.16 attack=0.003 release=0.08 pitch=5 interval=0 timbre=1 resonance=0.8 drive=0.35 cutoff=0.18 env>cut=0.5 mod_decay=0.16
+clip acid 1 4 90.0000 1.8000 5648832906866776019 level=0.16 attack=0.003 release=0.08 pitch=7 interval=0 timbre=1 resonance=0.8 drive=0.35 cutoff=0.18 env>cut=0.5 mod_decay=0.16

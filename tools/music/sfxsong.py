@@ -3,6 +3,7 @@
     from sfxsong import Song
     s = Song("Title", bpm=120, seed=1, comment="...")
     s.clip("kick", "tones", 0, beat=0, beats=0.75, level=1, pitch=3, pitch_swp=-22, keyed=0)
+    s.clip("pluck", "tones", 3, beat=1, beats=1, timbre=2, cutoff=0.28, env_cut=0.55, mod_decay=0.12)
     s.write()                  # .sfx to stdout, a summary to stderr
 
 Pitch is semitones from A2 = 110 Hz (see README). Times are beats; the release
@@ -25,8 +26,12 @@ interval timbre detune shimmer fm_ratio fm_depth bank odd/even tilt stretch
 color density ping_decay spread damp sustain pick start loop pitch_mode speed
 voices gather gather_swp chord wander drift scatter sines residual purity
 ring formant burst jitter misfire flicker snap divide
+decay sus_level env>cut env>fm mod_decay
 """.split())
 NOT_SLIDERS = {"file", "keyed"}
+# Python-friendly spellings of the keys with > or / in them
+ALIASES = {"lfo_pitch": "lfo>pitch", "lfo_cut": "lfo>cut", "lfo_amp": "lfo>amp", "odd_even": "odd/even",
+           "env_cut": "env>cut", "env_fm": "env>fm"}
 
 CHORD = dict(octaves=0, power=1, major=2, unison=3, sus4=4, minor=5, harm7=6, overtones=7,
              maj7=8, penta=9, augment=10, harm11=11, tritone=12)
@@ -110,6 +115,7 @@ class Song:
         self.allowed, self.allowed_src = _allowed_keys()
 
     def clip(self, name, typ, track, beat, beats, seed=None, **kw):
+        kw = {ALIASES.get(k, k): v for k, v in kw.items()}   # env_cut= for env>cut, and so on
         if " " in name or not name:
             raise ValueError(f"clip name {name!r}: no spaces")
         if typ not in TYPES:

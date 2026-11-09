@@ -15,6 +15,7 @@ choir grown from any recording, partials resynthesis, a bendable tuning) make un
 | `hoarfrost.py` | ambient exploration loop, D major pentatonic, 72 BPM, no drums: clouds gathering into and out of focus, struck singing bowl, a random-firing arc as frost crackle, blizzard wind |
 | `the_coil_forgets.py` | the sad one, D minor, 56 BPM: the lament bass (D C# C B Bb A) as a ground, felt piano from tones, the coil as a voice singing sighs, cello partials, cloud strings, choir; at the end the voice misfires more each note until it stops |
 | `instruments.py` | an audition sheet: 19 instruments built from the clip types (felt and electric piano, marimba, vibraphone, music box, tubular bell, pipe organ, clarinet, flute, ocarina, reed, violin, harp, koto, sitar, fretless bass, didgeridoo, wind chimes, choir), each a function to copy, levels matched to -20 dB; `--list` prints the running order |
+| `envelope_ab.py` | before and after the envelope controls: felt piano, marimba, electric piano, violin, then brass, synth pluck and acid bass (new), each pair loudness-matched |
 | `sfxsong.py` | the helper the three above use: `Song.clip()` in beats, keys checked per clip type against `Sfx.java`, slider ranges and short envelopes reported |
 | `probe.py` | measure recordings before using them: pitch, envelope, a timeline, section levels of a render |
 | `listen.py` | look at a render: solo stems per track, RMS per track and section, spectrograms with bar lines, pitch classes per bar |
@@ -91,12 +92,31 @@ for a whole session. The scripts check every key against the `PSpec` names in
 `duck_from` (the key track, **1-based**: `duck_from=1` ducks under track 0).
 Every voice is high-passed at 30 Hz, so a fundamental under ~35 Hz thins out.
 
+## The envelope as a modulator (2026-11-09)
+
+Five shared keys, on every clip type. At their defaults a clip sounds exactly as before (the golden renders
+and every music project re-render bit-identical).
+
+| key | range | what it does |
+|---|---|---|
+| `decay` | 0-5 s | after the attack the level falls toward `sus_level`, exponentially with this time constant; 0 = off |
+| `sus_level` | 0-1 | where the decay settles. `decay=0.3 sus_level=0.7`: an accent that settles (brass, a bowed bite) |
+| `env>cut` | -1..1 | cutoff added at the envelope's peak: the filter opens with each note and closes as it fades |
+| `env>fm` | 0-1 | how much tones FM depth follows the envelope. 1 (default) is the old behaviour; 0 holds it steady |
+| `mod_decay` | 0-5 s | gives `env>cut` and `env>fm` their own decay from the attack, faster than the level's: the note dulls before it fades |
+
+In Python `sfxsong` accepts `env_cut=` / `env_fm=` (and `lfo_pitch=`, `odd_even=` ...) for the keys with `>` or `/`.
+Recipes, all in `envelope_ab.py`: synth pluck `timbre=1 cutoff=0.28 resonance=0.45 env>cut=0.55 mod_decay=0.12`;
+acid `timbre=1 cutoff=0.18 resonance=0.8 drive=0.35 env>cut=0.5 mod_decay=0.16`; brass `timbre=1 cutoff=0.3
+env>cut=0.42 decay=0.35 sus_level=0.7`; a piano's hammer `env>cut=0.3 mod_decay=0.45` with FM; a marimba's knock
+`fm_ratio=4 mod_decay=0.05`. Remember `timbre=1` is the saw: a sine (2) has nothing for a filter to take away.
+
 ## The clip types as instruments
 
 | type | what it is | parameters that matter |
 |---|---|---|
-| 0 cloud | up to 14 oscillators; ungathered each wanders 0.35x..12x the pitch, `gather` pulls voice i onto slot i of the chord table (slots span 3-4 octaves, first voices loudest) | `voices`, `gather`/`gather_swp` (0 to 1: a Deep Note), `drift` (wander speed), `timbre`, `chord`, `sub` (a saw an octave down). 3-4 voices on `unison` (3) are a section, each carrying its own ±0.6% detune; 14 on a chord a wide orchestral voicing; 8 on `power` with saw, drive and an opening cutoff a braam. Gather reaches 1 only at the clip's end: hold the chord in a second clip |
-| 1 tones | two oscillators | `interval` (semitones to the second, continuous: 19.02 is a tritave), `timbre` 0 sine .. 2 saw, `detune`, `shimmer`, `fm_ratio`/`fm_depth`; an additive bank: `bank`, `odd/even` (-1 odd only: hollow), `tilt`, `stretch` (bell). Kicks: `pitch=-1 pitch_swp=-19 timbre=0` |
+| 0 cloud | up to 14 oscillators; ungathered each wanders 0.35x..12x the pitch, `gather` pulls voice i onto slot i of the chord table (slots span 3-4 octaves, first voices loudest) | `voices`, `gather`/`gather_swp` (0 to 1: a Deep Note), `drift` (wander speed), `timbre` (the same three tables: 0 gritty, 1 saw, 2 sine), `chord`, `sub` (a saw an octave down). 3-4 voices on `unison` (3) are a section, each carrying its own ±0.6% detune; 14 on a chord a wide orchestral voicing; 8 on `power` with drive and an opening cutoff a braam (use `timbre=1` for a real saw). Gather reaches 1 only at the clip's end: hold the chord in a second clip |
+| 1 tones | two oscillators | `interval` (semitones to the second, continuous: 19.02 is a tritave), `timbre` blends three wavetables: **0 gritty** (16 harmonics at random phases), **1 saw** (12 harmonics), **2 sine** (not 0 sine .. 2 saw, as this line said until 2026-11-09; the pieces written before then used it that way, so their "saws" are sines and their "sines" are gritty), `detune`, `shimmer`, `fm_ratio`/`fm_depth`; an additive bank: `bank`, `odd/even` (-1 odd only: hollow), `tilt`, `stretch` (bell). Kicks: `pitch=-1 pitch_swp=-19 timbre=0` (gritty: the click is in the wave) |
 | 2 noise | coloured noise | `color`; with `filter=1 resonance=0.9` and the cutoff on a note it is a pitched drip (`tritave_signal.py drip()`) |
 | 4 pluck | Karplus-Strong string | `damp`, `sustain`, `pick`, `interval` (a second string, summed before the drive: power chords, or -3/-4 for thirds, liked). Through `drive` it sounds 8-bit; an amp stage is wanted |
 | 5 sample | a recording | `file`, `start` (0-1 of the file), `loop`, `pitch_mode` 0 tape (pitch = speed) / 1 keep length (granular), `speed` (keep length at `speed=0` freezes a grain: the glitch buzzsaw) |
