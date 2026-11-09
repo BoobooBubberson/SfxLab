@@ -13,6 +13,7 @@ choir grown from any recording, partials resynthesis, a bendable tuning) make un
 | `lantern_market.py` | G major in just intonation, 96 BPM swung, loops: FM kalimba, swung plucks, tuned FM toks, a 7/4 seventh on the V7 (hub / safe room) |
 | `sunfall.py` | cinematic, D minor to D major, 84 BPM: a cloud Deep Note, cloud sections as string ostinato and horns, braams, taiko and timpani, the strings melting back to cloud in the bridge |
 | `hoarfrost.py` | ambient exploration loop, D major pentatonic, 72 BPM, no drums: clouds gathering into and out of focus, struck singing bowl, a random-firing arc as frost crackle, blizzard wind |
+| `the_coil_forgets.py` | the sad one, D minor, 56 BPM: the lament bass (D C# C B Bb A) as a ground, felt piano from tones, the coil as a voice singing sighs, cello partials, cloud strings, choir; at the end the voice misfires more each note until it stops |
 | `sfxsong.py` | the helper the three above use: `Song.clip()` in beats, keys checked per clip type against `Sfx.java`, slider ranges and short envelopes reported |
 | `probe.py` | measure recordings before using them: pitch, envelope, a timeline, section levels of a render |
 | `listen.py` | look at a render: solo stems per track, RMS per track and section, spectrograms with bar lines, pitch classes per bar |
@@ -66,6 +67,8 @@ for a whole session. The scripts check every key against the `PSpec` names in
   microtones and other tunings are just numbers (`tritave_signal.py`: a Bohlen-Pierce step is 1.463)
 - on a recording (sample, choir, partials) `pitch` is a shift from the recording's own pitch, so measure
   it first (`probe.py pitch`) and shift by the difference, cents included
+- an arc voice reads as its pitch with `formant=12` (the octave). At 19 the 3rd harmonic dominates and a
+  sung D measures as A: fine for colour, risky for a melody
 - arc `formant` does not detune the note: each pulse restarts the formant grain (FOF), so the output stays
   periodic and only the harmonics near the formant get louder. A pitch-class check of an arc lead reads
   bright harmonics (a 5th above for formant 19), not wrong notes

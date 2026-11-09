@@ -1,0 +1,325 @@
+# SfxLab project v2: clip name type track start dur seed key=value...
+# 'The Coil Forgets' - D minor, 56 BPM, by Claude. tracks: 1 piano bass 2 piano 3 cello 4 coil voice 5 strings/choir 6 rain
+loop 0
+root 110.0000
+track 0 0.900 0
+track 1 0.900 0
+track 2 0.700 0
+track 3 0.850 0
+track 4 0.850 0
+track 5 0.600 0
+clip piano 1 0 -0.0169 3.2143 8730251691352300253 level=0.1575 attack=0.004 release=3.2103 pitch=5 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.125
+clip rain 2 5 0.0000 94.2857 2259630911829173921 level=0.16 attack=2 release=3 filter=2 cutoff=0.6 color=0.4 reverb=0.3 lfo_rate=0.13 lfo>amp=0.25 keyed=0
+clip piano 1 0 0.0164 3.2143 6594962033839356607 level=0.495 attack=0.004 release=3.2103 pitch=-7 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.4
+clip drop 5 5 0.2188 2.1429 2985901160648522634 level=0.1016 release=2.1229 file=aqueous/Aqueous_drip_00003.ogg pitch=-0.9244 cutoff=0.7 reverb=0.5 pan=0.2976 keyed=0
+clip piano 1 1 0.5408 2.7857 2138065801437212013 level=0.279 attack=0.004 release=2.7817 pitch=5 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.125
+clip piano 1 1 1.0975 2.7857 5595569230918139122 level=0.243 attack=0.004 release=2.7817 pitch=8 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.05
+clip piano 1 0 2.1384 3.2143 2224804452938218475 level=0.495 attack=0.004 release=3.2103 pitch=-8 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.4
+clip piano 1 0 2.1637 3.2143 8909765995704259477 level=0.1575 attack=0.004 release=3.2103 pitch=4 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.15
+clip piano 1 1 2.6566 2.7857 4931961148368625920 level=0.279 attack=0.004 release=2.7817 pitch=7 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.075
+clip piano 1 1 3.2387 2.7857 2025336752000027545 level=0.243 attack=0.004 release=2.7817 pitch=12 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=0.05
+clip piano 1 0 4.2990 3.2143 4481416782218879014 level=0.495 attack=0.004 release=3.2103 pitch=-9 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.4
+clip piano 1 0 4.3076 3.2143 8251177407090996876 level=0.1575 attack=0.004 release=3.2103 pitch=3 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.175
+clip drop 5 5 4.3757 2.1429 346680065027909589 level=0.12 release=2.1229 file=aqueous/Aqueous_drip_00002.ogg pitch=0.1738 cutoff=0.7 reverb=0.5 pan=-0.3334 keyed=0
+clip piano 1 1 4.8358 2.7857 5509014761425417979 level=0.279 attack=0.004 release=2.7817 pitch=8 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.05
+clip piano 1 1 5.3610 2.7857 1851406324924396697 level=0.243 attack=0.004 release=2.7817 pitch=12 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=0.05
+clip piano 1 0 6.4147 3.2143 4304805113613565673 level=0.1575 attack=0.004 release=3.2103 pitch=2 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.2
+clip piano 1 0 6.4168 3.2143 3326382611219450977 level=0.495 attack=0.004 release=3.2103 pitch=-10 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.4
+clip piano 1 1 6.9600 2.7857 7029727601118462884 level=0.279 attack=0.004 release=2.7817 pitch=5 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.125
+clip piano 1 1 7.5102 2.7857 2516118136222131649 level=0.243 attack=0.004 release=2.7817 pitch=10 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=0
+clip piano 1 0 8.5737 3.2143 6571780526396258945 level=0.1575 attack=0.004 release=3.2103 pitch=1 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.225
+clip piano 1 0 8.5879 3.2143 7864797680715520583 level=0.495 attack=0.004 release=3.2103 pitch=-11 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.4
+clip piano 1 1 9.1216 2.7857 6538036925083299907 level=0.279 attack=0.004 release=2.7817 pitch=5 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.125
+clip drop 5 5 9.1967 2.1429 2860275541585625912 level=0.0822 release=2.1229 file=aqueous/Aqueous_drip_00003.ogg pitch=-2.9413 cutoff=0.7 reverb=0.5 pan=0.5739 keyed=0
+clip piano 1 1 9.6632 2.7857 9185967952085117142 level=0.243 attack=0.004 release=2.7817 pitch=10 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=0
+clip drop 5 5 10.5600 2.1429 1556826078294705601 level=0.0835 release=2.1229 file=aqueous/Aqueous_drip_00001.ogg pitch=0.6493 cutoff=0.7 reverb=0.5 pan=0.2765 keyed=0
+clip piano 1 0 10.6881 3.2143 1761412242739532167 level=0.1575 attack=0.004 release=3.2103 pitch=0 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.25
+clip piano 1 0 10.7267 3.2143 6809251909824871585 level=0.495 attack=0.004 release=3.2103 pitch=-12 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.4
+clip piano 1 1 11.2301 2.7857 7873666840071351814 level=0.279 attack=0.004 release=2.7817 pitch=7 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.075
+clip drop 5 5 11.5653 2.1429 9190236160325995449 level=0.1386 release=2.1229 file=aqueous/Aqueous_drip_00001.ogg pitch=-0.9645 cutoff=0.7 reverb=0.5 pan=-0.182 keyed=0
+clip piano 1 1 11.7613 2.7857 3510285610870461882 level=0.243 attack=0.004 release=2.7817 pitch=12 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=0.05
+clip piano 1 0 12.8374 3.2143 9125079951318422147 level=0.495 attack=0.004 release=3.2103 pitch=-12 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.4
+clip piano 1 0 12.8652 3.2143 7297140207013145290 level=0.1575 attack=0.004 release=3.2103 pitch=0 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.25
+clip piano 1 1 13.4090 2.7857 1085270765680855239 level=0.279 attack=0.004 release=2.7817 pitch=7 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.075
+clip drop 5 5 13.7508 2.1429 2332150968128818873 level=0.0879 release=2.1229 file=aqueous/Aqueous_drip_00001.ogg pitch=-0.204 cutoff=0.7 reverb=0.5 pan=0.0525 keyed=0
+clip piano 1 1 13.9148 2.7857 1569163803569265854 level=0.243 attack=0.004 release=2.7817 pitch=12 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=0.05
+clip piano 1 0 14.9774 3.2143 7145386908708602028 level=0.1575 attack=0.004 release=3.2103 pitch=0 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.25
+clip piano 1 0 14.9816 3.2143 8067940541687396071 level=0.495 attack=0.004 release=3.2103 pitch=-12 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.4
+clip piano 1 1 15.5529 2.7857 7825954795742806667 level=0.279 attack=0.004 release=2.7817 pitch=10 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=0
+clip piano 1 1 16.0539 2.7857 983064264355906807 level=0.243 attack=0.004 release=2.7817 pitch=16 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=0.15
+clip piano 1 0 17.1316 3.2143 739393723043940875 level=0.495 attack=0.004 release=3.2103 pitch=-7 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.4
+clip piano 1 0 17.1499 3.2143 7926318372310101881 level=0.1575 attack=0.004 release=3.2103 pitch=5 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.125
+clip drop 5 5 17.3564 2.1429 507905935846405674 level=0.1422 release=2.1229 file=aqueous/Aqueous_drip_00001.ogg pitch=2.4288 cutoff=0.7 reverb=0.5 pan=-0.2245 keyed=0
+clip drop 5 5 17.4168 2.1429 8607623990704201824 level=0.1427 release=2.1229 file=aqueous/Aqueous_drip_00001.ogg pitch=-1.4324 cutoff=0.7 reverb=0.5 pan=-0.3223 keyed=0
+clip drop 5 5 17.5141 2.1429 4479142738293246073 level=0.092 release=2.1229 file=aqueous/Aqueous_drip_00003.ogg pitch=-2.2318 cutoff=0.7 reverb=0.5 pan=0.2916 keyed=0
+clip voice 8 3 17.6857 1.5000 7060623089956098555 level=0.48 attack=0.08 release=0.675 pitch=20 ring=0.95 formant=12 burst=14 jitter=0.02 misfire=0 flicker=0.12 snap=0.1 color=0.3 reverb=0.55 echo=0.18 pan=0.05
+clip piano 1 1 17.6862 2.7857 3654636189956346492 level=0.279 attack=0.004 release=2.7817 pitch=5 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.125
+clip piano 1 1 18.2104 2.7857 2249410480488420375 level=0.243 attack=0.004 release=2.7817 pitch=8 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.05
+clip drop 5 5 18.5536 2.1429 1272229260603377027 level=0.1563 release=2.1229 file=aqueous/Aqueous_drip_00001.ogg pitch=-0.031 cutoff=0.7 reverb=0.5 pan=0.3145 keyed=0
+clip voice 8 3 18.7487 0.9643 5566731102774695965 level=0.48 attack=0.08 release=0.4339 pitch=19 ring=0.95 formant=12 burst=14 jitter=0.02 misfire=0 flicker=0.12 snap=0.1 color=0.3 reverb=0.55 echo=0.18 pan=0.05
+clip piano 1 1 18.7543 2.7857 3537390495234317677 level=0.207 attack=0.004 release=2.7817 pitch=12 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=0.05
+clip piano 1 0 19.2628 3.2143 6963815260111759044 level=0.495 attack=0.004 release=3.2103 pitch=-8 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.4
+clip piano 1 0 19.2670 3.2143 554645528822075541 level=0.1575 attack=0.004 release=3.2103 pitch=4 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.15
+clip voice 8 3 19.2721 1.5000 6225112941503538879 level=0.48 attack=0.08 release=0.675 pitch=19 ring=0.95 formant=12 burst=14 jitter=0.02 misfire=0 flicker=0.12 snap=0.1 color=0.3 reverb=0.55 echo=0.18 pan=0.05
+clip piano 1 1 19.8371 2.7857 2985553050872281808 level=0.279 attack=0.004 release=2.7817 pitch=7 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.075
+clip voice 8 3 20.3485 0.9643 9209097445495535766 level=0.48 attack=0.08 release=0.4339 pitch=17 ring=0.95 formant=12 burst=14 jitter=0.02 misfire=0 flicker=0.12 snap=0.1 color=0.3 reverb=0.55 echo=0.18 pan=0.05
+clip piano 1 1 20.3694 2.7857 7775060728170259402 level=0.243 attack=0.004 release=2.7817 pitch=12 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=0.05
+clip piano 1 1 20.8838 2.7857 3464905949589991006 level=0.207 attack=0.004 release=2.7817 pitch=16 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=0.15
+clip voice 8 3 20.9135 0.9643 2309145262736646555 level=0.48 attack=0.08 release=0.4339 pitch=16 ring=0.95 formant=12 burst=14 jitter=0.02 misfire=0 flicker=0.12 snap=0.1 color=0.3 reverb=0.55 echo=0.18 pan=0.05
+clip piano 1 0 21.4124 3.2143 277274431138249673 level=0.1575 attack=0.004 release=3.2103 pitch=3 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.175
+clip voice 8 3 21.4128 2.0357 1158817973972413224 level=0.48 attack=0.22 release=0.9 pitch=17 ring=0.95 formant=12 burst=14 jitter=0.02 misfire=0 flicker=0.12 snap=0.1 color=0.3 reverb=0.55 echo=0.18 pan=0.05 lfo_rate=4.6 lfo>pitch=0.09
+clip piano 1 0 21.4461 3.2143 4997194538595774082 level=0.495 attack=0.004 release=3.2103 pitch=-9 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.4
+clip piano 1 1 21.9910 2.7857 862836660451459552 level=0.279 attack=0.004 release=2.7817 pitch=8 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.05
+clip drop 5 5 22.0942 2.1429 422347983231772636 level=0.1086 release=2.1229 file=aqueous/Aqueous_drip_00003.ogg pitch=-1.9403 cutoff=0.7 reverb=0.5 pan=-0.1248 keyed=0
+clip piano 1 1 22.4819 2.7857 4399984173349100619 level=0.243 attack=0.004 release=2.7817 pitch=12 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=0.05
+clip piano 1 1 23.0350 2.7857 4196390076009245072 level=0.207 attack=0.004 release=2.7817 pitch=17 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=0.175
+clip voice 8 3 23.0491 0.9643 1140744534011249443 level=0.48 attack=0.08 release=0.4339 pitch=24 ring=0.95 formant=12 burst=14 jitter=0.02 misfire=0 flicker=0.12 snap=0.1 color=0.3 reverb=0.55 echo=0.18 pan=0.05
+clip piano 1 0 23.5492 3.2143 7528884473204343402 level=0.495 attack=0.004 release=3.2103 pitch=-10 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.4
+clip piano 1 0 23.5577 3.2143 8354095728780081298 level=0.1575 attack=0.004 release=3.2103 pitch=2 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.2
+clip voice 8 3 23.5761 1.5000 5764867393704409625 level=0.48 attack=0.08 release=0.675 pitch=24 ring=0.95 formant=12 burst=14 jitter=0.02 misfire=0 flicker=0.12 snap=0.1 color=0.3 reverb=0.55 echo=0.18 pan=0.05
+clip piano 1 1 24.1246 2.7857 139185488113107186 level=0.279 attack=0.004 release=2.7817 pitch=5 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.125
+clip voice 8 3 24.6349 1.5000 7800218778787905986 level=0.48 attack=0.08 release=0.675 pitch=22 ring=0.95 formant=12 burst=14 jitter=0.02 misfire=0 flicker=0.12 snap=0.1 color=0.3 reverb=0.55 echo=0.18 pan=0.05
+clip piano 1 1 24.6644 2.7857 5590053409376147777 level=0.243 attack=0.004 release=2.7817 pitch=10 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=0
+clip piano 1 1 25.1817 2.7857 473387202689172212 level=0.207 attack=0.004 release=2.7817 pitch=14 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=0.1
+clip voice 8 3 25.6974 2.0357 1542771448195996559 level=0.48 attack=0.22 release=0.9 pitch=25 ring=0.95 formant=12 burst=14 jitter=0.02 misfire=0 flicker=0.12 snap=0.1 color=0.3 reverb=0.55 echo=0.18 pan=0.05 lfo_rate=4.6 lfo>pitch=0.09
+clip piano 1 0 25.7246 3.2143 280819098269344178 level=0.495 attack=0.004 release=3.2103 pitch=-11 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.4
+clip piano 1 0 25.7347 3.2143 5939620599634001344 level=0.1575 attack=0.004 release=3.2103 pitch=1 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.225
+clip piano 1 1 26.2679 2.7857 1338018020130163691 level=0.279 attack=0.004 release=2.7817 pitch=5 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.125
+clip piano 1 1 26.7867 2.7857 8612126654213541348 level=0.243 attack=0.004 release=2.7817 pitch=10 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=0
+clip voice 8 3 27.3038 0.9643 2196518390999559326 level=0.48 attack=0.08 release=0.4339 pitch=24 ring=0.95 formant=12 burst=14 jitter=0.02 misfire=0 flicker=0.12 snap=0.1 color=0.3 reverb=0.55 echo=0.18 pan=0.05
+clip piano 1 1 27.3180 2.7857 8242766582879938511 level=0.207 attack=0.004 release=2.7817 pitch=13 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=0.075
+clip piano 1 0 27.8459 3.2143 8221377302715915351 level=0.1575 attack=0.004 release=3.2103 pitch=0 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.25
+clip voice 8 3 27.8506 1.5000 9109850483439987531 level=0.48 attack=0.08 release=0.675 pitch=22 ring=0.95 formant=12 burst=14 jitter=0.02 misfire=0 flicker=0.12 snap=0.1 color=0.3 reverb=0.55 echo=0.18 pan=0.05
+clip piano 1 0 27.8808 3.2143 1469762864574989892 level=0.495 attack=0.004 release=3.2103 pitch=-12 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.4
+clip drop 5 5 28.3272 2.1429 3735437740571761113 level=0.1086 release=2.1229 file=aqueous/Aqueous_drip_00002.ogg pitch=0.3232 cutoff=0.7 reverb=0.5 pan=-0.4957 keyed=0
+clip piano 1 1 28.4053 2.7857 570088253301367945 level=0.279 attack=0.004 release=2.7817 pitch=7 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.075
+clip voice 8 3 28.9286 1.5000 4070269637062059738 level=0.48 attack=0.08 release=0.675 pitch=20 ring=0.95 formant=12 burst=14 jitter=0.02 misfire=0 flicker=0.12 snap=0.1 color=0.3 reverb=0.55 echo=0.18 pan=0.05
+clip piano 1 1 28.9288 2.7857 8580802761091039021 level=0.243 attack=0.004 release=2.7817 pitch=12 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=0.05
+clip piano 1 1 29.4594 2.7857 7060189840299831832 level=0.207 attack=0.004 release=2.7817 pitch=17 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=0.175
+clip voice 8 3 29.9978 4.7143 4723843569828838991 level=0.48 attack=0.22 release=0.9 pitch=19 ring=0.95 formant=12 burst=14 jitter=0.02 misfire=0 flicker=0.12 snap=0.1 color=0.3 reverb=0.55 echo=0.18 pan=0.05 lfo_rate=4.6 lfo>pitch=0.09
+clip piano 1 0 30.0056 3.2143 4433322062459817323 level=0.495 attack=0.004 release=3.2103 pitch=-12 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.4
+clip piano 1 0 30.0146 3.2143 8886763186796607620 level=0.1575 attack=0.004 release=3.2103 pitch=0 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.25
+clip piano 1 1 30.5594 2.7857 8998726137862138844 level=0.279 attack=0.004 release=2.7817 pitch=7 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.075
+clip drop 5 5 30.8541 2.1429 5124203991054257627 level=0.1134 release=2.1229 file=aqueous/Aqueous_drip_00001.ogg pitch=-0.0101 cutoff=0.7 reverb=0.5 pan=0.5064 keyed=0
+clip piano 1 1 31.0785 2.7857 8232816941799572894 level=0.243 attack=0.004 release=2.7817 pitch=12 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=0.05
+clip piano 1 1 31.5879 2.7857 8871886990713652031 level=0.207 attack=0.004 release=2.7817 pitch=16 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=0.15
+clip piano 1 0 32.1396 3.2143 7079184639179919971 level=0.495 attack=0.004 release=3.2103 pitch=-12 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.4
+clip piano 1 0 32.1453 3.2143 3668671843903758866 level=0.1575 attack=0.004 release=3.2103 pitch=0 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.25
+clip piano 1 1 32.6672 2.7857 5713359218603172115 level=0.279 attack=0.004 release=2.7817 pitch=10 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=0
+clip piano 1 1 33.1926 2.7857 1859827347790461374 level=0.243 attack=0.004 release=2.7817 pitch=16 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=0.15
+clip piano 1 1 33.7433 2.7857 2355151971661903025 level=0.207 attack=0.004 release=2.7817 pitch=19 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=0.225
+clip cello 7 2 33.9643 3.1071 1855229371658434719 level=0.3 attack=0.6 release=0.9 pitch=0 file=resonant/cello_00002_pad.ogg gather=0.9 chord=5 purity=0.2 shimmer=0.2 tilt=-0.3 reverb=0.45 cutoff=0.6
+clip strings 0 4 33.9643 3.1071 7095579490492479457 level=0.36 attack=0.7 release=0.8 pitch=5 voices=10 gather=1 drift=0.1 timbre=0.6 chord=5 sub=0 cutoff=0.5 reverb=0.55
+clip piano 1 0 34.2690 3.2143 8345472616141810155 level=0.55 attack=0.004 release=3.2103 pitch=-7 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.4
+clip voice 8 3 34.2748 2.0357 4720609782031236795 level=0.52 attack=0.22 release=0.9 pitch=25 ring=0.95 formant=12 burst=14 jitter=0.02 misfire=0 flicker=0.12 snap=0.1 color=0.3 reverb=0.55 echo=0.18 pan=0.05 lfo_rate=4.6 lfo>pitch=0.09
+clip piano 1 0 34.3031 3.2143 6387099842551849636 level=0.175 attack=0.004 release=3.2103 pitch=5 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.125
+clip piano 1 1 34.8373 2.7857 913203611106528794 level=0.31 attack=0.004 release=2.7817 pitch=5 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.125
+clip piano 1 1 35.3479 2.7857 6106662653508418482 level=0.27 attack=0.004 release=2.7817 pitch=8 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.05
+clip voice 8 3 35.9011 0.9643 394567524936749171 level=0.52 attack=0.08 release=0.4339 pitch=24 ring=0.95 formant=12 burst=14 jitter=0.02 misfire=0 flicker=0.12 snap=0.1 color=0.3 reverb=0.55 echo=0.18 pan=0.05
+clip piano 1 1 35.9039 2.7857 2822205772598172580 level=0.23 attack=0.004 release=2.7817 pitch=12 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=0.05
+clip cello 7 2 36.1071 3.1071 939732842780346058 level=0.3 attack=0.6 release=0.9 pitch=-5 file=resonant/cello_00002_pad.ogg gather=0.9 chord=2 purity=0.2 shimmer=0.2 tilt=-0.3 reverb=0.45 cutoff=0.6
+clip strings 0 4 36.1071 3.1071 2773577351978139962 level=0.36 attack=0.7 release=0.8 pitch=0 voices=10 gather=1 drift=0.1 timbre=0.6 chord=2 sub=0 cutoff=0.5 reverb=0.55
+clip piano 1 0 36.4068 3.2143 360453862338867374 level=0.175 attack=0.004 release=3.2103 pitch=4 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.15
+clip voice 8 3 36.4353 1.5000 5041483458747034073 level=0.52 attack=0.08 release=0.675 pitch=24 ring=0.95 formant=12 burst=14 jitter=0.02 misfire=0 flicker=0.12 snap=0.1 color=0.3 reverb=0.55 echo=0.18 pan=0.05
+clip piano 1 0 36.4509 3.2143 9067385183404284431 level=0.55 attack=0.004 release=3.2103 pitch=-8 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.4
+clip piano 1 1 36.9609 2.7857 3311238186149059271 level=0.31 attack=0.004 release=2.7817 pitch=7 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.075
+clip voice 8 3 37.5140 1.5000 6260582315172893340 level=0.52 attack=0.08 release=0.675 pitch=22 ring=0.95 formant=12 burst=14 jitter=0.02 misfire=0 flicker=0.12 snap=0.1 color=0.3 reverb=0.55 echo=0.18 pan=0.05
+clip piano 1 1 37.5192 2.7857 700742534966348752 level=0.27 attack=0.004 release=2.7817 pitch=12 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=0.05
+clip piano 1 1 38.0187 2.7857 4891377360657559779 level=0.23 attack=0.004 release=2.7817 pitch=16 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=0.15
+clip drop 5 5 38.1887 2.1429 1096148485462623654 level=0.1552 release=2.1229 file=aqueous/Aqueous_drip_00001.ogg pitch=2.2954 cutoff=0.7 reverb=0.5 pan=0.4029 keyed=0
+clip cello 7 2 38.2500 3.1071 9044123005054504993 level=0.3 attack=0.6 release=0.9 pitch=0 file=resonant/cello_00002_pad.ogg gather=0.9 chord=5 purity=0.2 shimmer=0.2 tilt=-0.3 reverb=0.45 cutoff=0.6
+clip strings 0 4 38.2500 3.1071 5958604668329631342 level=0.36 attack=0.7 release=0.8 pitch=5 voices=10 gather=1 drift=0.1 timbre=0.6 chord=5 sub=0 cutoff=0.5 reverb=0.55
+clip voice 8 3 38.5642 2.0357 8968094909033785821 level=0.52 attack=0.22 release=0.9 pitch=20 ring=0.95 formant=12 burst=14 jitter=0.02 misfire=0 flicker=0.12 snap=0.1 color=0.3 reverb=0.55 echo=0.18 pan=0.05 lfo_rate=4.6 lfo>pitch=0.09
+clip piano 1 0 38.5705 3.2143 5116165312301797191 level=0.175 attack=0.004 release=3.2103 pitch=3 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.175
+clip piano 1 0 38.5868 3.2143 3438744107581964376 level=0.55 attack=0.004 release=3.2103 pitch=-9 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.4
+clip piano 1 1 39.0992 2.7857 1026944039288175129 level=0.31 attack=0.004 release=2.7817 pitch=8 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.05
+clip piano 1 1 39.6631 2.7857 3660548177802429382 level=0.27 attack=0.004 release=2.7817 pitch=12 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=0.05
+clip voice 8 3 40.1933 0.9643 8590447385601290797 level=0.52 attack=0.08 release=0.4339 pitch=27 ring=0.95 formant=12 burst=14 jitter=0.02 misfire=0 flicker=0.12 snap=0.1 color=0.3 reverb=0.55 echo=0.18 pan=0.05
+clip piano 1 1 40.1958 2.7857 6584400006230716268 level=0.23 attack=0.004 release=2.7817 pitch=17 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=0.175
+clip drop 5 5 40.3171 2.1429 4312495211512953846 level=0.0929 release=2.1229 file=aqueous/Aqueous_drip_00001.ogg pitch=-1.423 cutoff=0.7 reverb=0.5 pan=-0.0792 keyed=0
+clip cello 7 2 40.3929 3.1071 257983883130839072 level=0.3 attack=0.6 release=0.9 pitch=5 file=resonant/cello_00002_pad.ogg gather=0.9 chord=2 purity=0.2 shimmer=0.2 tilt=-0.3 reverb=0.45 cutoff=0.6
+clip strings 0 4 40.3929 3.1071 5990005872998905937 level=0.36 attack=0.7 release=0.8 pitch=10 voices=10 gather=1 drift=0.1 timbre=0.6 chord=2 sub=0 cutoff=0.5 reverb=0.55
+clip piano 1 0 40.6938 3.2143 8678615656866119771 level=0.55 attack=0.004 release=3.2103 pitch=-10 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.4
+clip piano 1 0 40.6994 3.2143 1072092467323728640 level=0.175 attack=0.004 release=3.2103 pitch=2 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.2
+clip voice 8 3 40.6995 1.5000 1365822837287943489 level=0.52 attack=0.08 release=0.675 pitch=26 ring=0.95 formant=12 burst=14 jitter=0.02 misfire=0 flicker=0.12 snap=0.1 color=0.3 reverb=0.55 echo=0.18 pan=0.05
+clip drop 5 5 41.0703 2.1429 9158928028464361810 level=0.1423 release=2.1229 file=aqueous/Aqueous_drip_00002.ogg pitch=1.939 cutoff=0.7 reverb=0.5 pan=0.203 keyed=0
+clip piano 1 1 41.2612 2.7857 2358128867129027675 level=0.31 attack=0.004 release=2.7817 pitch=5 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.125
+clip drop 5 5 41.4263 2.1429 5741379981435982300 level=0.0816 release=2.1229 file=aqueous/Aqueous_drip_00003.ogg pitch=1.8588 cutoff=0.7 reverb=0.5 pan=-0.3467 keyed=0
+clip piano 1 1 41.7664 2.7857 2223657247222666919 level=0.27 attack=0.004 release=2.7817 pitch=10 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=0
+clip voice 8 3 41.7832 1.5000 4463482666083864874 level=0.52 attack=0.08 release=0.675 pitch=29 ring=0.95 formant=12 burst=14 jitter=0.02 misfire=0 flicker=0.12 snap=0.1 color=0.3 reverb=0.55 echo=0.18 pan=0.05
+clip drop 5 5 41.9564 2.1429 9123908365983474184 level=0.1448 release=2.1229 file=aqueous/Aqueous_drip_00003.ogg pitch=-1.9414 cutoff=0.7 reverb=0.5 pan=-0.1625 keyed=0
+clip piano 1 1 42.3476 2.7857 1737249888777058294 level=0.23 attack=0.004 release=2.7817 pitch=14 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=0.1
+clip cello 7 2 42.5357 3.1071 8639558672076147143 level=0.3 attack=0.6 release=0.9 pitch=5 file=resonant/cello_00002_pad.ogg gather=0.9 chord=5 purity=0.2 shimmer=0.2 tilt=-0.3 reverb=0.45 cutoff=0.6
+clip strings 0 4 42.5357 3.1071 7920786316783464469 level=0.36 attack=0.7 release=0.8 pitch=10 voices=10 gather=1 drift=0.1 timbre=0.6 chord=5 sub=0 cutoff=0.5 reverb=0.55
+clip piano 1 0 42.8401 3.2143 5397864458532968558 level=0.175 attack=0.004 release=3.2103 pitch=1 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.225
+clip voice 8 3 42.8408 2.0357 6020920144798201169 level=0.52 attack=0.22 release=0.9 pitch=29 ring=0.95 formant=12 burst=14 jitter=0.02 misfire=0 flicker=0.12 snap=0.1 color=0.3 reverb=0.55 echo=0.18 pan=0.05 lfo_rate=4.6 lfo>pitch=0.09
+clip piano 1 0 42.8704 3.2143 4565614863617490659 level=0.55 attack=0.004 release=3.2103 pitch=-11 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.4
+clip piano 1 1 43.3735 2.7857 321898084781020235 level=0.31 attack=0.004 release=2.7817 pitch=5 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.125
+clip piano 1 1 43.9071 2.7857 7936862410431227941 level=0.27 attack=0.004 release=2.7817 pitch=10 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=0
+clip drop 5 5 44.4018 2.1429 7100369339657683655 level=0.1327 release=2.1229 file=aqueous/Aqueous_drip_00002.ogg pitch=-1.4016 cutoff=0.7 reverb=0.5 pan=0.0434 keyed=0
+clip voice 8 3 44.4443 0.9643 88766633379533895 level=0.52 attack=0.08 release=0.4339 pitch=27 ring=0.95 formant=12 burst=14 jitter=0.02 misfire=0 flicker=0.12 snap=0.1 color=0.3 reverb=0.55 echo=0.18 pan=0.05
+clip piano 1 1 44.4608 2.7857 2469208464843015548 level=0.23 attack=0.004 release=2.7817 pitch=13 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=0.075
+clip cello 7 2 44.6786 3.1071 602869366263307553 level=0.3 attack=0.6 release=0.9 pitch=-5 file=resonant/cello_00002_pad.ogg gather=0.9 chord=4 purity=0.2 shimmer=0.2 tilt=-0.3 reverb=0.45 cutoff=0.6
+clip strings 0 4 44.6786 3.1071 1352455061270267885 level=0.36 attack=0.7 release=0.8 pitch=0 voices=10 gather=1 drift=0.1 timbre=0.6 chord=4 sub=0 cutoff=0.5 reverb=0.55
+clip piano 1 0 44.9780 3.2143 616544009068702003 level=0.175 attack=0.004 release=3.2103 pitch=0 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.25
+clip piano 1 0 44.9938 3.2143 3183579696643111820 level=0.55 attack=0.004 release=3.2103 pitch=-12 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.4
+clip voice 8 3 44.9956 1.5000 2381077699790895307 level=0.52 attack=0.08 release=0.675 pitch=25 ring=0.95 formant=12 burst=14 jitter=0.02 misfire=0 flicker=0.12 snap=0.1 color=0.3 reverb=0.55 echo=0.18 pan=0.05
+clip piano 1 1 45.5625 2.7857 6631180456283730416 level=0.31 attack=0.004 release=2.7817 pitch=7 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.075
+clip voice 8 3 46.0509 1.5000 4912399656828921353 level=0.52 attack=0.08 release=0.675 pitch=24 ring=0.95 formant=12 burst=14 jitter=0.02 misfire=0 flicker=0.12 snap=0.1 color=0.3 reverb=0.55 echo=0.18 pan=0.05
+clip piano 1 1 46.0658 2.7857 4500380638694649363 level=0.27 attack=0.004 release=2.7817 pitch=12 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=0.05
+clip piano 1 1 46.6274 2.7857 6712178668418704 level=0.23 attack=0.004 release=2.7817 pitch=17 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=0.175
+clip cello 7 2 46.8214 3.1071 6558893378416576208 level=0.3 attack=0.6 release=0.9 pitch=-5 file=resonant/cello_00002_pad.ogg gather=0.9 chord=2 purity=0.2 shimmer=0.2 tilt=-0.3 reverb=0.45 cutoff=0.6
+clip strings 0 4 46.8214 3.1071 3576147794909695164 level=0.36 attack=0.7 release=0.8 pitch=0 voices=10 gather=1 drift=0.1 timbre=0.6 chord=2 sub=0 cutoff=0.5 reverb=0.55
+clip voice 8 3 47.1251 2.5714 2347600947386215863 level=0.52 attack=0.22 release=0.9 pitch=19 ring=0.95 formant=12 burst=14 jitter=0.02 misfire=0 flicker=0.12 snap=0.1 color=0.3 reverb=0.55 echo=0.18 pan=0.05 lfo_rate=4.6 lfo>pitch=0.09
+clip piano 1 0 47.1255 3.2143 3432908870149312970 level=0.55 attack=0.004 release=3.2103 pitch=-12 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.4
+clip piano 1 0 47.1393 3.2143 3596036848221129060 level=0.175 attack=0.004 release=3.2103 pitch=0 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.25
+clip piano 1 1 47.6521 2.7857 4411989019675467379 level=0.31 attack=0.004 release=2.7817 pitch=7 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.075
+clip piano 1 1 48.2048 2.7857 7824887765921487995 level=0.27 attack=0.004 release=2.7817 pitch=12 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=0.05
+clip piano 1 1 48.7577 2.7857 2048216967118712091 level=0.23 attack=0.004 release=2.7817 pitch=16 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=0.15
+clip cello 7 2 48.9643 3.1071 8445308495508933343 level=0.3 attack=0.6 release=0.9 pitch=-5 file=resonant/cello_00002_pad.ogg gather=0.9 chord=6 purity=0.2 shimmer=0.2 tilt=-0.3 reverb=0.45 cutoff=0.6
+clip strings 0 4 48.9643 3.1071 8957499496620756843 level=0.36 attack=0.7 release=0.8 pitch=0 voices=10 gather=1 drift=0.1 timbre=0.6 chord=6 sub=0 cutoff=0.5 reverb=0.55
+clip piano 1 0 49.2861 3.2143 3324423568337242920 level=0.175 attack=0.004 release=3.2103 pitch=0 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.25
+clip voice 8 3 49.2982 2.5714 459951448428943588 level=0.52 attack=0.22 release=0.9 pitch=16 ring=0.95 formant=12 burst=14 jitter=0.02 misfire=0 flicker=0.12 snap=0.1 color=0.3 reverb=0.55 echo=0.18 pan=0.05 lfo_rate=4.6 lfo>pitch=0.09
+clip piano 1 0 49.2994 3.2143 8342251836477690827 level=0.55 attack=0.004 release=3.2103 pitch=-12 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.4
+clip piano 1 1 49.8104 2.7857 4932220233098491036 level=0.31 attack=0.004 release=2.7817 pitch=10 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=0
+clip piano 1 1 50.3695 2.7857 2645207879480205555 level=0.27 attack=0.004 release=2.7817 pitch=16 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=0.15
+clip piano 1 1 50.9052 2.7857 9043918579993847806 level=0.23 attack=0.004 release=2.7817 pitch=19 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=0.225
+clip cello 7 2 51.1071 3.1071 7966590911692004092 level=0.38 attack=0.6 release=0.9 pitch=0 file=resonant/cello_00002_pad.ogg gather=0.9 chord=5 purity=0.2 shimmer=0.2 tilt=-0.3 reverb=0.45 cutoff=0.6
+clip strings 0 4 51.1071 3.1071 3898289058343652452 level=0.42 attack=0.7 release=0.8 pitch=5 voices=10 gather=1 drift=0.1 timbre=0.6 chord=5 sub=0 cutoff=0.6 reverb=0.55
+clip choir 6 4 51.1071 3.1071 131197184229283255 level=0.42 attack=0.7 release=0.9 pitch=2.06 chord=5 file=luminal/luminal_synth_vocal_treble_00004.ogg start=0.2 speed=0.3 voices=8 gather=1 drift=0.4 wander=2 scatter=0.4 reverb=0.65 cutoff=0.75
+clip voice 8 3 51.4174 2.5714 2360099994850007735 level=0.58 attack=0.22 release=0.9 pitch=29 ring=0.95 formant=12 burst=14 jitter=0.02 misfire=0 flicker=0.12 snap=0.1 color=0.3 reverb=0.55 echo=0.18 pan=0.05 lfo_rate=4.6 lfo>pitch=0.09
+clip piano 1 0 51.4247 3.2143 1064304495782911028 level=0.605 attack=0.004 release=3.2103 pitch=-7 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.4
+clip piano 1 0 51.4259 3.2143 8782878497011351618 level=0.1925 attack=0.004 release=3.2103 pitch=5 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.125
+clip strings_line 0 4 51.4286 2.5714 3051586180968616076 level=0.16 attack=0.15 release=0.8 pitch=17 voices=4 gather=1 drift=0.08 timbre=1.2 chord=3 cutoff=0.55 reverb=0.5
+clip piano 1 1 51.9786 2.7857 2490270151557530982 level=0.341 attack=0.004 release=2.7817 pitch=5 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.125
+clip piano 1 1 52.4746 2.7857 4020122447843463991 level=0.297 attack=0.004 release=2.7817 pitch=8 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.05
+clip piano 1 1 53.0535 2.7857 2860036461555429005 level=0.253 attack=0.004 release=2.7817 pitch=12 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=0.05
+clip cello 7 2 53.2500 3.1071 8524335244248563916 level=0.38 attack=0.6 release=0.9 pitch=-5 file=resonant/cello_00002_pad.ogg gather=0.9 chord=2 purity=0.2 shimmer=0.2 tilt=-0.3 reverb=0.45 cutoff=0.6
+clip strings 0 4 53.2500 3.1071 4849994108691272404 level=0.42 attack=0.7 release=0.8 pitch=0 voices=10 gather=1 drift=0.1 timbre=0.6 chord=2 sub=0 cutoff=0.6 reverb=0.55
+clip choir 6 4 53.2500 3.1071 5676873715854327080 level=0.42 attack=0.7 release=0.9 pitch=-2.94 chord=2 file=luminal/luminal_synth_vocal_treble_00004.ogg start=0.2 speed=0.3 voices=8 gather=1 drift=0.4 wander=2 scatter=0.4 reverb=0.65 cutoff=0.75
+clip voice 8 3 53.5508 2.0357 4469797312032882875 level=0.58 attack=0.22 release=0.9 pitch=28 ring=0.95 formant=12 burst=14 jitter=0.02 misfire=0 flicker=0.12 snap=0.1 color=0.3 reverb=0.55 echo=0.18 pan=0.05 lfo_rate=4.6 lfo>pitch=0.09
+clip piano 1 0 53.5563 3.2143 453112079960756107 level=0.605 attack=0.004 release=3.2103 pitch=-8 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.4
+clip piano 1 0 53.5703 3.2143 798878576872072178 level=0.1925 attack=0.004 release=3.2103 pitch=4 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.15
+clip strings_line 0 4 53.5714 2.0357 6754480878044677635 level=0.16 attack=0.15 release=0.8 pitch=16 voices=4 gather=1 drift=0.08 timbre=1.2 chord=3 cutoff=0.55 reverb=0.5
+clip piano 1 1 54.1310 2.7857 8420107031994959547 level=0.341 attack=0.004 release=2.7817 pitch=7 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.075
+clip piano 1 1 54.6248 2.7857 6729661291048957754 level=0.297 attack=0.004 release=2.7817 pitch=12 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=0.05
+clip piano 1 1 55.1745 2.7857 4699689938685900786 level=0.253 attack=0.004 release=2.7817 pitch=16 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=0.15
+clip voice 8 3 55.1773 0.9643 8218588302214294618 level=0.58 attack=0.08 release=0.4339 pitch=31 ring=0.95 formant=12 burst=14 jitter=0.02 misfire=0 flicker=0.12 snap=0.1 color=0.3 reverb=0.55 echo=0.18 pan=0.05
+clip strings_line 0 4 55.1786 0.9643 3941324522110368198 level=0.16 attack=0.15 release=0.4339 pitch=19 voices=4 gather=1 drift=0.08 timbre=1.2 chord=3 cutoff=0.55 reverb=0.5
+clip cello 7 2 55.3929 3.1071 4888459592245355466 level=0.38 attack=0.6 release=0.9 pitch=0 file=resonant/cello_00002_pad.ogg gather=0.9 chord=5 purity=0.2 shimmer=0.2 tilt=-0.3 reverb=0.45 cutoff=0.6
+clip strings 0 4 55.3929 3.1071 6616185030893608780 level=0.42 attack=0.7 release=0.8 pitch=5 voices=10 gather=1 drift=0.1 timbre=0.6 chord=5 sub=0 cutoff=0.6 reverb=0.55
+clip choir 6 4 55.3929 3.1071 953533725976896703 level=0.42 attack=0.7 release=0.9 pitch=2.06 chord=5 file=luminal/luminal_synth_vocal_treble_00004.ogg start=0.2 speed=0.3 voices=8 gather=1 drift=0.4 wander=2 scatter=0.4 reverb=0.65 cutoff=0.75
+clip piano 1 0 55.7070 3.2143 2183065348885442637 level=0.605 attack=0.004 release=3.2103 pitch=-9 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.4
+clip voice 8 3 55.7120 2.0357 38881709981306319 level=0.58 attack=0.22 release=0.9 pitch=32 ring=0.95 formant=12 burst=14 jitter=0.02 misfire=0 flicker=0.12 snap=0.1 color=0.3 reverb=0.55 echo=0.18 pan=0.05 lfo_rate=4.6 lfo>pitch=0.09
+clip strings_line 0 4 55.7143 2.0357 6063752081337285497 level=0.16 attack=0.15 release=0.8 pitch=20 voices=4 gather=1 drift=0.08 timbre=1.2 chord=3 cutoff=0.55 reverb=0.5
+clip piano 1 0 55.7350 3.2143 6833514855886450955 level=0.1925 attack=0.004 release=3.2103 pitch=3 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.175
+clip piano 1 1 56.2493 2.7857 7139190889094348369 level=0.341 attack=0.004 release=2.7817 pitch=8 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.05
+clip piano 1 1 56.7672 2.7857 6769728070132498958 level=0.297 attack=0.004 release=2.7817 pitch=12 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=0.05
+clip voice 8 3 57.3154 0.9643 230621265598257376 level=0.58 attack=0.08 release=0.4339 pitch=31 ring=0.95 formant=12 burst=14 jitter=0.02 misfire=0 flicker=0.12 snap=0.1 color=0.3 reverb=0.55 echo=0.18 pan=0.05
+clip strings_line 0 4 57.3214 0.9643 4734476964463483793 level=0.16 attack=0.15 release=0.4339 pitch=19 voices=4 gather=1 drift=0.08 timbre=1.2 chord=3 cutoff=0.55 reverb=0.5
+clip piano 1 1 57.3464 2.7857 585747806291393159 level=0.253 attack=0.004 release=2.7817 pitch=17 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=0.175
+clip cello 7 2 57.5357 3.1071 2316852681553633353 level=0.38 attack=0.6 release=0.9 pitch=5 file=resonant/cello_00002_pad.ogg gather=0.9 chord=2 purity=0.2 shimmer=0.2 tilt=-0.3 reverb=0.45 cutoff=0.6
+clip strings 0 4 57.5357 3.1071 2993838814943850332 level=0.42 attack=0.7 release=0.8 pitch=10 voices=10 gather=1 drift=0.1 timbre=0.6 chord=2 sub=0 cutoff=0.6 reverb=0.55
+clip choir 6 4 57.5357 3.1071 8286884122979890979 level=0.42 attack=0.7 release=0.9 pitch=-4.94 chord=2 file=luminal/luminal_synth_vocal_treble_00004.ogg start=0.2 speed=0.3 voices=8 gather=1 drift=0.4 wander=2 scatter=0.4 reverb=0.65 cutoff=0.75
+clip strings_line 0 4 57.8571 2.0357 8738403073978390482 level=0.16 attack=0.15 release=0.8 pitch=17 voices=4 gather=1 drift=0.08 timbre=1.2 chord=3 cutoff=0.55 reverb=0.5
+clip piano 1 0 57.8715 3.2143 7186851278173309164 level=0.1925 attack=0.004 release=3.2103 pitch=2 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.2
+clip voice 8 3 57.8775 2.0357 6288441358858180121 level=0.58 attack=0.22 release=0.9 pitch=29 ring=0.95 formant=12 burst=14 jitter=0.02 misfire=0 flicker=0.12 snap=0.1 color=0.3 reverb=0.55 echo=0.18 pan=0.05 lfo_rate=4.6 lfo>pitch=0.09
+clip piano 1 0 57.8796 3.2143 2786305708449217941 level=0.605 attack=0.004 release=3.2103 pitch=-10 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.4
+clip drop 5 5 58.3311 2.1429 7561572316712511226 level=0.1085 release=2.1229 file=aqueous/Aqueous_drip_00002.ogg pitch=-0.8085 cutoff=0.7 reverb=0.5 pan=0.626 keyed=0
+clip piano 1 1 58.3710 2.7857 5734206150592797048 level=0.341 attack=0.004 release=2.7817 pitch=5 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.125
+clip piano 1 1 58.9079 2.7857 3703277373615947682 level=0.297 attack=0.004 release=2.7817 pitch=10 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=0
+clip strings_line 0 4 59.4643 0.9643 5586560407380554940 level=0.16 attack=0.15 release=0.4339 pitch=19 voices=4 gather=1 drift=0.08 timbre=1.2 chord=3 cutoff=0.55 reverb=0.5
+clip voice 8 3 59.4828 0.9643 4295880925196947941 level=0.58 attack=0.08 release=0.4339 pitch=31 ring=0.95 formant=12 burst=14 jitter=0.02 misfire=0 flicker=0.12 snap=0.1 color=0.3 reverb=0.55 echo=0.18 pan=0.05
+clip piano 1 1 59.4907 2.7857 6484522423403654960 level=0.253 attack=0.004 release=2.7817 pitch=14 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=0.1
+clip cello 7 2 59.6786 3.1071 5481109100923024524 level=0.38 attack=0.6 release=0.9 pitch=5 file=resonant/cello_00002_pad.ogg gather=0.9 chord=5 purity=0.2 shimmer=0.2 tilt=-0.3 reverb=0.45 cutoff=0.6
+clip strings 0 4 59.6786 3.1071 4270532240572397700 level=0.42 attack=0.7 release=0.8 pitch=10 voices=10 gather=1 drift=0.1 timbre=0.6 chord=5 sub=0 cutoff=0.6 reverb=0.55
+clip choir 6 4 59.6786 3.1071 5033880953205159419 level=0.42 attack=0.7 release=0.9 pitch=-4.94 chord=5 file=luminal/luminal_synth_vocal_treble_00004.ogg start=0.2 speed=0.3 voices=8 gather=1 drift=0.4 wander=2 scatter=0.4 reverb=0.65 cutoff=0.75
+clip piano 1 0 59.9844 3.2143 2708613256746467745 level=0.605 attack=0.004 release=3.2103 pitch=-11 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.4
+clip strings_line 0 4 60.0000 1.5000 3982032456596013514 level=0.16 attack=0.15 release=0.675 pitch=22 voices=4 gather=1 drift=0.08 timbre=1.2 chord=3 cutoff=0.55 reverb=0.5
+clip piano 1 0 60.0033 3.2143 6183821714467329239 level=0.1925 attack=0.004 release=3.2103 pitch=1 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.225
+clip voice 8 3 60.0145 1.5000 8232106934148473525 level=0.58 attack=0.08 release=0.675 pitch=34 ring=0.95 formant=12 burst=14 jitter=0.02 misfire=0 flicker=0.12 snap=0.1 color=0.3 reverb=0.55 echo=0.18 pan=0.05
+clip piano 1 1 60.5316 2.7857 7913407942399762255 level=0.341 attack=0.004 release=2.7817 pitch=5 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.125
+clip strings_line 0 4 61.0714 1.5000 2800570719188974037 level=0.16 attack=0.15 release=0.675 pitch=20 voices=4 gather=1 drift=0.08 timbre=1.2 chord=3 cutoff=0.55 reverb=0.5
+clip piano 1 1 61.0908 2.7857 6029235892597471479 level=0.297 attack=0.004 release=2.7817 pitch=10 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=0
+clip voice 8 3 61.0911 1.5000 7591878020105742738 level=0.58 attack=0.08 release=0.675 pitch=32 ring=0.95 formant=12 burst=14 jitter=0.02 misfire=0 flicker=0.12 snap=0.1 color=0.3 reverb=0.55 echo=0.18 pan=0.05
+clip piano 1 1 61.6209 2.7857 5850746965594050250 level=0.253 attack=0.004 release=2.7817 pitch=13 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=0.075
+clip cello 7 2 61.8214 3.1071 4622431933541195226 level=0.38 attack=0.6 release=0.9 pitch=-5 file=resonant/cello_00002_pad.ogg gather=0.9 chord=4 purity=0.2 shimmer=0.2 tilt=-0.3 reverb=0.45 cutoff=0.6
+clip strings 0 4 61.8214 3.1071 7001348550194240732 level=0.42 attack=0.7 release=0.8 pitch=0 voices=10 gather=1 drift=0.1 timbre=0.6 chord=4 sub=0 cutoff=0.6 reverb=0.55
+clip choir 6 4 61.8214 3.1071 4480580918434974291 level=0.42 attack=0.7 release=0.9 pitch=-2.94 chord=2 file=luminal/luminal_synth_vocal_treble_00004.ogg start=0.2 speed=0.3 voices=8 gather=1 drift=0.4 wander=2 scatter=0.4 reverb=0.65 cutoff=0.75
+clip drop 5 5 61.9879 2.1429 2141275265624472846 level=0.1272 release=2.1229 file=aqueous/Aqueous_drip_00001.ogg pitch=-0.6742 cutoff=0.7 reverb=0.5 pan=-0.5496 keyed=0
+clip voice 8 3 62.1231 1.5000 7493357171025353660 level=0.58 attack=0.08 release=0.675 pitch=29 ring=0.95 formant=12 burst=14 jitter=0.02 misfire=0 flicker=0.12 snap=0.1 color=0.3 reverb=0.55 echo=0.18 pan=0.05
+clip piano 1 0 62.1263 3.2143 1184482441975289330 level=0.605 attack=0.004 release=3.2103 pitch=-12 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.4
+clip strings_line 0 4 62.1429 1.5000 705624861620564859 level=0.16 attack=0.15 release=0.675 pitch=17 voices=4 gather=1 drift=0.08 timbre=1.2 chord=3 cutoff=0.55 reverb=0.5
+clip piano 1 0 62.1518 3.2143 3702954464084123909 level=0.1925 attack=0.004 release=3.2103 pitch=0 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.25
+clip piano 1 1 62.6579 2.7857 3998347193793011334 level=0.341 attack=0.004 release=2.7817 pitch=7 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.075
+clip piano 1 1 63.1965 2.7857 2415565394497205405 level=0.297 attack=0.004 release=2.7817 pitch=12 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=0.05
+clip voice 8 3 63.2064 1.5000 4301015099934741914 level=0.58 attack=0.08 release=0.675 pitch=27 ring=0.95 formant=12 burst=14 jitter=0.02 misfire=0 flicker=0.12 snap=0.1 color=0.3 reverb=0.55 echo=0.18 pan=0.05
+clip strings_line 0 4 63.2143 1.5000 4103677462781728115 level=0.16 attack=0.15 release=0.675 pitch=15 voices=4 gather=1 drift=0.08 timbre=1.2 chord=3 cutoff=0.55 reverb=0.5
+clip piano 1 1 63.7745 2.7857 848501681087602927 level=0.253 attack=0.004 release=2.7817 pitch=17 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=0.175
+clip cello 7 2 63.9643 3.1071 6245035553114470452 level=0.38 attack=0.6 release=0.9 pitch=-5 file=resonant/cello_00002_pad.ogg gather=0.9 chord=2 purity=0.2 shimmer=0.2 tilt=-0.3 reverb=0.45 cutoff=0.6
+clip strings 0 4 63.9643 3.1071 7907277015668493457 level=0.42 attack=0.7 release=0.8 pitch=0 voices=10 gather=1 drift=0.1 timbre=0.6 chord=2 sub=0 cutoff=0.6 reverb=0.55
+clip choir 6 4 63.9643 3.1071 3241904706344625603 level=0.42 attack=0.7 release=0.9 pitch=-2.94 chord=2 file=luminal/luminal_synth_vocal_treble_00004.ogg start=0.2 speed=0.3 voices=8 gather=1 drift=0.4 wander=2 scatter=0.4 reverb=0.65 cutoff=0.75
+clip piano 1 0 64.2651 3.2143 1919591184427030478 level=0.1925 attack=0.004 release=3.2103 pitch=0 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.25
+clip piano 1 0 64.2829 3.2143 3538162014486098946 level=0.605 attack=0.004 release=3.2103 pitch=-12 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.4
+clip strings_line 0 4 64.2857 4.7143 4729205467740181938 level=0.16 attack=0.15 release=0.8 pitch=16 voices=4 gather=1 drift=0.08 timbre=1.2 chord=3 cutoff=0.55 reverb=0.5
+clip voice 8 3 64.3005 4.7143 1251265785173777896 level=0.58 attack=0.22 release=0.9 pitch=28 ring=0.95 formant=12 burst=14 jitter=0.02 misfire=0 flicker=0.12 snap=0.1 color=0.3 reverb=0.55 echo=0.18 pan=0.05 lfo_rate=4.6 lfo>pitch=0.09
+clip piano 1 1 64.8283 2.7857 4153936685610330633 level=0.341 attack=0.004 release=2.7817 pitch=7 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.075
+clip piano 1 1 65.3341 2.7857 8129108455617145704 level=0.297 attack=0.004 release=2.7817 pitch=12 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=0.05
+clip piano 1 1 65.8943 2.7857 1347935389477447855 level=0.253 attack=0.004 release=2.7817 pitch=16 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=0.15
+clip cello 7 2 66.1071 3.1071 6015244897849925518 level=0.38 attack=0.6 release=0.9 pitch=-5 file=resonant/cello_00002_pad.ogg gather=0.9 chord=6 purity=0.2 shimmer=0.2 tilt=-0.3 reverb=0.45 cutoff=0.6
+clip strings 0 4 66.1071 3.1071 691977114726516658 level=0.42 attack=0.7 release=0.8 pitch=0 voices=10 gather=1 drift=0.1 timbre=0.6 chord=6 sub=0 cutoff=0.6 reverb=0.55
+clip choir 6 4 66.1071 3.1071 6774348895744764155 level=0.42 attack=0.7 release=0.9 pitch=-2.94 chord=2 file=luminal/luminal_synth_vocal_treble_00004.ogg start=0.2 speed=0.3 voices=8 gather=1 drift=0.4 wander=2 scatter=0.4 reverb=0.65 cutoff=0.75
+clip piano 1 0 66.4120 3.2143 6769147036742361455 level=0.605 attack=0.004 release=3.2103 pitch=-12 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.4
+clip piano 1 0 66.4175 3.2143 1278810083422839386 level=0.1925 attack=0.004 release=3.2103 pitch=0 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.25
+clip piano 1 1 66.9390 2.7857 8670483155773210483 level=0.341 attack=0.004 release=2.7817 pitch=10 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=0
+clip piano 1 1 67.4832 2.7857 5394415648826146891 level=0.297 attack=0.004 release=2.7817 pitch=16 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=0.15
+clip piano 1 1 68.0422 2.7857 5462360857361921486 level=0.253 attack=0.004 release=2.7817 pitch=19 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=0.225
+clip piano 1 0 68.5571 3.2143 664475370815994526 level=0.147 attack=0.004 release=3.2103 pitch=5 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.125
+clip piano 1 0 68.5640 3.2143 22364807790463062 level=0.462 attack=0.004 release=3.2103 pitch=-7 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.4
+clip piano 1 1 69.0992 2.7857 8552607119782005657 level=0.2604 attack=0.004 release=2.7817 pitch=5 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.125
+clip voice 8 3 69.1111 1.5000 1079420797791513587 level=0.48 attack=0.08 release=0.675 pitch=20 ring=0.95 formant=12 burst=14 jitter=0.02 misfire=0.1 flicker=0.15 snap=0.1 color=0.3 reverb=0.55 echo=0.18 pan=0.05
+clip drop 5 5 69.3593 2.1429 1621053892783462162 level=0.1258 release=2.1229 file=aqueous/Aqueous_drip_00002.ogg pitch=2.1154 cutoff=0.7 reverb=0.5 pan=0.5604 keyed=0
+clip piano 1 1 69.6251 2.7857 1793933706415056866 level=0.2268 attack=0.004 release=2.7817 pitch=8 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.05
+clip voice 8 3 70.1868 0.9643 4678123998769520932 level=0.45 attack=0.08 release=0.4339 pitch=19 ring=0.95 formant=12 burst=14 jitter=0.0617 misfire=0.2167 flicker=0.25 snap=0.1 color=0.3 reverb=0.55 echo=0.18 pan=0.05
+clip piano 1 0 70.6984 3.2143 5704563856776240247 level=0.147 attack=0.004 release=3.2103 pitch=4 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.15
+clip piano 1 0 70.7216 3.2143 726681827283107645 level=0.462 attack=0.004 release=3.2103 pitch=-8 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.4
+clip voice 8 3 70.7241 1.5000 5720589743038252616 level=0.42 attack=0.08 release=0.675 pitch=19 ring=0.95 formant=12 burst=14 jitter=0.1033 misfire=0.3333 flicker=0.35 snap=0.1 color=0.3 reverb=0.55 echo=0.18 pan=0.05
+clip piano 1 1 71.2727 2.7857 6917719321562771562 level=0.2604 attack=0.004 release=2.7817 pitch=7 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.075
+clip piano 1 1 71.7766 2.7857 5018124555073290900 level=0.2268 attack=0.004 release=2.7817 pitch=12 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=0.05
+clip voice 8 3 71.8071 0.9643 1265816672826013722 level=0.39 attack=0.08 release=0.4339 pitch=17 ring=0.95 formant=12 burst=14 jitter=0.145 misfire=0.45 flicker=0.45 snap=0.1 color=0.3 reverb=0.55 echo=0.18 pan=0.05
+clip voice 8 3 72.3194 0.9643 3307501038376980597 level=0.36 attack=0.08 release=0.4339 pitch=16 ring=0.95 formant=12 burst=14 jitter=0.1867 misfire=0.5667 flicker=0.55 snap=0.1 color=0.3 reverb=0.55 echo=0.18 pan=0.05
+clip piano 1 0 72.8436 3.2143 1266169965421924847 level=0.462 attack=0.004 release=3.2103 pitch=-9 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.4
+clip piano 1 0 72.8656 3.2143 5764722566956579264 level=0.147 attack=0.004 release=3.2103 pitch=3 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.175
+clip voice 8 3 72.8779 2.0357 7479484806644351171 level=0.33 attack=0.22 release=0.9 pitch=17 ring=0.95 formant=12 burst=14 jitter=0.2283 misfire=0.6833 flicker=0.65 snap=0.1 color=0.3 reverb=0.55 echo=0.18 pan=0.05 lfo_rate=4.6 lfo>pitch=0.09
+clip piano 1 1 73.4139 2.7857 5124988627478514913 level=0.2604 attack=0.004 release=2.7817 pitch=8 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.05
+clip piano 1 1 73.9258 2.7857 2383343223748879826 level=0.2268 attack=0.004 release=2.7817 pitch=12 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=0.05
+clip drop 5 5 74.9280 2.1429 1084554143022797793 level=0.1514 release=2.1229 file=aqueous/Aqueous_drip_00001.ogg pitch=1.3244 cutoff=0.7 reverb=0.5 pan=0.5897 keyed=0
+clip piano 1 0 74.9829 3.2143 7013627019287667542 level=0.147 attack=0.004 release=3.2103 pitch=2 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.2
+clip piano 1 0 74.9954 3.2143 3474304970411878319 level=0.462 attack=0.004 release=3.2103 pitch=-10 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.4
+clip piano 1 1 75.5448 2.7857 1812151339581668592 level=0.2604 attack=0.004 release=2.7817 pitch=5 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.125
+clip voice 8 3 76.0589 1.5000 8823204473129666883 level=0.3 attack=0.08 release=0.675 pitch=22 ring=0.95 formant=12 burst=14 jitter=0.27 misfire=0.8 flicker=0.75 snap=0.1 color=0.3 reverb=0.55 echo=0.18 pan=0.05
+clip piano 1 1 76.0641 2.7857 8729812625159357380 level=0.2268 attack=0.004 release=2.7817 pitch=10 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=0
+clip piano 1 0 77.1347 3.2143 6724478237386094549 level=0.462 attack=0.004 release=3.2103 pitch=-11 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.4
+clip piano 1 0 77.1364 3.2143 3069984225523975224 level=0.147 attack=0.004 release=3.2103 pitch=1 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.225
+clip piano 1 1 77.7003 2.7857 5172005836085252400 level=0.2604 attack=0.004 release=2.7817 pitch=5 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.125
+clip piano 1 1 78.2318 2.7857 6893573974148467346 level=0.2268 attack=0.004 release=2.7817 pitch=10 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=0
+clip piano 1 0 79.2705 3.2143 1717761713628049443 level=0.147 attack=0.004 release=3.2103 pitch=0 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.25
+clip piano 1 0 79.2900 3.2143 8735712659509514033 level=0.462 attack=0.004 release=3.2103 pitch=-12 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.4
+clip drop 5 5 79.4087 2.1429 5864756198674213329 level=0.126 release=2.1229 file=aqueous/Aqueous_drip_00001.ogg pitch=-1.6762 cutoff=0.7 reverb=0.5 pan=0.0526 keyed=0
+clip piano 1 1 79.8440 2.7857 4592233353374550162 level=0.2604 attack=0.004 release=2.7817 pitch=7 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.075
+clip piano 1 1 80.3692 2.7857 6359685360707285111 level=0.2268 attack=0.004 release=2.7817 pitch=12 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=0.05
+clip piano 1 0 81.4258 3.2143 5276907151288430687 level=0.462 attack=0.004 release=3.2103 pitch=-12 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.4
+clip piano 1 0 81.4468 3.2143 8900760738423033091 level=0.147 attack=0.004 release=3.2103 pitch=0 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.25
+clip piano 1 1 81.9750 2.7857 7211107501497293536 level=0.2604 attack=0.004 release=2.7817 pitch=7 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.075
+clip drop 5 5 82.2207 2.1429 1651283314056230377 level=0.1254 release=2.1229 file=aqueous/Aqueous_drip_00003.ogg pitch=-0.7922 cutoff=0.7 reverb=0.5 pan=0.1014 keyed=0
+clip piano 1 1 82.5059 2.7857 936051917985248333 level=0.2268 attack=0.004 release=2.7817 pitch=12 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=0.05
+clip piano 1 0 83.5540 3.2143 7661353392311645925 level=0.147 attack=0.004 release=3.2103 pitch=0 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.25
+clip piano 1 0 83.5574 4.2857 4452899868530482275 level=0.462 attack=0.004 release=4.2817 pitch=-12 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.4
+clip piano 1 1 84.0918 2.7857 3008708581243092805 level=0.2604 attack=0.004 release=2.7817 pitch=10 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=0
+clip piano 1 1 84.6240 2.7857 3629848139658133901 level=0.2268 attack=0.004 release=2.7817 pitch=16 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=0.15
+clip drop 5 5 85.5524 2.1429 5899414546680461480 level=0.1083 release=2.1229 file=aqueous/Aqueous_drip_00001.ogg pitch=-1.7829 cutoff=0.7 reverb=0.5 pan=0.6385 keyed=0
+clip piano 1 0 85.7017 8.5714 146168958523843872 level=0.5 attack=0.004 release=8.5674 pitch=-7 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.4
+clip piano 1 0 85.7100 8.5714 4171969395316520331 level=0.25 attack=0.004 release=8.5674 pitch=5 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.125
+clip piano 1 1 86.7987 7.5000 867578771171452355 level=0.3 attack=0.004 release=7.496 pitch=8 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=-0.05
+clip piano 1 1 88.3915 5.8929 3630927296768692839 level=0.18 attack=0.004 release=5.8889 pitch=32 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.5 pan=0.4
+clip last_breath 8 3 88.9286 4.2857 4615410977168254985 level=0.25 attack=0.6 release=2.5 pitch=24 ring=0.95 formant=12 burst=14 jitter=0.4 misfire=0.9 flicker=0.9 snap=0.1 color=0.3 reverb=0.7 echo=0.3 pitch_swp=-1
