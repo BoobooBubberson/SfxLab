@@ -14,6 +14,7 @@ choir grown from any recording, partials resynthesis, a bendable tuning) make un
 | `sunfall.py` | cinematic, D minor to D major, 84 BPM: a cloud Deep Note, cloud sections as string ostinato and horns, braams, taiko and timpani, the strings melting back to cloud in the bridge |
 | `hoarfrost.py` | ambient exploration loop, D major pentatonic, 72 BPM, no drums: clouds gathering into and out of focus, struck singing bowl, a random-firing arc as frost crackle, blizzard wind |
 | `the_coil_forgets.py` | the sad one, D minor, 56 BPM: the lament bass (D C# C B Bb A) as a ground, felt piano from tones, the coil as a voice singing sighs, cello partials, cloud strings, choir; at the end the voice misfires more each note until it stops |
+| `instruments.py` | an audition sheet: 19 instruments built from the clip types (felt and electric piano, marimba, vibraphone, music box, tubular bell, pipe organ, clarinet, flute, ocarina, reed, violin, harp, koto, sitar, fretless bass, didgeridoo, wind chimes, choir), each a function to copy, levels matched to -20 dB; `--list` prints the running order |
 | `sfxsong.py` | the helper the three above use: `Song.clip()` in beats, keys checked per clip type against `Sfx.java`, slider ranges and short envelopes reported |
 | `probe.py` | measure recordings before using them: pitch, envelope, a timeline, section levels of a render |
 | `listen.py` | look at a render: solo stems per track, RMS per track and section, spectrograms with bar lines, pitch classes per bar |

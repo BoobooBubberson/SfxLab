@@ -1,0 +1,151 @@
+# SfxLab project v2: clip name type track start dur seed key=value...
+# 'Instruments' - an audition of instruments made from the lab's clip types, by Claude
+loop 0
+root 110.0000
+track 0 1.000 0
+track 1 1.000 0
+track 2 1.000 0
+track 3 1.000 0
+track 4 1.000 0
+track 5 1.000 0
+clip felt_piano 1 0 0.0000 2.0000 4256048244721673690 level=0.6081 attack=0.004 release=1.996 pitch=12 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.4
+clip felt_piano 1 0 0.6667 1.6667 8597087172018818224 level=0.6081 attack=0.004 release=1.6627 pitch=15 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.4
+clip felt_piano 1 0 1.0000 1.6667 2401245948479062437 level=0.6081 attack=0.004 release=1.6627 pitch=19 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.4
+clip felt_piano 1 0 1.3333 2.0000 3678729858013403936 level=0.6081 attack=0.004 release=1.996 pitch=24 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.4
+clip felt_piano 1 0 2.0000 1.6667 6611065127510970115 level=0.6081 attack=0.004 release=1.6627 pitch=22 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.4
+clip felt_piano 1 0 2.3333 1.6667 2600102583585890771 level=0.6081 attack=0.004 release=1.6627 pitch=19 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.4
+clip felt_piano 1 0 2.6667 2.0000 8805808134441354263 level=0.6081 attack=0.004 release=1.996 pitch=17 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.4
+clip felt_piano 1 0 3.3333 3.3333 1561816047652927960 level=0.6081 attack=0.004 release=3.3293 pitch=19 interval=12 timbre=0 detune=0.04 fm_ratio=1 fm_depth=0.7 env_curve=0.55 cutoff=0.62 reverb=0.4
+clip e_piano 1 0 6.6667 1.6667 1602876295017401233 level=0.4111 attack=0.003 release=1.6637 pitch=12 interval=0 timbre=0 detune=0.02 fm_ratio=1 fm_depth=0.45 env_curve=0.35 cutoff=0.7 lfo_rate=4.5 lfo>amp=0.35 phaser=0.2 reverb=0.3
+clip e_piano 1 0 7.3333 1.3333 7041423741091558855 level=0.4111 attack=0.003 release=1.3303 pitch=15 interval=0 timbre=0 detune=0.02 fm_ratio=1 fm_depth=0.45 env_curve=0.35 cutoff=0.7 lfo_rate=4.5 lfo>amp=0.35 phaser=0.2 reverb=0.3
+clip e_piano 1 0 7.6667 1.3333 6285532669348601971 level=0.4111 attack=0.003 release=1.3303 pitch=19 interval=0 timbre=0 detune=0.02 fm_ratio=1 fm_depth=0.45 env_curve=0.35 cutoff=0.7 lfo_rate=4.5 lfo>amp=0.35 phaser=0.2 reverb=0.3
+clip e_piano 1 0 8.0000 1.6667 7701495139730936790 level=0.4111 attack=0.003 release=1.6637 pitch=24 interval=0 timbre=0 detune=0.02 fm_ratio=1 fm_depth=0.45 env_curve=0.35 cutoff=0.7 lfo_rate=4.5 lfo>amp=0.35 phaser=0.2 reverb=0.3
+clip e_piano 1 0 8.6667 1.3333 7927694916639765299 level=0.4111 attack=0.003 release=1.3303 pitch=22 interval=0 timbre=0 detune=0.02 fm_ratio=1 fm_depth=0.45 env_curve=0.35 cutoff=0.7 lfo_rate=4.5 lfo>amp=0.35 phaser=0.2 reverb=0.3
+clip e_piano 1 0 9.0000 1.3333 3640067533827828284 level=0.4111 attack=0.003 release=1.3303 pitch=19 interval=0 timbre=0 detune=0.02 fm_ratio=1 fm_depth=0.45 env_curve=0.35 cutoff=0.7 lfo_rate=4.5 lfo>amp=0.35 phaser=0.2 reverb=0.3
+clip e_piano 1 0 9.3333 1.6667 803526646898195915 level=0.4111 attack=0.003 release=1.6637 pitch=17 interval=0 timbre=0 detune=0.02 fm_ratio=1 fm_depth=0.45 env_curve=0.35 cutoff=0.7 lfo_rate=4.5 lfo>amp=0.35 phaser=0.2 reverb=0.3
+clip e_piano 1 0 10.0000 3.0000 2909668451445954200 level=0.4111 attack=0.003 release=2.997 pitch=19 interval=0 timbre=0 detune=0.02 fm_ratio=1 fm_depth=0.45 env_curve=0.35 cutoff=0.7 lfo_rate=4.5 lfo>amp=0.35 phaser=0.2 reverb=0.3
+clip marimba 1 0 13.3333 0.8000 9212480063916649335 level=0.9976 attack=0.002 release=0.798 pitch=12 interval=0 timbre=0 fm_ratio=4 fm_depth=0.55 env_curve=0.9 reverb=0.3
+clip marimba 1 0 14.0000 0.8000 5342890351952658119 level=0.9976 attack=0.002 release=0.798 pitch=15 interval=0 timbre=0 fm_ratio=4 fm_depth=0.55 env_curve=0.9 reverb=0.3
+clip marimba 1 0 14.3333 0.8000 7186831220781415695 level=0.9976 attack=0.002 release=0.798 pitch=19 interval=0 timbre=0 fm_ratio=4 fm_depth=0.55 env_curve=0.9 reverb=0.3
+clip marimba 1 0 14.6667 0.8000 1384570456238506054 level=0.9976 attack=0.002 release=0.798 pitch=24 interval=0 timbre=0 fm_ratio=4 fm_depth=0.55 env_curve=0.9 reverb=0.3
+clip marimba 1 0 15.3333 0.8000 1512936674165995316 level=0.9976 attack=0.002 release=0.798 pitch=22 interval=0 timbre=0 fm_ratio=4 fm_depth=0.55 env_curve=0.9 reverb=0.3
+clip marimba 1 0 15.6667 0.8000 2537509959792331817 level=0.9976 attack=0.002 release=0.798 pitch=19 interval=0 timbre=0 fm_ratio=4 fm_depth=0.55 env_curve=0.9 reverb=0.3
+clip marimba 1 0 16.0000 0.8000 7814873488706783989 level=0.9976 attack=0.002 release=0.798 pitch=17 interval=0 timbre=0 fm_ratio=4 fm_depth=0.55 env_curve=0.9 reverb=0.3
+clip marimba 1 0 16.6667 0.8000 5306570287407805768 level=0.9976 attack=0.002 release=0.798 pitch=19 interval=0 timbre=0 fm_ratio=4 fm_depth=0.55 env_curve=0.9 reverb=0.3
+clip vibraphone 1 0 20.0000 2.3333 2267131205748886384 level=0.7311 attack=0.002 release=2.3313 pitch=12 interval=12 timbre=0 fm_ratio=4 fm_depth=0.3 env_curve=0.45 lfo_rate=5.5 lfo>amp=0.45 reverb=0.45
+clip vibraphone 1 0 20.6667 2.0000 6447276067858310748 level=0.7311 attack=0.002 release=1.998 pitch=15 interval=12 timbre=0 fm_ratio=4 fm_depth=0.3 env_curve=0.45 lfo_rate=5.5 lfo>amp=0.45 reverb=0.45
+clip vibraphone 1 0 21.0000 2.0000 3472204407203427596 level=0.7311 attack=0.002 release=1.998 pitch=19 interval=12 timbre=0 fm_ratio=4 fm_depth=0.3 env_curve=0.45 lfo_rate=5.5 lfo>amp=0.45 reverb=0.45
+clip vibraphone 1 0 21.3333 2.3333 6100056647702057821 level=0.7311 attack=0.002 release=2.3313 pitch=24 interval=12 timbre=0 fm_ratio=4 fm_depth=0.3 env_curve=0.45 lfo_rate=5.5 lfo>amp=0.45 reverb=0.45
+clip vibraphone 1 0 22.0000 2.0000 2213808614382000835 level=0.7311 attack=0.002 release=1.998 pitch=22 interval=12 timbre=0 fm_ratio=4 fm_depth=0.3 env_curve=0.45 lfo_rate=5.5 lfo>amp=0.45 reverb=0.45
+clip vibraphone 1 0 22.3333 2.0000 5497401041961802422 level=0.7311 attack=0.002 release=1.998 pitch=19 interval=12 timbre=0 fm_ratio=4 fm_depth=0.3 env_curve=0.45 lfo_rate=5.5 lfo>amp=0.45 reverb=0.45
+clip vibraphone 1 0 22.6667 2.3333 5877432477562225742 level=0.7311 attack=0.002 release=2.3313 pitch=17 interval=12 timbre=0 fm_ratio=4 fm_depth=0.3 env_curve=0.45 lfo_rate=5.5 lfo>amp=0.45 reverb=0.45
+clip vibraphone 1 0 23.3333 3.6667 1428139367771436681 level=0.7311 attack=0.002 release=3.6647 pitch=19 interval=12 timbre=0 fm_ratio=4 fm_depth=0.3 env_curve=0.45 lfo_rate=5.5 lfo>amp=0.45 reverb=0.45
+clip music_box 1 0 26.6667 1.6667 1908219266374897895 level=0.6441 attack=0.001 release=1.6657 pitch=36 interval=0 timbre=0 fm_ratio=7.13 fm_depth=0.35 env_curve=0.7 reverb=0.45 echo=0.15
+clip music_box 1 0 27.3333 1.6667 5125461989462949350 level=0.6441 attack=0.001 release=1.6657 pitch=39 interval=0 timbre=0 fm_ratio=7.13 fm_depth=0.35 env_curve=0.7 reverb=0.45 echo=0.15
+clip music_box 1 0 27.6667 1.6667 6295350720059438903 level=0.6441 attack=0.001 release=1.6657 pitch=43 interval=0 timbre=0 fm_ratio=7.13 fm_depth=0.35 env_curve=0.7 reverb=0.45 echo=0.15
+clip music_box 1 0 28.0000 1.6667 7179843773969533150 level=0.6441 attack=0.001 release=1.6657 pitch=48 interval=0 timbre=0 fm_ratio=7.13 fm_depth=0.35 env_curve=0.7 reverb=0.45 echo=0.15
+clip music_box 1 0 28.6667 1.6667 407490082508769346 level=0.6441 attack=0.001 release=1.6657 pitch=46 interval=0 timbre=0 fm_ratio=7.13 fm_depth=0.35 env_curve=0.7 reverb=0.45 echo=0.15
+clip music_box 1 0 29.0000 1.6667 5920260073725300032 level=0.6441 attack=0.001 release=1.6657 pitch=43 interval=0 timbre=0 fm_ratio=7.13 fm_depth=0.35 env_curve=0.7 reverb=0.45 echo=0.15
+clip music_box 1 0 29.3333 1.6667 69659831058869368 level=0.6441 attack=0.001 release=1.6657 pitch=41 interval=0 timbre=0 fm_ratio=7.13 fm_depth=0.35 env_curve=0.7 reverb=0.45 echo=0.15
+clip music_box 1 0 30.0000 1.6667 8168111010127621453 level=0.6441 attack=0.001 release=1.6657 pitch=43 interval=0 timbre=0 fm_ratio=7.13 fm_depth=0.35 env_curve=0.7 reverb=0.45 echo=0.15
+clip tubular_bell 1 1 33.3333 2.6667 224066827648056051 level=0.5116 attack=0.002 release=2.6647 pitch=24 interval=0 timbre=0 bank=1 stretch=0.09 tilt=-0.35 env_curve=0.5 reverb=0.5
+clip tubular_bell 1 1 34.6667 2.6667 6638490493976462253 level=0.5116 attack=0.002 release=2.6647 pitch=31 interval=0 timbre=0 bank=1 stretch=0.09 tilt=-0.35 env_curve=0.5 reverb=0.5
+clip tubular_bell 1 1 36.0000 2.6667 6292373880642802966 level=0.5116 attack=0.002 release=2.6647 pitch=29 interval=0 timbre=0 bank=1 stretch=0.09 tilt=-0.35 env_curve=0.5 reverb=0.5
+clip pipe_organ 1 1 40.0000 2.6667 5614626320770967803 level=0.1707 attack=0.03 release=0.08 pitch=12 interval=12 timbre=0 bank=1 tilt=-0.45 reverb=0.6
+clip pipe_organ 1 1 40.0000 2.6667 5945483938369477911 level=0.1707 attack=0.03 release=0.08 pitch=15 interval=12 timbre=0 bank=1 tilt=-0.45 reverb=0.6
+clip pipe_organ 1 1 40.0000 2.6667 5220282631246301574 level=0.1707 attack=0.03 release=0.08 pitch=19 interval=12 timbre=0 bank=1 tilt=-0.45 reverb=0.6
+clip pipe_organ 1 1 42.6667 2.6667 7496768001607092369 level=0.1707 attack=0.03 release=0.08 pitch=10 interval=12 timbre=0 bank=1 tilt=-0.45 reverb=0.6
+clip pipe_organ 1 1 42.6667 2.6667 4399895620412552642 level=0.1707 attack=0.03 release=0.08 pitch=14 interval=12 timbre=0 bank=1 tilt=-0.45 reverb=0.6
+clip pipe_organ 1 1 42.6667 2.6667 8634312125283950285 level=0.1707 attack=0.03 release=0.08 pitch=17 interval=12 timbre=0 bank=1 tilt=-0.45 reverb=0.6
+clip clarinet 1 1 46.6667 0.6667 3364948304244059137 level=0.3155 attack=0.06 release=0.12 pitch=12 interval=0 timbre=0 bank=1 tilt=-0.5 cutoff=0.7 lfo_rate=5 odd/even=-1 lfo>pitch=0.05 reverb=0.35
+clip clarinet 1 1 47.3333 0.3333 360530812431759322 level=0.3155 attack=0.06 release=0.12 pitch=15 interval=0 timbre=0 bank=1 tilt=-0.5 cutoff=0.7 lfo_rate=5 odd/even=-1 lfo>pitch=0.05 reverb=0.35
+clip clarinet 1 1 47.6667 0.3333 6243055302105832034 level=0.3155 attack=0.06 release=0.12 pitch=19 interval=0 timbre=0 bank=1 tilt=-0.5 cutoff=0.7 lfo_rate=5 odd/even=-1 lfo>pitch=0.05 reverb=0.35
+clip clarinet 1 1 48.0000 0.6667 4334043847285280283 level=0.3155 attack=0.06 release=0.12 pitch=24 interval=0 timbre=0 bank=1 tilt=-0.5 cutoff=0.7 lfo_rate=5 odd/even=-1 lfo>pitch=0.05 reverb=0.35
+clip clarinet 1 1 48.6667 0.3333 8868298669237372584 level=0.3155 attack=0.06 release=0.12 pitch=22 interval=0 timbre=0 bank=1 tilt=-0.5 cutoff=0.7 lfo_rate=5 odd/even=-1 lfo>pitch=0.05 reverb=0.35
+clip clarinet 1 1 49.0000 0.3333 7346332919332103225 level=0.3155 attack=0.06 release=0.12 pitch=19 interval=0 timbre=0 bank=1 tilt=-0.5 cutoff=0.7 lfo_rate=5 odd/even=-1 lfo>pitch=0.05 reverb=0.35
+clip clarinet 1 1 49.3333 0.6667 4611137294910223833 level=0.3155 attack=0.06 release=0.12 pitch=17 interval=0 timbre=0 bank=1 tilt=-0.5 cutoff=0.7 lfo_rate=5 odd/even=-1 lfo>pitch=0.05 reverb=0.35
+clip clarinet 1 1 50.0000 2.0000 3011283474578488408 level=0.3155 attack=0.06 release=0.12 pitch=19 interval=0 timbre=0 bank=1 tilt=-0.5 cutoff=0.7 lfo_rate=5 odd/even=-1 lfo>pitch=0.05 reverb=0.35
+clip flute 1 1 53.3333 0.6667 540373698988033814 level=0.6151 attack=0.07 release=0.15 pitch=24 interval=12 timbre=0.15 lfo_rate=5.2 lfo>pitch=0.08 reverb=0.45
+clip flute_breath 2 1 53.3333 0.6667 8589343730394068384 level=0.0431 attack=0.03 release=0.15 filter=1 cutoff=0.5598 resonance=0.85 color=0.5 reverb=0.45
+clip flute 1 1 54.0000 0.3333 7318466556473747810 level=0.6151 attack=0.07 release=0.15 pitch=27 interval=12 timbre=0.15 lfo_rate=5.2 lfo>pitch=0.08 reverb=0.45
+clip flute_breath 2 1 54.0000 0.3333 5323465730838465463 level=0.0431 attack=0.03 release=0.15 filter=1 cutoff=0.5912 resonance=0.85 color=0.5 reverb=0.45
+clip flute 1 1 54.3333 0.3333 4219382708974159490 level=0.6151 attack=0.07 release=0.15 pitch=31 interval=12 timbre=0.15 lfo_rate=5.2 lfo>pitch=0.08 reverb=0.45
+clip flute_breath 2 1 54.3333 0.3333 5654311092321503073 level=0.0431 attack=0.03 release=0.15 filter=1 cutoff=0.6331 resonance=0.85 color=0.5 reverb=0.45
+clip flute 1 1 54.6667 0.6667 2046068645522329421 level=0.6151 attack=0.07 release=0.15 pitch=36 interval=12 timbre=0.15 lfo_rate=5.2 lfo>pitch=0.08 reverb=0.45
+clip flute_breath 2 1 54.6667 0.6667 5280809663896622672 level=0.0431 attack=0.03 release=0.15 filter=1 cutoff=0.6854 resonance=0.85 color=0.5 reverb=0.45
+clip flute 1 1 55.3333 0.3333 8537579350873163063 level=0.6151 attack=0.07 release=0.15 pitch=34 interval=12 timbre=0.15 lfo_rate=5.2 lfo>pitch=0.08 reverb=0.45
+clip flute_breath 2 1 55.3333 0.3333 8343831725881180715 level=0.0431 attack=0.03 release=0.15 filter=1 cutoff=0.6644 resonance=0.85 color=0.5 reverb=0.45
+clip flute 1 1 55.6667 0.3333 5758136125568390836 level=0.6151 attack=0.07 release=0.15 pitch=31 interval=12 timbre=0.15 lfo_rate=5.2 lfo>pitch=0.08 reverb=0.45
+clip flute_breath 2 1 55.6667 0.3333 842441376181822881 level=0.0431 attack=0.03 release=0.15 filter=1 cutoff=0.6331 resonance=0.85 color=0.5 reverb=0.45
+clip flute 1 1 56.0000 0.6667 915535330617757483 level=0.6151 attack=0.07 release=0.15 pitch=29 interval=12 timbre=0.15 lfo_rate=5.2 lfo>pitch=0.08 reverb=0.45
+clip flute_breath 2 1 56.0000 0.6667 7727118087424561849 level=0.0431 attack=0.03 release=0.15 filter=1 cutoff=0.6121 resonance=0.85 color=0.5 reverb=0.45
+clip flute 1 1 56.6667 2.0000 6321239530265874234 level=0.6151 attack=0.07 release=0.15 pitch=31 interval=12 timbre=0.15 lfo_rate=5.2 lfo>pitch=0.08 reverb=0.45
+clip flute_breath 2 1 56.6667 2.0000 8273338145814773052 level=0.0431 attack=0.03 release=0.15 filter=1 cutoff=0.6331 resonance=0.85 color=0.5 reverb=0.45
+clip ocarina 8 2 60.0000 0.6667 1973391578538470095 level=0.278 attack=0.05 release=0.15 pitch=24 ring=1 formant=12 burst=25 jitter=0.01 snap=0 color=0.2 lfo_rate=5 lfo>pitch=0.06 reverb=0.45
+clip ocarina 8 2 60.6667 0.3333 6399684631039073279 level=0.278 attack=0.05 release=0.15 pitch=27 ring=1 formant=12 burst=25 jitter=0.01 snap=0 color=0.2 lfo_rate=5 lfo>pitch=0.06 reverb=0.45
+clip ocarina 8 2 61.0000 0.3333 8105455919309719182 level=0.278 attack=0.05 release=0.15 pitch=31 ring=1 formant=12 burst=25 jitter=0.01 snap=0 color=0.2 lfo_rate=5 lfo>pitch=0.06 reverb=0.45
+clip ocarina 8 2 61.3333 0.6667 2637572573033365821 level=0.278 attack=0.05 release=0.15 pitch=36 ring=1 formant=12 burst=25 jitter=0.01 snap=0 color=0.2 lfo_rate=5 lfo>pitch=0.06 reverb=0.45
+clip ocarina 8 2 62.0000 0.3333 6917804262438533576 level=0.278 attack=0.05 release=0.15 pitch=34 ring=1 formant=12 burst=25 jitter=0.01 snap=0 color=0.2 lfo_rate=5 lfo>pitch=0.06 reverb=0.45
+clip ocarina 8 2 62.3333 0.3333 2784906834751547315 level=0.278 attack=0.05 release=0.15 pitch=31 ring=1 formant=12 burst=25 jitter=0.01 snap=0 color=0.2 lfo_rate=5 lfo>pitch=0.06 reverb=0.45
+clip ocarina 8 2 62.6667 0.6667 1972607873772294744 level=0.278 attack=0.05 release=0.15 pitch=29 ring=1 formant=12 burst=25 jitter=0.01 snap=0 color=0.2 lfo_rate=5 lfo>pitch=0.06 reverb=0.45
+clip ocarina 8 2 63.3333 2.0000 2379424261215623013 level=0.278 attack=0.05 release=0.15 pitch=31 ring=1 formant=12 burst=25 jitter=0.01 snap=0 color=0.2 lfo_rate=5 lfo>pitch=0.06 reverb=0.45
+clip reed 8 2 66.6667 0.6667 517429898305912704 level=0.5943 attack=0.04 release=0.12 pitch=12 ring=0.3 formant=31.02 burst=1.5 jitter=0.005 snap=1 color=0.35 filter=1 cutoff=0.72 resonance=0.3 lfo_rate=5.5 lfo>pitch=0.06 reverb=0.4
+clip reed 8 2 67.3333 0.3333 6926552220450770992 level=0.5943 attack=0.04 release=0.12 pitch=15 ring=0.3 formant=31.02 burst=1.5 jitter=0.005 snap=1 color=0.35 filter=1 cutoff=0.72 resonance=0.3 lfo_rate=5.5 lfo>pitch=0.06 reverb=0.4
+clip reed 8 2 67.6667 0.3333 7681700658482580437 level=0.5943 attack=0.04 release=0.12 pitch=19 ring=0.3 formant=31.02 burst=1.5 jitter=0.005 snap=1 color=0.35 filter=1 cutoff=0.72 resonance=0.3 lfo_rate=5.5 lfo>pitch=0.06 reverb=0.4
+clip reed 8 2 68.0000 0.6667 5453559114322560708 level=0.5943 attack=0.04 release=0.12 pitch=24 ring=0.3 formant=31.02 burst=1.5 jitter=0.005 snap=1 color=0.35 filter=1 cutoff=0.72 resonance=0.3 lfo_rate=5.5 lfo>pitch=0.06 reverb=0.4
+clip reed 8 2 68.6667 0.3333 3215174734456998645 level=0.5943 attack=0.04 release=0.12 pitch=22 ring=0.3 formant=31.02 burst=1.5 jitter=0.005 snap=1 color=0.35 filter=1 cutoff=0.72 resonance=0.3 lfo_rate=5.5 lfo>pitch=0.06 reverb=0.4
+clip reed 8 2 69.0000 0.3333 3919590234101314395 level=0.5943 attack=0.04 release=0.12 pitch=19 ring=0.3 formant=31.02 burst=1.5 jitter=0.005 snap=1 color=0.35 filter=1 cutoff=0.72 resonance=0.3 lfo_rate=5.5 lfo>pitch=0.06 reverb=0.4
+clip reed 8 2 69.3333 0.6667 5665876149505275335 level=0.5943 attack=0.04 release=0.12 pitch=17 ring=0.3 formant=31.02 burst=1.5 jitter=0.005 snap=1 color=0.35 filter=1 cutoff=0.72 resonance=0.3 lfo_rate=5.5 lfo>pitch=0.06 reverb=0.4
+clip reed 8 2 70.0000 2.0000 2338975780616468891 level=0.5943 attack=0.04 release=0.12 pitch=19 ring=0.3 formant=31.02 burst=1.5 jitter=0.005 snap=1 color=0.35 filter=1 cutoff=0.72 resonance=0.3 lfo_rate=5.5 lfo>pitch=0.06 reverb=0.4
+clip violin 1 2 73.3333 0.6667 6468250993304602842 level=0.1656 attack=0.1 release=0.2 pitch=24 interval=0 timbre=2 detune=0.03 cutoff=0.74 resonance=0.35 lfo_rate=5.6 lfo>pitch=0.13 reverb=0.45
+clip violin 1 2 74.0000 0.3333 1607459779148188796 level=0.1656 attack=0.1 release=0.175 pitch=27 interval=0 timbre=2 detune=0.03 cutoff=0.74 resonance=0.35 lfo_rate=5.6 lfo>pitch=0.13 reverb=0.45
+clip violin 1 2 74.3333 0.3333 7033078842610554228 level=0.1656 attack=0.1 release=0.175 pitch=31 interval=0 timbre=2 detune=0.03 cutoff=0.74 resonance=0.35 lfo_rate=5.6 lfo>pitch=0.13 reverb=0.45
+clip violin 1 2 74.6667 0.6667 3102019547113647567 level=0.1656 attack=0.1 release=0.2 pitch=36 interval=0 timbre=2 detune=0.03 cutoff=0.74 resonance=0.35 lfo_rate=5.6 lfo>pitch=0.13 reverb=0.45
+clip violin 1 2 75.3333 0.3333 4401692705682223452 level=0.1656 attack=0.1 release=0.175 pitch=34 interval=0 timbre=2 detune=0.03 cutoff=0.74 resonance=0.35 lfo_rate=5.6 lfo>pitch=0.13 reverb=0.45
+clip violin 1 2 75.6667 0.3333 8329743567883485057 level=0.1656 attack=0.1 release=0.175 pitch=31 interval=0 timbre=2 detune=0.03 cutoff=0.74 resonance=0.35 lfo_rate=5.6 lfo>pitch=0.13 reverb=0.45
+clip violin 1 2 76.0000 0.6667 7286960871498267846 level=0.1656 attack=0.1 release=0.2 pitch=29 interval=0 timbre=2 detune=0.03 cutoff=0.74 resonance=0.35 lfo_rate=5.6 lfo>pitch=0.13 reverb=0.45
+clip violin 1 2 76.6667 2.0000 1155761799604649419 level=0.1656 attack=0.1 release=0.2 pitch=31 interval=0 timbre=2 detune=0.03 cutoff=0.74 resonance=0.35 lfo_rate=5.6 lfo>pitch=0.13 reverb=0.45
+clip harp 4 3 80.0000 2.3333 8853577756476473253 level=1 attack=0.002 release=2.3313 pitch=12 damp=0.3 sustain=0.95 pick=0.45 reverb=0.45
+clip harp 4 3 80.6667 2.0000 3713712664985804931 level=1 attack=0.002 release=1.998 pitch=15 damp=0.3 sustain=0.95 pick=0.45 reverb=0.45
+clip harp 4 3 81.0000 2.0000 6515099018794248432 level=1 attack=0.002 release=1.998 pitch=19 damp=0.3 sustain=0.95 pick=0.45 reverb=0.45
+clip harp 4 3 81.3333 2.3333 98039416213793481 level=1 attack=0.002 release=2.3313 pitch=24 damp=0.3 sustain=0.95 pick=0.45 reverb=0.45
+clip harp 4 3 82.0000 2.0000 8759334632817826703 level=1 attack=0.002 release=1.998 pitch=22 damp=0.3 sustain=0.95 pick=0.45 reverb=0.45
+clip harp 4 3 82.3333 2.0000 9132167842174388372 level=1 attack=0.002 release=1.998 pitch=19 damp=0.3 sustain=0.95 pick=0.45 reverb=0.45
+clip harp 4 3 82.6667 2.3333 3409616045002307024 level=1 attack=0.002 release=2.3313 pitch=17 damp=0.3 sustain=0.95 pick=0.45 reverb=0.45
+clip harp 4 3 83.3333 3.6667 3355548869873967739 level=1 attack=0.002 release=3.6647 pitch=19 damp=0.3 sustain=0.95 pick=0.45 reverb=0.45
+clip koto 4 3 86.6667 1.6667 2249621046755158832 level=0.9527 attack=0.001 release=1.6657 pitch=11.6 pitch_swp=0.4 damp=0.12 sustain=0.92 pick=0.93 reverb=0.35
+clip koto 4 3 87.3333 1.3333 8544901438160263089 level=0.9527 attack=0.001 release=1.3323 pitch=14.6 pitch_swp=0 damp=0.12 sustain=0.92 pick=0.93 reverb=0.35
+clip koto 4 3 87.6667 1.3333 5439704058486018873 level=0.9527 attack=0.001 release=1.3323 pitch=18.6 pitch_swp=0 damp=0.12 sustain=0.92 pick=0.93 reverb=0.35
+clip koto 4 3 88.0000 1.6667 5447608607992251695 level=0.9527 attack=0.001 release=1.6657 pitch=23.6 pitch_swp=0.4 damp=0.12 sustain=0.92 pick=0.93 reverb=0.35
+clip koto 4 3 88.6667 1.3333 8981053925608196834 level=0.9527 attack=0.001 release=1.3323 pitch=21.6 pitch_swp=0 damp=0.12 sustain=0.92 pick=0.93 reverb=0.35
+clip koto 4 3 89.0000 1.3333 5841629552459263832 level=0.9527 attack=0.001 release=1.3323 pitch=18.6 pitch_swp=0 damp=0.12 sustain=0.92 pick=0.93 reverb=0.35
+clip koto 4 3 89.3333 1.6667 7908661443444158351 level=0.9527 attack=0.001 release=1.6657 pitch=16.6 pitch_swp=0.4 damp=0.12 sustain=0.92 pick=0.93 reverb=0.35
+clip koto 4 3 90.0000 3.0000 4644825541430126578 level=0.9527 attack=0.001 release=2.999 pitch=18.6 pitch_swp=0.4 damp=0.12 sustain=0.92 pick=0.93 reverb=0.35
+clip sitar 4 3 93.3333 1.6667 2485044120968577064 level=0.2535 attack=0.001 release=1.6657 pitch=12 damp=0.08 sustain=0.96 pick=0.97 drive=0.35 filter=1 cutoff=0.74 resonance=0.35 flange=0.25 reverb=0.35
+clip sitar 4 3 94.0000 1.3333 6188472024616383604 level=0.2535 attack=0.001 release=1.3323 pitch=15 damp=0.08 sustain=0.96 pick=0.97 drive=0.35 filter=1 cutoff=0.74 resonance=0.35 flange=0.25 reverb=0.35
+clip sitar 4 3 94.3333 1.3333 7673555042290532621 level=0.2535 attack=0.001 release=1.3323 pitch=19 damp=0.08 sustain=0.96 pick=0.97 drive=0.35 filter=1 cutoff=0.74 resonance=0.35 flange=0.25 reverb=0.35
+clip sitar 4 3 94.6667 1.6667 4113035564601640876 level=0.2535 attack=0.001 release=1.6657 pitch=24 damp=0.08 sustain=0.96 pick=0.97 drive=0.35 filter=1 cutoff=0.74 resonance=0.35 flange=0.25 reverb=0.35
+clip sitar 4 3 95.3333 1.3333 7153224510029991335 level=0.2535 attack=0.001 release=1.3323 pitch=22 damp=0.08 sustain=0.96 pick=0.97 drive=0.35 filter=1 cutoff=0.74 resonance=0.35 flange=0.25 reverb=0.35
+clip sitar 4 3 95.6667 1.3333 3468668737073882573 level=0.2535 attack=0.001 release=1.3323 pitch=19 damp=0.08 sustain=0.96 pick=0.97 drive=0.35 filter=1 cutoff=0.74 resonance=0.35 flange=0.25 reverb=0.35
+clip sitar 4 3 96.0000 1.6667 4866907002112203387 level=0.2535 attack=0.001 release=1.6657 pitch=17 damp=0.08 sustain=0.96 pick=0.97 drive=0.35 filter=1 cutoff=0.74 resonance=0.35 flange=0.25 reverb=0.35
+clip sitar 4 3 96.6667 3.0000 7822389483137509857 level=0.2535 attack=0.001 release=2.999 pitch=19 damp=0.08 sustain=0.96 pick=0.97 drive=0.35 filter=1 cutoff=0.74 resonance=0.35 flange=0.25 reverb=0.35
+clip fretless 4 4 100.0000 1.0000 3028646296000944284 level=1 attack=0.003 release=0.997 pitch=-12.3 pitch_swp=0.3 damp=0.75 sustain=0.92 pick=0.3 cutoff=0.45
+clip fretless_body 1 4 100.0000 1.0000 2277621340961282246 level=0.6 attack=0.01 release=0.99 pitch=-12.3 pitch_swp=0.3 interval=12 timbre=0.1 env_curve=0.3
+clip fretless 4 4 100.6667 0.6667 1786759366762988012 level=1 attack=0.003 release=0.6637 pitch=-9.3 pitch_swp=0.3 damp=0.75 sustain=0.92 pick=0.3 cutoff=0.45
+clip fretless_body 1 4 100.6667 0.6667 6532259984991953660 level=0.6 attack=0.01 release=0.6567 pitch=-9.3 pitch_swp=0.3 interval=12 timbre=0.1 env_curve=0.3
+clip fretless 4 4 101.0000 0.6667 8080839890508204076 level=1 attack=0.003 release=0.6637 pitch=-5.3 pitch_swp=0.3 damp=0.75 sustain=0.92 pick=0.3 cutoff=0.45
+clip fretless_body 1 4 101.0000 0.6667 1955617466505518424 level=0.6 attack=0.01 release=0.6567 pitch=-5.3 pitch_swp=0.3 interval=12 timbre=0.1 env_curve=0.3
+clip fretless 4 4 101.3333 1.0000 245459991242850822 level=1 attack=0.003 release=0.997 pitch=-0.3 pitch_swp=0.3 damp=0.75 sustain=0.92 pick=0.3 cutoff=0.45
+clip fretless_body 1 4 101.3333 1.0000 4884796471462290377 level=0.6 attack=0.01 release=0.99 pitch=-0.3 pitch_swp=0.3 interval=12 timbre=0.1 env_curve=0.3
+clip fretless 4 4 102.0000 0.6667 7274484584182697336 level=1 attack=0.003 release=0.6637 pitch=-2.3 pitch_swp=0.3 damp=0.75 sustain=0.92 pick=0.3 cutoff=0.45
+clip fretless_body 1 4 102.0000 0.6667 2012909276996441683 level=0.6 attack=0.01 release=0.6567 pitch=-2.3 pitch_swp=0.3 interval=12 timbre=0.1 env_curve=0.3
+clip fretless 4 4 102.3333 0.6667 2020595355793675109 level=1 attack=0.003 release=0.6637 pitch=-5.3 pitch_swp=0.3 damp=0.75 sustain=0.92 pick=0.3 cutoff=0.45
+clip fretless_body 1 4 102.3333 0.6667 4176035760309886290 level=0.6 attack=0.01 release=0.6567 pitch=-5.3 pitch_swp=0.3 interval=12 timbre=0.1 env_curve=0.3
+clip fretless 4 4 102.6667 1.0000 5435825064849256909 level=1 attack=0.003 release=0.997 pitch=-7.3 pitch_swp=0.3 damp=0.75 sustain=0.92 pick=0.3 cutoff=0.45
+clip fretless_body 1 4 102.6667 1.0000 3447365103826561352 level=0.6 attack=0.01 release=0.99 pitch=-7.3 pitch_swp=0.3 interval=12 timbre=0.1 env_curve=0.3
+clip fretless 4 4 103.3333 2.3333 2353403436739241084 level=1 attack=0.003 release=2.3303 pitch=-5.3 pitch_swp=0.3 damp=0.75 sustain=0.92 pick=0.3 cutoff=0.45
+clip fretless_body 1 4 103.3333 2.3333 1845177387512507592 level=0.6 attack=0.01 release=2.3233 pitch=-5.3 pitch_swp=0.3 interval=12 timbre=0.1 env_curve=0.3
+clip didgeridoo 8 4 106.6667 5.3333 1166567106478780548 level=0.6902 attack=0.05 release=0.1 pitch=0 ring=0.4 formant=24 burst=3 snap=0.9 jitter=0.02 filter=1 cutoff=0.42 resonance=0.75 lfo_rate=2.2 lfo>cut=0.18 reverb=0.3
+clip wind_chimes 3 5 113.3333 5.3333 2888176630326555286 level=0.4355 attack=0.2 release=1 pitch=24 density=4 ping_decay=0.4 spread=1 range=2 fm_ratio=3.5 fm_depth=1.6 reverb=0.6
+clip choir_ooh 0 5 120.0000 2.6667 8889580403813673772 level=0.5546 attack=0.5 release=0.8 pitch=12 voices=8 gather=1 drift=0.15 timbre=0.1 chord=5 sub=0 cutoff=0.6 lfo_rate=4.5 lfo>pitch=0.05 reverb=0.6
+clip choir_ooh 0 5 122.6667 2.6667 554869064877222838 level=0.5546 attack=0.5 release=0.8 pitch=10 voices=8 gather=1 drift=0.15 timbre=0.1 chord=2 cutoff=0.6 lfo_rate=4.5 lfo>pitch=0.05 reverb=0.6
