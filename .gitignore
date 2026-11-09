@@ -35,3 +35,4 @@ samples/*
 !samples/cryic/
 !samples/resonant/
 !samples/voltaic/
+!samples/cat/
