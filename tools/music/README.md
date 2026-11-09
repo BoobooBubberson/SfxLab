@@ -17,6 +17,9 @@ choir grown from any recording, partials resynthesis, a bendable tuning) make un
 | `instruments.py` | an audition sheet: 19 instruments built from the clip types (felt and electric piano, marimba, vibraphone, music box, tubular bell, pipe organ, clarinet, flute, ocarina, reed, violin, harp, koto, sitar, fretless bass, didgeridoo, wind chimes, choir), each a function to copy, levels matched to -20 dB; `--list` prints the running order |
 | `envelope_ab.py` | before and after the envelope controls: felt piano, marimba, electric piano, violin, then brass, synth pluck and acid bass (new), each pair loudness-matched |
 | `the_coil_remembers.py` | part II, D minor, 112 BPM (twice part I's 56, so the ground keeps its pace): the coil learns its phrase back, acid bass and synth pluck, brass stabs, the ground as a chromatic metal riff on the heavy guitar, the G major held, and the phrase part I broke off finally resolving to D. 1321 clips; renders ~1.8x real time on two cores |
+| `nine_lives.py` | part III, nine variations on the coil's theme, one turn of the ground each: kitten mews answering, trip-hop with frozen-meow harmony, four on the floor with a meow solo, a double-time break with meow chords and a dead stop, the metal riff with meows in thirds and a yowl, a breakdown where a meow takes over the phrase, the ground in 7/8, everything at once, and a purr. 1791 clips, ~2x real time to render on two cores |
+| `meows.py` | the cat recordings as instruments: `meow` (tape-pitched sampler), `mew` (the kitten's four, chopped), `meow_hold` (frozen to a tone), `meow_partials` (resynthesised, gathered onto chords), `meow_choir`; pitches calibrated by rendering |
+| `meow_audition.py` | eight ways to play the meows, each on the coil's phrase, for comparing |
 | `sfxsong.py` | the helper the three above use: `Song.clip()` in beats, keys checked per clip type against `Sfx.java`, slider ranges and short envelopes reported |
 | `probe.py` | measure recordings before using them: pitch, envelope, a timeline, section levels of a render |
 | `listen.py` | look at a render: solo stems per track, RMS per track and section, spectrograms with bar lines, pitch classes per bar |
@@ -149,6 +152,22 @@ Arc tricks used so far:
 Most recorded risers peak early, not at their end (`probe.py envelope`): place them by their peak, or synthesise the riser.
 Only the cleared sample sets are in git (see `samples/README.md`); the hymn also reads
 `vocals/`, `machines/` and `impacts/`, which are local, so it renders with silent clips elsewhere.
+
+## The cat recordings
+
+`samples/cat/` holds seven Pixabay meows and their cleaned `.ogg` copies (`tools/sfx_batch.sh`: peak -1 dBFS, mono;
+the quietest needed +24 dB, so `u6` carries some hum). `meows.py` knows each one's pitch *as the engine plays it*:
+measured by rendering and reading the middle of the note, which moved the first estimates by +0.3 to +1.5 st
+(a meow's onset glides, and the brightest harmonic often outvotes the fundamental). With the calibration a
+sampler line lands within 0.16 st. Things learned:
+- tape mode (the default) is the most natural: a meow shifted a few semitones still sounds like a cat. Keep shifts
+  within about -6..+5 st; the meows live around Eb5-G#5 (29-35), so melodies go an octave over the coil's
+- a meow is short (0.3-0.7 s): for a long note, follow the meow with `meow_hold`, the same cat frozen mid-vowel
+- `u6` is "mee-ow" (up to 32.4, then steady at 29.9 from 0.55 s): held notes start in that tail (`HOLD`)
+- the kitten file's four mews have their own pitches (the third is 1.9 st higher); `mew(k=)` knows them
+- `meow_partials` with `speed` near 0.1 and `gather` 0.9 turns one meow into a sustained chord; `meow_choir`
+  (granular copies) is a noisier wash
+- `sigh` falls about 6 st; `meow(..., "sigh")` is tuned by where it lands, so start it before the beat it sighs onto
 
 ## Checking a piece without ears
 

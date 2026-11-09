@@ -1,0 +1,261 @@
+# SfxLab project v2: clip name type track start dur seed key=value...
+# 'Meow audition' - the cat recordings as instruments, by Claude
+loop 0
+root 110.0000
+track 0 0.600 0
+track 1 1.000 0
+track 2 1.000 0
+track 3 1.000 0
+track 4 1.000 0
+track 5 1.000 0
+clip piano 1 0 0.0000 3.2143 5836063469416787882 level=0.35 attack=0.004 release=3.2103 pitch=-7 interval=12 timbre=0 fm_ratio=1 fm_depth=1 env_curve=0.45 cutoff=0.5 env>cut=0.3 mod_decay=0.45 reverb=0.4
+clip pad 0 0 0.0000 2.4107 3667531093443665903 level=0.12 attack=0.3 release=0.4 pitch=5 voices=6 gather=1 drift=0.1 timbre=1.9 chord=5 cutoff=0.5 reverb=0.5
+clip meow 5 3 0.5357 0.5957 7096374770534683497 level=0.561 attack=0.005 release=0.08 pitch=-1.7 file=cat/kitty.ogg start=0 pan=0
+clip meow 5 3 1.6071 0.5357 2027499029806537678 level=0.561 attack=0.005 release=0.08 pitch=-2.7 file=cat/kitty.ogg start=0 pan=0
+clip piano 1 0 2.1429 3.2143 1742670562489003742 level=0.35 attack=0.004 release=3.2103 pitch=-8 interval=12 timbre=0 fm_ratio=1 fm_depth=1 env_curve=0.45 cutoff=0.5 env>cut=0.3 mod_decay=0.45 reverb=0.4
+clip pad 0 0 2.1429 2.4107 5041533182641002112 level=0.12 attack=0.3 release=0.4 pitch=0 voices=6 gather=1 drift=0.1 timbre=1.9 chord=2 cutoff=0.5 reverb=0.5
+clip meow 5 3 2.1429 0.6311 4957201311374710801 level=0.561 attack=0.005 release=0.08 pitch=-2.7 file=cat/kitty.ogg start=0 pan=0
+clip meow 5 3 3.2143 0.5357 2719561179911250430 level=0.561 attack=0.005 release=0.08 pitch=-4.7 file=cat/kitty.ogg start=0 pan=0
+clip meow 5 3 3.7500 0.5357 2154938729095693037 level=0.561 attack=0.005 release=0.08 pitch=-5.7 file=cat/kitty.ogg start=0 pan=0
+clip piano 1 0 4.2857 3.2143 7755603019346942415 level=0.35 attack=0.004 release=3.2103 pitch=-9 interval=12 timbre=0 fm_ratio=1 fm_depth=1 env_curve=0.45 cutoff=0.5 env>cut=0.3 mod_decay=0.45 reverb=0.4
+clip pad 0 0 4.2857 2.4107 8918730293705876732 level=0.12 attack=0.3 release=0.4 pitch=5 voices=6 gather=1 drift=0.1 timbre=1.9 chord=5 cutoff=0.5 reverb=0.5
+clip meow 5 3 4.2857 0.7084 6403507272886806866 level=0.561 attack=0.005 release=0.08 pitch=-4.7 file=cat/kitty.ogg start=0 pan=0
+clip meow 5 3 5.8929 0.4728 3133687504916508997 level=0.561 attack=0.005 release=0.08 pitch=2.3 file=cat/kitty.ogg start=0 pan=0
+clip piano 1 0 6.4286 3.2143 1708797717224131068 level=0.35 attack=0.004 release=3.2103 pitch=-10 interval=12 timbre=0 fm_ratio=1 fm_depth=1 env_curve=0.45 cutoff=0.5 env>cut=0.3 mod_decay=0.45 reverb=0.4
+clip pad 0 0 6.4286 2.4107 1483934906881154329 level=0.12 attack=0.3 release=0.4 pitch=10 voices=6 gather=1 drift=0.1 timbre=1.9 chord=2 cutoff=0.5 reverb=0.5
+clip meow 5 3 6.4286 0.4728 7874329074149995641 level=0.561 attack=0.005 release=0.08 pitch=2.3 file=cat/kitty.ogg start=0 pan=0
+clip meow 5 3 7.5000 0.5307 211156003021659566 level=0.561 attack=0.005 release=0.08 pitch=0.3 file=cat/kitty.ogg start=0 pan=0
+clip piano 1 0 8.5714 3.2143 2356861746470118486 level=0.35 attack=0.004 release=3.2103 pitch=-11 interval=12 timbre=0 fm_ratio=1 fm_depth=1 env_curve=0.45 cutoff=0.5 env>cut=0.3 mod_decay=0.45 reverb=0.4
+clip pad 0 0 8.5714 2.4107 2271972725815052420 level=0.12 attack=0.3 release=0.4 pitch=10 voices=6 gather=1 drift=0.1 timbre=1.9 chord=5 cutoff=0.5 reverb=0.5
+clip meow 5 3 8.5714 0.4463 8969722784560967710 level=0.561 attack=0.005 release=0.08 pitch=3.3 file=cat/kitty.ogg start=0 pan=0
+clip meow 5 3 10.1786 0.4728 6084529565849097799 level=0.561 attack=0.005 release=0.08 pitch=2.3 file=cat/kitty.ogg start=0 pan=0
+clip piano 1 0 10.7143 3.2143 6563838605433046040 level=0.35 attack=0.004 release=3.2103 pitch=-12 interval=12 timbre=0 fm_ratio=1 fm_depth=1 env_curve=0.45 cutoff=0.5 env>cut=0.3 mod_decay=0.45 reverb=0.4
+clip pad 0 0 10.7143 2.4107 4174517365658531766 level=0.12 attack=0.3 release=0.4 pitch=0 voices=6 gather=1 drift=0.1 timbre=1.9 chord=4 cutoff=0.5 reverb=0.5
+clip meow 5 3 10.7143 0.5307 2592426660422586490 level=0.561 attack=0.005 release=0.08 pitch=0.3 file=cat/kitty.ogg start=0 pan=0
+clip meow 5 3 11.7857 0.5957 3608103459675482432 level=0.561 attack=0.005 release=0.08 pitch=-1.7 file=cat/kitty.ogg start=0 pan=0
+clip piano 1 0 12.8571 3.2143 5357122919768022688 level=0.35 attack=0.004 release=3.2103 pitch=-12 interval=12 timbre=0 fm_ratio=1 fm_depth=1 env_curve=0.45 cutoff=0.5 env>cut=0.3 mod_decay=0.45 reverb=0.4
+clip pad 0 0 12.8571 2.4107 1676678997912515212 level=0.12 attack=0.3 release=0.4 pitch=0 voices=6 gather=1 drift=0.1 timbre=1.9 chord=2 cutoff=0.5 reverb=0.5
+clip meow 5 3 12.8571 0.6311 5571131812265797620 level=0.561 attack=0.005 release=0.08 pitch=-2.7 file=cat/kitty.ogg start=0 pan=0
+clip piano 1 0 15.0000 3.2143 2472360523905220144 level=0.35 attack=0.004 release=3.2103 pitch=-12 interval=12 timbre=0 fm_ratio=1 fm_depth=1 env_curve=0.45 cutoff=0.5 env>cut=0.3 mod_decay=0.45 reverb=0.4
+clip pad 0 0 15.0000 2.4107 4176611812903205194 level=0.12 attack=0.3 release=0.4 pitch=0 voices=6 gather=1 drift=0.1 timbre=1.9 chord=6 cutoff=0.5 reverb=0.5
+clip piano 1 0 19.2857 3.2143 1296432441419827379 level=0.35 attack=0.004 release=3.2103 pitch=-7 interval=12 timbre=0 fm_ratio=1 fm_depth=1 env_curve=0.45 cutoff=0.5 env>cut=0.3 mod_decay=0.45 reverb=0.4
+clip pad 0 0 19.2857 2.4107 6273687908071974387 level=0.12 attack=0.3 release=0.4 pitch=5 voices=6 gather=1 drift=0.1 timbre=1.9 chord=5 cutoff=0.5 reverb=0.5
+clip meow 5 3 19.8214 0.5755 3714556207831217521 level=0.4305 attack=0.005 release=0.08 pitch=1.29 file=cat/garage1.ogg start=0.0698 pan=0
+clip meow 5 3 20.8929 0.5357 5871943042356630073 level=0.4305 attack=0.005 release=0.08 pitch=0.29 file=cat/garage1.ogg start=0.0698 pan=0
+clip piano 1 0 21.4286 3.2143 103841167560452634 level=0.35 attack=0.004 release=3.2103 pitch=-8 interval=12 timbre=0 fm_ratio=1 fm_depth=1 env_curve=0.45 cutoff=0.5 env>cut=0.3 mod_decay=0.45 reverb=0.4
+clip pad 0 0 21.4286 2.4107 7972158618916690145 level=0.12 attack=0.3 release=0.4 pitch=0 voices=6 gather=1 drift=0.1 timbre=1.9 chord=2 cutoff=0.5 reverb=0.5
+clip meow 5 3 21.4286 0.6097 3459908169108947951 level=0.4305 attack=0.005 release=0.08 pitch=0.29 file=cat/garage1.ogg start=0.0698 pan=0
+clip meow 5 3 22.5000 0.5357 3848079780793490866 level=0.4305 attack=0.005 release=0.08 pitch=-1.71 file=cat/garage1.ogg start=0.0698 pan=0
+clip meow 5 3 23.0357 0.5357 7398553571882875289 level=0.4305 attack=0.005 release=0.08 pitch=-2.71 file=cat/garage1.ogg start=0.0698 pan=0
+clip piano 1 0 23.5714 3.2143 180854814735962032 level=0.35 attack=0.004 release=3.2103 pitch=-9 interval=12 timbre=0 fm_ratio=1 fm_depth=1 env_curve=0.45 cutoff=0.5 env>cut=0.3 mod_decay=0.45 reverb=0.4
+clip pad 0 0 23.5714 2.4107 1708751960779267420 level=0.12 attack=0.3 release=0.4 pitch=5 voices=6 gather=1 drift=0.1 timbre=1.9 chord=5 cutoff=0.5 reverb=0.5
+clip meow 5 3 23.5714 0.6844 8244368505528936831 level=0.4305 attack=0.005 release=0.08 pitch=-1.71 file=cat/garage1.ogg start=0.0698 pan=0
+clip meow 5 3 25.1786 0.4568 5556267862134195557 level=0.4305 attack=0.005 release=0.08 pitch=5.29 file=cat/garage1.ogg start=0.0698 pan=0
+clip piano 1 0 25.7143 3.2143 178495875342596845 level=0.35 attack=0.004 release=3.2103 pitch=-10 interval=12 timbre=0 fm_ratio=1 fm_depth=1 env_curve=0.45 cutoff=0.5 env>cut=0.3 mod_decay=0.45 reverb=0.4
+clip pad 0 0 25.7143 2.4107 465020952253729305 level=0.12 attack=0.3 release=0.4 pitch=10 voices=6 gather=1 drift=0.1 timbre=1.9 chord=2 cutoff=0.5 reverb=0.5
+clip meow 5 3 25.7143 0.4568 1788057516666812153 level=0.4305 attack=0.005 release=0.08 pitch=5.29 file=cat/garage1.ogg start=0.0698 pan=0
+clip meow 5 3 26.7857 0.5127 7177622500719866503 level=0.4305 attack=0.005 release=0.08 pitch=3.29 file=cat/garage1.ogg start=0.0698 pan=0
+clip piano 1 0 27.8571 3.2143 2963443234275594295 level=0.35 attack=0.004 release=3.2103 pitch=-11 interval=12 timbre=0 fm_ratio=1 fm_depth=1 env_curve=0.45 cutoff=0.5 env>cut=0.3 mod_decay=0.45 reverb=0.4
+clip pad 0 0 27.8571 2.4107 1924416827871418066 level=0.12 attack=0.3 release=0.4 pitch=10 voices=6 gather=1 drift=0.1 timbre=1.9 chord=5 cutoff=0.5 reverb=0.5
+clip meow 5 3 27.8571 0.4311 1350606341626368774 level=0.4305 attack=0.005 release=0.08 pitch=6.29 file=cat/garage1.ogg start=0.0698 pan=0
+clip meow 5 3 29.4643 0.4568 306257971385965209 level=0.4305 attack=0.005 release=0.08 pitch=5.29 file=cat/garage1.ogg start=0.0698 pan=0
+clip piano 1 0 30.0000 3.2143 3647935818835862947 level=0.35 attack=0.004 release=3.2103 pitch=-12 interval=12 timbre=0 fm_ratio=1 fm_depth=1 env_curve=0.45 cutoff=0.5 env>cut=0.3 mod_decay=0.45 reverb=0.4
+clip pad 0 0 30.0000 2.4107 6137768903858741516 level=0.12 attack=0.3 release=0.4 pitch=0 voices=6 gather=1 drift=0.1 timbre=1.9 chord=4 cutoff=0.5 reverb=0.5
+clip meow 5 3 30.0000 0.5127 3435669941057133137 level=0.4305 attack=0.005 release=0.08 pitch=3.29 file=cat/garage1.ogg start=0.0698 pan=0
+clip meow 5 3 31.0714 0.5755 9053929250551053831 level=0.4305 attack=0.005 release=0.08 pitch=1.29 file=cat/garage1.ogg start=0.0698 pan=0
+clip piano 1 0 32.1429 3.2143 6540948037076351030 level=0.35 attack=0.004 release=3.2103 pitch=-12 interval=12 timbre=0 fm_ratio=1 fm_depth=1 env_curve=0.45 cutoff=0.5 env>cut=0.3 mod_decay=0.45 reverb=0.4
+clip pad 0 0 32.1429 2.4107 5914814727311864926 level=0.12 attack=0.3 release=0.4 pitch=0 voices=6 gather=1 drift=0.1 timbre=1.9 chord=2 cutoff=0.5 reverb=0.5
+clip meow 5 3 32.1429 0.6097 6076288630009649970 level=0.4305 attack=0.005 release=0.08 pitch=0.29 file=cat/garage1.ogg start=0.0698 pan=0
+clip piano 1 0 34.2857 3.2143 5156714364209246565 level=0.35 attack=0.004 release=3.2103 pitch=-12 interval=12 timbre=0 fm_ratio=1 fm_depth=1 env_curve=0.45 cutoff=0.5 env>cut=0.3 mod_decay=0.45 reverb=0.4
+clip pad 0 0 34.2857 2.4107 2224163869323873332 level=0.12 attack=0.3 release=0.4 pitch=0 voices=6 gather=1 drift=0.1 timbre=1.9 chord=6 cutoff=0.5 reverb=0.5
+clip piano 1 0 38.5714 3.2143 617575353781757977 level=0.35 attack=0.004 release=3.2103 pitch=-7 interval=12 timbre=0 fm_ratio=1 fm_depth=1 env_curve=0.45 cutoff=0.5 env>cut=0.3 mod_decay=0.45 reverb=0.4
+clip pad 0 0 38.5714 2.4107 2414282150006306769 level=0.12 attack=0.3 release=0.4 pitch=5 voices=6 gather=1 drift=0.1 timbre=1.9 chord=5 cutoff=0.5 reverb=0.5
+clip meow 5 3 39.1071 1.0714 8016172067525786608 level=0.472 attack=0.005 release=0.08 pitch=2.1 file=cat/u6.ogg start=0.4907 pan=0 pitch_mode=1 speed=0.6
+clip meow 5 3 40.1786 0.5357 2450642093175554119 level=0.472 attack=0.005 release=0.08 pitch=1.1 file=cat/u6.ogg start=0.4907 pan=0 pitch_mode=1 speed=0.6
+clip piano 1 0 40.7143 3.2143 6027565008903728495 level=0.35 attack=0.004 release=3.2103 pitch=-8 interval=12 timbre=0 fm_ratio=1 fm_depth=1 env_curve=0.45 cutoff=0.5 env>cut=0.3 mod_decay=0.45 reverb=0.4
+clip pad 0 0 40.7143 2.4107 1420459768608664606 level=0.12 attack=0.3 release=0.4 pitch=0 voices=6 gather=1 drift=0.1 timbre=1.9 chord=2 cutoff=0.5 reverb=0.5
+clip meow 5 3 40.7143 1.0714 5779204304252323713 level=0.472 attack=0.005 release=0.08 pitch=1.1 file=cat/u6.ogg start=0.4907 pan=0 pitch_mode=1 speed=0.6
+clip meow 5 3 41.7857 0.5357 6478090901552705041 level=0.472 attack=0.005 release=0.08 pitch=-0.9 file=cat/u6.ogg start=0.4907 pan=0 pitch_mode=1 speed=0.6
+clip meow 5 3 42.3214 0.5357 5159702784167923159 level=0.472 attack=0.005 release=0.08 pitch=-1.9 file=cat/u6.ogg start=0.4907 pan=0 pitch_mode=1 speed=0.6
+clip piano 1 0 42.8571 3.2143 442074761909714057 level=0.35 attack=0.004 release=3.2103 pitch=-9 interval=12 timbre=0 fm_ratio=1 fm_depth=1 env_curve=0.45 cutoff=0.5 env>cut=0.3 mod_decay=0.45 reverb=0.4
+clip pad 0 0 42.8571 2.4107 564061687861252884 level=0.12 attack=0.3 release=0.4 pitch=5 voices=6 gather=1 drift=0.1 timbre=1.9 chord=5 cutoff=0.5 reverb=0.5
+clip meow 5 3 42.8571 1.6071 8141828620007069442 level=0.472 attack=0.005 release=0.08 pitch=-0.9 file=cat/u6.ogg start=0.4907 pan=0 pitch_mode=1 speed=0.6
+clip meow 5 3 44.4643 0.5357 9009012164155235737 level=0.472 attack=0.005 release=0.08 pitch=6.1 file=cat/u6.ogg start=0.4907 pan=0 pitch_mode=1 speed=0.6
+clip piano 1 0 45.0000 3.2143 2382250609888162769 level=0.35 attack=0.004 release=3.2103 pitch=-10 interval=12 timbre=0 fm_ratio=1 fm_depth=1 env_curve=0.45 cutoff=0.5 env>cut=0.3 mod_decay=0.45 reverb=0.4
+clip pad 0 0 45.0000 2.4107 7110873945697597482 level=0.12 attack=0.3 release=0.4 pitch=10 voices=6 gather=1 drift=0.1 timbre=1.9 chord=2 cutoff=0.5 reverb=0.5
+clip meow 5 3 45.0000 1.0714 4633794243623027613 level=0.472 attack=0.005 release=0.08 pitch=6.1 file=cat/u6.ogg start=0.4907 pan=0 pitch_mode=1 speed=0.6
+clip meow 5 3 46.0714 1.0714 3508983024564319289 level=0.472 attack=0.005 release=0.08 pitch=4.1 file=cat/u6.ogg start=0.4907 pan=0 pitch_mode=1 speed=0.6
+clip piano 1 0 47.1429 3.2143 259942165781484360 level=0.35 attack=0.004 release=3.2103 pitch=-11 interval=12 timbre=0 fm_ratio=1 fm_depth=1 env_curve=0.45 cutoff=0.5 env>cut=0.3 mod_decay=0.45 reverb=0.4
+clip pad 0 0 47.1429 2.4107 2046258514494080042 level=0.12 attack=0.3 release=0.4 pitch=10 voices=6 gather=1 drift=0.1 timbre=1.9 chord=5 cutoff=0.5 reverb=0.5
+clip meow 5 3 47.1429 1.6071 6946568552943275118 level=0.472 attack=0.005 release=0.08 pitch=7.1 file=cat/u6.ogg start=0.4907 pan=0 pitch_mode=1 speed=0.6
+clip meow 5 3 48.7500 0.5357 3326155446678598936 level=0.472 attack=0.005 release=0.08 pitch=6.1 file=cat/u6.ogg start=0.4907 pan=0 pitch_mode=1 speed=0.6
+clip piano 1 0 49.2857 3.2143 3018683128981267856 level=0.35 attack=0.004 release=3.2103 pitch=-12 interval=12 timbre=0 fm_ratio=1 fm_depth=1 env_curve=0.45 cutoff=0.5 env>cut=0.3 mod_decay=0.45 reverb=0.4
+clip pad 0 0 49.2857 2.4107 780279975180637676 level=0.12 attack=0.3 release=0.4 pitch=0 voices=6 gather=1 drift=0.1 timbre=1.9 chord=4 cutoff=0.5 reverb=0.5
+clip meow 5 3 49.2857 1.0714 395886576432313789 level=0.472 attack=0.005 release=0.08 pitch=4.1 file=cat/u6.ogg start=0.4907 pan=0 pitch_mode=1 speed=0.6
+clip meow 5 3 50.3571 1.0714 4599533917237406263 level=0.472 attack=0.005 release=0.08 pitch=2.1 file=cat/u6.ogg start=0.4907 pan=0 pitch_mode=1 speed=0.6
+clip piano 1 0 51.4286 3.2143 6010614319478826988 level=0.35 attack=0.004 release=3.2103 pitch=-12 interval=12 timbre=0 fm_ratio=1 fm_depth=1 env_curve=0.45 cutoff=0.5 env>cut=0.3 mod_decay=0.45 reverb=0.4
+clip pad 0 0 51.4286 2.4107 2602179255892548515 level=0.12 attack=0.3 release=0.4 pitch=0 voices=6 gather=1 drift=0.1 timbre=1.9 chord=2 cutoff=0.5 reverb=0.5
+clip meow 5 3 51.4286 4.2857 5238461375852923879 level=0.472 attack=0.005 release=0.08 pitch=1.1 file=cat/u6.ogg start=0.4907 pan=0 pitch_mode=1 speed=0.6
+clip piano 1 0 53.5714 3.2143 7003513528567013048 level=0.35 attack=0.004 release=3.2103 pitch=-12 interval=12 timbre=0 fm_ratio=1 fm_depth=1 env_curve=0.45 cutoff=0.5 env>cut=0.3 mod_decay=0.45 reverb=0.4
+clip pad 0 0 53.5714 2.4107 2290080532367949400 level=0.12 attack=0.3 release=0.4 pitch=0 voices=6 gather=1 drift=0.1 timbre=1.9 chord=6 cutoff=0.5 reverb=0.5
+clip piano 1 0 57.8571 3.2143 2840390429705474271 level=0.35 attack=0.004 release=3.2103 pitch=-7 interval=12 timbre=0 fm_ratio=1 fm_depth=1 env_curve=0.45 cutoff=0.5 env>cut=0.3 mod_decay=0.45 reverb=0.4
+clip pad 0 0 57.8571 2.4107 1024078879246075846 level=0.12 attack=0.3 release=0.4 pitch=5 voices=6 gather=1 drift=0.1 timbre=1.9 chord=5 cutoff=0.5 reverb=0.5
+clip mew 5 3 58.3929 0.3578 8376175497897397896 level=0.8042 attack=0.003 release=0.06 pitch=-3.05 file=cat/kitten.ogg start=0.0284 pan=0
+clip mew 5 3 58.6607 0.5024 4142905101952881568 level=0.4369 attack=0.003 release=0.06 pitch=-3.1 file=cat/kitten.ogg start=0.1896 pan=0
+clip mew 5 3 58.9286 0.3573 2053309420306255880 level=0.5893 attack=0.003 release=0.06 pitch=-4.85 file=cat/kitten.ogg start=0.3981 pan=0
+clip mew 5 3 59.1964 0.3846 3459909356288257238 level=0.4628 attack=0.003 release=0.06 pitch=-2.65 file=cat/kitten.ogg start=0.5877 pan=0
+clip mew 5 3 59.4643 0.3791 6252481258650885488 level=0.8042 attack=0.003 release=0.06 pitch=-4.05 file=cat/kitten.ogg start=0.0284 pan=0
+clip mew 5 3 59.7321 0.5322 7962387254417958175 level=0.4369 attack=0.003 release=0.06 pitch=-4.1 file=cat/kitten.ogg start=0.1896 pan=0
+clip piano 1 0 60.0000 3.2143 17412442456124635 level=0.35 attack=0.004 release=3.2103 pitch=-8 interval=12 timbre=0 fm_ratio=1 fm_depth=1 env_curve=0.45 cutoff=0.5 env>cut=0.3 mod_decay=0.45 reverb=0.4
+clip pad 0 0 60.0000 2.4107 3928607829033794178 level=0.12 attack=0.3 release=0.4 pitch=0 voices=6 gather=1 drift=0.1 timbre=1.9 chord=2 cutoff=0.5 reverb=0.5
+clip mew 5 3 60.0000 0.3791 8937374266489051493 level=0.8042 attack=0.003 release=0.06 pitch=-4.05 file=cat/kitten.ogg start=0.0284 pan=0
+clip mew 5 3 60.2679 0.5322 1929404848069210830 level=0.4369 attack=0.003 release=0.06 pitch=-4.1 file=cat/kitten.ogg start=0.1896 pan=0
+clip mew 5 3 60.5357 0.3785 8213466480851748828 level=0.5893 attack=0.003 release=0.06 pitch=-5.85 file=cat/kitten.ogg start=0.3981 pan=0
+clip mew 5 3 60.8036 0.4075 6242717247292495482 level=0.4628 attack=0.003 release=0.06 pitch=-3.65 file=cat/kitten.ogg start=0.5877 pan=0
+clip mew 5 3 61.0714 0.4255 6059940693584683296 level=0.8042 attack=0.003 release=0.06 pitch=-6.05 file=cat/kitten.ogg start=0.0284 pan=0
+clip mew 5 3 61.3393 0.5974 5281162443024294138 level=0.4369 attack=0.003 release=0.06 pitch=-6.1 file=cat/kitten.ogg start=0.1896 pan=0
+clip mew 5 3 61.6071 0.4508 3440034817430990562 level=0.8042 attack=0.003 release=0.06 pitch=-7.05 file=cat/kitten.ogg start=0.0284 pan=0
+clip mew 5 3 61.8750 0.6329 32476898775561452 level=0.4369 attack=0.003 release=0.06 pitch=-7.1 file=cat/kitten.ogg start=0.1896 pan=0
+clip piano 1 0 62.1429 3.2143 6881511729812538884 level=0.35 attack=0.004 release=3.2103 pitch=-9 interval=12 timbre=0 fm_ratio=1 fm_depth=1 env_curve=0.45 cutoff=0.5 env>cut=0.3 mod_decay=0.45 reverb=0.4
+clip pad 0 0 62.1429 2.4107 5747879242475068416 level=0.12 attack=0.3 release=0.4 pitch=5 voices=6 gather=1 drift=0.1 timbre=1.9 chord=5 cutoff=0.5 reverb=0.5
+clip mew 5 3 62.1429 0.4255 6610023943237302746 level=0.8042 attack=0.003 release=0.06 pitch=-6.05 file=cat/kitten.ogg start=0.0284 pan=0
+clip mew 5 3 62.4107 0.5974 3885523873721993224 level=0.4369 attack=0.003 release=0.06 pitch=-6.1 file=cat/kitten.ogg start=0.1896 pan=0
+clip mew 5 3 62.6786 0.4249 1020585034441801873 level=0.5893 attack=0.003 release=0.06 pitch=-7.85 file=cat/kitten.ogg start=0.3981 pan=0
+clip mew 5 3 62.9464 0.4574 6997526108161727880 level=0.4628 attack=0.003 release=0.06 pitch=-5.65 file=cat/kitten.ogg start=0.5877 pan=0
+clip mew 5 3 63.7500 0.2840 8796656520366490268 level=0.8042 attack=0.003 release=0.06 pitch=0.95 file=cat/kitten.ogg start=0.0284 pan=0
+clip mew 5 3 64.0179 0.3987 8772604746262277879 level=0.4369 attack=0.003 release=0.06 pitch=0.9 file=cat/kitten.ogg start=0.1896 pan=0
+clip piano 1 0 64.2857 3.2143 2081714498820355913 level=0.35 attack=0.004 release=3.2103 pitch=-10 interval=12 timbre=0 fm_ratio=1 fm_depth=1 env_curve=0.45 cutoff=0.5 env>cut=0.3 mod_decay=0.45 reverb=0.4
+clip pad 0 0 64.2857 2.4107 961897995801280354 level=0.12 attack=0.3 release=0.4 pitch=10 voices=6 gather=1 drift=0.1 timbre=1.9 chord=2 cutoff=0.5 reverb=0.5
+clip mew 5 3 64.2857 0.2840 44135160158574251 level=0.8042 attack=0.003 release=0.06 pitch=0.95 file=cat/kitten.ogg start=0.0284 pan=0
+clip mew 5 3 64.5536 0.3987 5762712048893660644 level=0.4369 attack=0.003 release=0.06 pitch=0.9 file=cat/kitten.ogg start=0.1896 pan=0
+clip mew 5 3 64.8214 0.2836 5900917542005821956 level=0.5893 attack=0.003 release=0.06 pitch=-0.85 file=cat/kitten.ogg start=0.3981 pan=0
+clip mew 5 3 65.0893 0.3052 167513481402739483 level=0.4628 attack=0.003 release=0.06 pitch=1.35 file=cat/kitten.ogg start=0.5877 pan=0
+clip mew 5 3 65.3571 0.3188 8467737707804932747 level=0.8042 attack=0.003 release=0.06 pitch=-1.05 file=cat/kitten.ogg start=0.0284 pan=0
+clip mew 5 3 65.6250 0.4476 6995689174922957410 level=0.4369 attack=0.003 release=0.06 pitch=-1.1 file=cat/kitten.ogg start=0.1896 pan=0
+clip mew 5 3 65.8929 0.3183 721827796748178789 level=0.5893 attack=0.003 release=0.06 pitch=-2.85 file=cat/kitten.ogg start=0.3981 pan=0
+clip mew 5 3 66.1607 0.3426 6012962450378423187 level=0.4628 attack=0.003 release=0.06 pitch=-0.65 file=cat/kitten.ogg start=0.5877 pan=0
+clip piano 1 0 66.4286 3.2143 7616278294542474546 level=0.35 attack=0.004 release=3.2103 pitch=-11 interval=12 timbre=0 fm_ratio=1 fm_depth=1 env_curve=0.45 cutoff=0.5 env>cut=0.3 mod_decay=0.45 reverb=0.4
+clip pad 0 0 66.4286 2.4107 3649732434589007794 level=0.12 attack=0.3 release=0.4 pitch=10 voices=6 gather=1 drift=0.1 timbre=1.9 chord=5 cutoff=0.5 reverb=0.5
+clip mew 5 3 66.4286 0.2680 7637521952579584301 level=0.8042 attack=0.003 release=0.06 pitch=1.95 file=cat/kitten.ogg start=0.0284 pan=0
+clip mew 5 3 66.6964 0.3763 4530035526726938484 level=0.4369 attack=0.003 release=0.06 pitch=1.9 file=cat/kitten.ogg start=0.1896 pan=0
+clip mew 5 3 66.9643 0.2677 7684397872474872160 level=0.5893 attack=0.003 release=0.06 pitch=0.15 file=cat/kitten.ogg start=0.3981 pan=0
+clip mew 5 3 67.2321 0.2881 6394935471802623871 level=0.4628 attack=0.003 release=0.06 pitch=2.35 file=cat/kitten.ogg start=0.5877 pan=0
+clip mew 5 3 68.0357 0.2840 6620390366465894445 level=0.8042 attack=0.003 release=0.06 pitch=0.95 file=cat/kitten.ogg start=0.0284 pan=0
+clip mew 5 3 68.3036 0.3987 4028953769606770765 level=0.4369 attack=0.003 release=0.06 pitch=0.9 file=cat/kitten.ogg start=0.1896 pan=0
+clip piano 1 0 68.5714 3.2143 1172287410061367580 level=0.35 attack=0.004 release=3.2103 pitch=-12 interval=12 timbre=0 fm_ratio=1 fm_depth=1 env_curve=0.45 cutoff=0.5 env>cut=0.3 mod_decay=0.45 reverb=0.4
+clip pad 0 0 68.5714 2.4107 2138544968295680806 level=0.12 attack=0.3 release=0.4 pitch=0 voices=6 gather=1 drift=0.1 timbre=1.9 chord=4 cutoff=0.5 reverb=0.5
+clip mew 5 3 68.5714 0.3188 3211104196831219440 level=0.8042 attack=0.003 release=0.06 pitch=-1.05 file=cat/kitten.ogg start=0.0284 pan=0
+clip mew 5 3 68.8393 0.4476 830145976029853440 level=0.4369 attack=0.003 release=0.06 pitch=-1.1 file=cat/kitten.ogg start=0.1896 pan=0
+clip mew 5 3 69.1071 0.3183 5135750448666274823 level=0.5893 attack=0.003 release=0.06 pitch=-2.85 file=cat/kitten.ogg start=0.3981 pan=0
+clip mew 5 3 69.3750 0.3426 4897919727592002331 level=0.4628 attack=0.003 release=0.06 pitch=-0.65 file=cat/kitten.ogg start=0.5877 pan=0
+clip mew 5 3 69.6429 0.3578 6372538832450545553 level=0.8042 attack=0.003 release=0.06 pitch=-3.05 file=cat/kitten.ogg start=0.0284 pan=0
+clip mew 5 3 69.9107 0.5024 4068214610750665609 level=0.4369 attack=0.003 release=0.06 pitch=-3.1 file=cat/kitten.ogg start=0.1896 pan=0
+clip mew 5 3 70.1786 0.3573 7518452913031097701 level=0.5893 attack=0.003 release=0.06 pitch=-4.85 file=cat/kitten.ogg start=0.3981 pan=0
+clip mew 5 3 70.4464 0.3846 4647928918112941641 level=0.4628 attack=0.003 release=0.06 pitch=-2.65 file=cat/kitten.ogg start=0.5877 pan=0
+clip piano 1 0 70.7143 3.2143 1291344861992806252 level=0.35 attack=0.004 release=3.2103 pitch=-12 interval=12 timbre=0 fm_ratio=1 fm_depth=1 env_curve=0.45 cutoff=0.5 env>cut=0.3 mod_decay=0.45 reverb=0.4
+clip pad 0 0 70.7143 2.4107 836991881227716112 level=0.12 attack=0.3 release=0.4 pitch=0 voices=6 gather=1 drift=0.1 timbre=1.9 chord=2 cutoff=0.5 reverb=0.5
+clip mew 5 3 70.7143 0.3791 5152414152216799195 level=0.8042 attack=0.003 release=0.06 pitch=-4.05 file=cat/kitten.ogg start=0.0284 pan=0
+clip mew 5 3 70.9821 0.5322 4802145112084431992 level=0.4369 attack=0.003 release=0.06 pitch=-4.1 file=cat/kitten.ogg start=0.1896 pan=0
+clip mew 5 3 71.2500 0.3785 3520912999633323052 level=0.5893 attack=0.003 release=0.06 pitch=-5.85 file=cat/kitten.ogg start=0.3981 pan=0
+clip mew 5 3 71.5179 0.4075 5061186129168615016 level=0.4628 attack=0.003 release=0.06 pitch=-3.65 file=cat/kitten.ogg start=0.5877 pan=0
+clip piano 1 0 72.8571 3.2143 8719341207484771994 level=0.35 attack=0.004 release=3.2103 pitch=-12 interval=12 timbre=0 fm_ratio=1 fm_depth=1 env_curve=0.45 cutoff=0.5 env>cut=0.3 mod_decay=0.45 reverb=0.4
+clip pad 0 0 72.8571 2.4107 7181228837534490190 level=0.12 attack=0.3 release=0.4 pitch=0 voices=6 gather=1 drift=0.1 timbre=1.9 chord=6 cutoff=0.5 reverb=0.5
+clip piano 1 0 77.1429 3.2143 2382364066358416148 level=0.35 attack=0.004 release=3.2103 pitch=-7 interval=12 timbre=0 fm_ratio=1 fm_depth=1 env_curve=0.45 cutoff=0.5 env>cut=0.3 mod_decay=0.45 reverb=0.4
+clip pad 0 0 77.1429 2.4107 9176612972254385620 level=0.12 attack=0.3 release=0.4 pitch=5 voices=6 gather=1 drift=0.1 timbre=1.9 chord=5 cutoff=0.5 reverb=0.5
+clip meow_choir 6 4 77.1429 2.3036 7575315300185028095 level=0.4248 attack=0.15 release=0.4 pitch=-1.96 chord=5 file=cat/u6.ogg start=0.1944 speed=0.25 voices=6 gather=1 drift=0.2 wander=1 scatter=0.3
+clip piano 1 0 79.2857 3.2143 1927130554564302165 level=0.35 attack=0.004 release=3.2103 pitch=-8 interval=12 timbre=0 fm_ratio=1 fm_depth=1 env_curve=0.45 cutoff=0.5 env>cut=0.3 mod_decay=0.45 reverb=0.4
+clip pad 0 0 79.2857 2.4107 4646969302342406759 level=0.12 attack=0.3 release=0.4 pitch=0 voices=6 gather=1 drift=0.1 timbre=1.9 chord=2 cutoff=0.5 reverb=0.5
+clip meow_choir 6 4 79.2857 2.3036 2920926301070806543 level=0.4248 attack=0.15 release=0.4 pitch=-6.96 chord=2 file=cat/u6.ogg start=0.1944 speed=0.25 voices=6 gather=1 drift=0.2 wander=1 scatter=0.3
+clip piano 1 0 81.4286 3.2143 4378670491944621069 level=0.35 attack=0.004 release=3.2103 pitch=-9 interval=12 timbre=0 fm_ratio=1 fm_depth=1 env_curve=0.45 cutoff=0.5 env>cut=0.3 mod_decay=0.45 reverb=0.4
+clip pad 0 0 81.4286 2.4107 1526317073799936544 level=0.12 attack=0.3 release=0.4 pitch=5 voices=6 gather=1 drift=0.1 timbre=1.9 chord=5 cutoff=0.5 reverb=0.5
+clip meow_choir 6 4 81.4286 2.3036 8871098754661105232 level=0.4248 attack=0.15 release=0.4 pitch=-1.96 chord=5 file=cat/u6.ogg start=0.1944 speed=0.25 voices=6 gather=1 drift=0.2 wander=1 scatter=0.3
+clip piano 1 0 83.5714 3.2143 4876074634321095707 level=0.35 attack=0.004 release=3.2103 pitch=-10 interval=12 timbre=0 fm_ratio=1 fm_depth=1 env_curve=0.45 cutoff=0.5 env>cut=0.3 mod_decay=0.45 reverb=0.4
+clip pad 0 0 83.5714 2.4107 7366010334388480924 level=0.12 attack=0.3 release=0.4 pitch=10 voices=6 gather=1 drift=0.1 timbre=1.9 chord=2 cutoff=0.5 reverb=0.5
+clip meow_choir 6 4 83.5714 2.3036 3336944681516795337 level=0.4248 attack=0.15 release=0.4 pitch=3.04 chord=2 file=cat/u6.ogg start=0.1944 speed=0.25 voices=6 gather=1 drift=0.2 wander=1 scatter=0.3
+clip piano 1 0 85.7143 3.2143 3273147695852298878 level=0.35 attack=0.004 release=3.2103 pitch=-11 interval=12 timbre=0 fm_ratio=1 fm_depth=1 env_curve=0.45 cutoff=0.5 env>cut=0.3 mod_decay=0.45 reverb=0.4
+clip pad 0 0 85.7143 2.4107 6765355937498221834 level=0.12 attack=0.3 release=0.4 pitch=10 voices=6 gather=1 drift=0.1 timbre=1.9 chord=5 cutoff=0.5 reverb=0.5
+clip meow_choir 6 4 85.7143 2.3036 3410539033234663753 level=0.4248 attack=0.15 release=0.4 pitch=3.04 chord=5 file=cat/u6.ogg start=0.1944 speed=0.25 voices=6 gather=1 drift=0.2 wander=1 scatter=0.3
+clip piano 1 0 87.8571 3.2143 5607297751128470503 level=0.35 attack=0.004 release=3.2103 pitch=-12 interval=12 timbre=0 fm_ratio=1 fm_depth=1 env_curve=0.45 cutoff=0.5 env>cut=0.3 mod_decay=0.45 reverb=0.4
+clip pad 0 0 87.8571 2.4107 390593502905643520 level=0.12 attack=0.3 release=0.4 pitch=0 voices=6 gather=1 drift=0.1 timbre=1.9 chord=4 cutoff=0.5 reverb=0.5
+clip meow_choir 6 4 87.8571 2.3036 2778255683676042433 level=0.4248 attack=0.15 release=0.4 pitch=-6.96 chord=2 file=cat/u6.ogg start=0.1944 speed=0.25 voices=6 gather=1 drift=0.2 wander=1 scatter=0.3
+clip piano 1 0 90.0000 3.2143 4446559978925661208 level=0.35 attack=0.004 release=3.2103 pitch=-12 interval=12 timbre=0 fm_ratio=1 fm_depth=1 env_curve=0.45 cutoff=0.5 env>cut=0.3 mod_decay=0.45 reverb=0.4
+clip pad 0 0 90.0000 2.4107 8549194101388419321 level=0.12 attack=0.3 release=0.4 pitch=0 voices=6 gather=1 drift=0.1 timbre=1.9 chord=2 cutoff=0.5 reverb=0.5
+clip meow_choir 6 4 90.0000 2.3036 7061917842906067334 level=0.4248 attack=0.15 release=0.4 pitch=-6.96 chord=2 file=cat/u6.ogg start=0.1944 speed=0.25 voices=6 gather=1 drift=0.2 wander=1 scatter=0.3
+clip piano 1 0 92.1429 3.2143 8716447192503296301 level=0.35 attack=0.004 release=3.2103 pitch=-12 interval=12 timbre=0 fm_ratio=1 fm_depth=1 env_curve=0.45 cutoff=0.5 env>cut=0.3 mod_decay=0.45 reverb=0.4
+clip pad 0 0 92.1429 2.4107 2836768570221470297 level=0.12 attack=0.3 release=0.4 pitch=0 voices=6 gather=1 drift=0.1 timbre=1.9 chord=6 cutoff=0.5 reverb=0.5
+clip meow_choir 6 4 92.1429 2.3036 2129528820512913790 level=0.4248 attack=0.15 release=0.4 pitch=-6.96 chord=2 file=cat/u6.ogg start=0.1944 speed=0.25 voices=6 gather=1 drift=0.2 wander=1 scatter=0.3
+clip piano 1 0 96.4286 3.2143 5786249553073183654 level=0.35 attack=0.004 release=3.2103 pitch=-7 interval=12 timbre=0 fm_ratio=1 fm_depth=1 env_curve=0.45 cutoff=0.5 env>cut=0.3 mod_decay=0.45 reverb=0.4
+clip pad 0 0 96.4286 2.4107 3230426587360683613 level=0.12 attack=0.3 release=0.4 pitch=5 voices=6 gather=1 drift=0.1 timbre=1.9 chord=5 cutoff=0.5 reverb=0.5
+clip meow_partials 7 4 96.4286 2.3036 1708614012082914323 level=0.5049 attack=0.05 release=0.3 pitch=-4.7 file=cat/kitty.ogg start=0.0333 speed=0.15 gather=0.9 chord=5
+clip piano 1 0 98.5714 3.2143 92763068210632480 level=0.35 attack=0.004 release=3.2103 pitch=-8 interval=12 timbre=0 fm_ratio=1 fm_depth=1 env_curve=0.45 cutoff=0.5 env>cut=0.3 mod_decay=0.45 reverb=0.4
+clip pad 0 0 98.5714 2.4107 6645170493486404360 level=0.12 attack=0.3 release=0.4 pitch=0 voices=6 gather=1 drift=0.1 timbre=1.9 chord=2 cutoff=0.5 reverb=0.5
+clip meow_partials 7 4 98.5714 2.3036 8803282732107927326 level=0.5049 attack=0.05 release=0.3 pitch=-9.7 file=cat/kitty.ogg start=0.0333 speed=0.15 gather=0.9 chord=2
+clip piano 1 0 100.7143 3.2143 5858617327659557445 level=0.35 attack=0.004 release=3.2103 pitch=-9 interval=12 timbre=0 fm_ratio=1 fm_depth=1 env_curve=0.45 cutoff=0.5 env>cut=0.3 mod_decay=0.45 reverb=0.4
+clip pad 0 0 100.7143 2.4107 6866636447730460949 level=0.12 attack=0.3 release=0.4 pitch=5 voices=6 gather=1 drift=0.1 timbre=1.9 chord=5 cutoff=0.5 reverb=0.5
+clip meow_partials 7 4 100.7143 2.3036 7729313515380087707 level=0.5049 attack=0.05 release=0.3 pitch=-4.7 file=cat/kitty.ogg start=0.0333 speed=0.15 gather=0.9 chord=5
+clip piano 1 0 102.8571 3.2143 5591714587821732911 level=0.35 attack=0.004 release=3.2103 pitch=-10 interval=12 timbre=0 fm_ratio=1 fm_depth=1 env_curve=0.45 cutoff=0.5 env>cut=0.3 mod_decay=0.45 reverb=0.4
+clip pad 0 0 102.8571 2.4107 4238059230404270965 level=0.12 attack=0.3 release=0.4 pitch=10 voices=6 gather=1 drift=0.1 timbre=1.9 chord=2 cutoff=0.5 reverb=0.5
+clip meow_partials 7 4 102.8571 2.3036 8698129421929364250 level=0.5049 attack=0.05 release=0.3 pitch=0.3 file=cat/kitty.ogg start=0.0333 speed=0.15 gather=0.9 chord=2
+clip piano 1 0 105.0000 3.2143 2065730423132588450 level=0.35 attack=0.004 release=3.2103 pitch=-11 interval=12 timbre=0 fm_ratio=1 fm_depth=1 env_curve=0.45 cutoff=0.5 env>cut=0.3 mod_decay=0.45 reverb=0.4
+clip pad 0 0 105.0000 2.4107 1694958078725757110 level=0.12 attack=0.3 release=0.4 pitch=10 voices=6 gather=1 drift=0.1 timbre=1.9 chord=5 cutoff=0.5 reverb=0.5
+clip meow_partials 7 4 105.0000 2.3036 4208016260763099182 level=0.5049 attack=0.05 release=0.3 pitch=0.3 file=cat/kitty.ogg start=0.0333 speed=0.15 gather=0.9 chord=5
+clip piano 1 0 107.1429 3.2143 3509295660433502352 level=0.35 attack=0.004 release=3.2103 pitch=-12 interval=12 timbre=0 fm_ratio=1 fm_depth=1 env_curve=0.45 cutoff=0.5 env>cut=0.3 mod_decay=0.45 reverb=0.4
+clip pad 0 0 107.1429 2.4107 2804930381489672554 level=0.12 attack=0.3 release=0.4 pitch=0 voices=6 gather=1 drift=0.1 timbre=1.9 chord=4 cutoff=0.5 reverb=0.5
+clip meow_partials 7 4 107.1429 2.3036 3450126181727553437 level=0.5049 attack=0.05 release=0.3 pitch=-9.7 file=cat/kitty.ogg start=0.0333 speed=0.15 gather=0.9 chord=2
+clip piano 1 0 109.2857 3.2143 1828369544804506028 level=0.35 attack=0.004 release=3.2103 pitch=-12 interval=12 timbre=0 fm_ratio=1 fm_depth=1 env_curve=0.45 cutoff=0.5 env>cut=0.3 mod_decay=0.45 reverb=0.4
+clip pad 0 0 109.2857 2.4107 665609819533608086 level=0.12 attack=0.3 release=0.4 pitch=0 voices=6 gather=1 drift=0.1 timbre=1.9 chord=2 cutoff=0.5 reverb=0.5
+clip meow_partials 7 4 109.2857 2.3036 492921163233068913 level=0.5049 attack=0.05 release=0.3 pitch=-9.7 file=cat/kitty.ogg start=0.0333 speed=0.15 gather=0.9 chord=2
+clip piano 1 0 111.4286 3.2143 5554772751790249464 level=0.35 attack=0.004 release=3.2103 pitch=-12 interval=12 timbre=0 fm_ratio=1 fm_depth=1 env_curve=0.45 cutoff=0.5 env>cut=0.3 mod_decay=0.45 reverb=0.4
+clip pad 0 0 111.4286 2.4107 129513721383667168 level=0.12 attack=0.3 release=0.4 pitch=0 voices=6 gather=1 drift=0.1 timbre=1.9 chord=6 cutoff=0.5 reverb=0.5
+clip meow_partials 7 4 111.4286 2.3036 556862254478488428 level=0.5049 attack=0.05 release=0.3 pitch=-9.7 file=cat/kitty.ogg start=0.0333 speed=0.15 gather=0.9 chord=2
+clip piano 1 0 115.7143 3.2143 6675132118721457183 level=0.35 attack=0.004 release=3.2103 pitch=-7 interval=12 timbre=0 fm_ratio=1 fm_depth=1 env_curve=0.45 cutoff=0.5 env>cut=0.3 mod_decay=0.45 reverb=0.4
+clip pad 0 0 115.7143 2.4107 7983384662190402728 level=0.12 attack=0.3 release=0.4 pitch=5 voices=6 gather=1 drift=0.1 timbre=1.9 chord=5 cutoff=0.5 reverb=0.5
+clip meow_hold 5 3 116.2500 1.2321 7127210022513308379 level=0.5049 attack=0.08 release=0.3 pitch=-1.7 file=cat/kitty.ogg start=0.34 pitch_mode=1 speed=0
+clip meow_hold 5 3 117.3214 0.6964 5938941946682656300 level=0.5049 attack=0.08 release=0.3 pitch=-2.7 file=cat/kitty.ogg start=0.34 pitch_mode=1 speed=0
+clip piano 1 0 117.8571 3.2143 6115425369026965199 level=0.35 attack=0.004 release=3.2103 pitch=-8 interval=12 timbre=0 fm_ratio=1 fm_depth=1 env_curve=0.45 cutoff=0.5 env>cut=0.3 mod_decay=0.45 reverb=0.4
+clip pad 0 0 117.8571 2.4107 2364744459032939536 level=0.12 attack=0.3 release=0.4 pitch=0 voices=6 gather=1 drift=0.1 timbre=1.9 chord=2 cutoff=0.5 reverb=0.5
+clip meow_hold 5 3 117.8571 1.2321 1656432143339155735 level=0.5049 attack=0.08 release=0.3 pitch=-2.7 file=cat/kitty.ogg start=0.34 pitch_mode=1 speed=0
+clip meow_hold 5 3 118.9286 0.6964 2590575387045055882 level=0.5049 attack=0.08 release=0.3 pitch=-4.7 file=cat/kitty.ogg start=0.34 pitch_mode=1 speed=0
+clip meow_hold 5 3 119.4643 0.6964 3350198714597966110 level=0.5049 attack=0.08 release=0.3 pitch=-5.7 file=cat/kitty.ogg start=0.34 pitch_mode=1 speed=0
+clip piano 1 0 120.0000 3.2143 7563878822796260665 level=0.35 attack=0.004 release=3.2103 pitch=-9 interval=12 timbre=0 fm_ratio=1 fm_depth=1 env_curve=0.45 cutoff=0.5 env>cut=0.3 mod_decay=0.45 reverb=0.4
+clip pad 0 0 120.0000 2.4107 2327864800911301635 level=0.12 attack=0.3 release=0.4 pitch=5 voices=6 gather=1 drift=0.1 timbre=1.9 chord=5 cutoff=0.5 reverb=0.5
+clip meow_hold 5 3 120.0000 1.7679 4392452236913191020 level=0.5049 attack=0.08 release=0.3 pitch=-4.7 file=cat/kitty.ogg start=0.34 pitch_mode=1 speed=0
+clip meow_hold 5 3 121.6071 0.6964 8865619580534254885 level=0.5049 attack=0.08 release=0.3 pitch=2.3 file=cat/kitty.ogg start=0.34 pitch_mode=1 speed=0
+clip piano 1 0 122.1429 3.2143 7429210562676174368 level=0.35 attack=0.004 release=3.2103 pitch=-10 interval=12 timbre=0 fm_ratio=1 fm_depth=1 env_curve=0.45 cutoff=0.5 env>cut=0.3 mod_decay=0.45 reverb=0.4
+clip pad 0 0 122.1429 2.4107 1439645040169602873 level=0.12 attack=0.3 release=0.4 pitch=10 voices=6 gather=1 drift=0.1 timbre=1.9 chord=2 cutoff=0.5 reverb=0.5
+clip meow_hold 5 3 122.1429 1.2321 1227665691547807817 level=0.5049 attack=0.08 release=0.3 pitch=2.3 file=cat/kitty.ogg start=0.34 pitch_mode=1 speed=0
+clip meow_hold 5 3 123.2143 1.2321 251081944846953895 level=0.5049 attack=0.08 release=0.3 pitch=0.3 file=cat/kitty.ogg start=0.34 pitch_mode=1 speed=0
+clip piano 1 0 124.2857 3.2143 3468881698420340056 level=0.35 attack=0.004 release=3.2103 pitch=-11 interval=12 timbre=0 fm_ratio=1 fm_depth=1 env_curve=0.45 cutoff=0.5 env>cut=0.3 mod_decay=0.45 reverb=0.4
+clip pad 0 0 124.2857 2.4107 2908857929487749350 level=0.12 attack=0.3 release=0.4 pitch=10 voices=6 gather=1 drift=0.1 timbre=1.9 chord=5 cutoff=0.5 reverb=0.5
+clip meow_hold 5 3 124.2857 1.7679 8905646923638760167 level=0.5049 attack=0.08 release=0.3 pitch=3.3 file=cat/kitty.ogg start=0.34 pitch_mode=1 speed=0
+clip meow_hold 5 3 125.8929 0.6964 5178277545664060762 level=0.5049 attack=0.08 release=0.3 pitch=2.3 file=cat/kitty.ogg start=0.34 pitch_mode=1 speed=0
+clip piano 1 0 126.4286 3.2143 5735002543458300353 level=0.35 attack=0.004 release=3.2103 pitch=-12 interval=12 timbre=0 fm_ratio=1 fm_depth=1 env_curve=0.45 cutoff=0.5 env>cut=0.3 mod_decay=0.45 reverb=0.4
+clip pad 0 0 126.4286 2.4107 1969393824372859412 level=0.12 attack=0.3 release=0.4 pitch=0 voices=6 gather=1 drift=0.1 timbre=1.9 chord=4 cutoff=0.5 reverb=0.5
+clip meow_hold 5 3 126.4286 1.2321 3271561993596883907 level=0.5049 attack=0.08 release=0.3 pitch=0.3 file=cat/kitty.ogg start=0.34 pitch_mode=1 speed=0
+clip meow_hold 5 3 127.5000 1.2321 6259566907292359285 level=0.5049 attack=0.08 release=0.3 pitch=-1.7 file=cat/kitty.ogg start=0.34 pitch_mode=1 speed=0
+clip piano 1 0 128.5714 3.2143 367066353288350917 level=0.35 attack=0.004 release=3.2103 pitch=-12 interval=12 timbre=0 fm_ratio=1 fm_depth=1 env_curve=0.45 cutoff=0.5 env>cut=0.3 mod_decay=0.45 reverb=0.4
+clip pad 0 0 128.5714 2.4107 3849625424602621172 level=0.12 attack=0.3 release=0.4 pitch=0 voices=6 gather=1 drift=0.1 timbre=1.9 chord=2 cutoff=0.5 reverb=0.5
+clip meow_hold 5 3 128.5714 4.4464 4641683007633126463 level=0.5049 attack=0.08 release=0.3 pitch=-2.7 file=cat/kitty.ogg start=0.34 pitch_mode=1 speed=0
+clip piano 1 0 130.7143 3.2143 1822400650961426307 level=0.35 attack=0.004 release=3.2103 pitch=-12 interval=12 timbre=0 fm_ratio=1 fm_depth=1 env_curve=0.45 cutoff=0.5 env>cut=0.3 mod_decay=0.45 reverb=0.4
+clip pad 0 0 130.7143 2.4107 3048405097063280795 level=0.12 attack=0.3 release=0.4 pitch=0 voices=6 gather=1 drift=0.1 timbre=1.9 chord=6 cutoff=0.5 reverb=0.5
+clip piano 1 0 135.0000 3.2143 5214424339389333924 level=0.35 attack=0.004 release=3.2103 pitch=-7 interval=12 timbre=0 fm_ratio=1 fm_depth=1 env_curve=0.45 cutoff=0.5 env>cut=0.3 mod_decay=0.45 reverb=0.4
+clip pad 0 0 135.0000 2.4107 5475414632418663813 level=0.12 attack=0.3 release=0.4 pitch=5 voices=6 gather=1 drift=0.1 timbre=1.9 chord=5 cutoff=0.5 reverb=0.5
+clip meow 5 3 135.2679 0.8807 7652057861513866376 level=0.5 attack=0.005 release=0.08 pitch=6.2 file=cat/sigh.ogg start=0.0662 pan=0
+clip piano 1 0 137.1429 3.2143 3581974430143897332 level=0.35 attack=0.004 release=3.2103 pitch=-8 interval=12 timbre=0 fm_ratio=1 fm_depth=1 env_curve=0.45 cutoff=0.5 env>cut=0.3 mod_decay=0.45 reverb=0.4
+clip pad 0 0 137.1429 2.4107 3173741801158528014 level=0.12 attack=0.3 release=0.4 pitch=0 voices=6 gather=1 drift=0.1 timbre=1.9 chord=2 cutoff=0.5 reverb=0.5
+clip meow 5 3 137.9464 1.0474 65122682983933270 level=0.5 attack=0.005 release=0.08 pitch=3.2 file=cat/sigh.ogg start=0.0662 pan=0
+clip piano 1 0 139.2857 3.2143 3723240210401991467 level=0.35 attack=0.004 release=3.2103 pitch=-9 interval=12 timbre=0 fm_ratio=1 fm_depth=1 env_curve=0.45 cutoff=0.5 env>cut=0.3 mod_decay=0.45 reverb=0.4
+clip pad 0 0 139.2857 2.4107 5999469184401424234 level=0.12 attack=0.3 release=0.4 pitch=5 voices=6 gather=1 drift=0.1 timbre=1.9 chord=5 cutoff=0.5 reverb=0.5
+clip piano 1 0 141.4286 3.2143 5688504478421471302 level=0.35 attack=0.004 release=3.2103 pitch=-10 interval=12 timbre=0 fm_ratio=1 fm_depth=1 env_curve=0.45 cutoff=0.5 env>cut=0.3 mod_decay=0.45 reverb=0.4
+clip pad 0 0 141.4286 2.4107 3599447102986648703 level=0.12 attack=0.3 release=0.4 pitch=10 voices=6 gather=1 drift=0.1 timbre=1.9 chord=2 cutoff=0.5 reverb=0.5
+clip meow 5 3 143.3036 0.6598 5409936869822448663 level=0.5 attack=0.005 release=0.08 pitch=11.2 file=cat/sigh.ogg start=0.0662 pan=0
+clip piano 1 0 143.5714 3.2143 7575833156910258664 level=0.35 attack=0.004 release=3.2103 pitch=-11 interval=12 timbre=0 fm_ratio=1 fm_depth=1 env_curve=0.45 cutoff=0.5 env>cut=0.3 mod_decay=0.45 reverb=0.4
+clip pad 0 0 143.5714 2.4107 5024545844955222418 level=0.12 attack=0.3 release=0.4 pitch=10 voices=6 gather=1 drift=0.1 timbre=1.9 chord=5 cutoff=0.5 reverb=0.5
+clip meow 5 3 145.4464 0.8313 2369685346751378797 level=0.5 attack=0.005 release=0.08 pitch=7.2 file=cat/sigh.ogg start=0.0662 pan=0
+clip piano 1 0 145.7143 3.2143 8756153280910574345 level=0.35 attack=0.004 release=3.2103 pitch=-12 interval=12 timbre=0 fm_ratio=1 fm_depth=1 env_curve=0.45 cutoff=0.5 env>cut=0.3 mod_decay=0.45 reverb=0.4
+clip pad 0 0 145.7143 2.4107 8045877387729367352 level=0.12 attack=0.3 release=0.4 pitch=0 voices=6 gather=1 drift=0.1 timbre=1.9 chord=4 cutoff=0.5 reverb=0.5
+clip meow 5 3 147.5893 0.9886 7050780417267511966 level=0.5 attack=0.005 release=0.08 pitch=4.2 file=cat/sigh.ogg start=0.0662 pan=0
+clip piano 1 0 147.8571 3.2143 7635647659528704442 level=0.35 attack=0.004 release=3.2103 pitch=-12 interval=12 timbre=0 fm_ratio=1 fm_depth=1 env_curve=0.45 cutoff=0.5 env>cut=0.3 mod_decay=0.45 reverb=0.4
+clip pad 0 0 147.8571 2.4107 7175061689030762082 level=0.12 attack=0.3 release=0.4 pitch=0 voices=6 gather=1 drift=0.1 timbre=1.9 chord=2 cutoff=0.5 reverb=0.5
+clip piano 1 0 150.0000 3.2143 7120943692334980733 level=0.35 attack=0.004 release=3.2103 pitch=-12 interval=12 timbre=0 fm_ratio=1 fm_depth=1 env_curve=0.45 cutoff=0.5 env>cut=0.3 mod_decay=0.45 reverb=0.4
+clip pad 0 0 150.0000 2.4107 7454279434668945167 level=0.12 attack=0.3 release=0.4 pitch=0 voices=6 gather=1 drift=0.1 timbre=1.9 chord=6 cutoff=0.5 reverb=0.5

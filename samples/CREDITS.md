@@ -21,8 +21,10 @@ wants to find the source.
 | `cryic/ice-spell-blizzard-wind-blast.ogg` | DRAGON-STUDIO on Pixabay | Pixabay Content License | `ice-spell-blizzard-wind-blast` |
 | `cryic/ice_crunching.ogg` | JesseQuinnMedia on Pixabay | Pixabay Content License | `jessequinnmedia-breaking-ice-crunching-307632.mp3` |
 | `cryic/skiing_loop.ogg` | freesound_community on Pixabay | Pixabay Content License | `freesound_community-ski-67717.mp3` |
-| `cat/meow-1.ogg` | SOUND_GARAGE on Pixabay | Pixabay Content License | `sound_garage-cat-fx-306184.mp3` |
-| `cat/meow-2.ogg` | u_6ekfl947a2 on Pixabay | Pixabay Content License | `u_6ekfl947a2-cat-meow-297927.mp3` |
+| `cat/garage1.ogg`, `cat/garage8.ogg` | SOUND_GARAGE on Pixabay | Pixabay Content License | `sound_garage-cat-meow-1-fx-306178.mp3`, `sound_garage-cat-meow-8-fx-306184.mp3` (both kept beside them) |
+| `cat/u6.ogg` | u_6ekfl947a2 on Pixabay | Pixabay Content License | `u_6ekfl947a2-cat-meow-297927.mp3` |
+| `cat/sigh.ogg`, `cat/kitten.ogg` | DRAGON-STUDIO on Pixabay | Pixabay Content License | `dragon-studio-cartoon-cat-meow-487661.mp3`, `dragon-studio-cartoon-kitten-meow-487668.mp3` |
+| `cat/kitty.ogg`, `cat/angry.ogg` | freesound_community on Pixabay | Pixabay Content License | `freesound_community-kitty-meow-85182.mp3`, `freesound_community-angry-cat-meow-82091.mp3` |
 | `cat/meow-3.ogg` | DRAGON-STUDIO on Pixabay | Pixabay Content License | `dragon-studio-cartoon-kitten-meow-487668.mp3` |
 | `cat/meow-4.ogg` | DRAGON-STUDIO on Pixabay | Pixabay Content License | `dragon-studio-cartoon-cat-meow-487661.mp3` |
 | `cat/meow-5.ogg` | SOUND_GARAGE on Pixabay | Pixabay Content License | `sound_garage-cat-meow-1-fx-306178.mp3` |
