@@ -1,0 +1,176 @@
+# SfxLab project v2: clip name type track start dur seed key=value...
+# 'Cathedral of Rust' - D minor, 66 BPM, by Claude. tracks: 1 kick 2 drums 3 guitar/bass 4 coil chant 5 cello/choir 6 drone/bells
+loop 0
+root 110.0000
+track 0 1.000 0
+track 1 0.700 0
+track 2 0.750 0
+track 3 0.800 0
+track 4 0.700 0
+track 5 0.650 0
+clip clockwork 8 1 0.0000 7.2727 1948805525286191036 level=0.14 attack=0 release=0.1 pitch=-7.7263 divide=4 ring=0 burst=2 snap=0.9 misfire=0.8 filter=2 cutoff=0.6 pan=0.3 reverb=0.35 keyed=0
+clip chant 8 3 0.0000 2.3636 4842733561950681936 level=0.36 attack=0.08 release=0.8 pitch=12 pitch_swp=0 ring=0.9 formant=12 burst=11 jitter=0.04 flicker=0.15 snap=0.2 reverb=0.6 echo=0.25 pan=0 lfo_rate=4.8 lfo>pitch=0.12
+clip cello 7 4 0.0000 8.1818 6506954686007994462 level=0.45 attack=3 release=1.5 pitch=0 file=resonant/cello_00002_pad.ogg gather=0.85 chord=5 purity=0.3 shimmer=0.15 reverb=0.45 cutoff=0.7 duck=0.45 duck_from=1
+clip drone 5 5 0.0000 38.1818 4420848485536729846 level=0.35 attack=4 release=3 pitch=0 file=resonant/guitar_heavy_00001_pad.ogg loop=1 pitch_mode=1 speed=0.3 cutoff=0.35 cutoff_swp=0.2 reverb=0.5 duck=0.45 duck_from=1
+clip bell 5 5 0.0000 6.3636 59763385968132356 level=0.5 release=5 pitch=-5.37 file=resonant/bell_00003.ogg reverb=0.55
+clip bell_low 1 5 0.0000 6.3636 7721143493280106468 level=0.25 attack=0.002 release=6 pitch=-7 interval=12 timbre=0 bank=1 stretch=0.06 tilt=-0.4 env_curve=0.6 reverb=0.6
+clip chant 8 3 1.8182 1.4545 436016296983676250 level=0.36 attack=0.08 release=0.8 pitch=10 pitch_swp=0 ring=0.9 formant=19 burst=11 jitter=0.04 flicker=0.15 snap=0.2 reverb=0.6 echo=0.25 pan=0 lfo_rate=4.8 lfo>pitch=0.12
+clip chant 8 3 2.7273 1.4545 9039497248801743641 level=0.36 attack=0.08 release=0.8 pitch=8 pitch_swp=0 ring=0.9 formant=19 burst=11 jitter=0.04 flicker=0.15 snap=0.2 reverb=0.6 echo=0.25 pan=0 lfo_rate=4.8 lfo>pitch=0.12
+clip chant 8 3 3.6364 1.4545 1814329556000409834 level=0.36 attack=0.08 release=0.8 pitch=7 pitch_swp=0 ring=0.9 formant=19 burst=11 jitter=0.04 flicker=0.15 snap=0.2 reverb=0.6 echo=0.25 pan=0 lfo_rate=4.8 lfo>pitch=0.12
+clip chant 8 3 4.5455 1.4545 3352767192426016432 level=0.36 attack=0.08 release=0.8 pitch=8 pitch_swp=0 ring=0.9 formant=19 burst=11 jitter=0.04 flicker=0.15 snap=0.2 reverb=0.6 echo=0.25 pan=0 lfo_rate=4.8 lfo>pitch=0.12
+clip chant 8 3 5.4545 2.3636 8662541358145742970 level=0.36 attack=0.08 release=0.8 pitch=5 pitch_swp=0 ring=0.9 formant=7 burst=11 jitter=0.04 flicker=0.15 snap=0.2 reverb=0.6 echo=0.25 pan=0 lfo_rate=4.8 lfo>pitch=0.12
+clip kick 1 0 7.2727 1.2727 2932390067107612889 level=1 attack=0.001 release=1.2 pitch=-2 pitch_swp=-17 interval=0 timbre=0 drive=0.5 env_curve=0.25 reverb=0.15 keyed=0
+clip clockwork 8 1 7.2727 14.5455 5396922146898734953 level=0.2 attack=0 release=0.1 pitch=-7.7263 divide=4 ring=0 burst=2 snap=0.9 misfire=0.5 filter=2 cutoff=0.6 pan=0.3 reverb=0.35 keyed=0
+clip gtr 5 2 7.2727 2.7273 332307082153948398 level=0.6 attack=0 release=0.8 pitch=0 file=resonant/guitar_heavy_00002.ogg cutoff=0.6 resonance=0.1 drive=0.2 reverb=0.25 duck=0.45 duck_from=1
+clip sub 1 2 7.2727 3.6364 6031146402942519745 level=0.4 attack=0.02 release=1 pitch=-7 interval=12 timbre=0.15 cutoff=0.35 duck=0.45 duck_from=1
+clip chant 8 3 7.2727 2.3636 3254220700518935672 level=0.42 attack=0.08 release=0.8 pitch=12 pitch_swp=0 ring=0.9 formant=7 burst=11 jitter=0.04 flicker=0.15 snap=0.2 reverb=0.6 echo=0.25 pan=0 lfo_rate=4.8 lfo>pitch=0.12
+clip cello 7 4 7.2727 4.5455 2222351628906871121 level=0.5 attack=1.2 release=1.5 pitch=0 file=resonant/cello_00002_pad.ogg gather=0.85 chord=5 purity=0.3 shimmer=0.15 reverb=0.45 cutoff=0.7 duck=0.45 duck_from=1
+clip anvil 2 1 9.0909 1.8182 6743883005958390591 level=0.4 attack=0.001 release=1.8 filter=1 resonance=0.92 cutoff=0.4866 color=0.2 env_curve=0.8 reverb=0.5 pan=-0.15 keyed=0
+clip anvil 2 1 9.0909 1.8182 5858412426029838376 level=0.28 attack=0.001 release=1.8 filter=1 resonance=0.92 cutoff=0.5598 color=0.2 env_curve=0.8 reverb=0.5 pan=0.2 keyed=0
+clip anvil_ping 1 1 9.0909 1.3636 7799812976231672475 level=0.176 attack=0.001 release=1.4 pitch=29 interval=0 timbre=0 fm_ratio=3.53 fm_depth=1.8 env_curve=0.85 reverb=0.5 keyed=0
+clip anvil_crack 2 1 9.0909 0.1364 2409373899329636482 level=0.32 attack=0 release=0.1 filter=2 cutoff=0.7 color=0 keyed=0
+clip chant 8 3 9.0909 1.4545 7873408797267500030 level=0.42 attack=0.08 release=0.8 pitch=13 pitch_swp=0 ring=0.9 formant=16 burst=11 jitter=0.04 flicker=0.15 snap=0.2 reverb=0.6 echo=0.25 pan=0 lfo_rate=4.8 lfo>pitch=0.12
+clip kick 1 0 9.5455 1.2727 363508324390217217 level=0.75 attack=0.001 release=1.2 pitch=-2 pitch_swp=-17 interval=0 timbre=0 drive=0.5 env_curve=0.25 reverb=0.15 keyed=0
+clip gtr 5 2 9.5455 1.0909 8628772598263303417 level=0.45 attack=0 release=0.8 pitch=0 file=resonant/guitar_heavy_00002.ogg cutoff=0.5 resonance=0.1 drive=0.2 reverb=0.25 duck=0.45 duck_from=1
+clip chant 8 3 10.0000 1.4545 2065063081114742807 level=0.42 attack=0.08 release=0.8 pitch=12 pitch_swp=0 ring=0.9 formant=16 burst=11 jitter=0.04 flicker=0.15 snap=0.2 reverb=0.6 echo=0.25 pan=0 lfo_rate=4.8 lfo>pitch=0.12
+clip kick 1 0 10.9091 1.2727 7613722862963940564 level=1 attack=0.001 release=1.2 pitch=-2 pitch_swp=-17 interval=0 timbre=0 drive=0.5 env_curve=0.25 reverb=0.15 keyed=0
+clip gtr 5 2 10.9091 2.7273 728850496264050571 level=0.6 attack=0 release=0.8 pitch=-4 file=resonant/guitar_heavy_00002.ogg cutoff=0.6 resonance=0.1 drive=0.2 reverb=0.25 duck=0.45 duck_from=1
+clip sub 1 2 10.9091 3.6364 3771787979797227463 level=0.4 attack=0.02 release=1 pitch=-11 interval=12 timbre=0.15 cutoff=0.35 duck=0.45 duck_from=1
+clip chant 8 3 10.9091 2.3636 4430873520449214034 level=0.42 attack=0.08 release=0.8 pitch=8 pitch_swp=0 ring=0.9 formant=7 burst=11 jitter=0.04 flicker=0.15 snap=0.2 reverb=0.6 echo=0.25 pan=0 lfo_rate=4.8 lfo>pitch=0.12
+clip cello 7 4 10.9091 4.5455 4036974476937003257 level=0.5 attack=1.2 release=1.5 pitch=-4 file=resonant/cello_00002_pad.ogg gather=0.85 chord=2 purity=0.3 shimmer=0.15 reverb=0.45 cutoff=0.7 duck=0.45 duck_from=1
+clip anvil 2 1 12.7273 1.8182 6761003870327783106 level=0.425 attack=0.001 release=1.8 filter=1 resonance=0.92 cutoff=0.4866 color=0.2 env_curve=0.8 reverb=0.5 pan=-0.15 keyed=0
+clip anvil 2 1 12.7273 1.8182 8352296024950250373 level=0.2975 attack=0.001 release=1.8 filter=1 resonance=0.92 cutoff=0.5598 color=0.2 env_curve=0.8 reverb=0.5 pan=0.2 keyed=0
+clip anvil_ping 1 1 12.7273 1.3636 8943173724888256745 level=0.187 attack=0.001 release=1.4 pitch=29 interval=0 timbre=0 fm_ratio=3.53 fm_depth=1.8 env_curve=0.85 reverb=0.5 keyed=0
+clip anvil_crack 2 1 12.7273 0.1364 1894107603155926212 level=0.34 attack=0 release=0.1 filter=2 cutoff=0.7 color=0 keyed=0
+clip chant 8 3 12.7273 1.4545 4597344380184090216 level=0.42 attack=0.08 release=0.8 pitch=10 pitch_swp=0 ring=0.9 formant=16 burst=11 jitter=0.04 flicker=0.15 snap=0.2 reverb=0.6 echo=0.25 pan=0 lfo_rate=4.8 lfo>pitch=0.12
+clip kick 1 0 13.1818 1.2727 3604064816349444566 level=0.75 attack=0.001 release=1.2 pitch=-2 pitch_swp=-17 interval=0 timbre=0 drive=0.5 env_curve=0.25 reverb=0.15 keyed=0
+clip gtr 5 2 13.1818 1.0909 5867515371499252896 level=0.45 attack=0 release=0.8 pitch=-4 file=resonant/guitar_heavy_00002.ogg cutoff=0.5 resonance=0.1 drive=0.2 reverb=0.25 duck=0.45 duck_from=1
+clip chant 8 3 13.6364 1.4545 5070255943056118807 level=0.42 attack=0.08 release=0.8 pitch=8 pitch_swp=0 ring=0.9 formant=19 burst=11 jitter=0.04 flicker=0.15 snap=0.2 reverb=0.6 echo=0.25 pan=0 lfo_rate=4.8 lfo>pitch=0.12
+clip kick 1 0 14.5455 1.2727 7274230746463208697 level=1 attack=0.001 release=1.2 pitch=-2 pitch_swp=-17 interval=0 timbre=0 drive=0.5 env_curve=0.25 reverb=0.15 keyed=0
+clip gtr 5 2 14.5455 2.7273 5296078341903773693 level=0.6 attack=0 release=0.8 pitch=-7 file=resonant/guitar_heavy_00002.ogg cutoff=0.6 resonance=0.1 drive=0.2 reverb=0.25 duck=0.45 duck_from=1
+clip sub 1 2 14.5455 3.6364 5370927433239706083 level=0.4 attack=0.02 release=1 pitch=-14 interval=12 timbre=0.15 cutoff=0.35 duck=0.45 duck_from=1
+clip chant 8 3 14.5455 1.4545 2518574735338085317 level=0.42 attack=0.08 release=0.8 pitch=10 pitch_swp=0 ring=0.9 formant=19 burst=11 jitter=0.04 flicker=0.15 snap=0.2 reverb=0.6 echo=0.25 pan=0 lfo_rate=4.8 lfo>pitch=0.12
+clip cello 7 4 14.5455 4.5455 6131511011818407210 level=0.5 attack=1.2 release=1.5 pitch=-7 file=resonant/cello_00002_pad.ogg gather=0.85 chord=5 purity=0.3 shimmer=0.15 reverb=0.45 cutoff=0.7 duck=0.45 duck_from=1
+clip chant 8 3 15.4545 1.4545 3086475112709685098 level=0.42 attack=0.08 release=0.8 pitch=13 pitch_swp=0 ring=0.9 formant=16 burst=11 jitter=0.04 flicker=0.15 snap=0.2 reverb=0.6 echo=0.25 pan=0 lfo_rate=4.8 lfo>pitch=0.12
+clip anvil 2 1 16.3636 1.8182 969763992701809188 level=0.45 attack=0.001 release=1.8 filter=1 resonance=0.92 cutoff=0.4866 color=0.2 env_curve=0.8 reverb=0.5 pan=-0.15 keyed=0
+clip anvil 2 1 16.3636 1.8182 1402865267372188853 level=0.315 attack=0.001 release=1.8 filter=1 resonance=0.92 cutoff=0.5598 color=0.2 env_curve=0.8 reverb=0.5 pan=0.2 keyed=0
+clip anvil_ping 1 1 16.3636 1.3636 8473167984596214718 level=0.198 attack=0.001 release=1.4 pitch=29 interval=0 timbre=0 fm_ratio=3.53 fm_depth=1.8 env_curve=0.85 reverb=0.5 keyed=0
+clip anvil_crack 2 1 16.3636 0.1364 7867791311304251685 level=0.36 attack=0 release=0.1 filter=2 cutoff=0.7 color=0 keyed=0
+clip chant 8 3 16.3636 1.4545 6674553073396029213 level=0.42 attack=0.08 release=0.8 pitch=12 pitch_swp=0 ring=0.9 formant=19 burst=11 jitter=0.04 flicker=0.15 snap=0.2 reverb=0.6 echo=0.25 pan=0 lfo_rate=4.8 lfo>pitch=0.12
+clip kick 1 0 16.8182 1.2727 858743814582896698 level=0.75 attack=0.001 release=1.2 pitch=-2 pitch_swp=-17 interval=0 timbre=0 drive=0.5 env_curve=0.25 reverb=0.15 keyed=0
+clip gtr 5 2 16.8182 1.0909 4613110416264282335 level=0.45 attack=0 release=0.8 pitch=-7 file=resonant/guitar_heavy_00002.ogg cutoff=0.5 resonance=0.1 drive=0.2 reverb=0.25 duck=0.45 duck_from=1
+clip chant 8 3 17.2727 1.4545 1087650119488164349 level=0.42 attack=0.08 release=0.8 pitch=10 pitch_swp=0 ring=0.9 formant=7 burst=11 jitter=0.04 flicker=0.15 snap=0.2 reverb=0.6 echo=0.25 pan=0 lfo_rate=4.8 lfo>pitch=0.12
+clip kick 1 0 18.1818 1.2727 6300038408733840612 level=1 attack=0.001 release=1.2 pitch=-2 pitch_swp=-17 interval=0 timbre=0 drive=0.5 env_curve=0.25 reverb=0.15 keyed=0
+clip gtr 5 2 18.1818 2.7273 3543997732338277941 level=0.6 attack=0 release=0.8 pitch=-5 file=resonant/guitar_heavy_00002.ogg cutoff=0.6 resonance=0.1 drive=0.2 reverb=0.25 duck=0.45 duck_from=1
+clip sub 1 2 18.1818 3.6364 8983909088595865838 level=0.4 attack=0.02 release=1 pitch=-12 interval=12 timbre=0.15 cutoff=0.35 duck=0.45 duck_from=1
+clip chant 8 3 18.1818 1.4545 3142456941937216618 level=0.42 attack=0.08 release=0.8 pitch=7 pitch_swp=0 ring=0.9 formant=16 burst=11 jitter=0.04 flicker=0.15 snap=0.2 reverb=0.6 echo=0.25 pan=0 lfo_rate=4.8 lfo>pitch=0.12
+clip cello 7 4 18.1818 4.5455 1640181882052958968 level=0.5 attack=1.2 release=1.5 pitch=-5 file=resonant/cello_00002_pad.ogg gather=0.85 chord=2 purity=0.3 shimmer=0.15 reverb=0.45 cutoff=0.7 duck=0.45 duck_from=1
+clip chant 8 3 19.0909 1.4545 2751748199876777583 level=0.42 attack=0.08 release=0.8 pitch=12 pitch_swp=0 ring=0.9 formant=7 burst=11 jitter=0.04 flicker=0.15 snap=0.2 reverb=0.6 echo=0.25 pan=0 lfo_rate=4.8 lfo>pitch=0.12
+clip anvil 2 1 20.0000 1.8182 5700038692233956576 level=0.475 attack=0.001 release=1.8 filter=1 resonance=0.92 cutoff=0.4866 color=0.2 env_curve=0.8 reverb=0.5 pan=-0.15 keyed=0
+clip anvil 2 1 20.0000 1.8182 3294703434835244313 level=0.3325 attack=0.001 release=1.8 filter=1 resonance=0.92 cutoff=0.5598 color=0.2 env_curve=0.8 reverb=0.5 pan=0.2 keyed=0
+clip anvil_ping 1 1 20.0000 1.3636 3523565774546351612 level=0.209 attack=0.001 release=1.4 pitch=29 interval=0 timbre=0 fm_ratio=3.53 fm_depth=1.8 env_curve=0.85 reverb=0.5 keyed=0
+clip anvil_crack 2 1 20.0000 0.1364 5592897626991203976 level=0.38 attack=0 release=0.1 filter=2 cutoff=0.7 color=0 keyed=0
+clip chant 8 3 20.0000 2.3636 4837695891322644267 level=0.42 attack=0.08 release=0.8 pitch=16 pitch_swp=0 ring=0.9 formant=16 burst=11 jitter=0.04 flicker=0.15 snap=0.2 reverb=0.6 echo=0.25 pan=0 lfo_rate=4.8 lfo>pitch=0.12
+clip kick 1 0 20.4545 1.2727 7968813794497773465 level=0.75 attack=0.001 release=1.2 pitch=-2 pitch_swp=-17 interval=0 timbre=0 drive=0.5 env_curve=0.25 reverb=0.15 keyed=0
+clip gtr 5 2 20.4545 1.0909 3401368781384497529 level=0.45 attack=0 release=0.8 pitch=-5 file=resonant/guitar_heavy_00002.ogg cutoff=0.5 resonance=0.1 drive=0.2 reverb=0.25 duck=0.45 duck_from=1
+clip kick 1 0 21.8182 1.2727 401115512382784165 level=1 attack=0.001 release=1.2 pitch=-2 pitch_swp=-17 interval=0 timbre=0 drive=0.5 env_curve=0.25 reverb=0.15 keyed=0
+clip clockwork 8 1 21.8182 14.5455 7064367754805831199 level=0.24 attack=0 release=0.1 pitch=-7.7263 divide=4 ring=0 burst=2 snap=0.9 misfire=0.3 filter=2 cutoff=0.6 pan=0.3 reverb=0.35 keyed=0
+clip gtr 5 2 21.8182 2.7273 1305141517903607643 level=0.65 attack=0 release=0.8 pitch=0 file=resonant/guitar_heavy_00002.ogg cutoff=0.7 resonance=0.1 drive=0.2 reverb=0.25 duck=0.45 duck_from=1
+clip sub 1 2 21.8182 3.6364 6492309186131523137 level=0.4 attack=0.02 release=1 pitch=-7 interval=12 timbre=0.15 cutoff=0.35 duck=0.45 duck_from=1
+clip chant 8 3 21.8182 2.3636 6818720383897982907 level=0.42 attack=0.08 release=0.8 pitch=24 pitch_swp=0 ring=0.9 formant=12 burst=11 jitter=0.04 flicker=0.15 snap=0.2 reverb=0.6 echo=0.25 pan=0 lfo_rate=4.8 lfo>pitch=0.12
+clip chant 8 3 21.8182 2.3636 2783804483519393932 level=0.25 attack=0.08 release=0.8 pitch=12 pitch_swp=0 ring=0.9 formant=12 burst=11 jitter=0.04 flicker=0.15 snap=0.2 reverb=0.6 echo=0.25 pan=-0.3 lfo_rate=4.8 lfo>pitch=0.12
+clip cello 7 4 21.8182 4.5455 3384908497103379650 level=0.4 attack=1.2 release=1.5 pitch=0 file=resonant/cello_00002_pad.ogg gather=0.85 chord=5 purity=0.3 shimmer=0.15 reverb=0.45 cutoff=0.7 duck=0.45 duck_from=1
+clip choir 6 4 21.8182 4.5455 165194658210752050 level=0.5 attack=1.5 release=1.5 pitch=2.06 chord=5 file=luminal/luminal_synth_vocal_treble_00004.ogg start=0.2 speed=0.3 voices=8 gather=0 gather_swp=1 drift=0.5 wander=12 scatter=0.4 reverb=0.65 cutoff=0.8
+clip bell 5 5 21.8182 6.3636 3004453491719073658 level=0.5 release=5 pitch=-5.37 file=resonant/bell_00003.ogg reverb=0.55
+clip bell_low 1 5 21.8182 6.3636 3299323510058642766 level=0.25 attack=0.002 release=6 pitch=-7 interval=12 timbre=0 bank=1 stretch=0.06 tilt=-0.4 env_curve=0.6 reverb=0.6
+clip kick 1 0 23.1818 1.2727 2472295069726333780 level=0.6 attack=0.001 release=1.2 pitch=-2 pitch_swp=-17 interval=0 timbre=0 drive=0.5 env_curve=0.25 reverb=0.15 keyed=0
+clip gtr 5 2 23.1818 0.9091 8814256476512500913 level=0.45 attack=0 release=0.8 pitch=0 file=resonant/guitar_heavy_00002.ogg cutoff=0.55 resonance=0.1 drive=0.2 reverb=0.25 duck=0.45 duck_from=1
+clip anvil 2 1 23.6364 1.8182 4282753192439214663 level=0.5 attack=0.001 release=1.8 filter=1 resonance=0.92 cutoff=0.4866 color=0.2 env_curve=0.8 reverb=0.5 pan=-0.15 keyed=0
+clip anvil 2 1 23.6364 1.8182 7405602694225106206 level=0.35 attack=0.001 release=1.8 filter=1 resonance=0.92 cutoff=0.5598 color=0.2 env_curve=0.8 reverb=0.5 pan=0.2 keyed=0
+clip anvil_ping 1 1 23.6364 1.3636 7464344572237466832 level=0.22 attack=0.001 release=1.4 pitch=29 interval=0 timbre=0 fm_ratio=3.53 fm_depth=1.8 env_curve=0.85 reverb=0.5 keyed=0
+clip anvil_crack 2 1 23.6364 0.1364 1753056954246126618 level=0.4 attack=0 release=0.1 filter=2 cutoff=0.7 color=0 keyed=0
+clip chant 8 3 23.6364 1.4545 8980270184859298865 level=0.42 attack=0.08 release=0.8 pitch=22 pitch_swp=0 ring=0.9 formant=19 burst=11 jitter=0.04 flicker=0.15 snap=0.2 reverb=0.6 echo=0.25 pan=0 lfo_rate=4.8 lfo>pitch=0.12
+clip chant 8 3 23.6364 1.4545 3998093023465832270 level=0.25 attack=0.08 release=0.8 pitch=10 pitch_swp=0 ring=0.9 formant=19 burst=11 jitter=0.04 flicker=0.15 snap=0.2 reverb=0.6 echo=0.25 pan=-0.3 lfo_rate=4.8 lfo>pitch=0.12
+clip kick 1 0 24.0909 1.2727 3906409422451867237 level=0.8 attack=0.001 release=1.2 pitch=-2 pitch_swp=-17 interval=0 timbre=0 drive=0.5 env_curve=0.25 reverb=0.15 keyed=0
+clip gtr 5 2 24.0909 1.0909 4101818357033169184 level=0.5 attack=0 release=0.8 pitch=0 file=resonant/guitar_heavy_00002.ogg cutoff=0.6 resonance=0.1 drive=0.2 reverb=0.25 duck=0.45 duck_from=1
+clip chant 8 3 24.5455 1.4545 7741737599943160126 level=0.42 attack=0.08 release=0.8 pitch=20 pitch_swp=0 ring=0.9 formant=12 burst=11 jitter=0.04 flicker=0.15 snap=0.2 reverb=0.6 echo=0.25 pan=0 lfo_rate=4.8 lfo>pitch=0.12
+clip chant 8 3 24.5455 1.4545 7787213174929915346 level=0.25 attack=0.08 release=0.8 pitch=8 pitch_swp=0 ring=0.9 formant=12 burst=11 jitter=0.04 flicker=0.15 snap=0.2 reverb=0.6 echo=0.25 pan=-0.3 lfo_rate=4.8 lfo>pitch=0.12
+clip kick 1 0 25.4545 1.2727 5770317958602982910 level=1 attack=0.001 release=1.2 pitch=-2 pitch_swp=-17 interval=0 timbre=0 drive=0.5 env_curve=0.25 reverb=0.15 keyed=0
+clip gtr 5 2 25.4545 2.7273 477561224641790523 level=0.65 attack=0 release=0.8 pitch=-4 file=resonant/guitar_heavy_00002.ogg cutoff=0.7 resonance=0.1 drive=0.2 reverb=0.25 duck=0.45 duck_from=1
+clip sub 1 2 25.4545 3.6364 7162563562645415342 level=0.4 attack=0.02 release=1 pitch=-11 interval=12 timbre=0.15 cutoff=0.35 duck=0.45 duck_from=1
+clip chant 8 3 25.4545 1.4545 380000655196146346 level=0.42 attack=0.08 release=0.8 pitch=20 pitch_swp=0 ring=0.9 formant=7 burst=11 jitter=0.04 flicker=0.15 snap=0.2 reverb=0.6 echo=0.25 pan=0 lfo_rate=4.8 lfo>pitch=0.12
+clip chant 8 3 25.4545 1.4545 8003259424477378403 level=0.25 attack=0.08 release=0.8 pitch=8 pitch_swp=0 ring=0.9 formant=7 burst=11 jitter=0.04 flicker=0.15 snap=0.2 reverb=0.6 echo=0.25 pan=-0.3 lfo_rate=4.8 lfo>pitch=0.12
+clip cello 7 4 25.4545 4.5455 1594684568248912845 level=0.4 attack=1.2 release=1.5 pitch=-4 file=resonant/cello_00002_pad.ogg gather=0.85 chord=2 purity=0.3 shimmer=0.15 reverb=0.45 cutoff=0.7 duck=0.45 duck_from=1
+clip choir 6 4 25.4545 4.5455 5431589234118986247 level=0.5 attack=0.6 release=1.5 pitch=-1.94 chord=2 file=luminal/luminal_synth_vocal_treble_00004.ogg start=0.2 speed=0.3 voices=8 gather=1 gather_swp=0 drift=0.5 wander=2 scatter=0.4 reverb=0.65 cutoff=0.8
+clip chant 8 3 26.3636 1.4545 3208706213674935688 level=0.42 attack=0.08 release=0.8 pitch=22 pitch_swp=0 ring=0.9 formant=12 burst=11 jitter=0.04 flicker=0.15 snap=0.2 reverb=0.6 echo=0.25 pan=0 lfo_rate=4.8 lfo>pitch=0.12
+clip chant 8 3 26.3636 1.4545 6118454228410802767 level=0.25 attack=0.08 release=0.8 pitch=10 pitch_swp=0 ring=0.9 formant=12 burst=11 jitter=0.04 flicker=0.15 snap=0.2 reverb=0.6 echo=0.25 pan=-0.3 lfo_rate=4.8 lfo>pitch=0.12
+clip kick 1 0 26.8182 1.2727 2570490763605174800 level=0.6 attack=0.001 release=1.2 pitch=-2 pitch_swp=-17 interval=0 timbre=0 drive=0.5 env_curve=0.25 reverb=0.15 keyed=0
+clip gtr 5 2 26.8182 0.9091 862252603897609307 level=0.45 attack=0 release=0.8 pitch=-4 file=resonant/guitar_heavy_00002.ogg cutoff=0.55 resonance=0.1 drive=0.2 reverb=0.25 duck=0.45 duck_from=1
+clip anvil 2 1 27.2727 1.8182 5592028558880240032 level=0.5 attack=0.001 release=1.8 filter=1 resonance=0.92 cutoff=0.4866 color=0.2 env_curve=0.8 reverb=0.5 pan=-0.15 keyed=0
+clip anvil 2 1 27.2727 1.8182 2086106323233962949 level=0.35 attack=0.001 release=1.8 filter=1 resonance=0.92 cutoff=0.5598 color=0.2 env_curve=0.8 reverb=0.5 pan=0.2 keyed=0
+clip anvil_ping 1 1 27.2727 1.3636 8430390413127637455 level=0.22 attack=0.001 release=1.4 pitch=29 interval=0 timbre=0 fm_ratio=3.53 fm_depth=1.8 env_curve=0.85 reverb=0.5 keyed=0
+clip anvil_crack 2 1 27.2727 0.1364 6958850655734425326 level=0.4 attack=0 release=0.1 filter=2 cutoff=0.7 color=0 keyed=0
+clip chant 8 3 27.2727 1.4545 8943177636845897612 level=0.42 attack=0.08 release=0.8 pitch=24 pitch_swp=0 ring=0.9 formant=12 burst=11 jitter=0.04 flicker=0.15 snap=0.2 reverb=0.6 echo=0.25 pan=0 lfo_rate=4.8 lfo>pitch=0.12
+clip chant 8 3 27.2727 1.4545 4734250150209124482 level=0.25 attack=0.08 release=0.8 pitch=12 pitch_swp=0 ring=0.9 formant=12 burst=11 jitter=0.04 flicker=0.15 snap=0.2 reverb=0.6 echo=0.25 pan=-0.3 lfo_rate=4.8 lfo>pitch=0.12
+clip kick 1 0 27.7273 1.2727 2295293153286965042 level=0.8 attack=0.001 release=1.2 pitch=-2 pitch_swp=-17 interval=0 timbre=0 drive=0.5 env_curve=0.25 reverb=0.15 keyed=0
+clip gtr 5 2 27.7273 1.0909 7611814872156082369 level=0.5 attack=0 release=0.8 pitch=-4 file=resonant/guitar_heavy_00002.ogg cutoff=0.6 resonance=0.1 drive=0.2 reverb=0.25 duck=0.45 duck_from=1
+clip chant 8 3 28.1818 1.4545 3987530749651338611 level=0.42 attack=0.08 release=0.8 pitch=25 pitch_swp=0 ring=0.9 formant=16 burst=11 jitter=0.04 flicker=0.15 snap=0.2 reverb=0.6 echo=0.25 pan=0 lfo_rate=4.8 lfo>pitch=0.12
+clip chant 8 3 28.1818 1.4545 4880756027296586741 level=0.25 attack=0.08 release=0.8 pitch=13 pitch_swp=0 ring=0.9 formant=16 burst=11 jitter=0.04 flicker=0.15 snap=0.2 reverb=0.6 echo=0.25 pan=-0.3 lfo_rate=4.8 lfo>pitch=0.12
+clip kick 1 0 29.0909 1.2727 4888900975644381926 level=1 attack=0.001 release=1.2 pitch=-2 pitch_swp=-17 interval=0 timbre=0 drive=0.5 env_curve=0.25 reverb=0.15 keyed=0
+clip gtr 5 2 29.0909 2.7273 792434530693322815 level=0.65 attack=0 release=0.8 pitch=-7 file=resonant/guitar_heavy_00002.ogg cutoff=0.7 resonance=0.1 drive=0.2 reverb=0.25 duck=0.45 duck_from=1
+clip sub 1 2 29.0909 3.6364 2782786391131789739 level=0.4 attack=0.02 release=1 pitch=-14 interval=12 timbre=0.15 cutoff=0.35 duck=0.45 duck_from=1
+clip chant 8 3 29.0909 2.3636 5927668498917126826 level=0.42 attack=0.08 release=0.8 pitch=29 pitch_swp=0 ring=0.9 formant=16 burst=11 jitter=0.04 flicker=0.15 snap=0.2 reverb=0.6 echo=0.25 pan=0 lfo_rate=4.8 lfo>pitch=0.12
+clip chant 8 3 29.0909 2.3636 3441256404402892257 level=0.25 attack=0.08 release=0.8 pitch=17 pitch_swp=0 ring=0.9 formant=16 burst=11 jitter=0.04 flicker=0.15 snap=0.2 reverb=0.6 echo=0.25 pan=-0.3 lfo_rate=4.8 lfo>pitch=0.12
+clip cello 7 4 29.0909 4.5455 4690464001657004925 level=0.4 attack=1.2 release=1.5 pitch=-7 file=resonant/cello_00002_pad.ogg gather=0.85 chord=5 purity=0.3 shimmer=0.15 reverb=0.45 cutoff=0.7 duck=0.45 duck_from=1
+clip choir 6 4 29.0909 4.5455 7887080620840533108 level=0.5 attack=0.6 release=1.5 pitch=-4.94 chord=5 file=luminal/luminal_synth_vocal_treble_00004.ogg start=0.2 speed=0.3 voices=8 gather=1 gather_swp=0 drift=0.5 wander=2 scatter=0.4 reverb=0.65 cutoff=0.8
+clip bell 5 5 29.0909 6.3636 6880421924846326386 level=0.45 release=5 pitch=-5.37 file=resonant/bell_00003.ogg reverb=0.55
+clip bell_low 1 5 29.0909 6.3636 5523006426082050978 level=0.25 attack=0.002 release=6 pitch=-7 interval=12 timbre=0 bank=1 stretch=0.06 tilt=-0.4 env_curve=0.6 reverb=0.6
+clip kick 1 0 30.4545 1.2727 600063703364242940 level=0.6 attack=0.001 release=1.2 pitch=-2 pitch_swp=-17 interval=0 timbre=0 drive=0.5 env_curve=0.25 reverb=0.15 keyed=0
+clip gtr 5 2 30.4545 0.9091 7027532543063552893 level=0.45 attack=0 release=0.8 pitch=-7 file=resonant/guitar_heavy_00002.ogg cutoff=0.55 resonance=0.1 drive=0.2 reverb=0.25 duck=0.45 duck_from=1
+clip anvil 2 1 30.9091 1.8182 7581557715184700486 level=0.5 attack=0.001 release=1.8 filter=1 resonance=0.92 cutoff=0.4866 color=0.2 env_curve=0.8 reverb=0.5 pan=-0.15 keyed=0
+clip anvil 2 1 30.9091 1.8182 6702024909601979809 level=0.35 attack=0.001 release=1.8 filter=1 resonance=0.92 cutoff=0.5598 color=0.2 env_curve=0.8 reverb=0.5 pan=0.2 keyed=0
+clip anvil_ping 1 1 30.9091 1.3636 8130005171272358909 level=0.22 attack=0.001 release=1.4 pitch=29 interval=0 timbre=0 fm_ratio=3.53 fm_depth=1.8 env_curve=0.85 reverb=0.5 keyed=0
+clip anvil_crack 2 1 30.9091 0.1364 8204083892266572209 level=0.4 attack=0 release=0.1 filter=2 cutoff=0.7 color=0 keyed=0
+clip chant 8 3 30.9091 1.4545 8538704527368725727 level=0.42 attack=0.08 release=0.8 pitch=27 pitch_swp=0 ring=0.9 formant=19 burst=11 jitter=0.04 flicker=0.15 snap=0.2 reverb=0.6 echo=0.25 pan=0 lfo_rate=4.8 lfo>pitch=0.12
+clip chant 8 3 30.9091 1.4545 1281533457725847649 level=0.25 attack=0.08 release=0.8 pitch=15 pitch_swp=0 ring=0.9 formant=19 burst=11 jitter=0.04 flicker=0.15 snap=0.2 reverb=0.6 echo=0.25 pan=-0.3 lfo_rate=4.8 lfo>pitch=0.12
+clip kick 1 0 31.3636 1.2727 4175779937997968628 level=0.8 attack=0.001 release=1.2 pitch=-2 pitch_swp=-17 interval=0 timbre=0 drive=0.5 env_curve=0.25 reverb=0.15 keyed=0
+clip gtr 5 2 31.3636 1.0909 5203476978076611884 level=0.5 attack=0 release=0.8 pitch=-7 file=resonant/guitar_heavy_00002.ogg cutoff=0.6 resonance=0.1 drive=0.2 reverb=0.25 duck=0.45 duck_from=1
+clip chant 8 3 31.8182 1.4545 8576698080955547376 level=0.42 attack=0.08 release=0.8 pitch=25 pitch_swp=0 ring=0.9 formant=12 burst=11 jitter=0.04 flicker=0.15 snap=0.2 reverb=0.6 echo=0.25 pan=0 lfo_rate=4.8 lfo>pitch=0.12
+clip chant 8 3 31.8182 1.4545 5550222717924485406 level=0.25 attack=0.08 release=0.8 pitch=13 pitch_swp=0 ring=0.9 formant=12 burst=11 jitter=0.04 flicker=0.15 snap=0.2 reverb=0.6 echo=0.25 pan=-0.3 lfo_rate=4.8 lfo>pitch=0.12
+clip kick 1 0 32.7273 1.2727 5221479727579480796 level=1 attack=0.001 release=1.2 pitch=-2 pitch_swp=-17 interval=0 timbre=0 drive=0.5 env_curve=0.25 reverb=0.15 keyed=0
+clip gtr 5 2 32.7273 2.7273 2120915597799211497 level=0.65 attack=0 release=0.8 pitch=-5 file=resonant/guitar_heavy_00002.ogg cutoff=0.7 resonance=0.1 drive=0.2 reverb=0.25 duck=0.45 duck_from=1
+clip sub 1 2 32.7273 3.6364 3068323527200076243 level=0.4 attack=0.02 release=1 pitch=-12 interval=12 timbre=0.15 cutoff=0.35 duck=0.45 duck_from=1
+clip chant 8 3 32.7273 1.4545 7418165598607926594 level=0.42 attack=0.08 release=0.8 pitch=24 pitch_swp=0 ring=0.9 formant=16 burst=11 jitter=0.04 flicker=0.15 snap=0.2 reverb=0.6 echo=0.25 pan=0 lfo_rate=4.8 lfo>pitch=0.12
+clip chant 8 3 32.7273 1.4545 8173673297659063523 level=0.25 attack=0.08 release=0.8 pitch=12 pitch_swp=0 ring=0.9 formant=16 burst=11 jitter=0.04 flicker=0.15 snap=0.2 reverb=0.6 echo=0.25 pan=-0.3 lfo_rate=4.8 lfo>pitch=0.12
+clip cello 7 4 32.7273 4.5455 1083493912303506610 level=0.4 attack=1.2 release=1.5 pitch=-5 file=resonant/cello_00002_pad.ogg gather=0.85 chord=2 purity=0.3 shimmer=0.15 reverb=0.45 cutoff=0.7 duck=0.45 duck_from=1
+clip choir 6 4 32.7273 4.5455 1502976878288488957 level=0.5 attack=0.6 release=1.5 pitch=-2.94 chord=2 file=luminal/luminal_synth_vocal_treble_00004.ogg start=0.2 speed=0.3 voices=8 gather=1 gather_swp=0 drift=0.5 wander=2 scatter=0.4 reverb=0.65 cutoff=0.8
+clip chant 8 3 33.6364 1.4545 905177757036151287 level=0.42 attack=0.08 release=0.8 pitch=22 pitch_swp=0 ring=0.9 formant=19 burst=11 jitter=0.04 flicker=0.15 snap=0.2 reverb=0.6 echo=0.25 pan=0 lfo_rate=4.8 lfo>pitch=0.12
+clip chant 8 3 33.6364 1.4545 5897283814288371869 level=0.25 attack=0.08 release=0.8 pitch=10 pitch_swp=0 ring=0.9 formant=19 burst=11 jitter=0.04 flicker=0.15 snap=0.2 reverb=0.6 echo=0.25 pan=-0.3 lfo_rate=4.8 lfo>pitch=0.12
+clip kick 1 0 34.0909 1.2727 7706516946124562683 level=0.6 attack=0.001 release=1.2 pitch=-2 pitch_swp=-17 interval=0 timbre=0 drive=0.5 env_curve=0.25 reverb=0.15 keyed=0
+clip gtr 5 2 34.0909 0.9091 2722498375086463466 level=0.45 attack=0 release=0.8 pitch=-5 file=resonant/guitar_heavy_00002.ogg cutoff=0.55 resonance=0.1 drive=0.2 reverb=0.25 duck=0.45 duck_from=1
+clip anvil 2 1 34.5455 1.8182 6772485911985078616 level=0.5 attack=0.001 release=1.8 filter=1 resonance=0.92 cutoff=0.4866 color=0.2 env_curve=0.8 reverb=0.5 pan=-0.15 keyed=0
+clip anvil 2 1 34.5455 1.8182 3727325338388170551 level=0.35 attack=0.001 release=1.8 filter=1 resonance=0.92 cutoff=0.5598 color=0.2 env_curve=0.8 reverb=0.5 pan=0.2 keyed=0
+clip anvil_ping 1 1 34.5455 1.3636 634418306025283081 level=0.22 attack=0.001 release=1.4 pitch=29 interval=0 timbre=0 fm_ratio=3.53 fm_depth=1.8 env_curve=0.85 reverb=0.5 keyed=0
+clip anvil_crack 2 1 34.5455 0.1364 6945728301102944185 level=0.4 attack=0 release=0.1 filter=2 cutoff=0.7 color=0 keyed=0
+clip chant 8 3 34.5455 2.3636 8602816738500894818 level=0.42 attack=0.08 release=0.8 pitch=28 pitch_swp=0 ring=0.9 formant=7 burst=11 jitter=0.04 flicker=0.15 snap=0.2 reverb=0.6 echo=0.25 pan=0 lfo_rate=4.8 lfo>pitch=0.12
+clip chant 8 3 34.5455 2.3636 4494881865084591288 level=0.25 attack=0.08 release=0.8 pitch=16 pitch_swp=0 ring=0.9 formant=7 burst=11 jitter=0.04 flicker=0.15 snap=0.2 reverb=0.6 echo=0.25 pan=-0.3 lfo_rate=4.8 lfo>pitch=0.12
+clip kick 1 0 35.0000 1.2727 2658989525196690866 level=0.8 attack=0.001 release=1.2 pitch=-2 pitch_swp=-17 interval=0 timbre=0 drive=0.5 env_curve=0.25 reverb=0.15 keyed=0
+clip gtr 5 2 35.0000 1.0909 422390947744928164 level=0.5 attack=0 release=0.8 pitch=-5 file=resonant/guitar_heavy_00002.ogg cutoff=0.6 resonance=0.1 drive=0.2 reverb=0.25 duck=0.45 duck_from=1
+clip anvil 2 1 35.9091 1.8182 2481847994973965591 level=0.35 attack=0.001 release=1.8 filter=1 resonance=0.92 cutoff=0.4866 color=0.2 env_curve=0.8 reverb=0.5 pan=-0.15 keyed=0
+clip anvil 2 1 35.9091 1.8182 2445594075927864759 level=0.245 attack=0.001 release=1.8 filter=1 resonance=0.92 cutoff=0.5598 color=0.2 env_curve=0.8 reverb=0.5 pan=0.2 keyed=0
+clip anvil_ping 1 1 35.9091 1.3636 7136084009866181891 level=0.154 attack=0.001 release=1.4 pitch=29 interval=0 timbre=0 fm_ratio=3.53 fm_depth=1.8 env_curve=0.85 reverb=0.5 keyed=0
+clip anvil_crack 2 1 35.9091 0.1364 8823574881561097891 level=0.28 attack=0 release=0.1 filter=2 cutoff=0.7 color=0 keyed=0
+clip kick 1 0 36.3636 1.2727 467999429415225267 level=1 attack=0.001 release=1.2 pitch=-2 pitch_swp=-17 interval=0 timbre=0 drive=0.5 env_curve=0.25 reverb=0.15 keyed=0
+clip anvil 2 1 36.3636 1.8182 1938180591506635269 level=0.5 attack=0.001 release=1.8 filter=1 resonance=0.92 cutoff=0.4866 color=0.2 env_curve=0.8 reverb=0.5 pan=-0.15 keyed=0
+clip anvil 2 1 36.3636 1.8182 4019301404978825966 level=0.35 attack=0.001 release=1.8 filter=1 resonance=0.92 cutoff=0.5598 color=0.2 env_curve=0.8 reverb=0.5 pan=0.2 keyed=0
+clip anvil_ping 1 1 36.3636 1.3636 5633032128082932559 level=0.22 attack=0.001 release=1.4 pitch=29 interval=0 timbre=0 fm_ratio=3.53 fm_depth=1.8 env_curve=0.85 reverb=0.5 keyed=0
+clip anvil_crack 2 1 36.3636 0.1364 2498195518872848567 level=0.4 attack=0 release=0.1 filter=2 cutoff=0.7 color=0 keyed=0
+clip clockwork 8 1 36.3636 3.6364 3573952772887612533 level=0.2 attack=0 release=0.1 pitch=-7.7263 divide=4 ring=0 burst=2 snap=0.9 misfire=0.6 filter=2 cutoff=0.6 pan=0.3 reverb=0.35 keyed=0
+clip gtr 5 2 36.3636 5.4545 4637313514679729168 level=0.6 attack=0 release=0.8 pitch=0 file=resonant/guitar_heavy_00002.ogg cutoff=0.7 resonance=0.1 drive=0.2 reverb=0.25 duck=0.45 duck_from=1
+clip sub_end 1 2 36.3636 5.4545 4156982730656541578 level=0.4 attack=0.02 release=4 pitch=-7 pitch_swp=-5 interval=12 timbre=0.15 cutoff=0.35
+clip dying_chant 8 3 36.3636 7.2727 5960344218040990086 level=0.4 attack=0.01 release=4 pitch=29 pitch_swp=-24 ring=0.9 formant=19 burst=11 jitter=0.4 misfire=0.5 flicker=0.8 reverb=0.6 echo=0.3
+clip cello 7 4 36.3636 7.2727 8041915487889674323 level=0.4 attack=0.05 release=1.5 pitch=0 file=resonant/cello_00002_pad.ogg gather=0.85 chord=5 purity=0.3 shimmer=0.15 reverb=0.45 cutoff=0.7 duck=0.45 duck_from=1
+clip choir 6 4 36.3636 7.2727 212512898587334585 level=0.5 attack=0.05 release=4 pitch=2.06 chord=5 file=luminal/luminal_synth_vocal_treble_00004.ogg start=0.2 speed=0.3 voices=8 gather=1 gather_swp=-1 drift=0.5 wander=12 scatter=0.4 reverb=0.65 cutoff=0.8
+clip bell 5 5 36.3636 6.3636 4581064506577973832 level=0.6 release=5 pitch=-5.37 file=resonant/bell_00003.ogg reverb=0.55
+clip bell_low 1 5 36.3636 6.3636 3609672117422780071 level=0.25 attack=0.002 release=6 pitch=-7 interval=12 timbre=0 bank=1 stretch=0.06 tilt=-0.4 env_curve=0.6 reverb=0.6
+clip clock_stop 8 1 40.0000 3.6364 2557358779410491841 level=0.2 attack=0 release=0.1 pitch=-7.7263 pitch_swp=-24 divide=4 ring=0 burst=2 snap=0.9 misfire=0.4 filter=2 cutoff=0.6 pan=0.3 reverb=0.35 keyed=0

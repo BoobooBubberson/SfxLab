@@ -1,0 +1,1080 @@
+# SfxLab project v2: clip name type track start dur seed key=value...
+# 'Hymn for a Dead Coil' - D phrygian, 170 BPM, by Claude. tracks (GUI numbering): 1 kick, 2 perc, 3 riff, 4 coil lead, 5 choir, 6 fx
+loop 0
+root 110.0000
+track 0 1.000 0
+track 1 0.700 0
+track 2 0.720 0
+track 3 0.450 0
+track 4 0.850 0
+track 5 0.700 0
+clip choir 6 4 0.0000 6.0000 3181953187780436645 level=0.65 attack=3.0 release=1.2 pitch=-2 chord=5 file=vocals/ethereal_vocals.wav start=0.2 speed=0.35 voices=10 gather=0.0 gather_swp=1.0 drift=0.5 wander=12 scatter=0.35 reverb=0.55 cutoff=0.85
+clip drone 5 4 0.0000 5.6471 7536879907090966839 level=0.5 attack=2.5 release=0.6 pitch=0 cutoff=0.5 loop=1 pitch_mode=1 speed=0.6 file=resonant/guitar_heavy_00001_pad.ogg reverb=0.4
+clip coil_hats 8 1 1.4118 1.4118 2953620678079275952 level=0.25 attack=0.0 release=0.05 pitch=8.6537 divide=4 burst=1.4 snap=0.85 misfire=0.8 filter=2 cutoff=0.72 pan=-0.25 keyed=0
+clip coil_hats 8 1 2.8235 1.4118 849551992858181512 level=0.3 attack=0.0 release=0.05 pitch=8.6537 divide=4 burst=1.4 snap=0.85 misfire=0.55 filter=2 cutoff=0.72 pan=-0.25 keyed=0
+clip coil_hats 8 1 4.2353 1.4118 3006129894494217754 level=0.34 attack=0.0 release=0.05 pitch=8.6537 divide=4 burst=1.4 snap=0.85 misfire=0.2 filter=2 cutoff=0.72 pan=-0.25 keyed=0
+clip kick 1 0 2.8235 0.2647 5354101254466524026 level=1.0 attack=0.001 release=0.6 pitch=3 pitch_swp=-22 interval=0 timbre=0.0 drive=0.7 env_curve=0.3 keyed=0
+clip kick_body 1 0 2.8235 0.1941 2012932832923621748 level=0.7 attack=0.002 release=0.45 pitch=-7 pitch_swp=-4 interval=0 timbre=0.0 drive=0.5 env_curve=0.2 keyed=0
+clip click 2 0 2.8235 0.0141 7273348813628587408 level=0.3 attack=0.0 release=0.012 cutoff=0.85 filter=2 keyed=0
+clip kick 1 0 4.2353 0.2647 3594117397446517349 level=1.0 attack=0.001 release=0.6 pitch=3 pitch_swp=-22 interval=0 timbre=0.0 drive=0.7 env_curve=0.3 keyed=0
+clip kick_body 1 0 4.2353 0.1941 4636009208099434752 level=0.7 attack=0.002 release=0.45 pitch=-7 pitch_swp=-4 interval=0 timbre=0.0 drive=0.5 env_curve=0.2 keyed=0
+clip click 2 0 4.2353 0.0141 5329241309613939319 level=0.3 attack=0.0 release=0.012 cutoff=0.85 filter=2 keyed=0
+clip kick 1 0 5.1176 0.2647 1105662594317024175 level=1.0 attack=0.001 release=0.6 pitch=3 pitch_swp=-22 interval=0 timbre=0.0 drive=0.7 env_curve=0.3 keyed=0
+clip kick_body 1 0 5.1176 0.1941 3229779232305679428 level=0.7 attack=0.002 release=0.45 pitch=-7 pitch_swp=-4 interval=0 timbre=0.0 drive=0.5 env_curve=0.2 keyed=0
+clip click 2 0 5.1176 0.0141 2277697206227698544 level=0.3 attack=0.0 release=0.012 cutoff=0.85 filter=2 keyed=0
+clip snare 2 1 4.9412 0.1941 1683801083284767777 level=0.1925 attack=0.001 release=0.5 cutoff=0.7 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 4.9412 0.1059 8049456005491778999 level=0.14 attack=0.001 release=0.25 pitch=8 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip snare 2 1 5.0294 0.1941 2904691439436333546 level=0.2372 attack=0.001 release=0.5 cutoff=0.7 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 5.0294 0.1059 9182138191202721256 level=0.1725 attack=0.001 release=0.25 pitch=8 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip snare 2 1 5.1176 0.1941 5214917501448182396 level=0.2819 attack=0.001 release=0.5 cutoff=0.71 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 5.1176 0.1059 6173129729066737295 level=0.205 attack=0.001 release=0.25 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip snare 2 1 5.2059 0.1941 2976548989849234776 level=0.3266 attack=0.001 release=0.5 cutoff=0.72 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 5.2059 0.1059 7105802234786155133 level=0.2375 attack=0.001 release=0.25 pitch=10 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip snare 2 1 5.2941 0.1941 5004908173406631309 level=0.3713 attack=0.001 release=0.5 cutoff=0.73 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 5.2941 0.1059 6714228846690809324 level=0.27 attack=0.001 release=0.25 pitch=11 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip stroke 5 1 5.2941 0.2471 6913368030940074450 level=0.3038 attack=0.0 release=0.3 pitch=-2 drive=0.4 cutoff=0.8 file=machines/steam_engine_stroke_3.ogg keyed=0
+clip snare 2 1 5.3824 0.1941 8225000139552033583 level=0.4159 attack=0.001 release=0.5 cutoff=0.73 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 5.3824 0.1059 1010415291056794954 level=0.3025 attack=0.001 release=0.25 pitch=11 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip stroke 5 1 5.3824 0.2471 5346028223866788582 level=0.3403 attack=0.0 release=0.3 pitch=-2 drive=0.4 cutoff=0.8 file=machines/steam_engine_stroke_3.ogg keyed=0
+clip snare 2 1 5.4706 0.1941 2206412957397656775 level=0.4606 attack=0.001 release=0.5 cutoff=0.74 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 5.4706 0.1059 6959791014192905331 level=0.335 attack=0.001 release=0.25 pitch=12 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip stroke 5 1 5.4706 0.2471 3057158395666268784 level=0.3769 attack=0.0 release=0.3 pitch=-2 drive=0.4 cutoff=0.8 file=machines/steam_engine_stroke_3.ogg keyed=0
+clip snare 2 1 5.5588 0.1941 3455245850678509471 level=0.5053 attack=0.001 release=0.5 cutoff=0.75 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 5.5588 0.1059 6746517414613471760 level=0.3675 attack=0.001 release=0.25 pitch=13 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip stroke 5 1 5.5588 0.2471 4660232005182584030 level=0.4134 attack=0.0 release=0.3 pitch=-2 drive=0.4 cutoff=0.8 file=machines/steam_engine_stroke_3.ogg keyed=0
+clip coil_riser 8 3 2.8235 2.8235 310513868972267193 level=0.35 attack=2.0 release=0.05 pitch=5 pitch_swp=24 ring=0.3 formant=19 burst=4 jitter=0.15 misfire=0.1 snap=0.5 flicker=0.4 reverb=0.3
+clip riser 5 5 3.3671 2.9859 3099586573987853546 level=0.55 release=0.4 file=gravitic/gravitic_riser_00001.ogg
+clip impact 5 5 5.6471 2.8235 236234332555053486 level=0.7 release=2 file=gravitic/gravitic_impact_00001.ogg
+clip impact 5 5 22.5882 2.8235 4845211457050780363 level=0.7 release=2 file=gravitic/gravitic_impact_00001.ogg
+clip kick 1 0 5.6471 0.2647 5135228454256458171 level=1.0 attack=0.001 release=0.6 pitch=3 pitch_swp=-22 interval=0 timbre=0.0 drive=0.7 env_curve=0.3 keyed=0
+clip kick_body 1 0 5.6471 0.1941 4630316755660765497 level=0.7 attack=0.002 release=0.45 pitch=-7 pitch_swp=-4 interval=0 timbre=0.0 drive=0.5 env_curve=0.2 keyed=0
+clip click 2 0 5.6471 0.0141 1456872312079255270 level=0.3 attack=0.0 release=0.012 cutoff=0.85 filter=2 keyed=0
+clip kick 1 0 6.1765 0.2647 9214109481751156941 level=1.0 attack=0.001 release=0.6 pitch=3 pitch_swp=-22 interval=0 timbre=0.0 drive=0.7 env_curve=0.3 keyed=0
+clip kick_body 1 0 6.1765 0.1941 2154355447056104079 level=0.7 attack=0.002 release=0.45 pitch=-7 pitch_swp=-4 interval=0 timbre=0.0 drive=0.5 env_curve=0.2 keyed=0
+clip click 2 0 6.1765 0.0141 2045184953717541255 level=0.3 attack=0.0 release=0.012 cutoff=0.85 filter=2 keyed=0
+clip kick 1 0 6.5294 0.2647 1605249691545705656 level=1.0 attack=0.001 release=0.6 pitch=3 pitch_swp=-22 interval=0 timbre=0.0 drive=0.7 env_curve=0.3 keyed=0
+clip kick_body 1 0 6.5294 0.1941 933817090733780086 level=0.7 attack=0.002 release=0.45 pitch=-7 pitch_swp=-4 interval=0 timbre=0.0 drive=0.5 env_curve=0.2 keyed=0
+clip click 2 0 6.5294 0.0141 8921130891139874586 level=0.3 attack=0.0 release=0.012 cutoff=0.85 filter=2 keyed=0
+clip snare 2 1 6.0000 0.1941 330245548344665445 level=0.55 attack=0.001 release=0.5 cutoff=0.7 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 6.0000 0.1059 5657712181323500932 level=0.4 attack=0.001 release=0.25 pitch=8 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip stroke 5 1 6.0000 0.2471 9216232287503877260 level=0.45 attack=0.0 release=0.3 pitch=-2 drive=0.4 cutoff=0.8 file=machines/steam_engine_stroke_3.ogg keyed=0
+clip snare 2 1 6.7059 0.1941 4239986092511322731 level=0.55 attack=0.001 release=0.5 cutoff=0.7 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 6.7059 0.1059 404465565425944073 level=0.4 attack=0.001 release=0.25 pitch=8 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip stroke 5 1 6.7059 0.2471 4481937152045434600 level=0.45 attack=0.0 release=0.3 pitch=-2 drive=0.4 cutoff=0.8 file=machines/steam_engine_stroke_3.ogg keyed=0
+clip snare 2 1 6.2647 0.1941 9000377445287269085 level=0.165 attack=0.001 release=0.5 cutoff=0.7 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 6.2647 0.1059 5107843226307569417 level=0.12 attack=0.001 release=0.25 pitch=8 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip snare 2 1 6.4412 0.1941 4626693083841042913 level=0.165 attack=0.001 release=0.5 cutoff=0.7 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 6.4412 0.1059 5364879783499920146 level=0.12 attack=0.001 release=0.25 pitch=8 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip snare 2 1 6.9706 0.1941 8735518504123151344 level=0.165 attack=0.001 release=0.5 cutoff=0.7 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 6.9706 0.1059 4813503491137072254 level=0.12 attack=0.001 release=0.25 pitch=8 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip kick 1 0 7.0588 0.2647 5341498055158769650 level=1.0 attack=0.001 release=0.6 pitch=3 pitch_swp=-22 interval=0 timbre=0.0 drive=0.7 env_curve=0.3 keyed=0
+clip kick_body 1 0 7.0588 0.1941 1545447402793370882 level=0.7 attack=0.002 release=0.45 pitch=-7 pitch_swp=-4 interval=0 timbre=0.0 drive=0.5 env_curve=0.2 keyed=0
+clip click 2 0 7.0588 0.0141 1184292040798643442 level=0.3 attack=0.0 release=0.012 cutoff=0.85 filter=2 keyed=0
+clip kick 1 0 7.2353 0.2647 2171160439493947445 level=1.0 attack=0.001 release=0.6 pitch=3 pitch_swp=-22 interval=0 timbre=0.0 drive=0.7 env_curve=0.3 keyed=0
+clip kick_body 1 0 7.2353 0.1941 3319499121342556994 level=0.7 attack=0.002 release=0.45 pitch=-7 pitch_swp=-4 interval=0 timbre=0.0 drive=0.5 env_curve=0.2 keyed=0
+clip click 2 0 7.2353 0.0141 884084818498657528 level=0.3 attack=0.0 release=0.012 cutoff=0.85 filter=2 keyed=0
+clip kick 1 0 7.9412 0.2647 9092906158986603095 level=1.0 attack=0.001 release=0.6 pitch=3 pitch_swp=-22 interval=0 timbre=0.0 drive=0.7 env_curve=0.3 keyed=0
+clip kick_body 1 0 7.9412 0.1941 6711082770649496009 level=0.7 attack=0.002 release=0.45 pitch=-7 pitch_swp=-4 interval=0 timbre=0.0 drive=0.5 env_curve=0.2 keyed=0
+clip click 2 0 7.9412 0.0141 3144440305315873783 level=0.3 attack=0.0 release=0.012 cutoff=0.85 filter=2 keyed=0
+clip kick 1 0 8.0294 0.2647 4020523613026946207 level=1.0 attack=0.001 release=0.6 pitch=3 pitch_swp=-22 interval=0 timbre=0.0 drive=0.7 env_curve=0.3 keyed=0
+clip kick_body 1 0 8.0294 0.1941 3456132076657680917 level=0.7 attack=0.002 release=0.45 pitch=-7 pitch_swp=-4 interval=0 timbre=0.0 drive=0.5 env_curve=0.2 keyed=0
+clip click 2 0 8.0294 0.0141 4946013759216885913 level=0.3 attack=0.0 release=0.012 cutoff=0.85 filter=2 keyed=0
+clip snare 2 1 7.4118 0.1941 3468307181787115901 level=0.55 attack=0.001 release=0.5 cutoff=0.7 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 7.4118 0.1059 7725851033166198083 level=0.4 attack=0.001 release=0.25 pitch=8 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip stroke 5 1 7.4118 0.2471 6825014736536395388 level=0.45 attack=0.0 release=0.3 pitch=-2 drive=0.4 cutoff=0.8 file=machines/steam_engine_stroke_3.ogg keyed=0
+clip snare 2 1 8.1176 0.1941 8380997237830026279 level=0.55 attack=0.001 release=0.5 cutoff=0.7 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 8.1176 0.1059 1832811562998115487 level=0.4 attack=0.001 release=0.25 pitch=8 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip stroke 5 1 8.1176 0.2471 4329608811129671716 level=0.45 attack=0.0 release=0.3 pitch=-2 drive=0.4 cutoff=0.8 file=machines/steam_engine_stroke_3.ogg keyed=0
+clip snare 2 1 7.8529 0.1941 2114364234697499144 level=0.165 attack=0.001 release=0.5 cutoff=0.7 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 7.8529 0.1059 5382234571658594556 level=0.12 attack=0.001 release=0.25 pitch=8 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip snare 2 1 8.2941 0.1941 5128013608532292097 level=0.165 attack=0.001 release=0.5 cutoff=0.7 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 8.2941 0.1059 2250753912373320310 level=0.12 attack=0.001 release=0.25 pitch=8 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip kick 1 0 8.4706 0.2647 8163059536655034009 level=1.0 attack=0.001 release=0.6 pitch=3 pitch_swp=-22 interval=0 timbre=0.0 drive=0.7 env_curve=0.3 keyed=0
+clip kick_body 1 0 8.4706 0.1941 2461636861312769022 level=0.7 attack=0.002 release=0.45 pitch=-7 pitch_swp=-4 interval=0 timbre=0.0 drive=0.5 env_curve=0.2 keyed=0
+clip click 2 0 8.4706 0.0141 2575364029774784498 level=0.3 attack=0.0 release=0.012 cutoff=0.85 filter=2 keyed=0
+clip kick 1 0 9.0000 0.2647 3242553752571361819 level=1.0 attack=0.001 release=0.6 pitch=3 pitch_swp=-22 interval=0 timbre=0.0 drive=0.7 env_curve=0.3 keyed=0
+clip kick_body 1 0 9.0000 0.1941 2351732158051041187 level=0.7 attack=0.002 release=0.45 pitch=-7 pitch_swp=-4 interval=0 timbre=0.0 drive=0.5 env_curve=0.2 keyed=0
+clip click 2 0 9.0000 0.0141 1177548442285825434 level=0.3 attack=0.0 release=0.012 cutoff=0.85 filter=2 keyed=0
+clip kick 1 0 9.3529 0.2647 1071863272006054896 level=1.0 attack=0.001 release=0.6 pitch=3 pitch_swp=-22 interval=0 timbre=0.0 drive=0.7 env_curve=0.3 keyed=0
+clip kick_body 1 0 9.3529 0.1941 4801312090556086882 level=0.7 attack=0.002 release=0.45 pitch=-7 pitch_swp=-4 interval=0 timbre=0.0 drive=0.5 env_curve=0.2 keyed=0
+clip click 2 0 9.3529 0.0141 1832086994703410897 level=0.3 attack=0.0 release=0.012 cutoff=0.85 filter=2 keyed=0
+clip snare 2 1 8.8235 0.1941 8400674783635879359 level=0.55 attack=0.001 release=0.5 cutoff=0.7 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 8.8235 0.1059 2996184254614925222 level=0.4 attack=0.001 release=0.25 pitch=8 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip stroke 5 1 8.8235 0.2471 3596762181987779575 level=0.45 attack=0.0 release=0.3 pitch=-2 drive=0.4 cutoff=0.8 file=machines/steam_engine_stroke_3.ogg keyed=0
+clip snare 2 1 9.5294 0.1941 5601889835230269469 level=0.55 attack=0.001 release=0.5 cutoff=0.7 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 9.5294 0.1059 3596352898871346194 level=0.4 attack=0.001 release=0.25 pitch=8 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip stroke 5 1 9.5294 0.2471 4507708947663930892 level=0.45 attack=0.0 release=0.3 pitch=-2 drive=0.4 cutoff=0.8 file=machines/steam_engine_stroke_3.ogg keyed=0
+clip snare 2 1 9.0882 0.1941 1183639478084820733 level=0.165 attack=0.001 release=0.5 cutoff=0.7 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 9.0882 0.1059 2995082152380207508 level=0.12 attack=0.001 release=0.25 pitch=8 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip snare 2 1 9.2647 0.1941 2101795059453042596 level=0.165 attack=0.001 release=0.5 cutoff=0.7 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 9.2647 0.1059 1682622931834341622 level=0.12 attack=0.001 release=0.25 pitch=8 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip snare 2 1 9.7941 0.1941 9126744713647438020 level=0.165 attack=0.001 release=0.5 cutoff=0.7 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 9.7941 0.1059 2353930219945008859 level=0.12 attack=0.001 release=0.25 pitch=8 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip kick 1 0 9.8824 0.2647 3306411843968724014 level=1.0 attack=0.001 release=0.6 pitch=3 pitch_swp=-22 interval=0 timbre=0.0 drive=0.7 env_curve=0.3 keyed=0
+clip kick_body 1 0 9.8824 0.1941 3503509534854756002 level=0.7 attack=0.002 release=0.45 pitch=-7 pitch_swp=-4 interval=0 timbre=0.0 drive=0.5 env_curve=0.2 keyed=0
+clip click 2 0 9.8824 0.0141 1865780703151262310 level=0.3 attack=0.0 release=0.012 cutoff=0.85 filter=2 keyed=0
+clip kick 1 0 10.0588 0.2647 7071195681123608806 level=1.0 attack=0.001 release=0.6 pitch=3 pitch_swp=-22 interval=0 timbre=0.0 drive=0.7 env_curve=0.3 keyed=0
+clip kick_body 1 0 10.0588 0.1941 4505495710374450622 level=0.7 attack=0.002 release=0.45 pitch=-7 pitch_swp=-4 interval=0 timbre=0.0 drive=0.5 env_curve=0.2 keyed=0
+clip click 2 0 10.0588 0.0141 798627670510536736 level=0.3 attack=0.0 release=0.012 cutoff=0.85 filter=2 keyed=0
+clip kick 1 0 10.7647 0.2647 151768227814609665 level=1.0 attack=0.001 release=0.6 pitch=3 pitch_swp=-22 interval=0 timbre=0.0 drive=0.7 env_curve=0.3 keyed=0
+clip kick_body 1 0 10.7647 0.1941 2356640184897595929 level=0.7 attack=0.002 release=0.45 pitch=-7 pitch_swp=-4 interval=0 timbre=0.0 drive=0.5 env_curve=0.2 keyed=0
+clip click 2 0 10.7647 0.0141 6179065208019418638 level=0.3 attack=0.0 release=0.012 cutoff=0.85 filter=2 keyed=0
+clip kick 1 0 10.8529 0.2647 157603700715209043 level=1.0 attack=0.001 release=0.6 pitch=3 pitch_swp=-22 interval=0 timbre=0.0 drive=0.7 env_curve=0.3 keyed=0
+clip kick_body 1 0 10.8529 0.1941 2863585879414422374 level=0.7 attack=0.002 release=0.45 pitch=-7 pitch_swp=-4 interval=0 timbre=0.0 drive=0.5 env_curve=0.2 keyed=0
+clip click 2 0 10.8529 0.0141 967345025942339058 level=0.3 attack=0.0 release=0.012 cutoff=0.85 filter=2 keyed=0
+clip snare 2 1 10.2353 0.1941 2042669519815487411 level=0.55 attack=0.001 release=0.5 cutoff=0.7 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 10.2353 0.1059 8738042446833744877 level=0.4 attack=0.001 release=0.25 pitch=8 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip stroke 5 1 10.2353 0.2471 3448812105568974140 level=0.45 attack=0.0 release=0.3 pitch=-2 drive=0.4 cutoff=0.8 file=machines/steam_engine_stroke_3.ogg keyed=0
+clip snare 2 1 10.9412 0.1941 100446604842484300 level=0.55 attack=0.001 release=0.5 cutoff=0.7 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 10.9412 0.1059 1906206281406421831 level=0.4 attack=0.001 release=0.25 pitch=8 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip stroke 5 1 10.9412 0.2471 555724011895575116 level=0.45 attack=0.0 release=0.3 pitch=-2 drive=0.4 cutoff=0.8 file=machines/steam_engine_stroke_3.ogg keyed=0
+clip snare 2 1 10.6765 0.1941 366104459571796616 level=0.165 attack=0.001 release=0.5 cutoff=0.7 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 10.6765 0.1059 1853021036613345226 level=0.12 attack=0.001 release=0.25 pitch=8 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip snare 2 1 11.1176 0.1941 8593990001221786800 level=0.165 attack=0.001 release=0.5 cutoff=0.7 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 11.1176 0.1059 6358053576831681956 level=0.12 attack=0.001 release=0.25 pitch=8 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip kick 1 0 11.2941 0.2647 1158710134300900096 level=1.0 attack=0.001 release=0.6 pitch=3 pitch_swp=-22 interval=0 timbre=0.0 drive=0.7 env_curve=0.3 keyed=0
+clip kick_body 1 0 11.2941 0.1941 339390858220958697 level=0.7 attack=0.002 release=0.45 pitch=-7 pitch_swp=-4 interval=0 timbre=0.0 drive=0.5 env_curve=0.2 keyed=0
+clip click 2 0 11.2941 0.0141 530120785633588893 level=0.3 attack=0.0 release=0.012 cutoff=0.85 filter=2 keyed=0
+clip kick 1 0 11.8235 0.2647 766377305578574242 level=1.0 attack=0.001 release=0.6 pitch=3 pitch_swp=-22 interval=0 timbre=0.0 drive=0.7 env_curve=0.3 keyed=0
+clip kick_body 1 0 11.8235 0.1941 3457531555025996539 level=0.7 attack=0.002 release=0.45 pitch=-7 pitch_swp=-4 interval=0 timbre=0.0 drive=0.5 env_curve=0.2 keyed=0
+clip click 2 0 11.8235 0.0141 8579682870162145083 level=0.3 attack=0.0 release=0.012 cutoff=0.85 filter=2 keyed=0
+clip kick 1 0 12.1765 0.2647 3430492568292181134 level=1.0 attack=0.001 release=0.6 pitch=3 pitch_swp=-22 interval=0 timbre=0.0 drive=0.7 env_curve=0.3 keyed=0
+clip kick_body 1 0 12.1765 0.1941 1356726296393947625 level=0.7 attack=0.002 release=0.45 pitch=-7 pitch_swp=-4 interval=0 timbre=0.0 drive=0.5 env_curve=0.2 keyed=0
+clip click 2 0 12.1765 0.0141 5303838764467909519 level=0.3 attack=0.0 release=0.012 cutoff=0.85 filter=2 keyed=0
+clip snare 2 1 11.6471 0.1941 4300818965643124045 level=0.55 attack=0.001 release=0.5 cutoff=0.7 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 11.6471 0.1059 6938231137023816753 level=0.4 attack=0.001 release=0.25 pitch=8 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip stroke 5 1 11.6471 0.2471 7387689849622092066 level=0.45 attack=0.0 release=0.3 pitch=-2 drive=0.4 cutoff=0.8 file=machines/steam_engine_stroke_3.ogg keyed=0
+clip snare 2 1 12.3529 0.1941 1283770416993942850 level=0.55 attack=0.001 release=0.5 cutoff=0.7 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 12.3529 0.1059 4388659580364787004 level=0.4 attack=0.001 release=0.25 pitch=8 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip stroke 5 1 12.3529 0.2471 8570104159437289717 level=0.45 attack=0.0 release=0.3 pitch=-2 drive=0.4 cutoff=0.8 file=machines/steam_engine_stroke_3.ogg keyed=0
+clip snare 2 1 11.9118 0.1941 2227282401555480140 level=0.165 attack=0.001 release=0.5 cutoff=0.7 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 11.9118 0.1059 6875997761603355297 level=0.12 attack=0.001 release=0.25 pitch=8 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip snare 2 1 12.0882 0.1941 4818180442676479191 level=0.165 attack=0.001 release=0.5 cutoff=0.7 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 12.0882 0.1059 8685972973294322427 level=0.12 attack=0.001 release=0.25 pitch=8 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip snare 2 1 12.6176 0.1941 1324333232287082398 level=0.165 attack=0.001 release=0.5 cutoff=0.7 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 12.6176 0.1059 5305509338652217449 level=0.12 attack=0.001 release=0.25 pitch=8 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip kick 1 0 12.7059 0.2647 720399368089898344 level=1.0 attack=0.001 release=0.6 pitch=3 pitch_swp=-22 interval=0 timbre=0.0 drive=0.7 env_curve=0.3 keyed=0
+clip kick_body 1 0 12.7059 0.1941 183203996136871510 level=0.7 attack=0.002 release=0.45 pitch=-7 pitch_swp=-4 interval=0 timbre=0.0 drive=0.5 env_curve=0.2 keyed=0
+clip click 2 0 12.7059 0.0141 7853653427754062444 level=0.3 attack=0.0 release=0.012 cutoff=0.85 filter=2 keyed=0
+clip kick 1 0 12.8824 0.2647 1319085439538323667 level=1.0 attack=0.001 release=0.6 pitch=3 pitch_swp=-22 interval=0 timbre=0.0 drive=0.7 env_curve=0.3 keyed=0
+clip kick_body 1 0 12.8824 0.1941 5962240220707301753 level=0.7 attack=0.002 release=0.45 pitch=-7 pitch_swp=-4 interval=0 timbre=0.0 drive=0.5 env_curve=0.2 keyed=0
+clip click 2 0 12.8824 0.0141 1392691222236398052 level=0.3 attack=0.0 release=0.012 cutoff=0.85 filter=2 keyed=0
+clip kick 1 0 13.5882 0.2647 3882890313309961603 level=1.0 attack=0.001 release=0.6 pitch=3 pitch_swp=-22 interval=0 timbre=0.0 drive=0.7 env_curve=0.3 keyed=0
+clip kick_body 1 0 13.5882 0.1941 7716920460733281133 level=0.7 attack=0.002 release=0.45 pitch=-7 pitch_swp=-4 interval=0 timbre=0.0 drive=0.5 env_curve=0.2 keyed=0
+clip click 2 0 13.5882 0.0141 670305462719136400 level=0.3 attack=0.0 release=0.012 cutoff=0.85 filter=2 keyed=0
+clip kick 1 0 13.6765 0.2647 7254221260507230323 level=1.0 attack=0.001 release=0.6 pitch=3 pitch_swp=-22 interval=0 timbre=0.0 drive=0.7 env_curve=0.3 keyed=0
+clip kick_body 1 0 13.6765 0.1941 8024418715192994715 level=0.7 attack=0.002 release=0.45 pitch=-7 pitch_swp=-4 interval=0 timbre=0.0 drive=0.5 env_curve=0.2 keyed=0
+clip click 2 0 13.6765 0.0141 2621029530040482573 level=0.3 attack=0.0 release=0.012 cutoff=0.85 filter=2 keyed=0
+clip snare 2 1 13.0588 0.1941 6857746510948118816 level=0.55 attack=0.001 release=0.5 cutoff=0.7 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 13.0588 0.1059 7375668064938525946 level=0.4 attack=0.001 release=0.25 pitch=8 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip stroke 5 1 13.0588 0.2471 2501629191131562324 level=0.45 attack=0.0 release=0.3 pitch=-2 drive=0.4 cutoff=0.8 file=machines/steam_engine_stroke_3.ogg keyed=0
+clip snare 2 1 13.7647 0.1941 8448158670323937293 level=0.55 attack=0.001 release=0.5 cutoff=0.7 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 13.7647 0.1059 3883416496871789839 level=0.4 attack=0.001 release=0.25 pitch=8 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip stroke 5 1 13.7647 0.2471 766525938537459178 level=0.45 attack=0.0 release=0.3 pitch=-2 drive=0.4 cutoff=0.8 file=machines/steam_engine_stroke_3.ogg keyed=0
+clip snare 2 1 13.5000 0.1941 5631960213477933966 level=0.165 attack=0.001 release=0.5 cutoff=0.7 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 13.5000 0.1059 3245391237888873691 level=0.12 attack=0.001 release=0.25 pitch=8 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip snare 2 1 13.9412 0.1941 2199609757252090930 level=0.165 attack=0.001 release=0.5 cutoff=0.7 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 13.9412 0.1059 1730930782812701086 level=0.12 attack=0.001 release=0.25 pitch=8 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip kick 1 0 14.1176 0.2647 4451536301230947239 level=1.0 attack=0.001 release=0.6 pitch=3 pitch_swp=-22 interval=0 timbre=0.0 drive=0.7 env_curve=0.3 keyed=0
+clip kick_body 1 0 14.1176 0.1941 1422975436367404965 level=0.7 attack=0.002 release=0.45 pitch=-7 pitch_swp=-4 interval=0 timbre=0.0 drive=0.5 env_curve=0.2 keyed=0
+clip click 2 0 14.1176 0.0141 4078819684265216258 level=0.3 attack=0.0 release=0.012 cutoff=0.85 filter=2 keyed=0
+clip kick 1 0 14.6471 0.2647 6423819359969228541 level=1.0 attack=0.001 release=0.6 pitch=3 pitch_swp=-22 interval=0 timbre=0.0 drive=0.7 env_curve=0.3 keyed=0
+clip kick_body 1 0 14.6471 0.1941 5245259483308430014 level=0.7 attack=0.002 release=0.45 pitch=-7 pitch_swp=-4 interval=0 timbre=0.0 drive=0.5 env_curve=0.2 keyed=0
+clip click 2 0 14.6471 0.0141 1079083223649510393 level=0.3 attack=0.0 release=0.012 cutoff=0.85 filter=2 keyed=0
+clip kick 1 0 15.0000 0.2647 6038785484749436379 level=1.0 attack=0.001 release=0.6 pitch=3 pitch_swp=-22 interval=0 timbre=0.0 drive=0.7 env_curve=0.3 keyed=0
+clip kick_body 1 0 15.0000 0.1941 5632995722121511083 level=0.7 attack=0.002 release=0.45 pitch=-7 pitch_swp=-4 interval=0 timbre=0.0 drive=0.5 env_curve=0.2 keyed=0
+clip click 2 0 15.0000 0.0141 6031057846349085129 level=0.3 attack=0.0 release=0.012 cutoff=0.85 filter=2 keyed=0
+clip snare 2 1 14.4706 0.1941 8718188813445712993 level=0.55 attack=0.001 release=0.5 cutoff=0.7 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 14.4706 0.1059 615139292649383941 level=0.4 attack=0.001 release=0.25 pitch=8 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip stroke 5 1 14.4706 0.2471 5625678327987506871 level=0.45 attack=0.0 release=0.3 pitch=-2 drive=0.4 cutoff=0.8 file=machines/steam_engine_stroke_3.ogg keyed=0
+clip snare 2 1 15.1765 0.1941 6813594874363856962 level=0.55 attack=0.001 release=0.5 cutoff=0.7 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 15.1765 0.1059 5636619304067657854 level=0.4 attack=0.001 release=0.25 pitch=8 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip stroke 5 1 15.1765 0.2471 4408785249437405871 level=0.45 attack=0.0 release=0.3 pitch=-2 drive=0.4 cutoff=0.8 file=machines/steam_engine_stroke_3.ogg keyed=0
+clip snare 2 1 14.7353 0.1941 533135514260282232 level=0.165 attack=0.001 release=0.5 cutoff=0.7 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 14.7353 0.1059 6650535573304919265 level=0.12 attack=0.001 release=0.25 pitch=8 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip snare 2 1 14.9118 0.1941 1930406569509597747 level=0.165 attack=0.001 release=0.5 cutoff=0.7 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 14.9118 0.1059 1747795518035921376 level=0.12 attack=0.001 release=0.25 pitch=8 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip snare 2 1 15.4412 0.1941 1796802816594245500 level=0.165 attack=0.001 release=0.5 cutoff=0.7 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 15.4412 0.1059 7192889547612447221 level=0.12 attack=0.001 release=0.25 pitch=8 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip kick 1 0 15.5294 0.2647 2552371047628370922 level=1.0 attack=0.001 release=0.6 pitch=3 pitch_swp=-22 interval=0 timbre=0.0 drive=0.7 env_curve=0.3 keyed=0
+clip kick_body 1 0 15.5294 0.1941 7554923711155549437 level=0.7 attack=0.002 release=0.45 pitch=-7 pitch_swp=-4 interval=0 timbre=0.0 drive=0.5 env_curve=0.2 keyed=0
+clip click 2 0 15.5294 0.0141 7268738509262629837 level=0.3 attack=0.0 release=0.012 cutoff=0.85 filter=2 keyed=0
+clip kick 1 0 15.7059 0.2647 3483036449419311403 level=1.0 attack=0.001 release=0.6 pitch=3 pitch_swp=-22 interval=0 timbre=0.0 drive=0.7 env_curve=0.3 keyed=0
+clip kick_body 1 0 15.7059 0.1941 8522444480600110683 level=0.7 attack=0.002 release=0.45 pitch=-7 pitch_swp=-4 interval=0 timbre=0.0 drive=0.5 env_curve=0.2 keyed=0
+clip click 2 0 15.7059 0.0141 6106064718423467593 level=0.3 attack=0.0 release=0.012 cutoff=0.85 filter=2 keyed=0
+clip snare 2 1 15.8824 0.1941 3367615021249173222 level=0.55 attack=0.001 release=0.5 cutoff=0.7 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 15.8824 0.1059 5960552165112089714 level=0.4 attack=0.001 release=0.25 pitch=8 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip stroke 5 1 15.8824 0.2471 5660670650732387984 level=0.45 attack=0.0 release=0.3 pitch=-2 drive=0.4 cutoff=0.8 file=machines/steam_engine_stroke_3.ogg keyed=0
+clip kick 1 0 16.2353 0.2647 6768858885303736567 level=1.0 attack=0.001 release=0.6 pitch=3 pitch_swp=-22 interval=0 timbre=0.0 drive=0.7 env_curve=0.3 keyed=0
+clip kick_body 1 0 16.2353 0.1941 763405133751436527 level=0.7 attack=0.002 release=0.45 pitch=-7 pitch_swp=-4 interval=0 timbre=0.0 drive=0.5 env_curve=0.2 keyed=0
+clip click 2 0 16.2353 0.0141 961715062642626590 level=0.3 attack=0.0 release=0.012 cutoff=0.85 filter=2 keyed=0
+clip snare 2 1 16.2353 0.1941 4777876243129065748 level=0.1925 attack=0.001 release=0.5 cutoff=0.7 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 16.2353 0.1059 8724848314632746186 level=0.14 attack=0.001 release=0.25 pitch=8 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip snare 2 1 16.3235 0.1941 2616372926746568965 level=0.2372 attack=0.001 release=0.5 cutoff=0.7 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 16.3235 0.1059 1480938740886585199 level=0.1725 attack=0.001 release=0.25 pitch=8 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip snare 2 1 16.4118 0.1941 1872179163341685486 level=0.2819 attack=0.001 release=0.5 cutoff=0.71 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 16.4118 0.1059 6941764748221602708 level=0.205 attack=0.001 release=0.25 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip snare 2 1 16.5000 0.1941 7207608706000496541 level=0.3266 attack=0.001 release=0.5 cutoff=0.72 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 16.5000 0.1059 3605689414629875161 level=0.2375 attack=0.001 release=0.25 pitch=10 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip snare 2 1 16.5882 0.1941 735080714746408028 level=0.3713 attack=0.001 release=0.5 cutoff=0.73 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 16.5882 0.1059 1708038115154989806 level=0.27 attack=0.001 release=0.25 pitch=11 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip stroke 5 1 16.5882 0.2471 9018365943298315245 level=0.3038 attack=0.0 release=0.3 pitch=-2 drive=0.4 cutoff=0.8 file=machines/steam_engine_stroke_3.ogg keyed=0
+clip snare 2 1 16.6765 0.1941 8771625816533727677 level=0.4159 attack=0.001 release=0.5 cutoff=0.73 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 16.6765 0.1059 7314067768383676088 level=0.3025 attack=0.001 release=0.25 pitch=11 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip stroke 5 1 16.6765 0.2471 3377763112616944606 level=0.3403 attack=0.0 release=0.3 pitch=-2 drive=0.4 cutoff=0.8 file=machines/steam_engine_stroke_3.ogg keyed=0
+clip snare 2 1 16.7647 0.1941 8412568546855932836 level=0.4606 attack=0.001 release=0.5 cutoff=0.74 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 16.7647 0.1059 3072781674668575066 level=0.335 attack=0.001 release=0.25 pitch=12 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip stroke 5 1 16.7647 0.2471 295914967075540485 level=0.3769 attack=0.0 release=0.3 pitch=-2 drive=0.4 cutoff=0.8 file=machines/steam_engine_stroke_3.ogg keyed=0
+clip snare 2 1 16.8529 0.1941 1138319485132696709 level=0.5053 attack=0.001 release=0.5 cutoff=0.75 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 16.8529 0.1059 7458758590356932081 level=0.3675 attack=0.001 release=0.25 pitch=13 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip stroke 5 1 16.8529 0.2471 1583304247267019403 level=0.4134 attack=0.0 release=0.3 pitch=-2 drive=0.4 cutoff=0.8 file=machines/steam_engine_stroke_3.ogg keyed=0
+clip coil_hats 8 1 5.6471 11.2941 2619951164550013384 level=0.34 attack=0.0 release=0.05 pitch=8.6537 divide=4 burst=1.4 snap=0.85 misfire=0.3 filter=2 cutoff=0.72 pan=-0.25 keyed=0
+clip chug 4 2 5.6471 0.1165 3935769675186566613 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 5.6591 0.1045 5731553392168820855 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip sub 1 2 5.6471 0.0882 5108074910005153094 level=0.35 attack=0.005 release=0.06 pitch=-19 interval=0 timbre=0.0 duck=0.55 duck_from=1
+clip chug 4 2 5.7353 0.1165 6937421321471863679 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 5.7473 0.1045 3590846877730349290 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 5.9118 0.1165 7015058025471395624 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 5.9238 0.1045 3064178434145139599 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 6.0882 0.1165 9203510920440710525 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 6.1002 0.1045 6624313969176006062 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 6.1765 0.2047 4573142492903771166 level=0.62 attack=0.001 release=0.06 pitch=-6 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 6.1885 0.1927 7189465921895815696 level=0.62 attack=0.001 release=0.06 pitch=-6 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip sub 1 2 6.1765 0.1765 5927801479285218274 level=0.35 attack=0.005 release=0.06 pitch=-18 interval=0 timbre=0.0 duck=0.55 duck_from=1
+clip chug 4 2 6.3529 0.1165 5042229501134563695 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 6.3649 0.1045 822545634329941233 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip sub 1 2 6.3529 0.0882 2669715582734727453 level=0.35 attack=0.005 release=0.06 pitch=-19 interval=0 timbre=0.0 duck=0.55 duck_from=1
+clip chug 4 2 6.5294 0.1165 8863766312843697508 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 6.5414 0.1045 3550065617447441377 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 6.6176 0.1165 2945341441285005215 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 6.6296 0.1045 3739865385594721780 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 6.7059 0.2047 8690873222934953794 level=0.62 attack=0.001 release=0.06 pitch=-4 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 6.7179 0.1927 3002355766830326736 level=0.62 attack=0.001 release=0.06 pitch=-4 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip sub 1 2 6.7059 0.1765 6119915985673411663 level=0.35 attack=0.005 release=0.06 pitch=-16 interval=0 timbre=0.0 duck=0.55 duck_from=1
+clip chug 4 2 6.8824 0.2047 1307754616051762290 level=0.62 attack=0.001 release=0.06 pitch=-6 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 6.8944 0.1927 6763231042692705799 level=0.62 attack=0.001 release=0.06 pitch=-6 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip sub 1 2 6.8824 0.1765 1726497721691955230 level=0.35 attack=0.005 release=0.06 pitch=-18 interval=0 timbre=0.0 duck=0.55 duck_from=1
+clip chug 4 2 7.0588 0.1165 8425065263782814740 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 7.0708 0.1045 8476163390230413162 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip sub 1 2 7.0588 0.0882 2085233567378644208 level=0.35 attack=0.005 release=0.06 pitch=-19 interval=0 timbre=0.0 duck=0.55 duck_from=1
+clip chug 4 2 7.1471 0.1165 7636416539029066364 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 7.1591 0.1045 9222381840805436462 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 7.3235 0.1165 1310350348577516042 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 7.3355 0.1045 3389291824199174609 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 7.5000 0.1165 6037981016563447348 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 7.5120 0.1045 8445307441343851429 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 7.5882 0.2047 5311895967331234603 level=0.62 attack=0.001 release=0.06 pitch=-9 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 7.6002 0.1927 3807539202289441495 level=0.62 attack=0.001 release=0.06 pitch=-9 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip sub 1 2 7.5882 0.1765 7168299941616152921 level=0.35 attack=0.005 release=0.06 pitch=-21 interval=0 timbre=0.0 duck=0.55 duck_from=1
+clip chug 4 2 7.7647 0.2047 982228099453130445 level=0.62 attack=0.001 release=0.06 pitch=-11 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 7.7767 0.1927 6013985984272561560 level=0.62 attack=0.001 release=0.06 pitch=-11 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip sub 1 2 7.7647 0.1765 6886498610841129124 level=0.35 attack=0.005 release=0.06 pitch=-23 interval=0 timbre=0.0 duck=0.55 duck_from=1
+clip chug 4 2 7.9412 0.2047 4078744742523722692 level=0.62 attack=0.001 release=0.06 pitch=-9 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 7.9532 0.1927 6696994593824523632 level=0.62 attack=0.001 release=0.06 pitch=-9 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip sub 1 2 7.9412 0.1765 8668830127270484850 level=0.35 attack=0.005 release=0.06 pitch=-21 interval=0 timbre=0.0 duck=0.55 duck_from=1
+clip chug 4 2 8.1176 0.1165 4793907004622544546 level=0.62 attack=0.001 release=0.06 pitch=-6 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 8.1296 0.1045 997400987083326545 level=0.62 attack=0.001 release=0.06 pitch=-6 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 8.2059 0.1165 3389370098684053521 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 8.2179 0.1045 986028577845251356 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 8.2941 0.2047 4308081871840898308 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 8.3061 0.1927 3066845162593390946 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip sub 1 2 8.2941 0.1765 1240906869485028911 level=0.35 attack=0.005 release=0.06 pitch=-19 interval=0 timbre=0.0 duck=0.55 duck_from=1
+clip chug 4 2 8.4706 0.1165 1685030621104115932 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 8.4826 0.1045 81737879843820848 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip sub 1 2 8.4706 0.0882 4181803402367802218 level=0.35 attack=0.005 release=0.06 pitch=-19 interval=0 timbre=0.0 duck=0.55 duck_from=1
+clip chug 4 2 8.5588 0.1165 684988461484997572 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 8.5708 0.1045 1012456798201275604 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 8.7353 0.1165 1297548674607349794 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 8.7473 0.1045 9082772665371156673 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 8.9118 0.1165 6382046896160935449 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 8.9238 0.1045 5610665903695874513 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 9.0000 0.2047 3680997960576967064 level=0.62 attack=0.001 release=0.06 pitch=-6 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 9.0120 0.1927 5192824551320969653 level=0.62 attack=0.001 release=0.06 pitch=-6 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip sub 1 2 9.0000 0.1765 3248062215763788844 level=0.35 attack=0.005 release=0.06 pitch=-18 interval=0 timbre=0.0 duck=0.55 duck_from=1
+clip chug 4 2 9.1765 0.1165 2356396315085072306 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 9.1885 0.1045 310049127479880796 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip sub 1 2 9.1765 0.0882 5170339914816159764 level=0.35 attack=0.005 release=0.06 pitch=-19 interval=0 timbre=0.0 duck=0.55 duck_from=1
+clip chug 4 2 9.3529 0.1165 633024018772384732 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 9.3649 0.1045 4059270479868748813 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 9.4412 0.1165 6305345160456807302 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 9.4532 0.1045 6749136950017187428 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 9.5294 0.2047 5132305426447154932 level=0.62 attack=0.001 release=0.06 pitch=-4 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 9.5414 0.1927 8662578634605206767 level=0.62 attack=0.001 release=0.06 pitch=-4 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip sub 1 2 9.5294 0.1765 8910645178961752178 level=0.35 attack=0.005 release=0.06 pitch=-16 interval=0 timbre=0.0 duck=0.55 duck_from=1
+clip chug 4 2 9.7059 0.2047 632052867176639228 level=0.62 attack=0.001 release=0.06 pitch=-6 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 9.7179 0.1927 1219037441066471396 level=0.62 attack=0.001 release=0.06 pitch=-6 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip sub 1 2 9.7059 0.1765 4981868853426501175 level=0.35 attack=0.005 release=0.06 pitch=-18 interval=0 timbre=0.0 duck=0.55 duck_from=1
+clip chug 4 2 9.8824 0.1165 3946946395075816397 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 9.8944 0.1045 4351434025745278472 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip sub 1 2 9.8824 0.0882 7084264551683065095 level=0.35 attack=0.005 release=0.06 pitch=-19 interval=0 timbre=0.0 duck=0.55 duck_from=1
+clip chug 4 2 9.9706 0.1165 225959545927095333 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 9.9826 0.1045 586342355208161520 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 10.1471 0.1165 2627417523026584821 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 10.1591 0.1045 41954295717624345 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 10.3235 0.1165 2321967083963913247 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 10.3355 0.1045 1554729061749111299 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 10.4118 0.2047 517774994183518613 level=0.62 attack=0.001 release=0.06 pitch=-9 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 10.4238 0.1927 7130073253019140013 level=0.62 attack=0.001 release=0.06 pitch=-9 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip sub 1 2 10.4118 0.1765 2186402157544102086 level=0.35 attack=0.005 release=0.06 pitch=-21 interval=0 timbre=0.0 duck=0.55 duck_from=1
+clip chug 4 2 10.5882 0.2047 6568549295510436857 level=0.62 attack=0.001 release=0.06 pitch=-11 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 10.6002 0.1927 7809518986207143118 level=0.62 attack=0.001 release=0.06 pitch=-11 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip sub 1 2 10.5882 0.1765 4450945870950173111 level=0.35 attack=0.005 release=0.06 pitch=-23 interval=0 timbre=0.0 duck=0.55 duck_from=1
+clip chug 4 2 10.7647 0.2047 669832565085855487 level=0.62 attack=0.001 release=0.06 pitch=-9 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 10.7767 0.1927 6547900849098961550 level=0.62 attack=0.001 release=0.06 pitch=-9 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip sub 1 2 10.7647 0.1765 5911621337511557033 level=0.35 attack=0.005 release=0.06 pitch=-21 interval=0 timbre=0.0 duck=0.55 duck_from=1
+clip chug 4 2 10.9412 0.1165 5943551161748713298 level=0.62 attack=0.001 release=0.06 pitch=-6 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 10.9532 0.1045 8915227442894111792 level=0.62 attack=0.001 release=0.06 pitch=-6 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 11.0294 0.1165 7554838630467590990 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 11.0414 0.1045 6772379735194323415 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 11.1176 0.2047 5114510466337346620 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 11.1296 0.1927 3388271846550414176 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip sub 1 2 11.1176 0.1765 9092684259515399256 level=0.35 attack=0.005 release=0.06 pitch=-19 interval=0 timbre=0.0 duck=0.55 duck_from=1
+clip chug 4 2 11.2941 0.1165 7480436840854401974 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 11.3061 0.1045 8539115814393472290 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip sub 1 2 11.2941 0.0882 3016787110544200774 level=0.35 attack=0.005 release=0.06 pitch=-19 interval=0 timbre=0.0 duck=0.55 duck_from=1
+clip chug 4 2 11.3824 0.1165 2621790335087343802 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 11.3944 0.1045 3358524354946912215 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 11.5588 0.1165 2915984304790968602 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 11.5708 0.1045 5772448183949992936 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 11.7353 0.1165 3445901670449645043 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 11.7473 0.1045 6927624955991443014 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 11.8235 0.2047 3089273661623773174 level=0.62 attack=0.001 release=0.06 pitch=-6 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 11.8355 0.1927 1888588898964225136 level=0.62 attack=0.001 release=0.06 pitch=-6 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip sub 1 2 11.8235 0.1765 4221610769085508191 level=0.35 attack=0.005 release=0.06 pitch=-18 interval=0 timbre=0.0 duck=0.55 duck_from=1
+clip chug 4 2 12.0000 0.1165 8904356904326942886 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 12.0120 0.1045 3947220054140509812 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip sub 1 2 12.0000 0.0882 276347458020673656 level=0.35 attack=0.005 release=0.06 pitch=-19 interval=0 timbre=0.0 duck=0.55 duck_from=1
+clip chug 4 2 12.1765 0.1165 8561509462698107667 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 12.1885 0.1045 6286779487390548126 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 12.2647 0.1165 6238934619293502550 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 12.2767 0.1045 448114263556744665 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 12.3529 0.2047 7922053336683955199 level=0.62 attack=0.001 release=0.06 pitch=-4 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 12.3649 0.1927 2034705883016743126 level=0.62 attack=0.001 release=0.06 pitch=-4 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip sub 1 2 12.3529 0.1765 4884999849371806437 level=0.35 attack=0.005 release=0.06 pitch=-16 interval=0 timbre=0.0 duck=0.55 duck_from=1
+clip chug 4 2 12.5294 0.2047 2736938401362282998 level=0.62 attack=0.001 release=0.06 pitch=-6 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 12.5414 0.1927 3506039545113331714 level=0.62 attack=0.001 release=0.06 pitch=-6 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip sub 1 2 12.5294 0.1765 3311137086629042180 level=0.35 attack=0.005 release=0.06 pitch=-18 interval=0 timbre=0.0 duck=0.55 duck_from=1
+clip chug 4 2 12.7059 0.1165 7046060207782178345 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 12.7179 0.1045 4642318733756277383 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip sub 1 2 12.7059 0.0882 8943737566014935953 level=0.35 attack=0.005 release=0.06 pitch=-19 interval=0 timbre=0.0 duck=0.55 duck_from=1
+clip chug 4 2 12.7941 0.1165 1695223438225272168 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 12.8061 0.1045 8181031004056814821 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 12.9706 0.1165 3250636294956514103 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 12.9826 0.1045 3301920592322147304 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 13.1471 0.1165 4754689450596147273 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 13.1591 0.1045 8260939584237338300 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 13.2353 0.2047 1866447786690431657 level=0.62 attack=0.001 release=0.06 pitch=-9 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 13.2473 0.1927 8248404963482091230 level=0.62 attack=0.001 release=0.06 pitch=-9 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip sub 1 2 13.2353 0.1765 5977742595826189153 level=0.35 attack=0.005 release=0.06 pitch=-21 interval=0 timbre=0.0 duck=0.55 duck_from=1
+clip chug 4 2 13.4118 0.2047 5273446715376804214 level=0.62 attack=0.001 release=0.06 pitch=-11 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 13.4238 0.1927 5905863628577996120 level=0.62 attack=0.001 release=0.06 pitch=-11 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip sub 1 2 13.4118 0.1765 5089134681176939078 level=0.35 attack=0.005 release=0.06 pitch=-23 interval=0 timbre=0.0 duck=0.55 duck_from=1
+clip chug 4 2 13.5882 0.2047 2349781556537649248 level=0.62 attack=0.001 release=0.06 pitch=-9 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 13.6002 0.1927 8416959738560259780 level=0.62 attack=0.001 release=0.06 pitch=-9 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip sub 1 2 13.5882 0.1765 8824332362282305644 level=0.35 attack=0.005 release=0.06 pitch=-21 interval=0 timbre=0.0 duck=0.55 duck_from=1
+clip chug 4 2 13.7647 0.1165 2518293317662504916 level=0.62 attack=0.001 release=0.06 pitch=-6 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 13.7767 0.1045 7027190318379509460 level=0.62 attack=0.001 release=0.06 pitch=-6 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 13.8529 0.1165 8975033793165625086 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 13.8649 0.1045 6117104787662270032 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 13.9412 0.2047 5958679329578440120 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 13.9532 0.1927 7553975948953513577 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip sub 1 2 13.9412 0.1765 6370163555616565664 level=0.35 attack=0.005 release=0.06 pitch=-19 interval=0 timbre=0.0 duck=0.55 duck_from=1
+clip chug 4 2 14.1176 0.1165 6989847926179396482 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 14.1296 0.1045 2863102231922318755 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip sub 1 2 14.1176 0.0882 8686827077159780646 level=0.35 attack=0.005 release=0.06 pitch=-19 interval=0 timbre=0.0 duck=0.55 duck_from=1
+clip chug 4 2 14.2059 0.1165 2515618429321793386 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 14.2179 0.1045 5590631447751292926 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 14.3824 0.1165 7101507748510549702 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 14.3944 0.1045 4477934139482052133 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 14.5588 0.1165 4704265500280771823 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 14.5708 0.1045 2635309465908644208 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 14.6471 0.2047 4784080565407309732 level=0.62 attack=0.001 release=0.06 pitch=-6 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 14.6591 0.1927 9079026871604900459 level=0.62 attack=0.001 release=0.06 pitch=-6 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip sub 1 2 14.6471 0.1765 7630687689271023289 level=0.35 attack=0.005 release=0.06 pitch=-18 interval=0 timbre=0.0 duck=0.55 duck_from=1
+clip chug 4 2 14.8235 0.1165 3785337941633203491 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 14.8355 0.1045 4859218369493117338 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip sub 1 2 14.8235 0.0882 685144242030336373 level=0.35 attack=0.005 release=0.06 pitch=-19 interval=0 timbre=0.0 duck=0.55 duck_from=1
+clip chug 4 2 15.0000 0.1165 6282312739993366981 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 15.0120 0.1045 2724152367206179381 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 15.0882 0.1165 5575257153970100471 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 15.1002 0.1045 3686714598543303423 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 15.1765 0.2047 4528016951645105485 level=0.62 attack=0.001 release=0.06 pitch=-4 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 15.1885 0.1927 7062538931139652279 level=0.62 attack=0.001 release=0.06 pitch=-4 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip sub 1 2 15.1765 0.1765 608345607151986908 level=0.35 attack=0.005 release=0.06 pitch=-16 interval=0 timbre=0.0 duck=0.55 duck_from=1
+clip chug 4 2 15.3529 0.2047 4120718687947274195 level=0.62 attack=0.001 release=0.06 pitch=-6 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 15.3649 0.1927 1816909577983118538 level=0.62 attack=0.001 release=0.06 pitch=-6 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip sub 1 2 15.3529 0.1765 3263115126056970303 level=0.35 attack=0.005 release=0.06 pitch=-18 interval=0 timbre=0.0 duck=0.55 duck_from=1
+clip chug 4 2 15.5294 0.1165 6078611023053057917 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 15.5414 0.1045 2600727518191444468 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip sub 1 2 15.5294 0.0882 6194192355214211975 level=0.35 attack=0.005 release=0.06 pitch=-19 interval=0 timbre=0.0 duck=0.55 duck_from=1
+clip chug 4 2 15.6176 0.1165 7236906340084982400 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 15.6296 0.1045 9002741118626058174 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 15.7941 0.1165 634547489365303880 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 15.8061 0.1045 1516178866137534621 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 15.9706 0.1165 7700682975150436979 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 15.9826 0.1045 4447867527343348663 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 16.0588 0.2047 3855385480243677421 level=0.62 attack=0.001 release=0.06 pitch=-9 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 16.0708 0.1927 1856529381276491940 level=0.62 attack=0.001 release=0.06 pitch=-9 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip sub 1 2 16.0588 0.1765 6317585467898316511 level=0.35 attack=0.005 release=0.06 pitch=-21 interval=0 timbre=0.0 duck=0.55 duck_from=1
+clip chug 4 2 16.2353 0.2047 2690279359935179555 level=0.62 attack=0.001 release=0.06 pitch=-11 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 16.2473 0.1927 8085364822289749122 level=0.62 attack=0.001 release=0.06 pitch=-11 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip sub 1 2 16.2353 0.1765 822209478495262937 level=0.35 attack=0.005 release=0.06 pitch=-23 interval=0 timbre=0.0 duck=0.55 duck_from=1
+clip chug 4 2 16.4118 0.2047 4324612207780575012 level=0.62 attack=0.001 release=0.06 pitch=-9 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 16.4238 0.1927 3696431370263070490 level=0.62 attack=0.001 release=0.06 pitch=-9 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip sub 1 2 16.4118 0.1765 1327594854309451167 level=0.35 attack=0.005 release=0.06 pitch=-21 interval=0 timbre=0.0 duck=0.55 duck_from=1
+clip chug 4 2 16.5882 0.1165 8875543930718820245 level=0.62 attack=0.001 release=0.06 pitch=-6 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 16.6002 0.1045 5947111299588087232 level=0.62 attack=0.001 release=0.06 pitch=-6 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 16.6765 0.1165 6605924327238932471 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 16.6885 0.1045 9089603994936077137 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 16.7647 0.2047 1502275250331380180 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 16.7767 0.1927 6022592900112888962 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip sub 1 2 16.7647 0.1765 838042525461296210 level=0.35 attack=0.005 release=0.06 pitch=-19 interval=0 timbre=0.0 duck=0.55 duck_from=1
+clip coil 8 3 5.6471 0.7059 7815907167571257078 level=0.5 attack=0.012 release=0.25 pitch=29 ring=0.62 formant=12 burst=7 jitter=0.05 snap=0.4 flicker=0.25 drive=0.3 echo=0.18 reverb=0.3 lfo_rate=5.5 pan=0.1
+clip coil 8 3 6.3529 0.3529 1516441928727905016 level=0.5 attack=0.012 release=0.1412 pitch=24 ring=0.62 formant=12 burst=7 jitter=0.05 snap=0.4 flicker=0.25 drive=0.3 echo=0.18 reverb=0.3 lfo_rate=5.5 pan=0.1
+clip coil 8 3 6.7059 0.3529 9066744802326471411 level=0.5 attack=0.012 release=0.1412 pitch=25 ring=0.62 formant=12 burst=7 jitter=0.05 snap=0.4 flicker=0.25 drive=0.3 echo=0.18 reverb=0.3 lfo_rate=5.5 pan=0.1
+clip coil 8 3 7.0588 0.5294 6704169967757290955 level=0.5 attack=0.012 release=0.2118 pitch=27 ring=0.62 formant=12 burst=7 jitter=0.05 snap=0.4 flicker=0.25 drive=0.3 echo=0.18 reverb=0.3 lfo_rate=5.5 pan=0.1
+clip coil 8 3 7.5882 0.1765 944968713102501784 level=0.5 attack=0.012 release=0.0706 pitch=25 ring=0.62 formant=12 burst=7 jitter=0.05 snap=0.4 flicker=0.25 drive=0.3 echo=0.18 reverb=0.3 lfo_rate=5.5 pan=0.1
+clip coil 8 3 7.7647 0.7059 2643022831631694209 level=0.5 attack=0.012 release=0.25 pitch=24 ring=0.62 formant=12 burst=7 jitter=0.05 snap=0.4 flicker=0.25 drive=0.3 echo=0.18 reverb=0.3 lfo_rate=5.5 pan=0.1
+clip coil 8 3 8.4706 0.3529 3753243772488537313 level=0.5 attack=0.012 release=0.1412 pitch=22 ring=0.62 formant=12 burst=7 jitter=0.05 snap=0.4 flicker=0.25 drive=0.3 echo=0.18 reverb=0.3 lfo_rate=5.5 pan=0.1
+clip coil 8 3 8.8235 0.3529 8012506678776719610 level=0.5 attack=0.012 release=0.1412 pitch=24 ring=0.62 formant=12 burst=7 jitter=0.05 snap=0.4 flicker=0.25 drive=0.3 echo=0.18 reverb=0.3 lfo_rate=5.5 pan=0.1
+clip coil 8 3 9.1765 0.3529 2422382883374421109 level=0.5 attack=0.012 release=0.1412 pitch=25 ring=0.62 formant=12 burst=7 jitter=0.05 snap=0.4 flicker=0.25 drive=0.3 echo=0.18 reverb=0.3 lfo_rate=5.5 pan=0.1
+clip coil 8 3 9.5294 0.3529 1453204008901623912 level=0.5 attack=0.012 release=0.1412 pitch=27 ring=0.62 formant=12 burst=7 jitter=0.05 snap=0.4 flicker=0.25 drive=0.3 echo=0.18 reverb=0.3 lfo_rate=5.5 pan=0.1
+clip coil 8 3 9.8824 1.0588 5261348320169016176 level=0.5 attack=0.012 release=0.25 pitch=29 ring=0.62 formant=12 burst=7 jitter=0.05 snap=0.4 flicker=0.25 drive=0.3 echo=0.18 reverb=0.3 lfo_rate=5.5 pan=0.1
+clip coil 8 3 10.9412 0.3529 1887379756586396248 level=0.5 attack=0.012 release=0.1412 pitch=30 ring=0.62 formant=12 burst=7 jitter=0.05 snap=0.4 flicker=0.25 drive=0.3 echo=0.18 reverb=0.3 lfo_rate=5.5 pan=0.1
+clip coil 8 3 11.2941 0.7059 4187059446605294909 level=0.5 attack=0.012 release=0.25 pitch=29 ring=0.62 formant=12 burst=7 jitter=0.05 snap=0.4 flicker=0.25 drive=0.3 echo=0.18 reverb=0.3 lfo_rate=5.5 pan=0.1
+clip coil 8 3 12.0000 0.3529 6416944429292467865 level=0.5 attack=0.012 release=0.1412 pitch=32 ring=0.62 formant=12 burst=7 jitter=0.05 snap=0.4 flicker=0.25 drive=0.3 echo=0.18 reverb=0.3 lfo_rate=5.5 pan=0.1
+clip coil 8 3 12.3529 0.3529 4344199406489568611 level=0.5 attack=0.012 release=0.1412 pitch=30 ring=0.62 formant=12 burst=7 jitter=0.05 snap=0.4 flicker=0.25 drive=0.3 echo=0.18 reverb=0.3 lfo_rate=5.5 pan=0.1
+clip coil 8 3 12.7059 0.5294 2662245421732709826 level=0.5 attack=0.012 release=0.2118 pitch=29 ring=0.62 formant=12 burst=7 jitter=0.05 snap=0.4 flicker=0.25 drive=0.3 echo=0.18 reverb=0.3 lfo_rate=5.5 pan=0.1
+clip coil 8 3 13.2353 0.1765 2927607216170555656 level=0.5 attack=0.012 release=0.0706 pitch=27 ring=0.62 formant=12 burst=7 jitter=0.05 snap=0.4 flicker=0.25 drive=0.3 echo=0.18 reverb=0.3 lfo_rate=5.5 pan=0.1
+clip coil 8 3 13.4118 0.7059 8856402559096468992 level=0.5 attack=0.012 release=0.25 pitch=25 ring=0.62 formant=12 burst=7 jitter=0.05 snap=0.4 flicker=0.25 drive=0.3 echo=0.18 reverb=0.3 lfo_rate=5.5 pan=0.1
+clip coil 8 3 14.1176 0.3529 5524550427927044631 level=0.5 attack=0.012 release=0.1412 pitch=24 ring=0.62 formant=12 burst=7 jitter=0.05 snap=0.4 flicker=0.25 drive=0.3 echo=0.18 reverb=0.3 lfo_rate=5.5 pan=0.1
+clip coil 8 3 14.4706 0.1765 2144273765318254743 level=0.5 attack=0.012 release=0.0706 pitch=25 ring=0.62 formant=12 burst=7 jitter=0.05 snap=0.4 flicker=0.25 drive=0.3 echo=0.18 reverb=0.3 lfo_rate=5.5 pan=0.1
+clip coil 8 3 14.6471 0.1765 7075359567789892185 level=0.5 attack=0.012 release=0.0706 pitch=24 ring=0.62 formant=12 burst=7 jitter=0.05 snap=0.4 flicker=0.25 drive=0.3 echo=0.18 reverb=0.3 lfo_rate=5.5 pan=0.1
+clip coil 8 3 14.8235 0.3529 2507370230874120168 level=0.5 attack=0.012 release=0.1412 pitch=22 ring=0.62 formant=12 burst=7 jitter=0.05 snap=0.4 flicker=0.25 drive=0.3 echo=0.18 reverb=0.3 lfo_rate=5.5 pan=0.1
+clip coil 8 3 15.1765 0.3529 2109950495190420913 level=0.5 attack=0.012 release=0.1412 pitch=20 ring=0.62 formant=12 burst=7 jitter=0.05 snap=0.4 flicker=0.25 drive=0.3 echo=0.18 reverb=0.3 lfo_rate=5.5 pan=0.1
+clip coil 8 3 15.5294 1.4118 7327432397118945786 level=0.5 attack=0.012 release=0.25 pitch=24 ring=0.62 formant=12 burst=7 jitter=0.05 snap=0.4 flicker=0.25 drive=0.3 echo=0.18 reverb=0.3 lfo_rate=5.5 pan=0.1
+clip choir 6 4 5.6471 11.2941 4232392681289013981 level=0.45 attack=0.3 release=0.8 pitch=-2 chord=5 file=vocals/ethereal_vocals.wav start=0.2 speed=0.35 voices=10 gather=1.0 gather_swp=0.0 drift=0.5 wander=2 scatter=0.35 reverb=0.55 cutoff=0.85 duck=0.55 duck_from=1
+clip choir 6 4 16.9412 1.6235 2151401538560010787 level=0.6 attack=0.25 release=0.9 pitch=-2 chord=5 file=vocals/ethereal_vocals.wav start=0.2 speed=0.35 voices=10 gather=1.0 gather_swp=0.0 drift=0.5 wander=2 scatter=0.35 reverb=0.55 cutoff=0.85
+clip bell 1 5 16.9412 2.4706 8906548479843777869 level=0.45 attack=0.002 release=5 pitch=29 interval=12 timbre=0.0 bank=1.0 stretch=0.08 tilt=-0.3 fm_ratio=3.5 fm_depth=1.2 env_curve=0.7 reverb=0.6 pan=-0.2
+clip bass 1 2 16.9412 1.4118 7570887781463255581 level=0.4 attack=0.3 release=0.4 pitch=-19 interval=12 timbre=0.4 cutoff=0.4
+clip engine 5 1 16.9412 0.3176 5178596803038058914 level=0.5 release=0.2 pitch=-3 file=machines/steam_engine_stroke_3.ogg pan=-0.3 reverb=0.2 keyed=0
+clip engine 5 1 17.2941 0.3176 434517572910085955 level=0.35 release=0.2 pitch=-3 file=machines/steam_engine_stroke_5.ogg pan=0.3 reverb=0.2 keyed=0
+clip engine 5 1 17.6471 0.3176 1436826869167649853 level=0.5 release=0.2 pitch=-3 file=machines/steam_engine_stroke_3.ogg pan=-0.3 reverb=0.2 keyed=0
+clip engine 5 1 18.0000 0.3176 4317247603559558722 level=0.35 release=0.2 pitch=-3 file=machines/steam_engine_stroke_7.ogg pan=0.3 reverb=0.2 keyed=0
+clip kick 1 0 16.9412 0.2647 3564706536276010408 level=0.8 attack=0.001 release=0.6 pitch=3 pitch_swp=-22 interval=0 timbre=0.0 drive=0.7 env_curve=0.3 keyed=0
+clip kick_body 1 0 16.9412 0.1941 8071811406660147228 level=0.56 attack=0.002 release=0.45 pitch=-7 pitch_swp=-4 interval=0 timbre=0.0 drive=0.5 env_curve=0.2 keyed=0
+clip click 2 0 16.9412 0.0141 6681594159203423961 level=0.24 attack=0.0 release=0.012 cutoff=0.85 filter=2 keyed=0
+clip choir 6 4 18.3529 1.6235 7766454707750851960 level=0.6 attack=0.25 release=0.9 pitch=-6 chord=2 file=vocals/ethereal_vocals.wav start=0.2 speed=0.35 voices=10 gather=1.0 gather_swp=0.0 drift=0.5 wander=2 scatter=0.35 reverb=0.55 cutoff=0.85
+clip bell 1 5 18.3529 2.4706 7725459866065872457 level=0.45 attack=0.002 release=5 pitch=25 interval=12 timbre=0.0 bank=1.0 stretch=0.08 tilt=-0.3 fm_ratio=3.5 fm_depth=1.2 env_curve=0.7 reverb=0.6 pan=-0.07
+clip bass 1 2 18.3529 1.4118 5707227931369114675 level=0.4 attack=0.3 release=0.4 pitch=-23 interval=12 timbre=0.4 cutoff=0.4
+clip engine 5 1 18.3529 0.3176 7052449042142144316 level=0.5 release=0.2 pitch=-3 file=machines/steam_engine_stroke_3.ogg pan=-0.3 reverb=0.2 keyed=0
+clip engine 5 1 18.7059 0.3176 3660279096697979597 level=0.35 release=0.2 pitch=-3 file=machines/steam_engine_stroke_5.ogg pan=0.3 reverb=0.2 keyed=0
+clip engine 5 1 19.0588 0.3176 6558829814408588205 level=0.5 release=0.2 pitch=-3 file=machines/steam_engine_stroke_3.ogg pan=-0.3 reverb=0.2 keyed=0
+clip engine 5 1 19.4118 0.3176 2929540833092993326 level=0.35 release=0.2 pitch=-3 file=machines/steam_engine_stroke_7.ogg pan=0.3 reverb=0.2 keyed=0
+clip kick 1 0 18.3529 0.2647 3697993016963677591 level=0.8 attack=0.001 release=0.6 pitch=3 pitch_swp=-22 interval=0 timbre=0.0 drive=0.7 env_curve=0.3 keyed=0
+clip kick_body 1 0 18.3529 0.1941 2734788740249088225 level=0.56 attack=0.002 release=0.45 pitch=-7 pitch_swp=-4 interval=0 timbre=0.0 drive=0.5 env_curve=0.2 keyed=0
+clip click 2 0 18.3529 0.0141 7194078387807671108 level=0.24 attack=0.0 release=0.012 cutoff=0.85 filter=2 keyed=0
+clip choir 6 4 19.7647 1.6235 1366911893354517054 level=0.6 attack=0.25 release=0.9 pitch=-4 chord=2 file=vocals/ethereal_vocals.wav start=0.2 speed=0.35 voices=10 gather=1.0 gather_swp=0.0 drift=0.5 wander=2 scatter=0.35 reverb=0.55 cutoff=0.85
+clip bell 1 5 19.7647 2.4706 141299976025812846 level=0.45 attack=0.002 release=5 pitch=27 interval=12 timbre=0.0 bank=1.0 stretch=0.08 tilt=-0.3 fm_ratio=3.5 fm_depth=1.2 env_curve=0.7 reverb=0.6 pan=0.06
+clip bass 1 2 19.7647 1.4118 2030328292305714487 level=0.4 attack=0.3 release=0.4 pitch=-21 interval=12 timbre=0.4 cutoff=0.4
+clip engine 5 1 19.7647 0.3176 7229000080782931341 level=0.5 release=0.2 pitch=-3 file=machines/steam_engine_stroke_3.ogg pan=-0.3 reverb=0.2 keyed=0
+clip engine 5 1 20.1176 0.3176 3346345711929361753 level=0.35 release=0.2 pitch=-3 file=machines/steam_engine_stroke_5.ogg pan=0.3 reverb=0.2 keyed=0
+clip engine 5 1 20.4706 0.3176 7149319850960314585 level=0.5 release=0.2 pitch=-3 file=machines/steam_engine_stroke_3.ogg pan=-0.3 reverb=0.2 keyed=0
+clip engine 5 1 20.8235 0.3176 4813321452377389960 level=0.35 release=0.2 pitch=-3 file=machines/steam_engine_stroke_7.ogg pan=0.3 reverb=0.2 keyed=0
+clip kick 1 0 19.7647 0.2647 5842125919442201086 level=0.8 attack=0.001 release=0.6 pitch=3 pitch_swp=-22 interval=0 timbre=0.0 drive=0.7 env_curve=0.3 keyed=0
+clip kick_body 1 0 19.7647 0.1941 4977240249648549364 level=0.56 attack=0.002 release=0.45 pitch=-7 pitch_swp=-4 interval=0 timbre=0.0 drive=0.5 env_curve=0.2 keyed=0
+clip click 2 0 19.7647 0.0141 5400067054561366438 level=0.24 attack=0.0 release=0.012 cutoff=0.85 filter=2 keyed=0
+clip choir 6 4 21.1765 1.6235 160145644495839740 level=0.6 attack=0.25 release=0.9 pitch=-1 chord=2 file=vocals/ethereal_vocals.wav start=0.2 speed=0.35 voices=10 gather=1.0 gather_swp=0.0 drift=0.5 wander=2 scatter=0.35 reverb=0.55 cutoff=0.85
+clip bell 1 5 21.1765 2.4706 4318875934071416941 level=0.45 attack=0.002 release=5 pitch=30 interval=12 timbre=0.0 bank=1.0 stretch=0.08 tilt=-0.3 fm_ratio=3.5 fm_depth=1.2 env_curve=0.7 reverb=0.6 pan=0.19
+clip bass 1 2 21.1765 1.4118 9133357129826712514 level=0.4 attack=0.3 release=0.4 pitch=-18 interval=12 timbre=0.4 cutoff=0.4
+clip engine 5 1 21.1765 0.3176 6117053069993920873 level=0.5 release=0.2 pitch=-3 file=machines/steam_engine_stroke_3.ogg pan=-0.3 reverb=0.2 keyed=0
+clip engine 5 1 21.5294 0.3176 784507516244730034 level=0.35 release=0.2 pitch=-3 file=machines/steam_engine_stroke_5.ogg pan=0.3 reverb=0.2 keyed=0
+clip engine 5 1 21.8824 0.3176 523651941974224303 level=0.5 release=0.2 pitch=-3 file=machines/steam_engine_stroke_3.ogg pan=-0.3 reverb=0.2 keyed=0
+clip engine 5 1 22.2353 0.3176 9195042200668292304 level=0.35 release=0.2 pitch=-3 file=machines/steam_engine_stroke_7.ogg pan=0.3 reverb=0.2 keyed=0
+clip kick 1 0 21.1765 0.2647 3703614952087720729 level=0.8 attack=0.001 release=0.6 pitch=3 pitch_swp=-22 interval=0 timbre=0.0 drive=0.7 env_curve=0.3 keyed=0
+clip kick_body 1 0 21.1765 0.1941 7481530020910623750 level=0.56 attack=0.002 release=0.45 pitch=-7 pitch_swp=-4 interval=0 timbre=0.0 drive=0.5 env_curve=0.2 keyed=0
+clip click 2 0 21.1765 0.0141 2989196560935052165 level=0.24 attack=0.0 release=0.012 cutoff=0.85 filter=2 keyed=0
+clip coil 8 3 16.9412 0.7059 1698739819747213940 level=0.42 attack=0.012 release=0.25 pitch=24 ring=0.62 formant=12 burst=7 jitter=0.05 snap=0.4 flicker=0.25 drive=0.3 echo=0.18 reverb=0.3 lfo_rate=5.5 pan=0.1
+clip coil 8 3 17.6471 0.7059 6883181725360941506 level=0.42 attack=0.012 release=0.25 pitch=29 ring=0.62 formant=12 burst=7 jitter=0.05 snap=0.4 flicker=0.25 drive=0.3 echo=0.18 reverb=0.3 lfo_rate=5.5 pan=0.1
+clip coil 8 3 18.3529 0.7059 3160822834728854138 level=0.42 attack=0.012 release=0.25 pitch=20 ring=0.62 formant=12 burst=7 jitter=0.05 snap=0.4 flicker=0.25 drive=0.3 echo=0.18 reverb=0.3 lfo_rate=5.5 pan=0.1
+clip coil 8 3 19.0588 0.7059 2798504688107920812 level=0.42 attack=0.012 release=0.25 pitch=25 ring=0.62 formant=12 burst=7 jitter=0.05 snap=0.4 flicker=0.25 drive=0.3 echo=0.18 reverb=0.3 lfo_rate=5.5 pan=0.1
+clip coil 8 3 19.7647 0.7059 4912224462606544087 level=0.42 attack=0.012 release=0.25 pitch=27 ring=0.62 formant=12 burst=7 jitter=0.05 snap=0.4 flicker=0.25 drive=0.3 echo=0.18 reverb=0.3 lfo_rate=5.5 pan=0.1
+clip coil 8 3 20.4706 0.7059 2157417374311239667 level=0.42 attack=0.012 release=0.25 pitch=22 ring=0.62 formant=12 burst=7 jitter=0.05 snap=0.4 flicker=0.25 drive=0.3 echo=0.18 reverb=0.3 lfo_rate=5.5 pan=0.1
+clip coil 8 3 21.1765 0.7059 1263689159302331633 level=0.42 attack=0.012 release=0.25 pitch=25 ring=0.62 formant=12 burst=7 jitter=0.05 snap=0.4 flicker=0.25 drive=0.3 echo=0.18 reverb=0.3 lfo_rate=5.5 pan=0.1
+clip coil 8 3 21.8824 0.3529 5031532114068666021 level=0.42 attack=0.012 release=0.1412 pitch=22 ring=0.62 formant=12 burst=7 jitter=0.05 snap=0.4 flicker=0.25 drive=0.3 echo=0.18 reverb=0.3 lfo_rate=5.5 pan=0.1
+clip coil 8 3 22.2353 0.3529 3763186208771480139 level=0.42 attack=0.012 release=0.1412 pitch=30 ring=0.62 formant=12 burst=7 jitter=0.05 snap=0.4 flicker=0.25 drive=0.3 echo=0.18 reverb=0.3 lfo_rate=5.5 pan=0.1
+clip coil_hats 8 1 19.7647 1.4118 460329291578307217 level=0.28 attack=0.0 release=0.05 pitch=8.6537 divide=4 burst=1.4 snap=0.85 misfire=0.5 filter=2 cutoff=0.72 pan=-0.25 keyed=0
+clip coil_hats 8 1 21.1765 1.4118 5798959719760283911 level=0.34 attack=0.0 release=0.05 pitch=8.6537 divide=4 burst=1.4 snap=0.85 misfire=0.1 filter=2 cutoff=0.72 pan=-0.25 keyed=0
+clip snare 2 1 21.1765 0.1941 4424676639479013378 level=0.1925 attack=0.001 release=0.5 cutoff=0.7 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 21.1765 0.1059 5936541438000230080 level=0.14 attack=0.001 release=0.25 pitch=8 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip snare 2 1 21.2647 0.1941 2996518371969117446 level=0.2148 attack=0.001 release=0.5 cutoff=0.7 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 21.2647 0.1059 8409563206160062638 level=0.1562 attack=0.001 release=0.25 pitch=8 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip snare 2 1 21.3529 0.1941 262910854590904403 level=0.2372 attack=0.001 release=0.5 cutoff=0.7 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 21.3529 0.1059 7822779690190250789 level=0.1725 attack=0.001 release=0.25 pitch=8 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip snare 2 1 21.4412 0.1941 7812987454964726595 level=0.2595 attack=0.001 release=0.5 cutoff=0.71 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 21.4412 0.1059 2419128860194579778 level=0.1888 attack=0.001 release=0.25 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip snare 2 1 21.5294 0.1941 409633070349887947 level=0.2819 attack=0.001 release=0.5 cutoff=0.71 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 21.5294 0.1059 1111725745656706637 level=0.205 attack=0.001 release=0.25 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip snare 2 1 21.6176 0.1941 8702509259913714793 level=0.3042 attack=0.001 release=0.5 cutoff=0.71 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 21.6176 0.1059 1700648779693069520 level=0.2213 attack=0.001 release=0.25 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip snare 2 1 21.7059 0.1941 8969379816597105847 level=0.3266 attack=0.001 release=0.5 cutoff=0.72 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 21.7059 0.1059 3508284601545137577 level=0.2375 attack=0.001 release=0.25 pitch=10 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip snare 2 1 21.7941 0.1941 9190773961970328152 level=0.3489 attack=0.001 release=0.5 cutoff=0.72 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 21.7941 0.1059 8985488602633240721 level=0.2537 attack=0.001 release=0.25 pitch=10 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip stroke 5 1 21.7941 0.2471 8666025145584089424 level=0.2855 attack=0.0 release=0.3 pitch=-2 drive=0.4 cutoff=0.8 file=machines/steam_engine_stroke_3.ogg keyed=0
+clip snare 2 1 21.8824 0.1941 3596548956288037751 level=0.3713 attack=0.001 release=0.5 cutoff=0.73 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 21.8824 0.1059 8730726595306016516 level=0.27 attack=0.001 release=0.25 pitch=11 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip stroke 5 1 21.8824 0.2471 8203228084861120278 level=0.3038 attack=0.0 release=0.3 pitch=-2 drive=0.4 cutoff=0.8 file=machines/steam_engine_stroke_3.ogg keyed=0
+clip snare 2 1 21.9706 0.1941 8489682169240461857 level=0.3936 attack=0.001 release=0.5 cutoff=0.73 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 21.9706 0.1059 326085961804930810 level=0.2863 attack=0.001 release=0.25 pitch=11 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip stroke 5 1 21.9706 0.2471 1008509879947996748 level=0.322 attack=0.0 release=0.3 pitch=-2 drive=0.4 cutoff=0.8 file=machines/steam_engine_stroke_3.ogg keyed=0
+clip snare 2 1 22.0588 0.1941 2399500022999269297 level=0.4159 attack=0.001 release=0.5 cutoff=0.73 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 22.0588 0.1059 5816174874528780311 level=0.3025 attack=0.001 release=0.25 pitch=11 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip stroke 5 1 22.0588 0.2471 1862803933503346159 level=0.3403 attack=0.0 release=0.3 pitch=-2 drive=0.4 cutoff=0.8 file=machines/steam_engine_stroke_3.ogg keyed=0
+clip snare 2 1 22.1471 0.1941 4593300818739185459 level=0.4383 attack=0.001 release=0.5 cutoff=0.74 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 22.1471 0.1059 8039254126983675671 level=0.3188 attack=0.001 release=0.25 pitch=12 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip stroke 5 1 22.1471 0.2471 4078559480922321393 level=0.3586 attack=0.0 release=0.3 pitch=-2 drive=0.4 cutoff=0.8 file=machines/steam_engine_stroke_3.ogg keyed=0
+clip snare 2 1 22.2353 0.1941 5576180173760931156 level=0.4606 attack=0.001 release=0.5 cutoff=0.74 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 22.2353 0.1059 1943206126760585842 level=0.335 attack=0.001 release=0.25 pitch=12 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip stroke 5 1 22.2353 0.2471 6963913002386782443 level=0.3769 attack=0.0 release=0.3 pitch=-2 drive=0.4 cutoff=0.8 file=machines/steam_engine_stroke_3.ogg keyed=0
+clip snare 2 1 22.3235 0.1941 2296786792498250553 level=0.483 attack=0.001 release=0.5 cutoff=0.74 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 22.3235 0.1059 5284932949456947526 level=0.3513 attack=0.001 release=0.25 pitch=12 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip stroke 5 1 22.3235 0.2471 5487006345135966511 level=0.3952 attack=0.0 release=0.3 pitch=-2 drive=0.4 cutoff=0.8 file=machines/steam_engine_stroke_3.ogg keyed=0
+clip snare 2 1 22.4118 0.1941 7528139500653629384 level=0.5053 attack=0.001 release=0.5 cutoff=0.75 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 22.4118 0.1059 5235119910979263034 level=0.3675 attack=0.001 release=0.25 pitch=13 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip stroke 5 1 22.4118 0.2471 5447180954487572058 level=0.4134 attack=0.0 release=0.3 pitch=-2 drive=0.4 cutoff=0.8 file=machines/steam_engine_stroke_3.ogg keyed=0
+clip snare 2 1 22.5000 0.1941 6077061807167330521 level=0.5277 attack=0.001 release=0.5 cutoff=0.75 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 22.5000 0.1059 6242648300196123463 level=0.3838 attack=0.001 release=0.25 pitch=13 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip stroke 5 1 22.5000 0.2471 6888571353736656448 level=0.4317 attack=0.0 release=0.3 pitch=-2 drive=0.4 cutoff=0.8 file=machines/steam_engine_stroke_3.ogg keyed=0
+clip coil_riser 8 3 21.1765 1.4118 9163569552821874371 level=0.35 attack=1.0 release=0.05 pitch=10 pitch_swp=19 ring=0.3 formant=19 burst=4 jitter=0.15 snap=0.5 flicker=0.4 reverb=0.3
+clip shatter 5 5 22.5882 2.1176 6373421160435168668 level=0.6 release=1.5 pitch=-2 file=resonant/crescendo_shatter.ogg reverb=0.3
+clip kick 1 0 22.5882 0.2647 1722751272204425171 level=1.0 attack=0.001 release=0.6 pitch=3 pitch_swp=-22 interval=0 timbre=0.0 drive=0.7 env_curve=0.3 keyed=0
+clip kick_body 1 0 22.5882 0.1941 6208807752339650075 level=0.7 attack=0.002 release=0.45 pitch=-7 pitch_swp=-4 interval=0 timbre=0.0 drive=0.5 env_curve=0.2 keyed=0
+clip click 2 0 22.5882 0.0141 3549046014928721016 level=0.3 attack=0.0 release=0.012 cutoff=0.85 filter=2 keyed=0
+clip kick 1 0 22.8529 0.2647 5180822463881324119 level=1.0 attack=0.001 release=0.6 pitch=3 pitch_swp=-22 interval=0 timbre=0.0 drive=0.7 env_curve=0.3 keyed=0
+clip kick_body 1 0 22.8529 0.1941 7525158209785970119 level=0.7 attack=0.002 release=0.45 pitch=-7 pitch_swp=-4 interval=0 timbre=0.0 drive=0.5 env_curve=0.2 keyed=0
+clip click 2 0 22.8529 0.0141 8075810219206944380 level=0.3 attack=0.0 release=0.012 cutoff=0.85 filter=2 keyed=0
+clip kick 1 0 23.1176 0.2647 559761647370493177 level=1.0 attack=0.001 release=0.6 pitch=3 pitch_swp=-22 interval=0 timbre=0.0 drive=0.7 env_curve=0.3 keyed=0
+clip kick_body 1 0 23.1176 0.1941 2996555586375158351 level=0.7 attack=0.002 release=0.45 pitch=-7 pitch_swp=-4 interval=0 timbre=0.0 drive=0.5 env_curve=0.2 keyed=0
+clip click 2 0 23.1176 0.0141 3192541439454358795 level=0.3 attack=0.0 release=0.012 cutoff=0.85 filter=2 keyed=0
+clip kick 1 0 23.4706 0.2647 6168088215711020715 level=1.0 attack=0.001 release=0.6 pitch=3 pitch_swp=-22 interval=0 timbre=0.0 drive=0.7 env_curve=0.3 keyed=0
+clip kick_body 1 0 23.4706 0.1941 9173318531637161593 level=0.7 attack=0.002 release=0.45 pitch=-7 pitch_swp=-4 interval=0 timbre=0.0 drive=0.5 env_curve=0.2 keyed=0
+clip click 2 0 23.4706 0.0141 3335722791398185212 level=0.3 attack=0.0 release=0.012 cutoff=0.85 filter=2 keyed=0
+clip snare 2 1 22.9412 0.1941 267603710578488563 level=0.55 attack=0.001 release=0.5 cutoff=0.7 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 22.9412 0.1059 5450843990830460999 level=0.4 attack=0.001 release=0.25 pitch=8 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip stroke 5 1 22.9412 0.2471 2090369855598213750 level=0.45 attack=0.0 release=0.3 pitch=-2 drive=0.4 cutoff=0.8 file=machines/steam_engine_stroke_3.ogg keyed=0
+clip snare 2 1 23.6471 0.1941 8683246141328409451 level=0.55 attack=0.001 release=0.5 cutoff=0.7 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 23.6471 0.1059 2814807058925003240 level=0.4 attack=0.001 release=0.25 pitch=8 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip stroke 5 1 23.6471 0.2471 6932936895977158323 level=0.45 attack=0.0 release=0.3 pitch=-2 drive=0.4 cutoff=0.8 file=machines/steam_engine_stroke_3.ogg keyed=0
+clip snare 2 1 23.2059 0.1941 1043079885333434201 level=0.165 attack=0.001 release=0.5 cutoff=0.7 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 23.2059 0.1059 3711212088262645751 level=0.12 attack=0.001 release=0.25 pitch=8 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip snare 2 1 23.3824 0.1941 2660949828932801930 level=0.165 attack=0.001 release=0.5 cutoff=0.7 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 23.3824 0.1059 1723716567991312249 level=0.12 attack=0.001 release=0.25 pitch=8 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip snare 2 1 23.9118 0.1941 8301583114088828436 level=0.165 attack=0.001 release=0.5 cutoff=0.7 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 23.9118 0.1059 8722366189040875649 level=0.12 attack=0.001 release=0.25 pitch=8 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip kick 1 0 24.0000 0.2647 5446447015637194082 level=1.0 attack=0.001 release=0.6 pitch=3 pitch_swp=-22 interval=0 timbre=0.0 drive=0.7 env_curve=0.3 keyed=0
+clip kick_body 1 0 24.0000 0.1941 7334346502457153161 level=0.7 attack=0.002 release=0.45 pitch=-7 pitch_swp=-4 interval=0 timbre=0.0 drive=0.5 env_curve=0.2 keyed=0
+clip click 2 0 24.0000 0.0141 1022016946021547841 level=0.3 attack=0.0 release=0.012 cutoff=0.85 filter=2 keyed=0
+clip kick 1 0 24.1765 0.2647 1747392003835779385 level=1.0 attack=0.001 release=0.6 pitch=3 pitch_swp=-22 interval=0 timbre=0.0 drive=0.7 env_curve=0.3 keyed=0
+clip kick_body 1 0 24.1765 0.1941 6894757549187667550 level=0.7 attack=0.002 release=0.45 pitch=-7 pitch_swp=-4 interval=0 timbre=0.0 drive=0.5 env_curve=0.2 keyed=0
+clip click 2 0 24.1765 0.0141 6172879370640976242 level=0.3 attack=0.0 release=0.012 cutoff=0.85 filter=2 keyed=0
+clip kick 1 0 24.5294 0.2647 409173676416402140 level=1.0 attack=0.001 release=0.6 pitch=3 pitch_swp=-22 interval=0 timbre=0.0 drive=0.7 env_curve=0.3 keyed=0
+clip kick_body 1 0 24.5294 0.1941 5573337985973347398 level=0.7 attack=0.002 release=0.45 pitch=-7 pitch_swp=-4 interval=0 timbre=0.0 drive=0.5 env_curve=0.2 keyed=0
+clip click 2 0 24.5294 0.0141 7420475341412234245 level=0.3 attack=0.0 release=0.012 cutoff=0.85 filter=2 keyed=0
+clip kick 1 0 24.8824 0.2647 7467292696654089107 level=1.0 attack=0.001 release=0.6 pitch=3 pitch_swp=-22 interval=0 timbre=0.0 drive=0.7 env_curve=0.3 keyed=0
+clip kick_body 1 0 24.8824 0.1941 7103628307411417030 level=0.7 attack=0.002 release=0.45 pitch=-7 pitch_swp=-4 interval=0 timbre=0.0 drive=0.5 env_curve=0.2 keyed=0
+clip click 2 0 24.8824 0.0141 6428775400048342725 level=0.3 attack=0.0 release=0.012 cutoff=0.85 filter=2 keyed=0
+clip kick 1 0 24.9706 0.2647 9108648328429003960 level=1.0 attack=0.001 release=0.6 pitch=3 pitch_swp=-22 interval=0 timbre=0.0 drive=0.7 env_curve=0.3 keyed=0
+clip kick_body 1 0 24.9706 0.1941 31171725497414002 level=0.7 attack=0.002 release=0.45 pitch=-7 pitch_swp=-4 interval=0 timbre=0.0 drive=0.5 env_curve=0.2 keyed=0
+clip click 2 0 24.9706 0.0141 4253119055535944448 level=0.3 attack=0.0 release=0.012 cutoff=0.85 filter=2 keyed=0
+clip kick 1 0 25.2353 0.2647 890938374668376681 level=1.0 attack=0.001 release=0.6 pitch=3 pitch_swp=-22 interval=0 timbre=0.0 drive=0.7 env_curve=0.3 keyed=0
+clip kick_body 1 0 25.2353 0.1941 1039084877585778284 level=0.7 attack=0.002 release=0.45 pitch=-7 pitch_swp=-4 interval=0 timbre=0.0 drive=0.5 env_curve=0.2 keyed=0
+clip click 2 0 25.2353 0.0141 3422870348269558313 level=0.3 attack=0.0 release=0.012 cutoff=0.85 filter=2 keyed=0
+clip snare 2 1 24.3529 0.1941 6055509232824097898 level=0.55 attack=0.001 release=0.5 cutoff=0.7 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 24.3529 0.1059 1446481824801940743 level=0.4 attack=0.001 release=0.25 pitch=8 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip stroke 5 1 24.3529 0.2471 3424567215503987869 level=0.45 attack=0.0 release=0.3 pitch=-2 drive=0.4 cutoff=0.8 file=machines/steam_engine_stroke_3.ogg keyed=0
+clip snare 2 1 25.0588 0.1941 3685176291156907419 level=0.55 attack=0.001 release=0.5 cutoff=0.7 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 25.0588 0.1059 3868831069039938654 level=0.4 attack=0.001 release=0.25 pitch=8 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip stroke 5 1 25.0588 0.2471 6508765290977448958 level=0.45 attack=0.0 release=0.3 pitch=-2 drive=0.4 cutoff=0.8 file=machines/steam_engine_stroke_3.ogg keyed=0
+clip snare 2 1 24.7941 0.1941 8717380519636417309 level=0.165 attack=0.001 release=0.5 cutoff=0.7 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 24.7941 0.1059 3842051398331495994 level=0.12 attack=0.001 release=0.25 pitch=8 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip snare 2 1 25.1471 0.1941 3649827704435971335 level=0.165 attack=0.001 release=0.5 cutoff=0.7 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 25.1471 0.1059 8221856396583188097 level=0.12 attack=0.001 release=0.25 pitch=8 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip kick 1 0 25.4118 0.2647 106285133068210317 level=1.0 attack=0.001 release=0.6 pitch=3 pitch_swp=-22 interval=0 timbre=0.0 drive=0.7 env_curve=0.3 keyed=0
+clip kick_body 1 0 25.4118 0.1941 950853109442661074 level=0.7 attack=0.002 release=0.45 pitch=-7 pitch_swp=-4 interval=0 timbre=0.0 drive=0.5 env_curve=0.2 keyed=0
+clip click 2 0 25.4118 0.0141 6827552880979398712 level=0.3 attack=0.0 release=0.012 cutoff=0.85 filter=2 keyed=0
+clip kick 1 0 25.6765 0.2647 6682577153919695564 level=1.0 attack=0.001 release=0.6 pitch=3 pitch_swp=-22 interval=0 timbre=0.0 drive=0.7 env_curve=0.3 keyed=0
+clip kick_body 1 0 25.6765 0.1941 1927093604252894800 level=0.7 attack=0.002 release=0.45 pitch=-7 pitch_swp=-4 interval=0 timbre=0.0 drive=0.5 env_curve=0.2 keyed=0
+clip click 2 0 25.6765 0.0141 3306147242604207153 level=0.3 attack=0.0 release=0.012 cutoff=0.85 filter=2 keyed=0
+clip kick 1 0 25.9412 0.2647 9199738987138593175 level=1.0 attack=0.001 release=0.6 pitch=3 pitch_swp=-22 interval=0 timbre=0.0 drive=0.7 env_curve=0.3 keyed=0
+clip kick_body 1 0 25.9412 0.1941 7030064005111635324 level=0.7 attack=0.002 release=0.45 pitch=-7 pitch_swp=-4 interval=0 timbre=0.0 drive=0.5 env_curve=0.2 keyed=0
+clip click 2 0 25.9412 0.0141 6695633090935055933 level=0.3 attack=0.0 release=0.012 cutoff=0.85 filter=2 keyed=0
+clip kick 1 0 26.2941 0.2647 1458867719122120016 level=1.0 attack=0.001 release=0.6 pitch=3 pitch_swp=-22 interval=0 timbre=0.0 drive=0.7 env_curve=0.3 keyed=0
+clip kick_body 1 0 26.2941 0.1941 1377368764947197585 level=0.7 attack=0.002 release=0.45 pitch=-7 pitch_swp=-4 interval=0 timbre=0.0 drive=0.5 env_curve=0.2 keyed=0
+clip click 2 0 26.2941 0.0141 5815796605036529006 level=0.3 attack=0.0 release=0.012 cutoff=0.85 filter=2 keyed=0
+clip snare 2 1 25.7647 0.1941 2504216217777564996 level=0.55 attack=0.001 release=0.5 cutoff=0.7 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 25.7647 0.1059 7050822747511436239 level=0.4 attack=0.001 release=0.25 pitch=8 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip stroke 5 1 25.7647 0.2471 9145856055926796425 level=0.45 attack=0.0 release=0.3 pitch=-2 drive=0.4 cutoff=0.8 file=machines/steam_engine_stroke_3.ogg keyed=0
+clip snare 2 1 26.4706 0.1941 6192430961172733399 level=0.55 attack=0.001 release=0.5 cutoff=0.7 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 26.4706 0.1059 3293015199500647019 level=0.4 attack=0.001 release=0.25 pitch=8 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip stroke 5 1 26.4706 0.2471 1013464376021727121 level=0.45 attack=0.0 release=0.3 pitch=-2 drive=0.4 cutoff=0.8 file=machines/steam_engine_stroke_3.ogg keyed=0
+clip snare 2 1 26.0294 0.1941 7779698422535099268 level=0.165 attack=0.001 release=0.5 cutoff=0.7 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 26.0294 0.1059 6348418361787596584 level=0.12 attack=0.001 release=0.25 pitch=8 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip snare 2 1 26.2059 0.1941 4752842889327562732 level=0.165 attack=0.001 release=0.5 cutoff=0.7 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 26.2059 0.1059 2725767795697780053 level=0.12 attack=0.001 release=0.25 pitch=8 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip snare 2 1 26.7353 0.1941 8173872551951765455 level=0.165 attack=0.001 release=0.5 cutoff=0.7 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 26.7353 0.1059 5045488943347713665 level=0.12 attack=0.001 release=0.25 pitch=8 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip kick 1 0 26.8235 0.2647 1157210310162652170 level=1.0 attack=0.001 release=0.6 pitch=3 pitch_swp=-22 interval=0 timbre=0.0 drive=0.7 env_curve=0.3 keyed=0
+clip kick_body 1 0 26.8235 0.1941 5274130987985657466 level=0.7 attack=0.002 release=0.45 pitch=-7 pitch_swp=-4 interval=0 timbre=0.0 drive=0.5 env_curve=0.2 keyed=0
+clip click 2 0 26.8235 0.0141 4640224868483732381 level=0.3 attack=0.0 release=0.012 cutoff=0.85 filter=2 keyed=0
+clip kick 1 0 27.0000 0.2647 416983557895308664 level=1.0 attack=0.001 release=0.6 pitch=3 pitch_swp=-22 interval=0 timbre=0.0 drive=0.7 env_curve=0.3 keyed=0
+clip kick_body 1 0 27.0000 0.1941 8152249686765496145 level=0.7 attack=0.002 release=0.45 pitch=-7 pitch_swp=-4 interval=0 timbre=0.0 drive=0.5 env_curve=0.2 keyed=0
+clip click 2 0 27.0000 0.0141 8280132559294029577 level=0.3 attack=0.0 release=0.012 cutoff=0.85 filter=2 keyed=0
+clip kick 1 0 27.3529 0.2647 6831920808733481554 level=1.0 attack=0.001 release=0.6 pitch=3 pitch_swp=-22 interval=0 timbre=0.0 drive=0.7 env_curve=0.3 keyed=0
+clip kick_body 1 0 27.3529 0.1941 1133547489249658987 level=0.7 attack=0.002 release=0.45 pitch=-7 pitch_swp=-4 interval=0 timbre=0.0 drive=0.5 env_curve=0.2 keyed=0
+clip click 2 0 27.3529 0.0141 8344719304989451780 level=0.3 attack=0.0 release=0.012 cutoff=0.85 filter=2 keyed=0
+clip kick 1 0 27.7059 0.2647 887419831963917569 level=1.0 attack=0.001 release=0.6 pitch=3 pitch_swp=-22 interval=0 timbre=0.0 drive=0.7 env_curve=0.3 keyed=0
+clip kick_body 1 0 27.7059 0.1941 83020643640118852 level=0.7 attack=0.002 release=0.45 pitch=-7 pitch_swp=-4 interval=0 timbre=0.0 drive=0.5 env_curve=0.2 keyed=0
+clip click 2 0 27.7059 0.0141 2431275957923151429 level=0.3 attack=0.0 release=0.012 cutoff=0.85 filter=2 keyed=0
+clip kick 1 0 27.7941 0.2647 8304371703145795068 level=1.0 attack=0.001 release=0.6 pitch=3 pitch_swp=-22 interval=0 timbre=0.0 drive=0.7 env_curve=0.3 keyed=0
+clip kick_body 1 0 27.7941 0.1941 9161103635462162087 level=0.7 attack=0.002 release=0.45 pitch=-7 pitch_swp=-4 interval=0 timbre=0.0 drive=0.5 env_curve=0.2 keyed=0
+clip click 2 0 27.7941 0.0141 6930359328425675817 level=0.3 attack=0.0 release=0.012 cutoff=0.85 filter=2 keyed=0
+clip kick 1 0 28.0588 0.2647 5268783892118096051 level=1.0 attack=0.001 release=0.6 pitch=3 pitch_swp=-22 interval=0 timbre=0.0 drive=0.7 env_curve=0.3 keyed=0
+clip kick_body 1 0 28.0588 0.1941 1483905630806597339 level=0.7 attack=0.002 release=0.45 pitch=-7 pitch_swp=-4 interval=0 timbre=0.0 drive=0.5 env_curve=0.2 keyed=0
+clip click 2 0 28.0588 0.0141 3707489214124318398 level=0.3 attack=0.0 release=0.012 cutoff=0.85 filter=2 keyed=0
+clip snare 2 1 27.1765 0.1941 7331038860166256895 level=0.55 attack=0.001 release=0.5 cutoff=0.7 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 27.1765 0.1059 1233702131778256556 level=0.4 attack=0.001 release=0.25 pitch=8 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip stroke 5 1 27.1765 0.2471 6984860063824914956 level=0.45 attack=0.0 release=0.3 pitch=-2 drive=0.4 cutoff=0.8 file=machines/steam_engine_stroke_3.ogg keyed=0
+clip snare 2 1 27.8824 0.1941 7267274879564854282 level=0.55 attack=0.001 release=0.5 cutoff=0.7 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 27.8824 0.1059 9035124807304279598 level=0.4 attack=0.001 release=0.25 pitch=8 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip stroke 5 1 27.8824 0.2471 4915447863336099316 level=0.45 attack=0.0 release=0.3 pitch=-2 drive=0.4 cutoff=0.8 file=machines/steam_engine_stroke_3.ogg keyed=0
+clip snare 2 1 27.6176 0.1941 1226967033273401142 level=0.165 attack=0.001 release=0.5 cutoff=0.7 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 27.6176 0.1059 268139744500812752 level=0.12 attack=0.001 release=0.25 pitch=8 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip snare 2 1 27.9706 0.1941 4824468258829325621 level=0.165 attack=0.001 release=0.5 cutoff=0.7 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 27.9706 0.1059 7949995965825801936 level=0.12 attack=0.001 release=0.25 pitch=8 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip kick 1 0 28.2353 0.2647 5661189803319129622 level=1.0 attack=0.001 release=0.6 pitch=3 pitch_swp=-22 interval=0 timbre=0.0 drive=0.7 env_curve=0.3 keyed=0
+clip kick_body 1 0 28.2353 0.1941 3769197303123969905 level=0.7 attack=0.002 release=0.45 pitch=-7 pitch_swp=-4 interval=0 timbre=0.0 drive=0.5 env_curve=0.2 keyed=0
+clip click 2 0 28.2353 0.0141 4562178595817649321 level=0.3 attack=0.0 release=0.012 cutoff=0.85 filter=2 keyed=0
+clip kick 1 0 28.5000 0.2647 5439892287860769242 level=1.0 attack=0.001 release=0.6 pitch=3 pitch_swp=-22 interval=0 timbre=0.0 drive=0.7 env_curve=0.3 keyed=0
+clip kick_body 1 0 28.5000 0.1941 1279049510605378137 level=0.7 attack=0.002 release=0.45 pitch=-7 pitch_swp=-4 interval=0 timbre=0.0 drive=0.5 env_curve=0.2 keyed=0
+clip click 2 0 28.5000 0.0141 2950761334006169111 level=0.3 attack=0.0 release=0.012 cutoff=0.85 filter=2 keyed=0
+clip kick 1 0 28.7647 0.2647 1001737582295601125 level=1.0 attack=0.001 release=0.6 pitch=3 pitch_swp=-22 interval=0 timbre=0.0 drive=0.7 env_curve=0.3 keyed=0
+clip kick_body 1 0 28.7647 0.1941 4047804020974076968 level=0.7 attack=0.002 release=0.45 pitch=-7 pitch_swp=-4 interval=0 timbre=0.0 drive=0.5 env_curve=0.2 keyed=0
+clip click 2 0 28.7647 0.0141 790365300732701238 level=0.3 attack=0.0 release=0.012 cutoff=0.85 filter=2 keyed=0
+clip kick 1 0 29.1176 0.2647 4766527100608162057 level=1.0 attack=0.001 release=0.6 pitch=3 pitch_swp=-22 interval=0 timbre=0.0 drive=0.7 env_curve=0.3 keyed=0
+clip kick_body 1 0 29.1176 0.1941 6438556400931552583 level=0.7 attack=0.002 release=0.45 pitch=-7 pitch_swp=-4 interval=0 timbre=0.0 drive=0.5 env_curve=0.2 keyed=0
+clip click 2 0 29.1176 0.0141 141161371502176648 level=0.3 attack=0.0 release=0.012 cutoff=0.85 filter=2 keyed=0
+clip snare 2 1 28.5882 0.1941 7645530631629945497 level=0.55 attack=0.001 release=0.5 cutoff=0.7 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 28.5882 0.1059 7403190970581198002 level=0.4 attack=0.001 release=0.25 pitch=8 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip stroke 5 1 28.5882 0.2471 2093354480887725873 level=0.45 attack=0.0 release=0.3 pitch=-2 drive=0.4 cutoff=0.8 file=machines/steam_engine_stroke_3.ogg keyed=0
+clip snare 2 1 29.2941 0.1941 7696669812164854340 level=0.55 attack=0.001 release=0.5 cutoff=0.7 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 29.2941 0.1059 2217932906665231193 level=0.4 attack=0.001 release=0.25 pitch=8 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip stroke 5 1 29.2941 0.2471 6206318643426794640 level=0.45 attack=0.0 release=0.3 pitch=-2 drive=0.4 cutoff=0.8 file=machines/steam_engine_stroke_3.ogg keyed=0
+clip snare 2 1 28.8529 0.1941 1289219439437327455 level=0.165 attack=0.001 release=0.5 cutoff=0.7 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 28.8529 0.1059 2705230771353728091 level=0.12 attack=0.001 release=0.25 pitch=8 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip snare 2 1 29.0294 0.1941 8998202775238040408 level=0.165 attack=0.001 release=0.5 cutoff=0.7 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 29.0294 0.1059 5530269694670222941 level=0.12 attack=0.001 release=0.25 pitch=8 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip snare 2 1 29.5588 0.1941 911221789622041251 level=0.165 attack=0.001 release=0.5 cutoff=0.7 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 29.5588 0.1059 7075608278436851018 level=0.12 attack=0.001 release=0.25 pitch=8 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip kick 1 0 29.6471 0.2647 2682846345591012333 level=1.0 attack=0.001 release=0.6 pitch=3 pitch_swp=-22 interval=0 timbre=0.0 drive=0.7 env_curve=0.3 keyed=0
+clip kick_body 1 0 29.6471 0.1941 980263249154359729 level=0.7 attack=0.002 release=0.45 pitch=-7 pitch_swp=-4 interval=0 timbre=0.0 drive=0.5 env_curve=0.2 keyed=0
+clip click 2 0 29.6471 0.0141 4865063266417517643 level=0.3 attack=0.0 release=0.012 cutoff=0.85 filter=2 keyed=0
+clip kick 1 0 29.8235 0.2647 6555988065989487925 level=1.0 attack=0.001 release=0.6 pitch=3 pitch_swp=-22 interval=0 timbre=0.0 drive=0.7 env_curve=0.3 keyed=0
+clip kick_body 1 0 29.8235 0.1941 2062009898744726993 level=0.7 attack=0.002 release=0.45 pitch=-7 pitch_swp=-4 interval=0 timbre=0.0 drive=0.5 env_curve=0.2 keyed=0
+clip click 2 0 29.8235 0.0141 6371350483306334351 level=0.3 attack=0.0 release=0.012 cutoff=0.85 filter=2 keyed=0
+clip kick 1 0 30.1765 0.2647 6824247704243219050 level=1.0 attack=0.001 release=0.6 pitch=3 pitch_swp=-22 interval=0 timbre=0.0 drive=0.7 env_curve=0.3 keyed=0
+clip kick_body 1 0 30.1765 0.1941 7564076145148089504 level=0.7 attack=0.002 release=0.45 pitch=-7 pitch_swp=-4 interval=0 timbre=0.0 drive=0.5 env_curve=0.2 keyed=0
+clip click 2 0 30.1765 0.0141 7749433559635713178 level=0.3 attack=0.0 release=0.012 cutoff=0.85 filter=2 keyed=0
+clip kick 1 0 30.5294 0.2647 2852984608986871173 level=1.0 attack=0.001 release=0.6 pitch=3 pitch_swp=-22 interval=0 timbre=0.0 drive=0.7 env_curve=0.3 keyed=0
+clip kick_body 1 0 30.5294 0.1941 3371392043005730716 level=0.7 attack=0.002 release=0.45 pitch=-7 pitch_swp=-4 interval=0 timbre=0.0 drive=0.5 env_curve=0.2 keyed=0
+clip click 2 0 30.5294 0.0141 2253809864243135543 level=0.3 attack=0.0 release=0.012 cutoff=0.85 filter=2 keyed=0
+clip kick 1 0 30.6176 0.2647 4068709892183824293 level=1.0 attack=0.001 release=0.6 pitch=3 pitch_swp=-22 interval=0 timbre=0.0 drive=0.7 env_curve=0.3 keyed=0
+clip kick_body 1 0 30.6176 0.1941 4102948693487531982 level=0.7 attack=0.002 release=0.45 pitch=-7 pitch_swp=-4 interval=0 timbre=0.0 drive=0.5 env_curve=0.2 keyed=0
+clip click 2 0 30.6176 0.0141 2818389187240308474 level=0.3 attack=0.0 release=0.012 cutoff=0.85 filter=2 keyed=0
+clip kick 1 0 30.8824 0.2647 5299501557511321372 level=1.0 attack=0.001 release=0.6 pitch=3 pitch_swp=-22 interval=0 timbre=0.0 drive=0.7 env_curve=0.3 keyed=0
+clip kick_body 1 0 30.8824 0.1941 4522372616175545701 level=0.7 attack=0.002 release=0.45 pitch=-7 pitch_swp=-4 interval=0 timbre=0.0 drive=0.5 env_curve=0.2 keyed=0
+clip click 2 0 30.8824 0.0141 2673653380187756455 level=0.3 attack=0.0 release=0.012 cutoff=0.85 filter=2 keyed=0
+clip snare 2 1 30.0000 0.1941 8164775081381382987 level=0.55 attack=0.001 release=0.5 cutoff=0.7 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 30.0000 0.1059 5388839593439998521 level=0.4 attack=0.001 release=0.25 pitch=8 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip stroke 5 1 30.0000 0.2471 3565726872848431889 level=0.45 attack=0.0 release=0.3 pitch=-2 drive=0.4 cutoff=0.8 file=machines/steam_engine_stroke_3.ogg keyed=0
+clip snare 2 1 30.7059 0.1941 1350714453708546251 level=0.55 attack=0.001 release=0.5 cutoff=0.7 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 30.7059 0.1059 5033762648308233067 level=0.4 attack=0.001 release=0.25 pitch=8 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip stroke 5 1 30.7059 0.2471 1810757453060011367 level=0.45 attack=0.0 release=0.3 pitch=-2 drive=0.4 cutoff=0.8 file=machines/steam_engine_stroke_3.ogg keyed=0
+clip snare 2 1 30.4412 0.1941 6263393885884146391 level=0.165 attack=0.001 release=0.5 cutoff=0.7 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 30.4412 0.1059 4956024185257803026 level=0.12 attack=0.001 release=0.25 pitch=8 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip snare 2 1 30.7941 0.1941 6001522494820474928 level=0.165 attack=0.001 release=0.5 cutoff=0.7 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 30.7941 0.1059 3916529448855292827 level=0.12 attack=0.001 release=0.25 pitch=8 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip kick 1 0 31.0588 0.2647 5926924318604985134 level=1.0 attack=0.001 release=0.6 pitch=3 pitch_swp=-22 interval=0 timbre=0.0 drive=0.7 env_curve=0.3 keyed=0
+clip kick_body 1 0 31.0588 0.1941 8614049050051164918 level=0.7 attack=0.002 release=0.45 pitch=-7 pitch_swp=-4 interval=0 timbre=0.0 drive=0.5 env_curve=0.2 keyed=0
+clip click 2 0 31.0588 0.0141 6716003801689763053 level=0.3 attack=0.0 release=0.012 cutoff=0.85 filter=2 keyed=0
+clip kick 1 0 31.3235 0.2647 8978642371443953887 level=1.0 attack=0.001 release=0.6 pitch=3 pitch_swp=-22 interval=0 timbre=0.0 drive=0.7 env_curve=0.3 keyed=0
+clip kick_body 1 0 31.3235 0.1941 7459547991789970184 level=0.7 attack=0.002 release=0.45 pitch=-7 pitch_swp=-4 interval=0 timbre=0.0 drive=0.5 env_curve=0.2 keyed=0
+clip click 2 0 31.3235 0.0141 2708008897804443729 level=0.3 attack=0.0 release=0.012 cutoff=0.85 filter=2 keyed=0
+clip kick 1 0 31.5882 0.2647 540188321655971368 level=1.0 attack=0.001 release=0.6 pitch=3 pitch_swp=-22 interval=0 timbre=0.0 drive=0.7 env_curve=0.3 keyed=0
+clip kick_body 1 0 31.5882 0.1941 544908572273565383 level=0.7 attack=0.002 release=0.45 pitch=-7 pitch_swp=-4 interval=0 timbre=0.0 drive=0.5 env_curve=0.2 keyed=0
+clip click 2 0 31.5882 0.0141 113216305328277321 level=0.3 attack=0.0 release=0.012 cutoff=0.85 filter=2 keyed=0
+clip kick 1 0 31.9412 0.2647 8876119161568025572 level=1.0 attack=0.001 release=0.6 pitch=3 pitch_swp=-22 interval=0 timbre=0.0 drive=0.7 env_curve=0.3 keyed=0
+clip kick_body 1 0 31.9412 0.1941 5417772682924035764 level=0.7 attack=0.002 release=0.45 pitch=-7 pitch_swp=-4 interval=0 timbre=0.0 drive=0.5 env_curve=0.2 keyed=0
+clip click 2 0 31.9412 0.0141 5814408911407586511 level=0.3 attack=0.0 release=0.012 cutoff=0.85 filter=2 keyed=0
+clip snare 2 1 31.4118 0.1941 1773553069787733924 level=0.55 attack=0.001 release=0.5 cutoff=0.7 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 31.4118 0.1059 7228599695371371514 level=0.4 attack=0.001 release=0.25 pitch=8 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip stroke 5 1 31.4118 0.2471 2704587854804353359 level=0.45 attack=0.0 release=0.3 pitch=-2 drive=0.4 cutoff=0.8 file=machines/steam_engine_stroke_3.ogg keyed=0
+clip snare 2 1 32.1176 0.1941 1733183788493467000 level=0.55 attack=0.001 release=0.5 cutoff=0.7 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 32.1176 0.1059 5006500884223499837 level=0.4 attack=0.001 release=0.25 pitch=8 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip stroke 5 1 32.1176 0.2471 7680034332553166566 level=0.45 attack=0.0 release=0.3 pitch=-2 drive=0.4 cutoff=0.8 file=machines/steam_engine_stroke_3.ogg keyed=0
+clip snare 2 1 31.6765 0.1941 3020898446978881371 level=0.165 attack=0.001 release=0.5 cutoff=0.7 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 31.6765 0.1059 3166641614230196891 level=0.12 attack=0.001 release=0.25 pitch=8 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip snare 2 1 31.8529 0.1941 9107334051633517433 level=0.165 attack=0.001 release=0.5 cutoff=0.7 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 31.8529 0.1059 8612865330433760270 level=0.12 attack=0.001 release=0.25 pitch=8 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip snare 2 1 32.3824 0.1941 8237923565181901159 level=0.165 attack=0.001 release=0.5 cutoff=0.7 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 32.3824 0.1059 3024069990706730350 level=0.12 attack=0.001 release=0.25 pitch=8 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip kick 1 0 32.4706 0.2647 4674517089555162347 level=1.0 attack=0.001 release=0.6 pitch=3 pitch_swp=-22 interval=0 timbre=0.0 drive=0.7 env_curve=0.3 keyed=0
+clip kick_body 1 0 32.4706 0.1941 4936914596887148985 level=0.7 attack=0.002 release=0.45 pitch=-7 pitch_swp=-4 interval=0 timbre=0.0 drive=0.5 env_curve=0.2 keyed=0
+clip click 2 0 32.4706 0.0141 2641601853371514607 level=0.3 attack=0.0 release=0.012 cutoff=0.85 filter=2 keyed=0
+clip kick 1 0 32.6471 0.2647 7786071944667960690 level=1.0 attack=0.001 release=0.6 pitch=3 pitch_swp=-22 interval=0 timbre=0.0 drive=0.7 env_curve=0.3 keyed=0
+clip kick_body 1 0 32.6471 0.1941 7564068651664516072 level=0.7 attack=0.002 release=0.45 pitch=-7 pitch_swp=-4 interval=0 timbre=0.0 drive=0.5 env_curve=0.2 keyed=0
+clip click 2 0 32.6471 0.0141 6776985117668416310 level=0.3 attack=0.0 release=0.012 cutoff=0.85 filter=2 keyed=0
+clip kick 1 0 33.0000 0.2647 8861645780258047523 level=1.0 attack=0.001 release=0.6 pitch=3 pitch_swp=-22 interval=0 timbre=0.0 drive=0.7 env_curve=0.3 keyed=0
+clip kick_body 1 0 33.0000 0.1941 6872085001316483448 level=0.7 attack=0.002 release=0.45 pitch=-7 pitch_swp=-4 interval=0 timbre=0.0 drive=0.5 env_curve=0.2 keyed=0
+clip click 2 0 33.0000 0.0141 7076825477947286113 level=0.3 attack=0.0 release=0.012 cutoff=0.85 filter=2 keyed=0
+clip snare 2 1 32.8235 0.1941 60241133553094104 level=0.55 attack=0.001 release=0.5 cutoff=0.7 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 32.8235 0.1059 9032531950890804758 level=0.4 attack=0.001 release=0.25 pitch=8 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip stroke 5 1 32.8235 0.2471 7988658380295225885 level=0.45 attack=0.0 release=0.3 pitch=-2 drive=0.4 cutoff=0.8 file=machines/steam_engine_stroke_3.ogg keyed=0
+clip kick 1 0 33.1765 0.2647 6972187868520525230 level=1.0 attack=0.001 release=0.6 pitch=3 pitch_swp=-22 interval=0 timbre=0.0 drive=0.7 env_curve=0.3 keyed=0
+clip kick_body 1 0 33.1765 0.1941 3723093447003299440 level=0.7 attack=0.002 release=0.45 pitch=-7 pitch_swp=-4 interval=0 timbre=0.0 drive=0.5 env_curve=0.2 keyed=0
+clip click 2 0 33.1765 0.0141 1929338938932316718 level=0.3 attack=0.0 release=0.012 cutoff=0.85 filter=2 keyed=0
+clip snare 2 1 33.1765 0.1941 7558607421707802846 level=0.1925 attack=0.001 release=0.5 cutoff=0.7 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 33.1765 0.1059 3018921754003206648 level=0.14 attack=0.001 release=0.25 pitch=8 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip snare 2 1 33.2647 0.1941 8351389317168121086 level=0.2372 attack=0.001 release=0.5 cutoff=0.7 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 33.2647 0.1059 4686990811251402161 level=0.1725 attack=0.001 release=0.25 pitch=8 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip snare 2 1 33.3529 0.1941 2016042161754367967 level=0.2819 attack=0.001 release=0.5 cutoff=0.71 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 33.3529 0.1059 6722535105000863944 level=0.205 attack=0.001 release=0.25 pitch=9 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip snare 2 1 33.4412 0.1941 3139688101834883640 level=0.3266 attack=0.001 release=0.5 cutoff=0.72 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 33.4412 0.1059 3888271064984730899 level=0.2375 attack=0.001 release=0.25 pitch=10 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip snare 2 1 33.5294 0.1941 1982078684018467505 level=0.3713 attack=0.001 release=0.5 cutoff=0.73 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 33.5294 0.1059 720942679460241087 level=0.27 attack=0.001 release=0.25 pitch=11 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip stroke 5 1 33.5294 0.2471 3559115349783296558 level=0.3038 attack=0.0 release=0.3 pitch=-2 drive=0.4 cutoff=0.8 file=machines/steam_engine_stroke_3.ogg keyed=0
+clip snare 2 1 33.6176 0.1941 5263256189695765006 level=0.4159 attack=0.001 release=0.5 cutoff=0.73 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 33.6176 0.1059 1361809470623902454 level=0.3025 attack=0.001 release=0.25 pitch=11 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip stroke 5 1 33.6176 0.2471 3426143263647003616 level=0.3403 attack=0.0 release=0.3 pitch=-2 drive=0.4 cutoff=0.8 file=machines/steam_engine_stroke_3.ogg keyed=0
+clip snare 2 1 33.7059 0.1941 3819670881523135217 level=0.4606 attack=0.001 release=0.5 cutoff=0.74 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 33.7059 0.1059 3219549803286792676 level=0.335 attack=0.001 release=0.25 pitch=12 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip stroke 5 1 33.7059 0.2471 3672811051296821067 level=0.3769 attack=0.0 release=0.3 pitch=-2 drive=0.4 cutoff=0.8 file=machines/steam_engine_stroke_3.ogg keyed=0
+clip snare 2 1 33.7941 0.1941 5265492241347524647 level=0.5053 attack=0.001 release=0.5 cutoff=0.75 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 33.7941 0.1059 764143905923420720 level=0.3675 attack=0.001 release=0.25 pitch=13 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip stroke 5 1 33.7941 0.2471 1796874871108978009 level=0.4134 attack=0.0 release=0.3 pitch=-2 drive=0.4 cutoff=0.8 file=machines/steam_engine_stroke_3.ogg keyed=0
+clip coil_hats 8 1 22.5882 11.2941 2218508374460513579 level=0.36 attack=0.0 release=0.05 pitch=8.6537 divide=4 burst=1.4 snap=0.85 misfire=0.15 filter=2 cutoff=0.72 pan=-0.25 keyed=0
+clip open_hat 2 1 22.7647 0.1765 5386095757041734882 level=0.16 attack=0.001 release=0.4 cutoff=0.9 filter=2 color=0.0 env_curve=0.4 pan=0.3 keyed=0
+clip open_hat 2 1 23.1176 0.1765 1271685149211268583 level=0.16 attack=0.001 release=0.4 cutoff=0.9 filter=2 color=0.0 env_curve=0.4 pan=0.3 keyed=0
+clip open_hat 2 1 23.4706 0.1765 1632396528876601441 level=0.16 attack=0.001 release=0.4 cutoff=0.9 filter=2 color=0.0 env_curve=0.4 pan=0.3 keyed=0
+clip open_hat 2 1 23.8235 0.1765 96427817680353729 level=0.16 attack=0.001 release=0.4 cutoff=0.9 filter=2 color=0.0 env_curve=0.4 pan=0.3 keyed=0
+clip open_hat 2 1 24.1765 0.1765 137805734122894625 level=0.16 attack=0.001 release=0.4 cutoff=0.9 filter=2 color=0.0 env_curve=0.4 pan=0.3 keyed=0
+clip open_hat 2 1 24.5294 0.1765 4095142236334759844 level=0.16 attack=0.001 release=0.4 cutoff=0.9 filter=2 color=0.0 env_curve=0.4 pan=0.3 keyed=0
+clip open_hat 2 1 24.8824 0.1765 1443661435499905214 level=0.16 attack=0.001 release=0.4 cutoff=0.9 filter=2 color=0.0 env_curve=0.4 pan=0.3 keyed=0
+clip open_hat 2 1 25.2353 0.1765 7108772488750078000 level=0.16 attack=0.001 release=0.4 cutoff=0.9 filter=2 color=0.0 env_curve=0.4 pan=0.3 keyed=0
+clip open_hat 2 1 25.5882 0.1765 2610859176897938098 level=0.16 attack=0.001 release=0.4 cutoff=0.9 filter=2 color=0.0 env_curve=0.4 pan=0.3 keyed=0
+clip open_hat 2 1 25.9412 0.1765 5665948846161232149 level=0.16 attack=0.001 release=0.4 cutoff=0.9 filter=2 color=0.0 env_curve=0.4 pan=0.3 keyed=0
+clip open_hat 2 1 26.2941 0.1765 7867935283600385381 level=0.16 attack=0.001 release=0.4 cutoff=0.9 filter=2 color=0.0 env_curve=0.4 pan=0.3 keyed=0
+clip open_hat 2 1 26.6471 0.1765 6185822091841453247 level=0.16 attack=0.001 release=0.4 cutoff=0.9 filter=2 color=0.0 env_curve=0.4 pan=0.3 keyed=0
+clip open_hat 2 1 27.0000 0.1765 3362979333513860967 level=0.16 attack=0.001 release=0.4 cutoff=0.9 filter=2 color=0.0 env_curve=0.4 pan=0.3 keyed=0
+clip open_hat 2 1 27.3529 0.1765 5779556823415743254 level=0.16 attack=0.001 release=0.4 cutoff=0.9 filter=2 color=0.0 env_curve=0.4 pan=0.3 keyed=0
+clip open_hat 2 1 27.7059 0.1765 2962375268552863226 level=0.16 attack=0.001 release=0.4 cutoff=0.9 filter=2 color=0.0 env_curve=0.4 pan=0.3 keyed=0
+clip open_hat 2 1 28.0588 0.1765 5337786133683280512 level=0.16 attack=0.001 release=0.4 cutoff=0.9 filter=2 color=0.0 env_curve=0.4 pan=0.3 keyed=0
+clip open_hat 2 1 28.4118 0.1765 6510699758217487201 level=0.16 attack=0.001 release=0.4 cutoff=0.9 filter=2 color=0.0 env_curve=0.4 pan=0.3 keyed=0
+clip open_hat 2 1 28.7647 0.1765 4175107516528284397 level=0.16 attack=0.001 release=0.4 cutoff=0.9 filter=2 color=0.0 env_curve=0.4 pan=0.3 keyed=0
+clip open_hat 2 1 29.1176 0.1765 1501414366966246415 level=0.16 attack=0.001 release=0.4 cutoff=0.9 filter=2 color=0.0 env_curve=0.4 pan=0.3 keyed=0
+clip open_hat 2 1 29.4706 0.1765 5834057265520060341 level=0.16 attack=0.001 release=0.4 cutoff=0.9 filter=2 color=0.0 env_curve=0.4 pan=0.3 keyed=0
+clip open_hat 2 1 29.8235 0.1765 8773728864784690978 level=0.16 attack=0.001 release=0.4 cutoff=0.9 filter=2 color=0.0 env_curve=0.4 pan=0.3 keyed=0
+clip open_hat 2 1 30.1765 0.1765 2299674649491874108 level=0.16 attack=0.001 release=0.4 cutoff=0.9 filter=2 color=0.0 env_curve=0.4 pan=0.3 keyed=0
+clip open_hat 2 1 30.5294 0.1765 6000925166576100657 level=0.16 attack=0.001 release=0.4 cutoff=0.9 filter=2 color=0.0 env_curve=0.4 pan=0.3 keyed=0
+clip open_hat 2 1 30.8824 0.1765 5588637418017090392 level=0.16 attack=0.001 release=0.4 cutoff=0.9 filter=2 color=0.0 env_curve=0.4 pan=0.3 keyed=0
+clip open_hat 2 1 31.2353 0.1765 6507390376251496852 level=0.16 attack=0.001 release=0.4 cutoff=0.9 filter=2 color=0.0 env_curve=0.4 pan=0.3 keyed=0
+clip open_hat 2 1 31.5882 0.1765 4014000598870294284 level=0.16 attack=0.001 release=0.4 cutoff=0.9 filter=2 color=0.0 env_curve=0.4 pan=0.3 keyed=0
+clip open_hat 2 1 31.9412 0.1765 547936022518150430 level=0.16 attack=0.001 release=0.4 cutoff=0.9 filter=2 color=0.0 env_curve=0.4 pan=0.3 keyed=0
+clip open_hat 2 1 32.2941 0.1765 6205781461632722860 level=0.16 attack=0.001 release=0.4 cutoff=0.9 filter=2 color=0.0 env_curve=0.4 pan=0.3 keyed=0
+clip open_hat 2 1 32.6471 0.1765 8227718755967803573 level=0.16 attack=0.001 release=0.4 cutoff=0.9 filter=2 color=0.0 env_curve=0.4 pan=0.3 keyed=0
+clip open_hat 2 1 33.0000 0.1765 7584833767982429710 level=0.16 attack=0.001 release=0.4 cutoff=0.9 filter=2 color=0.0 env_curve=0.4 pan=0.3 keyed=0
+clip open_hat 2 1 33.3529 0.1765 900140950654640741 level=0.16 attack=0.001 release=0.4 cutoff=0.9 filter=2 color=0.0 env_curve=0.4 pan=0.3 keyed=0
+clip open_hat 2 1 33.7059 0.1765 171995835012118157 level=0.16 attack=0.001 release=0.4 cutoff=0.9 filter=2 color=0.0 env_curve=0.4 pan=0.3 keyed=0
+clip chug 4 2 22.5882 0.1165 2570707672172132999 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 22.6002 0.1045 5494709557345147259 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip sub 1 2 22.5882 0.0882 7108253925860965532 level=0.35 attack=0.005 release=0.06 pitch=-19 interval=0 timbre=0.0 duck=0.55 duck_from=1
+clip chug 4 2 22.6765 0.1165 6420900169494596370 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 22.6885 0.1045 8990179616209478040 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 22.8529 0.1165 2685223972841653694 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 22.8649 0.1045 8944981837834294602 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 23.0294 0.1165 3413216333974642937 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 23.0414 0.1045 8141131908059197149 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 23.1176 0.2047 1106616153785175893 level=0.62 attack=0.001 release=0.06 pitch=-6 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 23.1296 0.1927 7203912805292408922 level=0.62 attack=0.001 release=0.06 pitch=-6 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip sub 1 2 23.1176 0.1765 1121643656823974692 level=0.35 attack=0.005 release=0.06 pitch=-18 interval=0 timbre=0.0 duck=0.55 duck_from=1
+clip chug 4 2 23.2941 0.1165 47966089372149262 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 23.3061 0.1045 1839479311478894585 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip sub 1 2 23.2941 0.0882 3119372916141349411 level=0.35 attack=0.005 release=0.06 pitch=-19 interval=0 timbre=0.0 duck=0.55 duck_from=1
+clip chug 4 2 23.4706 0.1165 6034947693739730589 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 23.4826 0.1045 8098462325706312730 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 23.5588 0.1165 319152604720934812 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 23.5708 0.1045 3941997615982954895 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 23.6471 0.2047 2194122858148555301 level=0.62 attack=0.001 release=0.06 pitch=-4 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 23.6591 0.1927 5006057315252990580 level=0.62 attack=0.001 release=0.06 pitch=-4 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip sub 1 2 23.6471 0.1765 5209078109707259398 level=0.35 attack=0.005 release=0.06 pitch=-16 interval=0 timbre=0.0 duck=0.55 duck_from=1
+clip chug 4 2 23.8235 0.2047 3602800147366177236 level=0.62 attack=0.001 release=0.06 pitch=-6 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 23.8355 0.1927 1170784152385369896 level=0.62 attack=0.001 release=0.06 pitch=-6 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip sub 1 2 23.8235 0.1765 8457658110434221031 level=0.35 attack=0.005 release=0.06 pitch=-18 interval=0 timbre=0.0 duck=0.55 duck_from=1
+clip chug 4 2 24.0000 0.1165 3843630372449179097 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 24.0120 0.1045 1267833532769753156 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip sub 1 2 24.0000 0.0882 5796171632500560652 level=0.35 attack=0.005 release=0.06 pitch=-19 interval=0 timbre=0.0 duck=0.55 duck_from=1
+clip chug 4 2 24.0882 0.1165 2505998719427822250 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 24.1002 0.1045 2955525952047328018 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 24.2647 0.1165 7174250949538142482 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 24.2767 0.1045 592248914884765712 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 24.4412 0.1165 5583472063735673716 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 24.4532 0.1045 2631167184115749543 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 24.5294 0.2047 5660075774084589086 level=0.62 attack=0.001 release=0.06 pitch=-9 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 24.5414 0.1927 3741067594191795684 level=0.62 attack=0.001 release=0.06 pitch=-9 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip sub 1 2 24.5294 0.1765 8863379186789733260 level=0.35 attack=0.005 release=0.06 pitch=-21 interval=0 timbre=0.0 duck=0.55 duck_from=1
+clip chug 4 2 24.7059 0.2047 7353679399960485345 level=0.62 attack=0.001 release=0.06 pitch=-11 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 24.7179 0.1927 3173998036254185116 level=0.62 attack=0.001 release=0.06 pitch=-11 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip sub 1 2 24.7059 0.1765 4307704822411462089 level=0.35 attack=0.005 release=0.06 pitch=-23 interval=0 timbre=0.0 duck=0.55 duck_from=1
+clip chug 4 2 24.8824 0.2047 9011527601306500634 level=0.62 attack=0.001 release=0.06 pitch=-9 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 24.8944 0.1927 6199198390473570859 level=0.62 attack=0.001 release=0.06 pitch=-9 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip sub 1 2 24.8824 0.1765 3142419638013646598 level=0.35 attack=0.005 release=0.06 pitch=-21 interval=0 timbre=0.0 duck=0.55 duck_from=1
+clip chug 4 2 25.0588 0.1165 8196901199834386451 level=0.62 attack=0.001 release=0.06 pitch=-6 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 25.0708 0.1045 5059811337254145080 level=0.62 attack=0.001 release=0.06 pitch=-6 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 25.1471 0.1165 8937129630471111455 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 25.1591 0.1045 2886510598952433327 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 25.2353 0.2047 8503548498493070149 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 25.2473 0.1927 3892664564243546720 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip sub 1 2 25.2353 0.1765 94023892971047924 level=0.35 attack=0.005 release=0.06 pitch=-19 interval=0 timbre=0.0 duck=0.55 duck_from=1
+clip chug 4 2 25.4118 0.1165 3942484310292317038 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 25.4238 0.1045 7725579133079965587 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip sub 1 2 25.4118 0.0882 841982775103347881 level=0.35 attack=0.005 release=0.06 pitch=-19 interval=0 timbre=0.0 duck=0.55 duck_from=1
+clip chug 4 2 25.5000 0.1165 5393338158095318027 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 25.5120 0.1045 328442470225690680 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 25.6765 0.1165 9022456585418236708 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 25.6885 0.1045 553956366102568070 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 25.8529 0.1165 5038763327020942451 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 25.8649 0.1045 6928186478712217529 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 25.9412 0.2047 4550931860847300089 level=0.62 attack=0.001 release=0.06 pitch=-6 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 25.9532 0.1927 4975925213672332525 level=0.62 attack=0.001 release=0.06 pitch=-6 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip sub 1 2 25.9412 0.1765 6695274413031271083 level=0.35 attack=0.005 release=0.06 pitch=-18 interval=0 timbre=0.0 duck=0.55 duck_from=1
+clip chug 4 2 26.1176 0.1165 5604924661158001323 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 26.1296 0.1045 4908072362276968982 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip sub 1 2 26.1176 0.0882 2888120952894328943 level=0.35 attack=0.005 release=0.06 pitch=-19 interval=0 timbre=0.0 duck=0.55 duck_from=1
+clip chug 4 2 26.2941 0.1165 6920660698290966091 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 26.3061 0.1045 2326891337772864671 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 26.3824 0.1165 18452406975409030 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 26.3944 0.1045 3065328365524739633 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 26.4706 0.2047 2908372772827158832 level=0.62 attack=0.001 release=0.06 pitch=-4 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 26.4826 0.1927 7502495968345172705 level=0.62 attack=0.001 release=0.06 pitch=-4 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip sub 1 2 26.4706 0.1765 6335547740683161565 level=0.35 attack=0.005 release=0.06 pitch=-16 interval=0 timbre=0.0 duck=0.55 duck_from=1
+clip chug 4 2 26.6471 0.2047 7681607083482539306 level=0.62 attack=0.001 release=0.06 pitch=-6 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 26.6591 0.1927 395922052728107265 level=0.62 attack=0.001 release=0.06 pitch=-6 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip sub 1 2 26.6471 0.1765 4863936555148236773 level=0.35 attack=0.005 release=0.06 pitch=-18 interval=0 timbre=0.0 duck=0.55 duck_from=1
+clip chug 4 2 26.8235 0.1165 6717641591697044195 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 26.8355 0.1045 1933377848535069001 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip sub 1 2 26.8235 0.0882 8023906274892799045 level=0.35 attack=0.005 release=0.06 pitch=-19 interval=0 timbre=0.0 duck=0.55 duck_from=1
+clip chug 4 2 26.9118 0.1165 2250240591626689749 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 26.9238 0.1045 5550398575828057183 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 27.0882 0.1165 6259223628603245144 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 27.1002 0.1045 7649929414794212137 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 27.2647 0.1165 5874346375964683013 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 27.2767 0.1045 8900513030748911783 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 27.3529 0.2047 1283964093602199544 level=0.62 attack=0.001 release=0.06 pitch=-9 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 27.3649 0.1927 8042004328448618934 level=0.62 attack=0.001 release=0.06 pitch=-9 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip sub 1 2 27.3529 0.1765 4462654132278317048 level=0.35 attack=0.005 release=0.06 pitch=-21 interval=0 timbre=0.0 duck=0.55 duck_from=1
+clip chug 4 2 27.5294 0.2047 1852912809536993006 level=0.62 attack=0.001 release=0.06 pitch=-11 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 27.5414 0.1927 4513085936358946065 level=0.62 attack=0.001 release=0.06 pitch=-11 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip sub 1 2 27.5294 0.1765 1438119301787760145 level=0.35 attack=0.005 release=0.06 pitch=-23 interval=0 timbre=0.0 duck=0.55 duck_from=1
+clip chug 4 2 27.7059 0.2047 1528721839701651199 level=0.62 attack=0.001 release=0.06 pitch=-9 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 27.7179 0.1927 6533392852127684339 level=0.62 attack=0.001 release=0.06 pitch=-9 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip sub 1 2 27.7059 0.1765 2238097139085370221 level=0.35 attack=0.005 release=0.06 pitch=-21 interval=0 timbre=0.0 duck=0.55 duck_from=1
+clip chug 4 2 27.8824 0.1165 8302685716199133308 level=0.62 attack=0.001 release=0.06 pitch=-6 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 27.8944 0.1045 7230429717770324345 level=0.62 attack=0.001 release=0.06 pitch=-6 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 27.9706 0.1165 3809422371573354703 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 27.9826 0.1045 8191633718725525862 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 28.0588 0.2047 5465401503746872971 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 28.0708 0.1927 428787418814818558 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip sub 1 2 28.0588 0.1765 7989671303399172036 level=0.35 attack=0.005 release=0.06 pitch=-19 interval=0 timbre=0.0 duck=0.55 duck_from=1
+clip chug 4 2 28.2353 0.1165 151724646479487179 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 28.2473 0.1045 2272887620072931593 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip sub 1 2 28.2353 0.0882 5419755704945109795 level=0.35 attack=0.005 release=0.06 pitch=-19 interval=0 timbre=0.0 duck=0.55 duck_from=1
+clip chug 4 2 28.3235 0.1165 1673343025814133896 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 28.3355 0.1045 331624398475629172 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 28.5000 0.1165 445484841730531176 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 28.5120 0.1045 3747439139178804127 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 28.6765 0.1165 3607652610171377487 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 28.6885 0.1045 8067557400143452198 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 28.7647 0.2047 5650413615453930490 level=0.62 attack=0.001 release=0.06 pitch=-6 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 28.7767 0.1927 8462812674915400403 level=0.62 attack=0.001 release=0.06 pitch=-6 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip sub 1 2 28.7647 0.1765 8007990032968535821 level=0.35 attack=0.005 release=0.06 pitch=-18 interval=0 timbre=0.0 duck=0.55 duck_from=1
+clip chug 4 2 28.9412 0.1165 4394871954214917231 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 28.9532 0.1045 1484405871940757619 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip sub 1 2 28.9412 0.0882 8579377652428774517 level=0.35 attack=0.005 release=0.06 pitch=-19 interval=0 timbre=0.0 duck=0.55 duck_from=1
+clip chug 4 2 29.1176 0.1165 7593180302165057477 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 29.1296 0.1045 6640101018156586085 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 29.2059 0.1165 1321074541112507070 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 29.2179 0.1045 2153707977850091885 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 29.2941 0.2047 4561425460220496143 level=0.62 attack=0.001 release=0.06 pitch=-4 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 29.3061 0.1927 3585919097548365717 level=0.62 attack=0.001 release=0.06 pitch=-4 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip sub 1 2 29.2941 0.1765 4194216588336995871 level=0.35 attack=0.005 release=0.06 pitch=-16 interval=0 timbre=0.0 duck=0.55 duck_from=1
+clip chug 4 2 29.4706 0.2047 8932437692341886064 level=0.62 attack=0.001 release=0.06 pitch=-6 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 29.4826 0.1927 8622579908583048662 level=0.62 attack=0.001 release=0.06 pitch=-6 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip sub 1 2 29.4706 0.1765 7104633995881558705 level=0.35 attack=0.005 release=0.06 pitch=-18 interval=0 timbre=0.0 duck=0.55 duck_from=1
+clip chug 4 2 29.6471 0.1165 5509375696898028133 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 29.6591 0.1045 6598549957703927907 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip sub 1 2 29.6471 0.0882 332027937702722796 level=0.35 attack=0.005 release=0.06 pitch=-19 interval=0 timbre=0.0 duck=0.55 duck_from=1
+clip chug 4 2 29.7353 0.1165 4615246983330061558 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 29.7473 0.1045 8513102852636744495 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 29.9118 0.1165 3698892985851928956 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 29.9238 0.1045 2297083086358200994 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 30.0882 0.1165 1168210762923050958 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 30.1002 0.1045 928898587197577828 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 30.1765 0.2047 7597787819541817839 level=0.62 attack=0.001 release=0.06 pitch=-9 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 30.1885 0.1927 9186219095495537959 level=0.62 attack=0.001 release=0.06 pitch=-9 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip sub 1 2 30.1765 0.1765 7198620716625285216 level=0.35 attack=0.005 release=0.06 pitch=-21 interval=0 timbre=0.0 duck=0.55 duck_from=1
+clip chug 4 2 30.3529 0.2047 3256655082386475756 level=0.62 attack=0.001 release=0.06 pitch=-11 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 30.3649 0.1927 7321886776542649684 level=0.62 attack=0.001 release=0.06 pitch=-11 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip sub 1 2 30.3529 0.1765 413060774693502887 level=0.35 attack=0.005 release=0.06 pitch=-23 interval=0 timbre=0.0 duck=0.55 duck_from=1
+clip chug 4 2 30.5294 0.2047 4031019429191880514 level=0.62 attack=0.001 release=0.06 pitch=-9 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 30.5414 0.1927 2692176047404549653 level=0.62 attack=0.001 release=0.06 pitch=-9 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip sub 1 2 30.5294 0.1765 4809735034718262785 level=0.35 attack=0.005 release=0.06 pitch=-21 interval=0 timbre=0.0 duck=0.55 duck_from=1
+clip chug 4 2 30.7059 0.1165 9022577834906670967 level=0.62 attack=0.001 release=0.06 pitch=-6 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 30.7179 0.1045 5107179170262881386 level=0.62 attack=0.001 release=0.06 pitch=-6 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 30.7941 0.1165 7540492714201592132 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 30.8061 0.1045 1217403483479800335 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 30.8824 0.2047 2720137072411988581 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 30.8944 0.1927 8617668318774101562 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip sub 1 2 30.8824 0.1765 7908601536496910853 level=0.35 attack=0.005 release=0.06 pitch=-19 interval=0 timbre=0.0 duck=0.55 duck_from=1
+clip chug 4 2 31.0588 0.1165 5178929708158899815 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 31.0708 0.1045 2057508311154623662 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip sub 1 2 31.0588 0.0882 2699683358507201764 level=0.35 attack=0.005 release=0.06 pitch=-19 interval=0 timbre=0.0 duck=0.55 duck_from=1
+clip chug 4 2 31.1471 0.1165 2935213737133114131 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 31.1591 0.1045 1517294774408886185 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 31.2353 0.1165 3323291024856142296 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 31.2473 0.1045 8744253458178446533 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 31.3235 0.1165 4445595935861783081 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 31.3355 0.1045 417697309411916878 level=0.62 attack=0.001 release=0.06 pitch=-7 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 31.4118 0.1165 801424441367429904 level=0.62 attack=0.001 release=0.06 pitch=-6 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 31.4238 0.1045 3565743135976440254 level=0.62 attack=0.001 release=0.06 pitch=-6 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 31.5000 0.1165 676862256243045074 level=0.62 attack=0.001 release=0.06 pitch=-6 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 31.5120 0.1045 6992598588019443220 level=0.62 attack=0.001 release=0.06 pitch=-6 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 31.5882 0.1165 1999198235576063634 level=0.62 attack=0.001 release=0.06 pitch=-6 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 31.6002 0.1045 7688996612707204695 level=0.62 attack=0.001 release=0.06 pitch=-6 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 31.6765 0.1165 831305420466169378 level=0.62 attack=0.001 release=0.06 pitch=-6 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 31.6885 0.1045 5715775819054001115 level=0.62 attack=0.001 release=0.06 pitch=-6 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 31.7647 0.1165 3325689662071610949 level=0.62 attack=0.001 release=0.06 pitch=-4 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 31.7767 0.1045 451985906784046338 level=0.62 attack=0.001 release=0.06 pitch=-4 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip sub 1 2 31.7647 0.0882 8092453083288386989 level=0.35 attack=0.005 release=0.06 pitch=-16 interval=0 timbre=0.0 duck=0.55 duck_from=1
+clip chug 4 2 31.8529 0.1165 8688882825404446530 level=0.62 attack=0.001 release=0.06 pitch=-4 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 31.8649 0.1045 1482137276025702911 level=0.62 attack=0.001 release=0.06 pitch=-4 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 31.9412 0.1165 8846760680273604878 level=0.62 attack=0.001 release=0.06 pitch=-4 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 31.9532 0.1045 6583157685256527990 level=0.62 attack=0.001 release=0.06 pitch=-4 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 32.0294 0.1165 3599855931535378986 level=0.62 attack=0.001 release=0.06 pitch=-4 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 32.0414 0.1045 4094595764566249012 level=0.62 attack=0.001 release=0.06 pitch=-4 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 32.1176 0.1165 1255556911962452662 level=0.62 attack=0.001 release=0.06 pitch=-2 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 32.1296 0.1045 3388286964410902598 level=0.62 attack=0.001 release=0.06 pitch=-2 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 32.2059 0.1165 8686661594077559514 level=0.62 attack=0.001 release=0.06 pitch=-2 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 32.2179 0.1045 7256220148562372289 level=0.62 attack=0.001 release=0.06 pitch=-2 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 32.2941 0.1165 9037058196765394361 level=0.62 attack=0.001 release=0.06 pitch=-2 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 32.3061 0.1045 6230235344986070140 level=0.62 attack=0.001 release=0.06 pitch=-2 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 32.3824 0.1165 7669808379158783445 level=0.62 attack=0.001 release=0.06 pitch=-2 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 32.3944 0.1045 375854021380124680 level=0.62 attack=0.001 release=0.06 pitch=-2 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 32.4706 0.1165 8063621655708126286 level=0.62 attack=0.001 release=0.06 pitch=0 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 32.4826 0.1045 8336447247775011516 level=0.62 attack=0.001 release=0.06 pitch=0 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip sub 1 2 32.4706 0.0882 2947389642811231802 level=0.35 attack=0.005 release=0.06 pitch=-12 interval=0 timbre=0.0 duck=0.55 duck_from=1
+clip chug 4 2 32.5588 0.1165 6114333640985070685 level=0.62 attack=0.001 release=0.06 pitch=0 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 32.5708 0.1045 4663764703492382496 level=0.62 attack=0.001 release=0.06 pitch=0 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 32.6471 0.1165 8477645800804999036 level=0.62 attack=0.001 release=0.06 pitch=0 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 32.6591 0.1045 1154306844228643258 level=0.62 attack=0.001 release=0.06 pitch=0 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 32.7353 0.1165 6367502162557757594 level=0.62 attack=0.001 release=0.06 pitch=0 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 32.7473 0.1045 368390690520514266 level=0.62 attack=0.001 release=0.06 pitch=0 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 32.8235 0.1165 6411354528083127800 level=0.62 attack=0.001 release=0.06 pitch=0 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 32.8355 0.1045 8057537363556250933 level=0.62 attack=0.001 release=0.06 pitch=0 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 32.9118 0.1165 8838540252056977910 level=0.62 attack=0.001 release=0.06 pitch=0 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 32.9238 0.1045 1512694148130151230 level=0.62 attack=0.001 release=0.06 pitch=0 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 33.0000 0.1165 6061557155759072980 level=0.62 attack=0.001 release=0.06 pitch=0 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 33.0120 0.1045 3901561661032099254 level=0.62 attack=0.001 release=0.06 pitch=0 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 33.0882 0.1165 2413311563021282673 level=0.62 attack=0.001 release=0.06 pitch=0 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 33.1002 0.1045 5784070534866961441 level=0.62 attack=0.001 release=0.06 pitch=0 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 33.1765 0.1165 1114257486439173041 level=0.62 attack=0.001 release=0.06 pitch=1 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 33.1885 0.1045 1536364437929245307 level=0.62 attack=0.001 release=0.06 pitch=1 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip sub 1 2 33.1765 0.0882 5836357457485164129 level=0.35 attack=0.005 release=0.06 pitch=-11 interval=0 timbre=0.0 duck=0.55 duck_from=1
+clip chug 4 2 33.2647 0.1165 4895231076558570213 level=0.62 attack=0.001 release=0.06 pitch=1 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 33.2767 0.1045 4625894889515910103 level=0.62 attack=0.001 release=0.06 pitch=1 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 33.3529 0.1165 1870148993947603041 level=0.62 attack=0.001 release=0.06 pitch=1 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 33.3649 0.1045 1326148091220603142 level=0.62 attack=0.001 release=0.06 pitch=1 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 33.4412 0.1165 2912347607634615831 level=0.62 attack=0.001 release=0.06 pitch=1 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 33.4532 0.1045 668899355177019492 level=0.62 attack=0.001 release=0.06 pitch=1 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 33.5294 0.1165 4543410409702604039 level=0.62 attack=0.001 release=0.06 pitch=3 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 33.5414 0.1045 7154082878155951422 level=0.62 attack=0.001 release=0.06 pitch=3 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 33.6176 0.1165 1827409767626376068 level=0.62 attack=0.001 release=0.06 pitch=3 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 33.6296 0.1045 7265990688224139325 level=0.62 attack=0.001 release=0.06 pitch=3 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 33.7059 0.1165 2460995689656176047 level=0.62 attack=0.001 release=0.06 pitch=3 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 33.7179 0.1045 5410158038012666283 level=0.62 attack=0.001 release=0.06 pitch=3 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip chug 4 2 33.7941 0.1165 6371753272210008126 level=0.62 attack=0.001 release=0.06 pitch=3 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=-0.45 duck=0.55 duck_from=1
+clip chug 4 2 33.8061 0.1045 9104505672132774058 level=0.62 attack=0.001 release=0.06 pitch=3 interval=7 damp=0.55 sustain=0.55 pick=0.9 drive=0.8 cutoff=0.6 resonance=0.2 pan=0.45 duck=0.55 duck_from=1
+clip coil 8 3 22.5882 0.7059 2372733424796626463 level=0.5 attack=0.012 release=0.25 pitch=29 ring=0.62 formant=12 burst=7 jitter=0.05 snap=0.4 flicker=0.25 drive=0.3 echo=0.18 reverb=0.3 lfo_rate=5.5 pan=0.1
+clip coil 8 3 22.5988 0.6953 2916292600166226620 level=0.36 attack=0.012 release=0.25 pitch=25 ring=0.62 formant=12 burst=7 jitter=0.05 snap=0.4 flicker=0.25 drive=0.3 echo=0.18 reverb=0.3 lfo_rate=5.5 pan=-0.3
+clip coil 8 3 23.2941 0.3529 3732801157251260815 level=0.5 attack=0.012 release=0.1412 pitch=24 ring=0.62 formant=12 burst=7 jitter=0.05 snap=0.4 flicker=0.25 drive=0.3 echo=0.18 reverb=0.3 lfo_rate=5.5 pan=0.1
+clip coil 8 3 23.3047 0.3424 1417606449172307776 level=0.36 attack=0.012 release=0.1369 pitch=20 ring=0.62 formant=12 burst=7 jitter=0.05 snap=0.4 flicker=0.25 drive=0.3 echo=0.18 reverb=0.3 lfo_rate=5.5 pan=-0.3
+clip coil 8 3 23.6471 0.3529 6986164668818769113 level=0.5 attack=0.012 release=0.1412 pitch=25 ring=0.62 formant=12 burst=7 jitter=0.05 snap=0.4 flicker=0.25 drive=0.3 echo=0.18 reverb=0.3 lfo_rate=5.5 pan=0.1
+clip coil 8 3 23.6576 0.3424 8431767173711508730 level=0.36 attack=0.012 release=0.1369 pitch=22 ring=0.62 formant=12 burst=7 jitter=0.05 snap=0.4 flicker=0.25 drive=0.3 echo=0.18 reverb=0.3 lfo_rate=5.5 pan=-0.3
+clip coil 8 3 24.0000 0.5294 21413094432567528 level=0.5 attack=0.012 release=0.2118 pitch=27 ring=0.62 formant=12 burst=7 jitter=0.05 snap=0.4 flicker=0.25 drive=0.3 echo=0.18 reverb=0.3 lfo_rate=5.5 pan=0.1
+clip coil 8 3 24.0106 0.5188 7641394101397464938 level=0.36 attack=0.012 release=0.2075 pitch=24 ring=0.62 formant=12 burst=7 jitter=0.05 snap=0.4 flicker=0.25 drive=0.3 echo=0.18 reverb=0.3 lfo_rate=5.5 pan=-0.3
+clip coil 8 3 24.5294 0.1765 2883406619675445936 level=0.5 attack=0.012 release=0.0706 pitch=25 ring=0.62 formant=12 burst=7 jitter=0.05 snap=0.4 flicker=0.25 drive=0.3 echo=0.18 reverb=0.3 lfo_rate=5.5 pan=0.1
+clip coil 8 3 24.5400 0.1659 6337956479820631928 level=0.36 attack=0.012 release=0.0664 pitch=22 ring=0.62 formant=12 burst=7 jitter=0.05 snap=0.4 flicker=0.25 drive=0.3 echo=0.18 reverb=0.3 lfo_rate=5.5 pan=-0.3
+clip coil 8 3 24.7059 0.7059 5727946443575686902 level=0.5 attack=0.012 release=0.25 pitch=24 ring=0.62 formant=12 burst=7 jitter=0.05 snap=0.4 flicker=0.25 drive=0.3 echo=0.18 reverb=0.3 lfo_rate=5.5 pan=0.1
+clip coil 8 3 24.7165 0.6953 1585820237349512148 level=0.36 attack=0.012 release=0.25 pitch=20 ring=0.62 formant=12 burst=7 jitter=0.05 snap=0.4 flicker=0.25 drive=0.3 echo=0.18 reverb=0.3 lfo_rate=5.5 pan=-0.3
+clip coil 8 3 25.4118 0.3529 849407595708553561 level=0.5 attack=0.012 release=0.1412 pitch=22 ring=0.62 formant=12 burst=7 jitter=0.05 snap=0.4 flicker=0.25 drive=0.3 echo=0.18 reverb=0.3 lfo_rate=5.5 pan=0.1
+clip coil 8 3 25.4224 0.3424 5390989391898210495 level=0.36 attack=0.012 release=0.1369 pitch=18 ring=0.62 formant=12 burst=7 jitter=0.05 snap=0.4 flicker=0.25 drive=0.3 echo=0.18 reverb=0.3 lfo_rate=5.5 pan=-0.3
+clip coil 8 3 25.7647 0.3529 3655399857984623999 level=0.5 attack=0.012 release=0.1412 pitch=24 ring=0.62 formant=12 burst=7 jitter=0.05 snap=0.4 flicker=0.25 drive=0.3 echo=0.18 reverb=0.3 lfo_rate=5.5 pan=0.1
+clip coil 8 3 25.7753 0.3424 100960605339073940 level=0.36 attack=0.012 release=0.1369 pitch=20 ring=0.62 formant=12 burst=7 jitter=0.05 snap=0.4 flicker=0.25 drive=0.3 echo=0.18 reverb=0.3 lfo_rate=5.5 pan=-0.3
+clip coil 8 3 26.1176 0.3529 4190474630257981627 level=0.5 attack=0.012 release=0.1412 pitch=25 ring=0.62 formant=12 burst=7 jitter=0.05 snap=0.4 flicker=0.25 drive=0.3 echo=0.18 reverb=0.3 lfo_rate=5.5 pan=0.1
+clip coil 8 3 26.1282 0.3424 3858740465613730491 level=0.36 attack=0.012 release=0.1369 pitch=22 ring=0.62 formant=12 burst=7 jitter=0.05 snap=0.4 flicker=0.25 drive=0.3 echo=0.18 reverb=0.3 lfo_rate=5.5 pan=-0.3
+clip coil 8 3 26.4706 0.3529 2745402117370778231 level=0.5 attack=0.012 release=0.1412 pitch=27 ring=0.62 formant=12 burst=7 jitter=0.05 snap=0.4 flicker=0.25 drive=0.3 echo=0.18 reverb=0.3 lfo_rate=5.5 pan=0.1
+clip coil 8 3 26.4812 0.3424 5089051718170575620 level=0.36 attack=0.012 release=0.1369 pitch=24 ring=0.62 formant=12 burst=7 jitter=0.05 snap=0.4 flicker=0.25 drive=0.3 echo=0.18 reverb=0.3 lfo_rate=5.5 pan=-0.3
+clip coil 8 3 26.8235 1.0588 8820515102707429077 level=0.5 attack=0.012 release=0.25 pitch=29 ring=0.62 formant=12 burst=7 jitter=0.05 snap=0.4 flicker=0.25 drive=0.3 echo=0.18 reverb=0.3 lfo_rate=5.5 pan=0.1
+clip coil 8 3 26.8341 1.0482 8460964646073163092 level=0.36 attack=0.012 release=0.25 pitch=25 ring=0.62 formant=12 burst=7 jitter=0.05 snap=0.4 flicker=0.25 drive=0.3 echo=0.18 reverb=0.3 lfo_rate=5.5 pan=-0.3
+clip coil 8 3 27.8824 0.3529 6180371370844083570 level=0.5 attack=0.012 release=0.1412 pitch=30 ring=0.62 formant=12 burst=7 jitter=0.05 snap=0.4 flicker=0.25 drive=0.3 echo=0.18 reverb=0.3 lfo_rate=5.5 pan=0.1
+clip coil 8 3 27.8929 0.3424 7621863558123045720 level=0.36 attack=0.012 release=0.1369 pitch=27 ring=0.62 formant=12 burst=7 jitter=0.05 snap=0.4 flicker=0.25 drive=0.3 echo=0.18 reverb=0.3 lfo_rate=5.5 pan=-0.3
+clip coil 8 3 28.2353 0.7059 1533243654461233036 level=0.5 attack=0.012 release=0.25 pitch=29 ring=0.62 formant=12 burst=7 jitter=0.05 snap=0.4 flicker=0.25 drive=0.3 echo=0.18 reverb=0.3 lfo_rate=5.5 pan=0.1
+clip coil 8 3 28.2459 0.6953 2179115228313284092 level=0.36 attack=0.012 release=0.25 pitch=25 ring=0.62 formant=12 burst=7 jitter=0.05 snap=0.4 flicker=0.25 drive=0.3 echo=0.18 reverb=0.3 lfo_rate=5.5 pan=-0.3
+clip coil 8 3 28.9412 0.3529 6886987752012424061 level=0.5 attack=0.012 release=0.1412 pitch=32 ring=0.62 formant=12 burst=7 jitter=0.05 snap=0.4 flicker=0.25 drive=0.3 echo=0.18 reverb=0.3 lfo_rate=5.5 pan=0.1
+clip coil 8 3 28.9518 0.3424 6170063611116921780 level=0.36 attack=0.012 release=0.1369 pitch=29 ring=0.62 formant=12 burst=7 jitter=0.05 snap=0.4 flicker=0.25 drive=0.3 echo=0.18 reverb=0.3 lfo_rate=5.5 pan=-0.3
+clip coil 8 3 29.2941 0.3529 1133564831377390755 level=0.5 attack=0.012 release=0.1412 pitch=30 ring=0.62 formant=12 burst=7 jitter=0.05 snap=0.4 flicker=0.25 drive=0.3 echo=0.18 reverb=0.3 lfo_rate=5.5 pan=0.1
+clip coil 8 3 29.3047 0.3424 9120423153062137048 level=0.36 attack=0.012 release=0.1369 pitch=27 ring=0.62 formant=12 burst=7 jitter=0.05 snap=0.4 flicker=0.25 drive=0.3 echo=0.18 reverb=0.3 lfo_rate=5.5 pan=-0.3
+clip coil 8 3 29.6471 0.5294 6865968504010937215 level=0.5 attack=0.012 release=0.2118 pitch=29 ring=0.62 formant=12 burst=7 jitter=0.05 snap=0.4 flicker=0.25 drive=0.3 echo=0.18 reverb=0.3 lfo_rate=5.5 pan=0.1
+clip coil 8 3 29.6576 0.5188 5991146014071136583 level=0.36 attack=0.012 release=0.2075 pitch=25 ring=0.62 formant=12 burst=7 jitter=0.05 snap=0.4 flicker=0.25 drive=0.3 echo=0.18 reverb=0.3 lfo_rate=5.5 pan=-0.3
+clip coil 8 3 30.1765 0.1765 1529434887838131201 level=0.5 attack=0.012 release=0.0706 pitch=27 ring=0.62 formant=12 burst=7 jitter=0.05 snap=0.4 flicker=0.25 drive=0.3 echo=0.18 reverb=0.3 lfo_rate=5.5 pan=0.1
+clip coil 8 3 30.1871 0.1659 6886491305857607841 level=0.36 attack=0.012 release=0.0664 pitch=24 ring=0.62 formant=12 burst=7 jitter=0.05 snap=0.4 flicker=0.25 drive=0.3 echo=0.18 reverb=0.3 lfo_rate=5.5 pan=-0.3
+clip coil 8 3 30.3529 0.7059 3787323647959792828 level=0.5 attack=0.012 release=0.25 pitch=25 ring=0.62 formant=12 burst=7 jitter=0.05 snap=0.4 flicker=0.25 drive=0.3 echo=0.18 reverb=0.3 lfo_rate=5.5 pan=0.1
+clip coil 8 3 30.3635 0.6953 7398957398755463029 level=0.36 attack=0.012 release=0.25 pitch=22 ring=0.62 formant=12 burst=7 jitter=0.05 snap=0.4 flicker=0.25 drive=0.3 echo=0.18 reverb=0.3 lfo_rate=5.5 pan=-0.3
+clip coil 8 3 31.0588 0.3529 3343596893442963204 level=0.5 attack=0.012 release=0.1412 pitch=24 ring=0.62 formant=12 burst=7 jitter=0.05 snap=0.4 flicker=0.25 drive=0.3 echo=0.18 reverb=0.3 lfo_rate=5.5 pan=0.1
+clip coil 8 3 31.0694 0.3424 9216859590614769877 level=0.36 attack=0.012 release=0.1369 pitch=20 ring=0.62 formant=12 burst=7 jitter=0.05 snap=0.4 flicker=0.25 drive=0.3 echo=0.18 reverb=0.3 lfo_rate=5.5 pan=-0.3
+clip coil 8 3 31.4118 0.1765 4694191518608825233 level=0.5 attack=0.012 release=0.0706 pitch=25 ring=0.62 formant=12 burst=7 jitter=0.05 snap=0.4 flicker=0.25 drive=0.3 echo=0.18 reverb=0.3 lfo_rate=5.5 pan=0.1
+clip coil 8 3 31.4224 0.1659 2891281438888278692 level=0.36 attack=0.012 release=0.0664 pitch=22 ring=0.62 formant=12 burst=7 jitter=0.05 snap=0.4 flicker=0.25 drive=0.3 echo=0.18 reverb=0.3 lfo_rate=5.5 pan=-0.3
+clip coil 8 3 31.5882 0.1765 3508926485067581466 level=0.5 attack=0.012 release=0.0706 pitch=24 ring=0.62 formant=12 burst=7 jitter=0.05 snap=0.4 flicker=0.25 drive=0.3 echo=0.18 reverb=0.3 lfo_rate=5.5 pan=0.1
+clip coil 8 3 31.5988 0.1659 6279819777219050490 level=0.36 attack=0.012 release=0.0664 pitch=20 ring=0.62 formant=12 burst=7 jitter=0.05 snap=0.4 flicker=0.25 drive=0.3 echo=0.18 reverb=0.3 lfo_rate=5.5 pan=-0.3
+clip coil 8 3 31.7647 0.3529 2309719809468115677 level=0.5 attack=0.012 release=0.1412 pitch=22 ring=0.62 formant=12 burst=7 jitter=0.05 snap=0.4 flicker=0.25 drive=0.3 echo=0.18 reverb=0.3 lfo_rate=5.5 pan=0.1
+clip coil 8 3 31.7753 0.3424 2228300079361500335 level=0.36 attack=0.012 release=0.1369 pitch=18 ring=0.62 formant=12 burst=7 jitter=0.05 snap=0.4 flicker=0.25 drive=0.3 echo=0.18 reverb=0.3 lfo_rate=5.5 pan=-0.3
+clip coil 8 3 32.1176 0.3529 7674424485586909351 level=0.5 attack=0.012 release=0.1412 pitch=20 ring=0.62 formant=12 burst=7 jitter=0.05 snap=0.4 flicker=0.25 drive=0.3 echo=0.18 reverb=0.3 lfo_rate=5.5 pan=0.1
+clip coil 8 3 32.1282 0.3424 4703282873278296674 level=0.36 attack=0.012 release=0.1369 pitch=17 ring=0.62 formant=12 burst=7 jitter=0.05 snap=0.4 flicker=0.25 drive=0.3 echo=0.18 reverb=0.3 lfo_rate=5.5 pan=-0.3
+clip coil 8 3 32.4706 1.4118 7130397277218775090 level=0.5 attack=0.012 release=0.25 pitch=24 ring=0.62 formant=12 burst=7 jitter=0.05 snap=0.4 flicker=0.25 drive=0.3 echo=0.18 reverb=0.3 lfo_rate=5.5 pan=0.1
+clip coil 8 3 32.4812 1.4012 4668769582287082397 level=0.36 attack=0.012 release=0.25 pitch=20 ring=0.62 formant=12 burst=7 jitter=0.05 snap=0.4 flicker=0.25 drive=0.3 echo=0.18 reverb=0.3 lfo_rate=5.5 pan=-0.3
+clip choir 6 4 22.5882 11.2941 5084655979185779927 level=0.4 attack=0.3 release=0.8 pitch=10 chord=5 file=vocals/ethereal_vocals.wav start=0.2 speed=0.35 voices=10 gather=1.0 gather_swp=0.0 drift=0.5 wander=2 scatter=0.35 reverb=0.55 cutoff=0.85 duck=0.55 duck_from=1
+clip choir 6 4 22.5882 11.2941 2162720370701462166 level=0.25 attack=0.3 release=0.8 pitch=-2 chord=1 file=vocals/ethereal_vocals.wav start=0.2 speed=0.35 voices=10 gather=1.0 gather_swp=0.0 drift=0.5 wander=1 scatter=0.35 reverb=0.55 cutoff=0.85 duck=0.55 duck_from=1
+clip stab 5 5 22.5882 2.1176 171683110523137789 level=0.5 release=1.5 pitch=-6 file=resonant/sforzando.ogg reverb=0.3
+clip stab 5 5 28.2353 2.1176 5086820720221518274 level=0.5 release=1.5 pitch=-6 file=resonant/sforzando.ogg reverb=0.3
+clip kick 1 0 33.8824 0.2647 3378135727088395283 level=1.0 attack=0.001 release=0.6 pitch=3 pitch_swp=-22 interval=0 timbre=0.0 drive=0.7 env_curve=0.3 keyed=0
+clip kick_body 1 0 33.8824 0.1941 8327861369935544212 level=0.7 attack=0.002 release=0.45 pitch=-7 pitch_swp=-4 interval=0 timbre=0.0 drive=0.5 env_curve=0.2 keyed=0
+clip click 2 0 33.8824 0.0141 5495744102093645311 level=0.3 attack=0.0 release=0.012 cutoff=0.85 filter=2 keyed=0
+clip snare 2 1 33.8824 0.1941 1995487670754459589 level=0.55 attack=0.001 release=0.5 cutoff=0.7 filter=1 resonance=0.15 color=0.3 env_curve=0.55 reverb=0.22 pan=0.05 keyed=0
+clip snare_body 1 1 33.8824 0.1059 677920098349420446 level=0.4 attack=0.001 release=0.25 pitch=8 pitch_swp=-7 interval=7 timbre=0.8 drive=0.3 env_curve=0.5 keyed=0
+clip stroke 5 1 33.8824 0.2471 2514092262565184321 level=0.45 attack=0.0 release=0.3 pitch=-2 drive=0.4 cutoff=0.8 file=machines/steam_engine_stroke_3.ogg keyed=0
+clip last_chord 4 2 33.8824 3.5294 8599362831158952645 level=0.6 attack=0.001 release=3 pitch=-7 interval=7 damp=0.4 sustain=0.95 pick=0.9 drive=0.8 cutoff=0.7 pan=-0.45
+clip last_chord 4 2 33.8824 3.5294 5411536936695692834 level=0.6 attack=0.001 release=3 pitch=-7 interval=7 damp=0.4 sustain=0.95 pick=0.9 drive=0.8 cutoff=0.7 pan=0.45
+clip sub 1 2 33.8824 2.8235 2090855786802230434 level=0.4 attack=0.005 release=3 pitch=-19 interval=0 timbre=0.0
+clip choir 6 4 33.8824 3.5294 5452262655242511509 level=0.6 attack=0.02 release=4 pitch=-2 chord=5 file=vocals/ethereal_vocals.wav start=0.2 speed=0.35 voices=10 gather=1.0 gather_swp=-1.0 drift=0.5 wander=12 scatter=0.35 reverb=0.55 cutoff=0.85
+clip crush 5 5 33.5724 3.8394 6244981016694659374 level=0.6 release=2 file=impacts/heavy-metal-crush.wav reverb=0.3
+clip dying_coil 8 3 33.8824 3.5294 33998326236897551 level=0.4 attack=0.01 release=4 pitch=29 pitch_swp=-36 ring=0.5 formant=12 burst=6 jitter=0.4 misfire=0.5 flicker=0.8 reverb=0.5 echo=0.3

@@ -1,0 +1,11 @@
+# SfxLab project v2: clip name type track start dur seed key=value...
+loop 0
+root 65.4064
+track 0 1.000 0
+track 1 1.000 0
+track 2 1.000 0
+track 3 1.000 0
+track 4 1.000 0
+track 5 1.000 0
+clip resonant/cello_heavy_00002_pad 7 0 0.0000 1.0000 -7827976278474627547 level=0.62667 attack=0.00000 release=0.08000 pitch=-1.24167 pitch_swp=-0.00000 cutoff=1.00000 cutoff_swp=-0.58667 resonance=0.13333 filter=0.00000 pan=0.00000 pan_swp=0.00000 echo=0.15333 drive=0.03200 start=0.08333 speed=0.40000 sines=1.04000 residual=1.10667 floor=14.00000 min_len=46.00000 loop=1.00000 odd/even=-0.01333 tilt=0.13333 purity=0.38667 stretch=0.04000 gather=1.00000 chord=5.00000 shimmer=0.00000 root_shift=0.00000 harm_tol=3.46000 lfo_rate=15.09133 lfo>pitch=0.00000 lfo>cut=0.00000 lfo>amp=0.00000 lfo_shape=0.00000 env_curve=0.00000 reverb=0.47333 flange=0.01333 flange_fb=0.50000 duck=0.00000 duck_from=0.00000 phaser=1.00000 phaser_rate=0.58000 ph_stages=6.00000 ph_pos=-0.05333 lfo_pos=-1.00000 flange_pos=-1.00000 file=resonant/cello_heavy_00002_pad.ogg keyed=2
+clip luminal/luminal_impact_00001 5 1 0.0000 1.4500 -3460795209400357076 level=0.33333 attack=0.00200 release=0.90000 pitch=-8.89051 pitch_swp=0.00000 cutoff=1.00000 cutoff_swp=0.05333 resonance=0.13333 filter=0.00000 pan=0.00000 pan_swp=0.00000 echo=0.00000 drive=0.03333 loop=0.00000 start=0.00000 pitch_mode=1.00000 speed=1.90000 lfo_rate=4.00000 lfo>pitch=0.00000 lfo>cut=0.00000 lfo>amp=0.00000 lfo_shape=0.00000 env_curve=0.00000 reverb=0.40667 flange=0.16000 flange_fb=0.50000 duck=0.00000 duck_from=0.00000 phaser=0.36667 phaser_rate=0.20900 ph_stages=4.00000 ph_pos=-1.00000 lfo_pos=-1.00000 flange_pos=-1.00000 file=luminal/luminal_impact_00001.ogg keyed=2

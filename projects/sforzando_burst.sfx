@@ -1,0 +1,12 @@
+# SfxLab project v2: clip name type track start dur seed key=value...
+loop 0
+root 65.4064
+track 0 1.000 0
+track 1 1.000 0
+track 2 1.000 0
+track 3 1.000 0
+track 4 1.000 0
+track 5 1.000 0
+clip impacts/heavy-metal-crush 5 0 0.1000 0.9500 -6820403874269942759 level=0.80000 attack=0.48000 release=0.26000 pitch=9.60000 pitch_swp=-5.60000 cutoff=0.86000 cutoff_swp=-0.73333 resonance=0.20000 filter=0.00000 pan=0.00000 pan_swp=0.00000 echo=0.39333 drive=0.01400 loop=0.00000 start=0.05232 pitch_mode=1.00000 speed=1.26000 lfo_rate=1.41340 lfo>pitch=0.00000 lfo>cut=0.00000 lfo>amp=0.00000 lfo_shape=1.00000 env_curve=0.00000 reverb=1.00000 flange=0.00000 flange_fb=0.50000 duck=0.00000 duck_from=0.00000 phaser=0.47333 phaser_rate=0.68600 ph_stages=8.00000 ph_pos=-1.00000 lfo_pos=-1.00000 flange_pos=-1.00000 file=impacts/heavy-metal-crush.wav keyed=2
+clip gravitic/gravitic_impact_00003 7 1 0.0000 1.1500 -2158251738261451452 level=0.80000 attack=0.00200 release=0.76000 pitch=17.62275 pitch_swp=8.80000 cutoff=1.00000 cutoff_swp=0.00000 resonance=0.25333 filter=0.00000 pan=0.00000 pan_swp=0.00000 echo=0.00000 drive=0.06000 start=0.12667 speed=1.00000 sines=1.00000 residual=1.00000 floor=14.00000 min_len=46.00000 loop=1.00000 odd/even=0.00000 tilt=-0.02667 purity=0.98667 stretch=0.00000 gather=0.00000 chord=1.00000 shimmer=0.00000 root_shift=0.00000 harm_tol=3.00000 lfo_rate=9.51933 lfo>pitch=4.00000 lfo>cut=0.00000 lfo>amp=0.00000 lfo_shape=2.00000 env_curve=0.00000 reverb=0.58667 flange=0.00000 flange_fb=0.50000 duck=0.00000 duck_from=0.00000 phaser=0.00000 phaser_rate=0.40000 ph_stages=4.00000 ph_pos=-1.00000 lfo_pos=-1.00000 flange_pos=-1.00000 file=gravitic/gravitic_impact_00003.ogg keyed=2
+clip tones 1 2 0.0500 1.1000 3085154704843619172 level=0.18000 attack=0.02000 release=0.46000 pitch=-9.00000 pitch_swp=0.00000 cutoff=1.00000 cutoff_swp=-0.70667 resonance=0.00000 filter=0.00000 pan=0.00000 pan_swp=0.00000 echo=0.00000 drive=0.04000 interval=12.00000 timbre=0.57333 detune=0.40000 shimmer=0.00000 fm_ratio=1.87600 fm_depth=0.85867 bank=1.00000 odd/even=0.00000 tilt=0.00000 stretch=0.00000 gather=0.00000 chord=1.00000 bank_shimmer=0.00000 lfo_rate=4.00000 lfo>pitch=0.00000 lfo>cut=0.00000 lfo>amp=0.00000 lfo_shape=0.00000 env_curve=0.00000 reverb=0.27333 flange=0.00000 flange_fb=0.50000 duck=0.00000 duck_from=0.00000 phaser=0.00000 phaser_rate=0.40000 ph_stages=4.00000 ph_pos=-1.00000 lfo_pos=-1.00000 flange_pos=-1.00000 keyed=3

@@ -1,0 +1,10 @@
+# SfxLab project v2: clip name type track start dur seed key=value...
+loop 0
+root 65.4064
+track 0 1.000 0
+track 1 1.000 0
+track 2 1.000 0
+track 3 1.000 0
+track 4 1.000 0
+track 5 1.000 0
+clip resonant/bowed_cymbal_00001_pad 6 0 0.0000 5.0000 -1275523844521463796 level=0.55333 attack=0.09333 release=1.32000 pitch=-4.13180 pitch_swp=0.00000 cutoff=1.00000 cutoff_swp=-0.29333 resonance=0.06000 filter=0.00000 pan=0.00000 pan_swp=0.00000 echo=0.24000 drive=0.03333 start=0.00000 speed=1.38000 voices=8.00000 gather=0.84667 drift=0.20000 chord=8.00000 wander=6.72000 scatter=0.18000 gather_swp=1.00000 lfo_rate=1.02867 lfo>pitch=0.00000 lfo>cut=0.00000 lfo>amp=0.00000 lfo_shape=0.00000 env_curve=1.00000 reverb=0.14000 flange=0.18000 flange_fb=0.50000 duck=0.00000 duck_from=0.00000 phaser=0.33333 phaser_rate=0.26200 ph_stages=6.00000 ph_pos=-1.00000 lfo_pos=-1.00000 flange_pos=-1.00000 file=resonant/bowed_cymbal_00001_pad.ogg keyed=2
