@@ -190,10 +190,20 @@ public class Engine {
             double kp = (c.keyed & KEY_PITCH) != 0 ? key : 0, ku = (c.keyed & KEY_FILTER) != 0 ? key * KEY_U : 0;
             double env = 1;
             if (p[P_ATT] > 1e-4) env = Math.min(1, lt / p[P_ATT]);
+            double atk = env;   // the attack ramp alone, for the mod envelope
             if (p[P_REL] > 1e-4) env = Math.min(env, (c.dur - lt) / p[P_REL]);
             if (env <= 0) return false;
+            // decay stage: after the attack the level falls toward `sus level`; the release ramp then fades from there
+            double envDec = p[lb + 17];
+            if (envDec > 1e-4) {
+                double past = lt - Math.max(0, p[P_ATT]);
+                if (past > 0) { double sus = p[lb + 18]; env *= sus + (1 - sus) * Math.exp(-past / envDec); }
+            }
             double curve = p[lb + 5];
             if (curve != 0) env = Math.pow(env, Math.pow(8, curve));
+            // the mod envelope (env>cut, env>fm): the level's envelope, or with `mod decay` its own faster fall from the attack
+            double mdec = p[lb + 21], menv = env;
+            if (mdec > 1e-4) menv = atk * Math.exp(-Math.max(0, lt - Math.max(0, p[P_ATT])) / mdec);
             // per-clip LFO: phase runs in clip-local time; random shape is
             // hashed from the cycle count + seed so renders stay deterministic
             double lfo = 0, lfoAmp = p[lb + 3];
@@ -251,7 +261,8 @@ public class Engine {
                     v.ph2 += f2 / SR; if (v.ph2 >= 1) v.ph2 -= 1;
                     // FM: phase-modulate the pair; depth rides the envelope so
                     // percussive clips strike bright and mellow into the ring
-                    double m1 = 0, m2 = 0, fmDepth = p[NCOMMON + 5] * env;
+                    double efm = p[lb + 20];   // env>fm: 1 (the default) is exactly the old `depth * env`
+                    double m1 = 0, m2 = 0, fmDepth = p[NCOMMON + 5] * (efm == 1 ? menv : 1 - efm + efm * menv);
                     if (fmDepth > 1e-4) {
                         double fmRatio = p[NCOMMON + 4];
                         v.phM1 += f1 * fmRatio / SR; if (v.phM1 >= 1) v.phM1 -= 1;
@@ -679,7 +690,9 @@ public class Engine {
             // must stay < 4) and sprays Nyquist junk; half-stepping doubles
             // the stable range past our 10 kHz max. The tanh on the band
             // state still bounds high-Q settings.
-            double u = Math.max(0, Math.min(1, p[P_CUT] + ku + p[P_CSWP] * prog + lfo * p[lb + 2]));
+            double ecut = p[lb + 19];   // env>cut: the filter follows the (mod) envelope
+            double u = Math.max(0, Math.min(1, p[P_CUT] + ku + p[P_CSWP] * prog + lfo * p[lb + 2]
+                                               + (ecut != 0 ? ecut * menv : 0)));
             double fc = 40 * Math.pow(250, u);   // 40 Hz .. 10 kHz
             double fS = 2 * Math.sin(Math.PI * fc / (2 * SR));
             double q1 = 1.0 / (0.5 + 7.5 * p[P_RES]);

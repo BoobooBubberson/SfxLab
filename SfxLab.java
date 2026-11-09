@@ -5244,6 +5244,11 @@ public class SfxLab extends JPanel {
             case "lfo pos" -> v < 0 ? "free (rate)" : String.format(Locale.ROOT, "%.2f cyc", v);
             case "flange pos" -> v < 0 ? "LFO" : String.format(Locale.ROOT, "%.2f (%.1f ms)", v, 1.2 + 3.8 * v);
             case "ph stages" -> String.valueOf((int) Math.round(v));
+            case "decay" -> v < 0.005 ? "off" : String.format(Locale.ROOT, "%.2f s", v);
+            case "mod decay" -> v < 0.005 ? "= level" : String.format(Locale.ROOT, "%.2f s", v);
+            case "sus level" -> String.format(Locale.ROOT, "%.2f%s", v, v > 0.995 ? " (hold)" : "");
+            case "env>cut" -> String.format(Locale.ROOT, "%+.2f%s", v, Math.abs(v) < 0.005 ? " off" : "");
+            case "env>fm" -> String.format(Locale.ROOT, "%.2f %s", v, v > 0.995 ? "follows" : v < 0.005 ? "steady" : "part");
             case "pitch mode" -> v >= 0.5 ? "keep len" : "tape";
             case "speed" -> v < 0.005 ? "freeze" : String.format(Locale.ROOT, "×%.2f", v);
             case "chord" -> CHORD_NAMES[chordIdx(v)];

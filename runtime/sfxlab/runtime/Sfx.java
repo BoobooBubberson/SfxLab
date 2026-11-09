@@ -197,6 +197,12 @@ public final class Sfx {
         new PSpec("ph pos", -1, 1, -1),         // < 0: the LFO sweeps; 0..1: the notch is parked / steered here (bind a signal: the orb steers the sweep)
         new PSpec("lfo pos", -1, 1, -1),        // < 0: the LFO runs at its rate; 0..1: its phase in cycles is parked / steered here
         new PSpec("flange pos", -1, 1, -1),     // < 0: the comb rides the LFO; 0..1: its delay is parked / steered here (1.2 .. 5 ms)
+        // the envelope as a modulator (2026-11-09). Defaults leave every older clip sounding exactly as before.
+        new PSpec("decay", 0, 5, 0),            // s: after the attack, the level falls toward `sus level` (exponential, this time constant); 0 = no decay stage
+        new PSpec("sus level", 0, 1, 1),        // where the decay settles: strike, then hold
+        new PSpec("env>cut", -1, 1, 0),         // cutoff added at the envelope's peak: the filter opens with the note and closes as it fades
+        new PSpec("env>fm", 0, 1, 1),           // how much FM depth follows the envelope (tones); 1 = as before, 0 = a steady depth
+        new PSpec("mod decay", 0, 5, 0),        // s: > 0 gives env>cut and env>fm their own decay from the attack, faster than the level's (a pluck dulls before it fades)
     };
     public static final int N_TAIL = TAIL_SPECS.length;
     /** Index of a tail param for a given type (j = offset within TAIL_SPECS). */
