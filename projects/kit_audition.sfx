@@ -1,0 +1,415 @@
+# SfxLab project v2: clip name type track start dur seed key=value...
+# 'Kit audition' - the noise kit, by Claude
+loop 0
+root 110.0000
+track 0 0.800 0
+track 1 0.800 0
+track 2 1.000 0
+track 3 1.000 0
+track 4 1.000 0
+track 5 1.000 0
+clip kick 2 0 0.0000 0.3000 1874344572472842147 level=1 attack=0.001 release=0.299 filter=0 cutoff=0.7 cutoff_swp=-1 resonance=0 color=0.5 drive=0 env_curve=0.2 keyed=0
+clip hat 2 1 0.1071 0.0514 5643121152719002482 level=0.16 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip hat 2 1 0.2143 0.0514 592684376068448243 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip snare 2 1 0.4286 0.2143 6862034801033017360 level=0.85 attack=0.001 release=0.2133 filter=1 cutoff=0.74 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.25 keyed=0
+clip snare_body 2 1 0.4286 0.1071 4585090458242319022 level=0.7 attack=0.001 release=0.1061 filter=0 cutoff=0.55 cutoff_swp=-0.45 resonance=0.35 color=0.6 env_curve=0.4 keyed=0
+clip hat 2 1 0.6429 0.0514 7894935766681657968 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip kick 2 0 0.7500 0.3000 1700496792179342013 level=1 attack=0.001 release=0.299 filter=0 cutoff=0.7 cutoff_swp=-1 resonance=0 color=0.5 drive=0 env_curve=0.2 keyed=0
+clip kick 2 0 0.8571 0.3000 1159826144991689296 level=1 attack=0.001 release=0.299 filter=0 cutoff=0.7 cutoff_swp=-1 resonance=0 color=0.5 drive=0 env_curve=0.2 keyed=0
+clip hat 2 1 0.9643 0.0514 8603407177812943650 level=0.16 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip hat 2 1 1.0714 0.0514 8196754320825361989 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip snare 2 1 1.2857 0.2143 7590384637433592212 level=0.85 attack=0.001 release=0.2133 filter=1 cutoff=0.74 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.25 keyed=0
+clip snare_body 2 1 1.2857 0.1071 4369991401441012366 level=0.7 attack=0.001 release=0.1061 filter=0 cutoff=0.55 cutoff_swp=-0.45 resonance=0.35 color=0.6 env_curve=0.4 keyed=0
+clip hat 2 1 1.5000 0.0514 2016662730902057397 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip kick 2 0 1.7143 0.3000 6755740732478477795 level=1 attack=0.001 release=0.299 filter=0 cutoff=0.7 cutoff_swp=-1 resonance=0 color=0.5 drive=0 env_curve=0.2 keyed=0
+clip hat 2 1 1.8214 0.0514 3085542781959716465 level=0.16 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip hat 2 1 1.9286 0.0514 5559467614210708142 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip snare 2 1 2.1429 0.2143 8013273659028382689 level=0.85 attack=0.001 release=0.2133 filter=1 cutoff=0.74 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.25 keyed=0
+clip snare_body 2 1 2.1429 0.1071 2854362591149734639 level=0.7 attack=0.001 release=0.1061 filter=0 cutoff=0.55 cutoff_swp=-0.45 resonance=0.35 color=0.6 env_curve=0.4 keyed=0
+clip hat 2 1 2.3571 0.0514 2799685171911706804 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip kick 2 0 2.4643 0.3000 4513403516709585426 level=1 attack=0.001 release=0.299 filter=0 cutoff=0.7 cutoff_swp=-1 resonance=0 color=0.5 drive=0 env_curve=0.2 keyed=0
+clip kick 2 0 2.5714 0.3000 166956208406696643 level=1 attack=0.001 release=0.299 filter=0 cutoff=0.7 cutoff_swp=-1 resonance=0 color=0.5 drive=0 env_curve=0.2 keyed=0
+clip hat 2 1 2.6786 0.0514 4362323810234214497 level=0.16 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip hat 2 1 2.7857 0.0514 3581079626509511697 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip snare 2 1 3.0000 0.2143 831435956213471462 level=0.85 attack=0.001 release=0.2133 filter=1 cutoff=0.74 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.25 keyed=0
+clip snare_body 2 1 3.0000 0.1071 2553299929918621540 level=0.7 attack=0.001 release=0.1061 filter=0 cutoff=0.55 cutoff_swp=-0.45 resonance=0.35 color=0.6 env_curve=0.4 keyed=0
+clip hat 2 1 3.2143 0.0514 1514537445762374579 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip kick 2 0 3.4286 0.3000 3205986369291625901 level=1 attack=0.001 release=0.299 filter=0 cutoff=0.7 cutoff_swp=-1 resonance=0 color=0.5 drive=0 env_curve=0.2 keyed=0
+clip hat 2 1 3.5357 0.0514 6697093406148350047 level=0.16 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip hat 2 1 3.6429 0.0514 8310899043313014087 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip snare 2 1 3.8571 0.2143 8790889427446658777 level=0.85 attack=0.001 release=0.2133 filter=1 cutoff=0.74 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.25 keyed=0
+clip snare_body 2 1 3.8571 0.1071 7821395356555606424 level=0.7 attack=0.001 release=0.1061 filter=0 cutoff=0.55 cutoff_swp=-0.45 resonance=0.35 color=0.6 env_curve=0.4 keyed=0
+clip hat 2 1 4.0714 0.0514 6374098462030840803 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip kick 2 0 4.1786 0.3000 8794207473729969626 level=1 attack=0.001 release=0.299 filter=0 cutoff=0.7 cutoff_swp=-1 resonance=0 color=0.5 drive=0 env_curve=0.2 keyed=0
+clip kick 2 0 4.2857 0.3000 3989828152251976598 level=1 attack=0.001 release=0.299 filter=0 cutoff=0.7 cutoff_swp=-1 resonance=0 color=0.5 drive=0 env_curve=0.2 keyed=0
+clip hat 2 1 4.3929 0.0514 783698850964578327 level=0.16 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip hat 2 1 4.5000 0.0514 2927211339522040079 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip snare 2 1 4.7143 0.2143 6310560014537836532 level=0.85 attack=0.001 release=0.2133 filter=1 cutoff=0.74 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.25 keyed=0
+clip snare_body 2 1 4.7143 0.1071 4199696609206050764 level=0.7 attack=0.001 release=0.1061 filter=0 cutoff=0.55 cutoff_swp=-0.45 resonance=0.35 color=0.6 env_curve=0.4 keyed=0
+clip hat 2 1 4.9286 0.0514 7584021372222329021 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip kick 2 0 5.1429 0.3000 9183764714550358093 level=1 attack=0.001 release=0.299 filter=0 cutoff=0.7 cutoff_swp=-1 resonance=0 color=0.5 drive=0 env_curve=0.2 keyed=0
+clip hat 2 1 5.2500 0.0514 7445540921473587507 level=0.16 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip hat 2 1 5.3571 0.0514 7106053354186068472 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip snare 2 1 5.5714 0.2143 4296083484664561917 level=0.85 attack=0.001 release=0.2133 filter=1 cutoff=0.74 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.25 keyed=0
+clip snare_body 2 1 5.5714 0.1071 4739042098387590948 level=0.7 attack=0.001 release=0.1061 filter=0 cutoff=0.55 cutoff_swp=-0.45 resonance=0.35 color=0.6 env_curve=0.4 keyed=0
+clip hat 2 1 5.7857 0.0514 3963750435175683809 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip kick 2 0 5.8929 0.3000 2107885140560385885 level=1 attack=0.001 release=0.299 filter=0 cutoff=0.7 cutoff_swp=-1 resonance=0 color=0.5 drive=0 env_curve=0.2 keyed=0
+clip kick 2 0 6.0000 0.3000 4355214955275408253 level=1 attack=0.001 release=0.299 filter=0 cutoff=0.7 cutoff_swp=-1 resonance=0 color=0.5 drive=0 env_curve=0.2 keyed=0
+clip hat 2 1 6.1071 0.0514 530381611305718122 level=0.16 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip hat 2 1 6.2143 0.0514 6458477306860991122 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip snare 2 1 6.4286 0.2143 5158728775306152828 level=0.85 attack=0.001 release=0.2133 filter=1 cutoff=0.74 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.25 keyed=0
+clip snare_body 2 1 6.4286 0.1071 1945223402541494297 level=0.7 attack=0.001 release=0.1061 filter=0 cutoff=0.55 cutoff_swp=-0.45 resonance=0.35 color=0.6 env_curve=0.4 keyed=0
+clip hat 2 1 6.6429 0.0514 5065821613700750894 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip open_hat 2 1 6.6429 0.1929 2786748641344413562 level=0.22 attack=0.002 release=0.1909 filter=2 cutoff=0.86 color=0 env_curve=0.4 pan=0.3 keyed=0
+clip kick 2 0 7.7143 0.1800 750273954057055162 level=1 attack=0.001 release=0.179 filter=0 cutoff=0.7 cutoff_swp=-1 resonance=0 color=0.5 drive=0 env_curve=0.2 keyed=0
+clip hat 2 1 7.8214 0.0514 7447531370940728170 level=0.16 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip hat 2 1 7.9286 0.0514 3764166206333115939 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip snare 2 1 8.1429 0.2143 1624953146830880872 level=0.85 attack=0.001 release=0.2133 filter=1 cutoff=0.74 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.25 keyed=0
+clip snare_body 2 1 8.1429 0.1071 2461694078640821822 level=0.7 attack=0.001 release=0.1061 filter=0 cutoff=0.55 cutoff_swp=-0.45 resonance=0.35 color=0.6 env_curve=0.4 keyed=0
+clip hat 2 1 8.3571 0.0514 6634227686902331981 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip kick 2 0 8.4643 0.1800 1701766339453719278 level=1 attack=0.001 release=0.179 filter=0 cutoff=0.7 cutoff_swp=-1 resonance=0 color=0.5 drive=0 env_curve=0.2 keyed=0
+clip kick 2 0 8.5714 0.1800 6181192539452250757 level=1 attack=0.001 release=0.179 filter=0 cutoff=0.7 cutoff_swp=-1 resonance=0 color=0.5 drive=0 env_curve=0.2 keyed=0
+clip hat 2 1 8.6786 0.0514 1781221247738070050 level=0.16 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip hat 2 1 8.7857 0.0514 4440115895536926368 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip snare 2 1 9.0000 0.2143 183004405876108918 level=0.85 attack=0.001 release=0.2133 filter=1 cutoff=0.74 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.25 keyed=0
+clip snare_body 2 1 9.0000 0.1071 2881991830804131663 level=0.7 attack=0.001 release=0.1061 filter=0 cutoff=0.55 cutoff_swp=-0.45 resonance=0.35 color=0.6 env_curve=0.4 keyed=0
+clip hat 2 1 9.2143 0.0514 5728912032934877370 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip kick 2 0 9.4286 0.1800 9111331999676645208 level=1 attack=0.001 release=0.179 filter=0 cutoff=0.7 cutoff_swp=-1 resonance=0 color=0.5 drive=0 env_curve=0.2 keyed=0
+clip hat 2 1 9.5357 0.0514 4183618894056757556 level=0.16 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip hat 2 1 9.6429 0.0514 8887753918666590892 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip snare 2 1 9.8571 0.2143 3765646018470404797 level=0.85 attack=0.001 release=0.2133 filter=1 cutoff=0.74 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.25 keyed=0
+clip snare_body 2 1 9.8571 0.1071 895875132653580389 level=0.7 attack=0.001 release=0.1061 filter=0 cutoff=0.55 cutoff_swp=-0.45 resonance=0.35 color=0.6 env_curve=0.4 keyed=0
+clip hat 2 1 10.0714 0.0514 5627385332939824324 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip kick 2 0 10.1786 0.1800 6956780859027664738 level=1 attack=0.001 release=0.179 filter=0 cutoff=0.7 cutoff_swp=-1 resonance=0 color=0.5 drive=0 env_curve=0.2 keyed=0
+clip kick 2 0 10.2857 0.1800 4733516272812291457 level=1 attack=0.001 release=0.179 filter=0 cutoff=0.7 cutoff_swp=-1 resonance=0 color=0.5 drive=0 env_curve=0.2 keyed=0
+clip hat 2 1 10.3929 0.0514 5777981874007183702 level=0.16 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip hat 2 1 10.5000 0.0514 1375000413218660774 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip snare 2 1 10.7143 0.2143 4805273630491521987 level=0.85 attack=0.001 release=0.2133 filter=1 cutoff=0.74 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.25 keyed=0
+clip snare_body 2 1 10.7143 0.1071 8074632266904923628 level=0.7 attack=0.001 release=0.1061 filter=0 cutoff=0.55 cutoff_swp=-0.45 resonance=0.35 color=0.6 env_curve=0.4 keyed=0
+clip hat 2 1 10.9286 0.0514 6629064926654508449 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip kick 2 0 11.1429 0.1800 2747911830251064270 level=1 attack=0.001 release=0.179 filter=0 cutoff=0.7 cutoff_swp=-1 resonance=0 color=0.5 drive=0 env_curve=0.2 keyed=0
+clip hat 2 1 11.2500 0.0514 3209021067217790886 level=0.16 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip hat 2 1 11.3571 0.0514 4084174335401091620 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip snare 2 1 11.5714 0.2143 4191427060949670523 level=0.85 attack=0.001 release=0.2133 filter=1 cutoff=0.74 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.25 keyed=0
+clip snare_body 2 1 11.5714 0.1071 8851302763996420742 level=0.7 attack=0.001 release=0.1061 filter=0 cutoff=0.55 cutoff_swp=-0.45 resonance=0.35 color=0.6 env_curve=0.4 keyed=0
+clip hat 2 1 11.7857 0.0514 6520015248367272904 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip kick 2 0 11.8929 0.1800 855893964535390213 level=1 attack=0.001 release=0.179 filter=0 cutoff=0.7 cutoff_swp=-1 resonance=0 color=0.5 drive=0 env_curve=0.2 keyed=0
+clip kick 2 0 12.0000 0.1800 4222133064389833869 level=1 attack=0.001 release=0.179 filter=0 cutoff=0.7 cutoff_swp=-1 resonance=0 color=0.5 drive=0 env_curve=0.2 keyed=0
+clip hat 2 1 12.1071 0.0514 1570741297763706955 level=0.16 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip hat 2 1 12.2143 0.0514 4200337299801450139 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip snare 2 1 12.4286 0.2143 1398323627611622492 level=0.85 attack=0.001 release=0.2133 filter=1 cutoff=0.74 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.25 keyed=0
+clip snare_body 2 1 12.4286 0.1071 4992676661094857511 level=0.7 attack=0.001 release=0.1061 filter=0 cutoff=0.55 cutoff_swp=-0.45 resonance=0.35 color=0.6 env_curve=0.4 keyed=0
+clip hat 2 1 12.6429 0.0514 2999459009366485899 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip kick 2 0 12.8571 0.1800 4415793587966973188 level=1 attack=0.001 release=0.179 filter=0 cutoff=0.7 cutoff_swp=-1 resonance=0 color=0.5 drive=0 env_curve=0.2 keyed=0
+clip hat 2 1 12.9643 0.0514 5508405393726664772 level=0.16 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip hat 2 1 13.0714 0.0514 8923316223177607250 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip snare 2 1 13.2857 0.2143 2482161015621222756 level=0.85 attack=0.001 release=0.2133 filter=1 cutoff=0.74 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.25 keyed=0
+clip snare_body 2 1 13.2857 0.1071 6276121733372339753 level=0.7 attack=0.001 release=0.1061 filter=0 cutoff=0.55 cutoff_swp=-0.45 resonance=0.35 color=0.6 env_curve=0.4 keyed=0
+clip hat 2 1 13.5000 0.0514 7589250762736825712 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip kick 2 0 13.6071 0.1800 6790234407578896119 level=1 attack=0.001 release=0.179 filter=0 cutoff=0.7 cutoff_swp=-1 resonance=0 color=0.5 drive=0 env_curve=0.2 keyed=0
+clip kick 2 0 13.7143 0.1800 8448573794351722172 level=1 attack=0.001 release=0.179 filter=0 cutoff=0.7 cutoff_swp=-1 resonance=0 color=0.5 drive=0 env_curve=0.2 keyed=0
+clip hat 2 1 13.8214 0.0514 8834075653217677889 level=0.16 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip hat 2 1 13.9286 0.0514 122216062321381526 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip snare 2 1 14.1429 0.2143 4578425872160685229 level=0.85 attack=0.001 release=0.2133 filter=1 cutoff=0.74 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.25 keyed=0
+clip snare_body 2 1 14.1429 0.1071 8556216949983128966 level=0.7 attack=0.001 release=0.1061 filter=0 cutoff=0.55 cutoff_swp=-0.45 resonance=0.35 color=0.6 env_curve=0.4 keyed=0
+clip hat 2 1 14.3571 0.0514 3787671640131434189 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip open_hat 2 1 14.3571 0.1929 3248832192146697271 level=0.22 attack=0.002 release=0.1909 filter=2 cutoff=0.86 color=0 env_curve=0.4 pan=0.3 keyed=0
+clip kick 2 0 15.4286 0.5000 8769386320433097577 level=1 attack=0.001 release=0.499 filter=0 cutoff=0.7 cutoff_swp=-1 resonance=0 color=0.5 drive=0 env_curve=0.2 keyed=0
+clip hat 2 1 15.5357 0.0514 5325842714823943566 level=0.16 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip hat 2 1 15.6429 0.0514 2835288329424945873 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip snare 2 1 15.8571 0.2143 8142775446513295243 level=0.85 attack=0.001 release=0.2133 filter=1 cutoff=0.74 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.25 keyed=0
+clip snare_body 2 1 15.8571 0.1071 1595998484542086775 level=0.7 attack=0.001 release=0.1061 filter=0 cutoff=0.55 cutoff_swp=-0.45 resonance=0.35 color=0.6 env_curve=0.4 keyed=0
+clip hat 2 1 16.0714 0.0514 8104249320819307639 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip kick 2 0 16.1786 0.5000 8253075605630161612 level=1 attack=0.001 release=0.499 filter=0 cutoff=0.7 cutoff_swp=-1 resonance=0 color=0.5 drive=0 env_curve=0.2 keyed=0
+clip kick 2 0 16.2857 0.5000 2070024464183227761 level=1 attack=0.001 release=0.499 filter=0 cutoff=0.7 cutoff_swp=-1 resonance=0 color=0.5 drive=0 env_curve=0.2 keyed=0
+clip hat 2 1 16.3929 0.0514 6208312176042688276 level=0.16 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip hat 2 1 16.5000 0.0514 8828284667470870265 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip snare 2 1 16.7143 0.2143 2528235081041142342 level=0.85 attack=0.001 release=0.2133 filter=1 cutoff=0.74 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.25 keyed=0
+clip snare_body 2 1 16.7143 0.1071 4100680718638803242 level=0.7 attack=0.001 release=0.1061 filter=0 cutoff=0.55 cutoff_swp=-0.45 resonance=0.35 color=0.6 env_curve=0.4 keyed=0
+clip hat 2 1 16.9286 0.0514 7887546686560040015 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip kick 2 0 17.1429 0.5000 6849907721066225134 level=1 attack=0.001 release=0.499 filter=0 cutoff=0.7 cutoff_swp=-1 resonance=0 color=0.5 drive=0 env_curve=0.2 keyed=0
+clip hat 2 1 17.2500 0.0514 5785071750056690158 level=0.16 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip hat 2 1 17.3571 0.0514 7206416556877180122 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip snare 2 1 17.5714 0.2143 4390875946938046252 level=0.85 attack=0.001 release=0.2133 filter=1 cutoff=0.74 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.25 keyed=0
+clip snare_body 2 1 17.5714 0.1071 6216896663822092503 level=0.7 attack=0.001 release=0.1061 filter=0 cutoff=0.55 cutoff_swp=-0.45 resonance=0.35 color=0.6 env_curve=0.4 keyed=0
+clip hat 2 1 17.7857 0.0514 3442505846933117347 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip kick 2 0 17.8929 0.5000 4286702422626193556 level=1 attack=0.001 release=0.499 filter=0 cutoff=0.7 cutoff_swp=-1 resonance=0 color=0.5 drive=0 env_curve=0.2 keyed=0
+clip kick 2 0 18.0000 0.5000 2978197647454939350 level=1 attack=0.001 release=0.499 filter=0 cutoff=0.7 cutoff_swp=-1 resonance=0 color=0.5 drive=0 env_curve=0.2 keyed=0
+clip hat 2 1 18.1071 0.0514 4538407002820721311 level=0.16 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip hat 2 1 18.2143 0.0514 115900596250271371 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip snare 2 1 18.4286 0.2143 4572270098461922061 level=0.85 attack=0.001 release=0.2133 filter=1 cutoff=0.74 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.25 keyed=0
+clip snare_body 2 1 18.4286 0.1071 2704958353897701208 level=0.7 attack=0.001 release=0.1061 filter=0 cutoff=0.55 cutoff_swp=-0.45 resonance=0.35 color=0.6 env_curve=0.4 keyed=0
+clip hat 2 1 18.6429 0.0514 922133871248121959 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip kick 2 0 18.8571 0.5000 2020713817831145749 level=1 attack=0.001 release=0.499 filter=0 cutoff=0.7 cutoff_swp=-1 resonance=0 color=0.5 drive=0 env_curve=0.2 keyed=0
+clip hat 2 1 18.9643 0.0514 6284934363884535812 level=0.16 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip hat 2 1 19.0714 0.0514 6672563762912644292 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip snare 2 1 19.2857 0.2143 8690725360807629650 level=0.85 attack=0.001 release=0.2133 filter=1 cutoff=0.74 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.25 keyed=0
+clip snare_body 2 1 19.2857 0.1071 5726158507577008291 level=0.7 attack=0.001 release=0.1061 filter=0 cutoff=0.55 cutoff_swp=-0.45 resonance=0.35 color=0.6 env_curve=0.4 keyed=0
+clip hat 2 1 19.5000 0.0514 136273750124509164 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip kick 2 0 19.6071 0.5000 6943846640911291720 level=1 attack=0.001 release=0.499 filter=0 cutoff=0.7 cutoff_swp=-1 resonance=0 color=0.5 drive=0 env_curve=0.2 keyed=0
+clip kick 2 0 19.7143 0.5000 2004923970399089530 level=1 attack=0.001 release=0.499 filter=0 cutoff=0.7 cutoff_swp=-1 resonance=0 color=0.5 drive=0 env_curve=0.2 keyed=0
+clip hat 2 1 19.8214 0.0514 869415404896904664 level=0.16 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip hat 2 1 19.9286 0.0514 7195427631884455056 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip snare 2 1 20.1429 0.2143 5393881759744067872 level=0.85 attack=0.001 release=0.2133 filter=1 cutoff=0.74 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.25 keyed=0
+clip snare_body 2 1 20.1429 0.1071 2362376703851375665 level=0.7 attack=0.001 release=0.1061 filter=0 cutoff=0.55 cutoff_swp=-0.45 resonance=0.35 color=0.6 env_curve=0.4 keyed=0
+clip hat 2 1 20.3571 0.0514 2138230934918598724 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip kick 2 0 20.5714 0.5000 7989654346728688037 level=1 attack=0.001 release=0.499 filter=0 cutoff=0.7 cutoff_swp=-1 resonance=0 color=0.5 drive=0 env_curve=0.2 keyed=0
+clip hat 2 1 20.6786 0.0514 8119147723295022245 level=0.16 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip hat 2 1 20.7857 0.0514 2256337123240475714 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip snare 2 1 21.0000 0.2143 6335943254884712870 level=0.85 attack=0.001 release=0.2133 filter=1 cutoff=0.74 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.25 keyed=0
+clip snare_body 2 1 21.0000 0.1071 3307126534785675433 level=0.7 attack=0.001 release=0.1061 filter=0 cutoff=0.55 cutoff_swp=-0.45 resonance=0.35 color=0.6 env_curve=0.4 keyed=0
+clip hat 2 1 21.2143 0.0514 7972522468931336491 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip kick 2 0 21.3214 0.5000 2614270507806893974 level=1 attack=0.001 release=0.499 filter=0 cutoff=0.7 cutoff_swp=-1 resonance=0 color=0.5 drive=0 env_curve=0.2 keyed=0
+clip kick 2 0 21.4286 0.5000 1218701183489512594 level=1 attack=0.001 release=0.499 filter=0 cutoff=0.7 cutoff_swp=-1 resonance=0 color=0.5 drive=0 env_curve=0.2 keyed=0
+clip hat 2 1 21.5357 0.0514 6828149072738590961 level=0.16 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip hat 2 1 21.6429 0.0514 8656674999613102586 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip snare 2 1 21.8571 0.2143 4914624604986211750 level=0.85 attack=0.001 release=0.2133 filter=1 cutoff=0.74 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.25 keyed=0
+clip snare_body 2 1 21.8571 0.1071 3386311510481897985 level=0.7 attack=0.001 release=0.1061 filter=0 cutoff=0.55 cutoff_swp=-0.45 resonance=0.35 color=0.6 env_curve=0.4 keyed=0
+clip hat 2 1 22.0714 0.0514 8053279498641957354 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip open_hat 2 1 22.0714 0.1929 2862703507952907712 level=0.22 attack=0.002 release=0.1909 filter=2 cutoff=0.86 color=0 env_curve=0.4 pan=0.3 keyed=0
+clip kick 2 0 23.1429 0.3000 2769094517580737219 level=1 attack=0.001 release=0.299 filter=0 cutoff=0.7 cutoff_swp=-1 resonance=0 color=0 drive=0 env_curve=0.2 keyed=0
+clip hat 2 1 23.2500 0.0514 3849602484287806586 level=0.16 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip hat 2 1 23.3571 0.0514 5119413224331537380 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip snare 2 1 23.5714 0.2143 6613647806905795469 level=0.85 attack=0.001 release=0.2133 filter=1 cutoff=0.74 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.25 keyed=0
+clip snare_body 2 1 23.5714 0.1071 6684770795427917220 level=0.7 attack=0.001 release=0.1061 filter=0 cutoff=0.55 cutoff_swp=-0.45 resonance=0.35 color=0.6 env_curve=0.4 keyed=0
+clip hat 2 1 23.7857 0.0514 232338954605953852 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip kick 2 0 23.8929 0.3000 1266775443167129122 level=1 attack=0.001 release=0.299 filter=0 cutoff=0.7 cutoff_swp=-1 resonance=0 color=0 drive=0 env_curve=0.2 keyed=0
+clip kick 2 0 24.0000 0.3000 5805246682917151746 level=1 attack=0.001 release=0.299 filter=0 cutoff=0.7 cutoff_swp=-1 resonance=0 color=0 drive=0 env_curve=0.2 keyed=0
+clip hat 2 1 24.1071 0.0514 8631663012723347440 level=0.16 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip hat 2 1 24.2143 0.0514 8035005380363038082 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip snare 2 1 24.4286 0.2143 7630691802325661812 level=0.85 attack=0.001 release=0.2133 filter=1 cutoff=0.74 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.25 keyed=0
+clip snare_body 2 1 24.4286 0.1071 5385901816274541922 level=0.7 attack=0.001 release=0.1061 filter=0 cutoff=0.55 cutoff_swp=-0.45 resonance=0.35 color=0.6 env_curve=0.4 keyed=0
+clip hat 2 1 24.6429 0.0514 1676287701731290014 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip kick 2 0 24.8571 0.3000 5992334533874011486 level=1 attack=0.001 release=0.299 filter=0 cutoff=0.7 cutoff_swp=-1 resonance=0 color=0 drive=0 env_curve=0.2 keyed=0
+clip hat 2 1 24.9643 0.0514 1707963215898951979 level=0.16 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip hat 2 1 25.0714 0.0514 8941984763306139201 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip snare 2 1 25.2857 0.2143 5569419878800775202 level=0.85 attack=0.001 release=0.2133 filter=1 cutoff=0.74 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.25 keyed=0
+clip snare_body 2 1 25.2857 0.1071 2374737385225436858 level=0.7 attack=0.001 release=0.1061 filter=0 cutoff=0.55 cutoff_swp=-0.45 resonance=0.35 color=0.6 env_curve=0.4 keyed=0
+clip hat 2 1 25.5000 0.0514 6506523377408205513 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip kick 2 0 25.6071 0.3000 7175942516420578015 level=1 attack=0.001 release=0.299 filter=0 cutoff=0.7 cutoff_swp=-1 resonance=0 color=0 drive=0 env_curve=0.2 keyed=0
+clip kick 2 0 25.7143 0.3000 2954463612491867225 level=1 attack=0.001 release=0.299 filter=0 cutoff=0.7 cutoff_swp=-1 resonance=0 color=0 drive=0 env_curve=0.2 keyed=0
+clip hat 2 1 25.8214 0.0514 564733225645849582 level=0.16 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip hat 2 1 25.9286 0.0514 6460094730270878349 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip snare 2 1 26.1429 0.2143 4907772601062790584 level=0.85 attack=0.001 release=0.2133 filter=1 cutoff=0.74 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.25 keyed=0
+clip snare_body 2 1 26.1429 0.1071 1671665024530993644 level=0.7 attack=0.001 release=0.1061 filter=0 cutoff=0.55 cutoff_swp=-0.45 resonance=0.35 color=0.6 env_curve=0.4 keyed=0
+clip hat 2 1 26.3571 0.0514 8680090499300513457 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip kick 2 0 26.5714 0.3000 3607851627082728762 level=1 attack=0.001 release=0.299 filter=0 cutoff=0.7 cutoff_swp=-1 resonance=0 color=0 drive=0 env_curve=0.2 keyed=0
+clip hat 2 1 26.6786 0.0514 2057517152048461515 level=0.16 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip hat 2 1 26.7857 0.0514 4857668885275117274 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip snare 2 1 27.0000 0.2143 5481968009488661396 level=0.85 attack=0.001 release=0.2133 filter=1 cutoff=0.74 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.25 keyed=0
+clip snare_body 2 1 27.0000 0.1071 1449053936068318873 level=0.7 attack=0.001 release=0.1061 filter=0 cutoff=0.55 cutoff_swp=-0.45 resonance=0.35 color=0.6 env_curve=0.4 keyed=0
+clip hat 2 1 27.2143 0.0514 5444752932393164994 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip kick 2 0 27.3214 0.3000 389553436047405659 level=1 attack=0.001 release=0.299 filter=0 cutoff=0.7 cutoff_swp=-1 resonance=0 color=0 drive=0 env_curve=0.2 keyed=0
+clip kick 2 0 27.4286 0.3000 1165769620853634021 level=1 attack=0.001 release=0.299 filter=0 cutoff=0.7 cutoff_swp=-1 resonance=0 color=0 drive=0 env_curve=0.2 keyed=0
+clip hat 2 1 27.5357 0.0514 7597045724257863233 level=0.16 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip hat 2 1 27.6429 0.0514 5977564485270562285 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip snare 2 1 27.8571 0.2143 2703095826623454147 level=0.85 attack=0.001 release=0.2133 filter=1 cutoff=0.74 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.25 keyed=0
+clip snare_body 2 1 27.8571 0.1071 4022337043431286023 level=0.7 attack=0.001 release=0.1061 filter=0 cutoff=0.55 cutoff_swp=-0.45 resonance=0.35 color=0.6 env_curve=0.4 keyed=0
+clip hat 2 1 28.0714 0.0514 4838063386153097374 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip kick 2 0 28.2857 0.3000 7168890753574053537 level=1 attack=0.001 release=0.299 filter=0 cutoff=0.7 cutoff_swp=-1 resonance=0 color=0 drive=0 env_curve=0.2 keyed=0
+clip hat 2 1 28.3929 0.0514 5958112975367636595 level=0.16 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip hat 2 1 28.5000 0.0514 4971125021636263981 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip snare 2 1 28.7143 0.2143 7897422740531915915 level=0.85 attack=0.001 release=0.2133 filter=1 cutoff=0.74 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.25 keyed=0
+clip snare_body 2 1 28.7143 0.1071 3388047718836865794 level=0.7 attack=0.001 release=0.1061 filter=0 cutoff=0.55 cutoff_swp=-0.45 resonance=0.35 color=0.6 env_curve=0.4 keyed=0
+clip hat 2 1 28.9286 0.0514 6342580165140107900 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip kick 2 0 29.0357 0.3000 7415721460940077687 level=1 attack=0.001 release=0.299 filter=0 cutoff=0.7 cutoff_swp=-1 resonance=0 color=0 drive=0 env_curve=0.2 keyed=0
+clip kick 2 0 29.1429 0.3000 6724308166761729813 level=1 attack=0.001 release=0.299 filter=0 cutoff=0.7 cutoff_swp=-1 resonance=0 color=0 drive=0 env_curve=0.2 keyed=0
+clip hat 2 1 29.2500 0.0514 3519730834753491997 level=0.16 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip hat 2 1 29.3571 0.0514 4064472369663330301 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip snare 2 1 29.5714 0.2143 5574325154224762681 level=0.85 attack=0.001 release=0.2133 filter=1 cutoff=0.74 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.25 keyed=0
+clip snare_body 2 1 29.5714 0.1071 8211030267329939423 level=0.7 attack=0.001 release=0.1061 filter=0 cutoff=0.55 cutoff_swp=-0.45 resonance=0.35 color=0.6 env_curve=0.4 keyed=0
+clip hat 2 1 29.7857 0.0514 3144230629326093602 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip open_hat 2 1 29.7857 0.1929 3511587574845991760 level=0.22 attack=0.002 release=0.1909 filter=2 cutoff=0.86 color=0 env_curve=0.4 pan=0.3 keyed=0
+clip kick 2 0 30.8571 0.3000 4653114402374193461 level=1 attack=0.001 release=0.299 filter=0 cutoff=0.7 cutoff_swp=-1 resonance=0 color=0.85 drive=0 env_curve=0.2 keyed=0
+clip hat 2 1 30.9643 0.0514 2253419988984697111 level=0.16 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip hat 2 1 31.0714 0.0514 7496788962857893321 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip snare 2 1 31.2857 0.2143 6913543066603852296 level=0.85 attack=0.001 release=0.2133 filter=1 cutoff=0.74 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.25 keyed=0
+clip snare_body 2 1 31.2857 0.1071 5660237066798451972 level=0.7 attack=0.001 release=0.1061 filter=0 cutoff=0.55 cutoff_swp=-0.45 resonance=0.35 color=0.6 env_curve=0.4 keyed=0
+clip hat 2 1 31.5000 0.0514 2956806544466242518 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip kick 2 0 31.6071 0.3000 7526676727119689378 level=1 attack=0.001 release=0.299 filter=0 cutoff=0.7 cutoff_swp=-1 resonance=0 color=0.85 drive=0 env_curve=0.2 keyed=0
+clip kick 2 0 31.7143 0.3000 6116983797669400032 level=1 attack=0.001 release=0.299 filter=0 cutoff=0.7 cutoff_swp=-1 resonance=0 color=0.85 drive=0 env_curve=0.2 keyed=0
+clip hat 2 1 31.8214 0.0514 8919304285882239722 level=0.16 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip hat 2 1 31.9286 0.0514 6476141186699513371 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip snare 2 1 32.1429 0.2143 1251542727327690423 level=0.85 attack=0.001 release=0.2133 filter=1 cutoff=0.74 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.25 keyed=0
+clip snare_body 2 1 32.1429 0.1071 3497915827106389358 level=0.7 attack=0.001 release=0.1061 filter=0 cutoff=0.55 cutoff_swp=-0.45 resonance=0.35 color=0.6 env_curve=0.4 keyed=0
+clip hat 2 1 32.3571 0.0514 990851036996811006 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip kick 2 0 32.5714 0.3000 5326453914370243762 level=1 attack=0.001 release=0.299 filter=0 cutoff=0.7 cutoff_swp=-1 resonance=0 color=0.85 drive=0 env_curve=0.2 keyed=0
+clip hat 2 1 32.6786 0.0514 8624544408691811212 level=0.16 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip hat 2 1 32.7857 0.0514 4086066932367271932 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip snare 2 1 33.0000 0.2143 6326637334070919038 level=0.85 attack=0.001 release=0.2133 filter=1 cutoff=0.74 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.25 keyed=0
+clip snare_body 2 1 33.0000 0.1071 5191980013182645929 level=0.7 attack=0.001 release=0.1061 filter=0 cutoff=0.55 cutoff_swp=-0.45 resonance=0.35 color=0.6 env_curve=0.4 keyed=0
+clip hat 2 1 33.2143 0.0514 694169469512509610 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip kick 2 0 33.3214 0.3000 1651362444768934719 level=1 attack=0.001 release=0.299 filter=0 cutoff=0.7 cutoff_swp=-1 resonance=0 color=0.85 drive=0 env_curve=0.2 keyed=0
+clip kick 2 0 33.4286 0.3000 3872294660240246278 level=1 attack=0.001 release=0.299 filter=0 cutoff=0.7 cutoff_swp=-1 resonance=0 color=0.85 drive=0 env_curve=0.2 keyed=0
+clip hat 2 1 33.5357 0.0514 2056018040742646871 level=0.16 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip hat 2 1 33.6429 0.0514 3535190652365405144 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip snare 2 1 33.8571 0.2143 5647167824382486154 level=0.85 attack=0.001 release=0.2133 filter=1 cutoff=0.74 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.25 keyed=0
+clip snare_body 2 1 33.8571 0.1071 61662126065998953 level=0.7 attack=0.001 release=0.1061 filter=0 cutoff=0.55 cutoff_swp=-0.45 resonance=0.35 color=0.6 env_curve=0.4 keyed=0
+clip hat 2 1 34.0714 0.0514 1964640665376518812 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip kick 2 0 34.2857 0.3000 5133938042590641483 level=1 attack=0.001 release=0.299 filter=0 cutoff=0.7 cutoff_swp=-1 resonance=0 color=0.85 drive=0 env_curve=0.2 keyed=0
+clip hat 2 1 34.3929 0.0514 2058062188175231988 level=0.16 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip hat 2 1 34.5000 0.0514 528227090377777081 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip snare 2 1 34.7143 0.2143 6741519809103581856 level=0.85 attack=0.001 release=0.2133 filter=1 cutoff=0.74 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.25 keyed=0
+clip snare_body 2 1 34.7143 0.1071 5864459657991965018 level=0.7 attack=0.001 release=0.1061 filter=0 cutoff=0.55 cutoff_swp=-0.45 resonance=0.35 color=0.6 env_curve=0.4 keyed=0
+clip hat 2 1 34.9286 0.0514 9045631001571939515 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip kick 2 0 35.0357 0.3000 8253617376652642020 level=1 attack=0.001 release=0.299 filter=0 cutoff=0.7 cutoff_swp=-1 resonance=0 color=0.85 drive=0 env_curve=0.2 keyed=0
+clip kick 2 0 35.1429 0.3000 4628907385528803450 level=1 attack=0.001 release=0.299 filter=0 cutoff=0.7 cutoff_swp=-1 resonance=0 color=0.85 drive=0 env_curve=0.2 keyed=0
+clip hat 2 1 35.2500 0.0514 4062561086885225193 level=0.16 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip hat 2 1 35.3571 0.0514 6838375696765132979 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip snare 2 1 35.5714 0.2143 4278534468676269060 level=0.85 attack=0.001 release=0.2133 filter=1 cutoff=0.74 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.25 keyed=0
+clip snare_body 2 1 35.5714 0.1071 6310651373931781260 level=0.7 attack=0.001 release=0.1061 filter=0 cutoff=0.55 cutoff_swp=-0.45 resonance=0.35 color=0.6 env_curve=0.4 keyed=0
+clip hat 2 1 35.7857 0.0514 3432098606739084398 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip kick 2 0 36.0000 0.3000 2401165935981422180 level=1 attack=0.001 release=0.299 filter=0 cutoff=0.7 cutoff_swp=-1 resonance=0 color=0.85 drive=0 env_curve=0.2 keyed=0
+clip hat 2 1 36.1071 0.0514 8506137533933058673 level=0.16 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip hat 2 1 36.2143 0.0514 3045385843553295753 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip snare 2 1 36.4286 0.2143 4066518113251673825 level=0.85 attack=0.001 release=0.2133 filter=1 cutoff=0.74 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.25 keyed=0
+clip snare_body 2 1 36.4286 0.1071 8195924432874112983 level=0.7 attack=0.001 release=0.1061 filter=0 cutoff=0.55 cutoff_swp=-0.45 resonance=0.35 color=0.6 env_curve=0.4 keyed=0
+clip hat 2 1 36.6429 0.0514 8796838814861622975 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip kick 2 0 36.7500 0.3000 4197997268352755432 level=1 attack=0.001 release=0.299 filter=0 cutoff=0.7 cutoff_swp=-1 resonance=0 color=0.85 drive=0 env_curve=0.2 keyed=0
+clip kick 2 0 36.8571 0.3000 9155921275368575966 level=1 attack=0.001 release=0.299 filter=0 cutoff=0.7 cutoff_swp=-1 resonance=0 color=0.85 drive=0 env_curve=0.2 keyed=0
+clip hat 2 1 36.9643 0.0514 8533278606878936039 level=0.16 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip hat 2 1 37.0714 0.0514 3334608661004369607 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip snare 2 1 37.2857 0.2143 677507939430911870 level=0.85 attack=0.001 release=0.2133 filter=1 cutoff=0.74 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.25 keyed=0
+clip snare_body 2 1 37.2857 0.1071 2214348271954710042 level=0.7 attack=0.001 release=0.1061 filter=0 cutoff=0.55 cutoff_swp=-0.45 resonance=0.35 color=0.6 env_curve=0.4 keyed=0
+clip hat 2 1 37.5000 0.0514 1509892285575611867 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip open_hat 2 1 37.5000 0.1929 781588104743519506 level=0.22 attack=0.002 release=0.1909 filter=2 cutoff=0.86 color=0 env_curve=0.4 pan=0.3 keyed=0
+clip kick 2 0 38.5714 0.3000 433039114469592544 level=1 attack=0.001 release=0.299 filter=0 cutoff=0.7 cutoff_swp=-1 resonance=0.6 color=0.5 drive=0 env_curve=0.2 keyed=0
+clip hat 2 1 38.6786 0.0514 3294698186584935293 level=0.16 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip hat 2 1 38.7857 0.0514 6666190288757577743 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip snare 2 1 39.0000 0.2143 8036717740521215427 level=0.85 attack=0.001 release=0.2133 filter=1 cutoff=0.74 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.25 keyed=0
+clip snare_body 2 1 39.0000 0.1071 7790643890519543535 level=0.7 attack=0.001 release=0.1061 filter=0 cutoff=0.55 cutoff_swp=-0.45 resonance=0.35 color=0.6 env_curve=0.4 keyed=0
+clip hat 2 1 39.2143 0.0514 3417198036126182999 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip kick 2 0 39.3214 0.3000 2261876310325013845 level=1 attack=0.001 release=0.299 filter=0 cutoff=0.7 cutoff_swp=-1 resonance=0.6 color=0.5 drive=0 env_curve=0.2 keyed=0
+clip kick 2 0 39.4286 0.3000 5241184882148459137 level=1 attack=0.001 release=0.299 filter=0 cutoff=0.7 cutoff_swp=-1 resonance=0.6 color=0.5 drive=0 env_curve=0.2 keyed=0
+clip hat 2 1 39.5357 0.0514 6956367635892073323 level=0.16 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip hat 2 1 39.6429 0.0514 8156778994132877828 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip snare 2 1 39.8571 0.2143 8790733254030624043 level=0.85 attack=0.001 release=0.2133 filter=1 cutoff=0.74 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.25 keyed=0
+clip snare_body 2 1 39.8571 0.1071 2482495043290094872 level=0.7 attack=0.001 release=0.1061 filter=0 cutoff=0.55 cutoff_swp=-0.45 resonance=0.35 color=0.6 env_curve=0.4 keyed=0
+clip hat 2 1 40.0714 0.0514 962632558209081620 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip kick 2 0 40.2857 0.3000 7959193667079122459 level=1 attack=0.001 release=0.299 filter=0 cutoff=0.7 cutoff_swp=-1 resonance=0.6 color=0.5 drive=0 env_curve=0.2 keyed=0
+clip hat 2 1 40.3929 0.0514 5296090292547369134 level=0.16 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip hat 2 1 40.5000 0.0514 6307433536238023768 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip snare 2 1 40.7143 0.2143 2895180059036922458 level=0.85 attack=0.001 release=0.2133 filter=1 cutoff=0.74 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.25 keyed=0
+clip snare_body 2 1 40.7143 0.1071 3644180287053516205 level=0.7 attack=0.001 release=0.1061 filter=0 cutoff=0.55 cutoff_swp=-0.45 resonance=0.35 color=0.6 env_curve=0.4 keyed=0
+clip hat 2 1 40.9286 0.0514 7471608104306724652 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip kick 2 0 41.0357 0.3000 8652891663735629828 level=1 attack=0.001 release=0.299 filter=0 cutoff=0.7 cutoff_swp=-1 resonance=0.6 color=0.5 drive=0 env_curve=0.2 keyed=0
+clip kick 2 0 41.1429 0.3000 5103840911740878712 level=1 attack=0.001 release=0.299 filter=0 cutoff=0.7 cutoff_swp=-1 resonance=0.6 color=0.5 drive=0 env_curve=0.2 keyed=0
+clip hat 2 1 41.2500 0.0514 5543659285202680038 level=0.16 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip hat 2 1 41.3571 0.0514 5534847692922130568 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip snare 2 1 41.5714 0.2143 7405073680040929383 level=0.85 attack=0.001 release=0.2133 filter=1 cutoff=0.74 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.25 keyed=0
+clip snare_body 2 1 41.5714 0.1071 6467637648286027981 level=0.7 attack=0.001 release=0.1061 filter=0 cutoff=0.55 cutoff_swp=-0.45 resonance=0.35 color=0.6 env_curve=0.4 keyed=0
+clip hat 2 1 41.7857 0.0514 3151281158610077901 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip kick 2 0 42.0000 0.3000 9151346633533088048 level=1 attack=0.001 release=0.299 filter=0 cutoff=0.7 cutoff_swp=-1 resonance=0.6 color=0.5 drive=0 env_curve=0.2 keyed=0
+clip hat 2 1 42.1071 0.0514 7341146975249091039 level=0.16 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip hat 2 1 42.2143 0.0514 8987037197212708557 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip snare 2 1 42.4286 0.2143 2805947872233599644 level=0.85 attack=0.001 release=0.2133 filter=1 cutoff=0.74 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.25 keyed=0
+clip snare_body 2 1 42.4286 0.1071 8623559899405234306 level=0.7 attack=0.001 release=0.1061 filter=0 cutoff=0.55 cutoff_swp=-0.45 resonance=0.35 color=0.6 env_curve=0.4 keyed=0
+clip hat 2 1 42.6429 0.0514 473521741379064385 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip kick 2 0 42.7500 0.3000 8516772293607766087 level=1 attack=0.001 release=0.299 filter=0 cutoff=0.7 cutoff_swp=-1 resonance=0.6 color=0.5 drive=0 env_curve=0.2 keyed=0
+clip kick 2 0 42.8571 0.3000 4663985609009933378 level=1 attack=0.001 release=0.299 filter=0 cutoff=0.7 cutoff_swp=-1 resonance=0.6 color=0.5 drive=0 env_curve=0.2 keyed=0
+clip hat 2 1 42.9643 0.0514 652844195249271247 level=0.16 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip hat 2 1 43.0714 0.0514 2095492931056441049 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip snare 2 1 43.2857 0.2143 6334814565848338035 level=0.85 attack=0.001 release=0.2133 filter=1 cutoff=0.74 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.25 keyed=0
+clip snare_body 2 1 43.2857 0.1071 4217141583253054968 level=0.7 attack=0.001 release=0.1061 filter=0 cutoff=0.55 cutoff_swp=-0.45 resonance=0.35 color=0.6 env_curve=0.4 keyed=0
+clip hat 2 1 43.5000 0.0514 8610350924604523100 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip kick 2 0 43.7143 0.3000 363933111914835592 level=1 attack=0.001 release=0.299 filter=0 cutoff=0.7 cutoff_swp=-1 resonance=0.6 color=0.5 drive=0 env_curve=0.2 keyed=0
+clip hat 2 1 43.8214 0.0514 3341867531721554773 level=0.16 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip hat 2 1 43.9286 0.0514 7350946192536749956 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip snare 2 1 44.1429 0.2143 7714760327794474153 level=0.85 attack=0.001 release=0.2133 filter=1 cutoff=0.74 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.25 keyed=0
+clip snare_body 2 1 44.1429 0.1071 6066967953535793704 level=0.7 attack=0.001 release=0.1061 filter=0 cutoff=0.55 cutoff_swp=-0.45 resonance=0.35 color=0.6 env_curve=0.4 keyed=0
+clip hat 2 1 44.3571 0.0514 7736480638507936404 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip kick 2 0 44.4643 0.3000 2795934929742090694 level=1 attack=0.001 release=0.299 filter=0 cutoff=0.7 cutoff_swp=-1 resonance=0.6 color=0.5 drive=0 env_curve=0.2 keyed=0
+clip kick 2 0 44.5714 0.3000 1388690061004528121 level=1 attack=0.001 release=0.299 filter=0 cutoff=0.7 cutoff_swp=-1 resonance=0.6 color=0.5 drive=0 env_curve=0.2 keyed=0
+clip hat 2 1 44.6786 0.0514 9152083528520642617 level=0.16 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip hat 2 1 44.7857 0.0514 7194864546110177672 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip snare 2 1 45.0000 0.2143 5157601411726531674 level=0.85 attack=0.001 release=0.2133 filter=1 cutoff=0.74 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.25 keyed=0
+clip snare_body 2 1 45.0000 0.1071 3982029389551460824 level=0.7 attack=0.001 release=0.1061 filter=0 cutoff=0.55 cutoff_swp=-0.45 resonance=0.35 color=0.6 env_curve=0.4 keyed=0
+clip hat 2 1 45.2143 0.0514 984120918838744149 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip open_hat 2 1 45.2143 0.1929 7153457398650198867 level=0.22 attack=0.002 release=0.1909 filter=2 cutoff=0.86 color=0 env_curve=0.4 pan=0.3 keyed=0
+clip kick 2 0 46.2857 0.3000 5001604791965049893 level=1 attack=0.001 release=0.299 filter=0 cutoff=0.7 cutoff_swp=-1 resonance=0.6 color=0.85 drive=0.4 env_curve=0.2 keyed=0
+clip hat 2 1 46.3929 0.0514 1056081176090451180 level=0.16 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip hat 2 1 46.5000 0.0514 5207506313909451075 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip snare 2 1 46.7143 0.2143 4444758988096003564 level=0.85 attack=0.001 release=0.2133 filter=1 cutoff=0.74 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.25 keyed=0
+clip snare_body 2 1 46.7143 0.1071 2234520949635514270 level=0.7 attack=0.001 release=0.1061 filter=0 cutoff=0.55 cutoff_swp=-0.45 resonance=0.35 color=0.6 env_curve=0.4 keyed=0
+clip hat 2 1 46.9286 0.0514 66527289735041133 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip kick 2 0 47.0357 0.3000 8514456804263358527 level=1 attack=0.001 release=0.299 filter=0 cutoff=0.7 cutoff_swp=-1 resonance=0.6 color=0.85 drive=0.4 env_curve=0.2 keyed=0
+clip kick 2 0 47.1429 0.3000 6775194200918409180 level=1 attack=0.001 release=0.299 filter=0 cutoff=0.7 cutoff_swp=-1 resonance=0.6 color=0.85 drive=0.4 env_curve=0.2 keyed=0
+clip hat 2 1 47.2500 0.0514 6224118782256761253 level=0.16 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip hat 2 1 47.3571 0.0514 2038663378756914821 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip snare 2 1 47.5714 0.2143 4294529530121136198 level=0.85 attack=0.001 release=0.2133 filter=1 cutoff=0.74 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.25 keyed=0
+clip snare_body 2 1 47.5714 0.1071 2909462200673092130 level=0.7 attack=0.001 release=0.1061 filter=0 cutoff=0.55 cutoff_swp=-0.45 resonance=0.35 color=0.6 env_curve=0.4 keyed=0
+clip hat 2 1 47.7857 0.0514 7519920762716217174 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip kick 2 0 48.0000 0.3000 4379889440908682221 level=1 attack=0.001 release=0.299 filter=0 cutoff=0.7 cutoff_swp=-1 resonance=0.6 color=0.85 drive=0.4 env_curve=0.2 keyed=0
+clip hat 2 1 48.1071 0.0514 9010892028286262253 level=0.16 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip hat 2 1 48.2143 0.0514 4162696923736702888 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip snare 2 1 48.4286 0.2143 5974978403189338699 level=0.85 attack=0.001 release=0.2133 filter=1 cutoff=0.74 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.25 keyed=0
+clip snare_body 2 1 48.4286 0.1071 6445306396023082283 level=0.7 attack=0.001 release=0.1061 filter=0 cutoff=0.55 cutoff_swp=-0.45 resonance=0.35 color=0.6 env_curve=0.4 keyed=0
+clip hat 2 1 48.6429 0.0514 8017781163752342414 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip kick 2 0 48.7500 0.3000 7311728188758772953 level=1 attack=0.001 release=0.299 filter=0 cutoff=0.7 cutoff_swp=-1 resonance=0.6 color=0.85 drive=0.4 env_curve=0.2 keyed=0
+clip kick 2 0 48.8571 0.3000 2050161578189824698 level=1 attack=0.001 release=0.299 filter=0 cutoff=0.7 cutoff_swp=-1 resonance=0.6 color=0.85 drive=0.4 env_curve=0.2 keyed=0
+clip hat 2 1 48.9643 0.0514 8479116012164521520 level=0.16 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip hat 2 1 49.0714 0.0514 7706139228749692430 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip snare 2 1 49.2857 0.2143 2604082294100103056 level=0.85 attack=0.001 release=0.2133 filter=1 cutoff=0.74 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.25 keyed=0
+clip snare_body 2 1 49.2857 0.1071 1209727194530367306 level=0.7 attack=0.001 release=0.1061 filter=0 cutoff=0.55 cutoff_swp=-0.45 resonance=0.35 color=0.6 env_curve=0.4 keyed=0
+clip hat 2 1 49.5000 0.0514 2128751063335431870 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip kick 2 0 49.7143 0.3000 3307734901590453294 level=1 attack=0.001 release=0.299 filter=0 cutoff=0.7 cutoff_swp=-1 resonance=0.6 color=0.85 drive=0.4 env_curve=0.2 keyed=0
+clip hat 2 1 49.8214 0.0514 7627310393768200712 level=0.16 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip hat 2 1 49.9286 0.0514 2339060064119475504 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip snare 2 1 50.1429 0.2143 3649370434875063800 level=0.85 attack=0.001 release=0.2133 filter=1 cutoff=0.74 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.25 keyed=0
+clip snare_body 2 1 50.1429 0.1071 2721410448039163600 level=0.7 attack=0.001 release=0.1061 filter=0 cutoff=0.55 cutoff_swp=-0.45 resonance=0.35 color=0.6 env_curve=0.4 keyed=0
+clip hat 2 1 50.3571 0.0514 2011307290404270918 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip kick 2 0 50.4643 0.3000 1082065234605973430 level=1 attack=0.001 release=0.299 filter=0 cutoff=0.7 cutoff_swp=-1 resonance=0.6 color=0.85 drive=0.4 env_curve=0.2 keyed=0
+clip kick 2 0 50.5714 0.3000 7130768248800001454 level=1 attack=0.001 release=0.299 filter=0 cutoff=0.7 cutoff_swp=-1 resonance=0.6 color=0.85 drive=0.4 env_curve=0.2 keyed=0
+clip hat 2 1 50.6786 0.0514 3799013566830046656 level=0.16 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip hat 2 1 50.7857 0.0514 2021291894239777956 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip snare 2 1 51.0000 0.2143 8074350618911711665 level=0.85 attack=0.001 release=0.2133 filter=1 cutoff=0.74 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.25 keyed=0
+clip snare_body 2 1 51.0000 0.1071 8195755459960251564 level=0.7 attack=0.001 release=0.1061 filter=0 cutoff=0.55 cutoff_swp=-0.45 resonance=0.35 color=0.6 env_curve=0.4 keyed=0
+clip hat 2 1 51.2143 0.0514 3414355813032943782 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip kick 2 0 51.4286 0.3000 8019229139850358774 level=1 attack=0.001 release=0.299 filter=0 cutoff=0.7 cutoff_swp=-1 resonance=0.6 color=0.85 drive=0.4 env_curve=0.2 keyed=0
+clip hat 2 1 51.5357 0.0514 7069198020576070083 level=0.16 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip hat 2 1 51.6429 0.0514 2870033449362714640 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip snare 2 1 51.8571 0.2143 4019367660343743314 level=0.85 attack=0.001 release=0.2133 filter=1 cutoff=0.74 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.25 keyed=0
+clip snare_body 2 1 51.8571 0.1071 7668662892571831814 level=0.7 attack=0.001 release=0.1061 filter=0 cutoff=0.55 cutoff_swp=-0.45 resonance=0.35 color=0.6 env_curve=0.4 keyed=0
+clip hat 2 1 52.0714 0.0514 7026193159767019854 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip kick 2 0 52.1786 0.3000 1010494663532933092 level=1 attack=0.001 release=0.299 filter=0 cutoff=0.7 cutoff_swp=-1 resonance=0.6 color=0.85 drive=0.4 env_curve=0.2 keyed=0
+clip kick 2 0 52.2857 0.3000 8707545376433682543 level=1 attack=0.001 release=0.299 filter=0 cutoff=0.7 cutoff_swp=-1 resonance=0.6 color=0.85 drive=0.4 env_curve=0.2 keyed=0
+clip hat 2 1 52.3929 0.0514 3637431784461809301 level=0.16 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip hat 2 1 52.5000 0.0514 7894612499144843940 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip snare 2 1 52.7143 0.2143 6359258354972662652 level=0.85 attack=0.001 release=0.2133 filter=1 cutoff=0.74 resonance=0.2 color=0.3 env_curve=0.6 reverb=0.25 keyed=0
+clip snare_body 2 1 52.7143 0.1071 5415516268461494580 level=0.7 attack=0.001 release=0.1061 filter=0 cutoff=0.55 cutoff_swp=-0.45 resonance=0.35 color=0.6 env_curve=0.4 keyed=0
+clip hat 2 1 52.9286 0.0514 8328743377843848368 level=0.32 attack=0.001 release=0.0504 filter=2 cutoff=0.88 color=0 env_curve=0.7 pan=-0.25 keyed=0
+clip open_hat 2 1 52.9286 0.1929 6234762231204418191 level=0.22 attack=0.002 release=0.1909 filter=2 cutoff=0.86 color=0 env_curve=0.4 pan=0.3 keyed=0
+clip tom 2 1 54.0000 0.3857 2117150066966779471 level=0.9 attack=0.001 release=0.3847 filter=1 cutoff=0.3643 cutoff_swp=-0.045 resonance=0.88 color=0.3 env_curve=0.45 reverb=0.3 pan=0.35 keyed=0
+clip tom_thump 2 1 54.0000 0.0857 4664751652977953598 level=0.35 attack=0.001 release=0.0847 filter=0 cutoff=0.505 cutoff_swp=-0.4 color=0.7 env_curve=0.4 pan=0.35 keyed=0
+clip tom 2 1 54.1071 0.3857 3101680837420315038 level=0.9 attack=0.001 release=0.3847 filter=1 cutoff=0.3168 cutoff_swp=-0.045 resonance=0.88 color=0.3 env_curve=0.45 reverb=0.3 pan=0.21 keyed=0
+clip tom_thump 2 1 54.1071 0.0857 8942722344728627443 level=0.35 attack=0.001 release=0.0847 filter=0 cutoff=0.4574 cutoff_swp=-0.4 color=0.7 env_curve=0.4 pan=0.21 keyed=0
+clip tom 2 1 54.2143 0.3857 3658052839043447453 level=0.9 attack=0.001 release=0.3847 filter=1 cutoff=0.2764 cutoff_swp=-0.045 resonance=0.88 color=0.3 env_curve=0.45 reverb=0.3 pan=0.07 keyed=0
+clip tom_thump 2 1 54.2143 0.0857 2777417413044277460 level=0.35 attack=0.001 release=0.0847 filter=0 cutoff=0.417 cutoff_swp=-0.4 color=0.7 env_curve=0.4 pan=0.07 keyed=0
+clip tom 2 1 54.3214 0.3857 7421547148163648075 level=0.9 attack=0.001 release=0.3847 filter=1 cutoff=0.2317 cutoff_swp=-0.045 resonance=0.88 color=0.3 env_curve=0.45 reverb=0.3 pan=-0.07 keyed=0
+clip tom_thump 2 1 54.3214 0.0857 3528606915090114966 level=0.35 attack=0.001 release=0.0847 filter=0 cutoff=0.3723 cutoff_swp=-0.4 color=0.7 env_curve=0.4 pan=-0.07 keyed=0
+clip tom 2 1 54.4286 0.3857 3663434772814294224 level=0.9 attack=0.001 release=0.3847 filter=1 cutoff=0.1913 cutoff_swp=-0.045 resonance=0.88 color=0.3 env_curve=0.45 reverb=0.3 pan=-0.21 keyed=0
+clip tom_thump 2 1 54.4286 0.0857 2430306382024842624 level=0.35 attack=0.001 release=0.0847 filter=0 cutoff=0.3319 cutoff_swp=-0.4 color=0.7 env_curve=0.4 pan=-0.21 keyed=0
+clip tom 2 1 54.5357 0.3857 5046788170667450120 level=0.9 attack=0.001 release=0.3847 filter=1 cutoff=0.1508 cutoff_swp=-0.045 resonance=0.88 color=0.3 env_curve=0.45 reverb=0.3 pan=-0.35 keyed=0
+clip tom_thump 2 1 54.5357 0.0857 5710215487440229177 level=0.35 attack=0.001 release=0.0847 filter=0 cutoff=0.2915 cutoff_swp=-0.4 color=0.7 env_curve=0.4 pan=-0.35 keyed=0
+clip tom 2 1 54.8571 0.3857 8708322967622446756 level=0.9 attack=0.001 release=0.3847 filter=1 cutoff=0.3643 cutoff_swp=-0.045 resonance=0.88 color=0.3 env_curve=0.45 reverb=0.3 pan=0.35 keyed=0
+clip tom_thump 2 1 54.8571 0.0857 3578232698273476479 level=0.35 attack=0.001 release=0.0847 filter=0 cutoff=0.505 cutoff_swp=-0.4 color=0.7 env_curve=0.4 pan=0.35 keyed=0
+clip tom 2 1 55.2857 0.3857 8026837998595797308 level=0.9 attack=0.001 release=0.3847 filter=1 cutoff=0.3168 cutoff_swp=-0.045 resonance=0.88 color=0.3 env_curve=0.45 reverb=0.3 pan=0.21 keyed=0
+clip tom_thump 2 1 55.2857 0.0857 287669279125649168 level=0.35 attack=0.001 release=0.0847 filter=0 cutoff=0.4574 cutoff_swp=-0.4 color=0.7 env_curve=0.4 pan=0.21 keyed=0
+clip tom 2 1 55.7143 0.3857 1951067698635551847 level=0.9 attack=0.001 release=0.3847 filter=1 cutoff=0.2764 cutoff_swp=-0.045 resonance=0.88 color=0.3 env_curve=0.45 reverb=0.3 pan=0.07 keyed=0
+clip tom_thump 2 1 55.7143 0.0857 4015825175051547470 level=0.35 attack=0.001 release=0.0847 filter=0 cutoff=0.417 cutoff_swp=-0.4 color=0.7 env_curve=0.4 pan=0.07 keyed=0
+clip tom 2 1 56.1429 0.3857 5017714197085902674 level=0.9 attack=0.001 release=0.3847 filter=1 cutoff=0.2317 cutoff_swp=-0.045 resonance=0.88 color=0.3 env_curve=0.45 reverb=0.3 pan=-0.07 keyed=0
+clip tom_thump 2 1 56.1429 0.0857 4150676221139870282 level=0.35 attack=0.001 release=0.0847 filter=0 cutoff=0.3723 cutoff_swp=-0.4 color=0.7 env_curve=0.4 pan=-0.07 keyed=0
+clip tom 2 1 56.5714 0.3857 8198079960780040994 level=0.9 attack=0.001 release=0.3847 filter=1 cutoff=0.1913 cutoff_swp=-0.045 resonance=0.88 color=0.3 env_curve=0.45 reverb=0.3 pan=-0.21 keyed=0
+clip tom_thump 2 1 56.5714 0.0857 3519894090416330899 level=0.35 attack=0.001 release=0.0847 filter=0 cutoff=0.3319 cutoff_swp=-0.4 color=0.7 env_curve=0.4 pan=-0.21 keyed=0
+clip tom 2 1 57.0000 0.3857 4178687441299632061 level=0.9 attack=0.001 release=0.3847 filter=1 cutoff=0.1508 cutoff_swp=-0.045 resonance=0.88 color=0.3 env_curve=0.45 reverb=0.3 pan=-0.35 keyed=0
+clip tom_thump 2 1 57.0000 0.0857 6504920284958789769 level=0.35 attack=0.001 release=0.0847 filter=0 cutoff=0.2915 cutoff_swp=-0.4 color=0.7 env_curve=0.4 pan=-0.35 keyed=0
+clip kick 2 0 57.4286 0.3000 9221141083516241969 level=1 attack=0.001 release=0.299 filter=0 cutoff=0.7 cutoff_swp=-1 resonance=0.6 color=0.85 drive=0.4 env_curve=0.2 keyed=0
+clip crash 2 1 57.4286 3.4286 4887382921704196225 level=0.25 attack=0.001 release=3.4276 filter=2 cutoff=0.8 color=0 env_curve=0.75 reverb=0.45 pan=0.2 keyed=0
+clip ride 2 1 59.1429 0.4286 1812102424160270616 level=0.2 attack=0.001 release=0.4276 filter=1 cutoff=0.9 resonance=0.55 color=0 env_curve=0.5 reverb=0.2 pan=0.35 keyed=0
+clip ride 2 1 59.3571 0.4286 5846847453616757274 level=0.14 attack=0.001 release=0.4276 filter=1 cutoff=0.9 resonance=0.55 color=0 env_curve=0.5 reverb=0.2 pan=0.35 keyed=0
+clip ride 2 1 59.5714 0.4286 9131268794788974173 level=0.2 attack=0.001 release=0.4276 filter=1 cutoff=0.9 resonance=0.55 color=0 env_curve=0.5 reverb=0.2 pan=0.35 keyed=0
+clip ride 2 1 59.7857 0.4286 7280537040034653779 level=0.14 attack=0.001 release=0.4276 filter=1 cutoff=0.9 resonance=0.55 color=0 env_curve=0.5 reverb=0.2 pan=0.35 keyed=0
+clip ride 2 1 60.0000 0.4286 3483747441173230800 level=0.2 attack=0.001 release=0.4276 filter=1 cutoff=0.9 resonance=0.55 color=0 env_curve=0.5 reverb=0.2 pan=0.35 keyed=0
+clip ride 2 1 60.2143 0.4286 1520461052581179941 level=0.14 attack=0.001 release=0.4276 filter=1 cutoff=0.9 resonance=0.55 color=0 env_curve=0.5 reverb=0.2 pan=0.35 keyed=0
+clip ride 2 1 60.4286 0.4286 6739805182756206424 level=0.2 attack=0.001 release=0.4276 filter=1 cutoff=0.9 resonance=0.55 color=0 env_curve=0.5 reverb=0.2 pan=0.35 keyed=0
+clip ride 2 1 60.6429 0.4286 9109940226202685682 level=0.14 attack=0.001 release=0.4276 filter=1 cutoff=0.9 resonance=0.55 color=0 env_curve=0.5 reverb=0.2 pan=0.35 keyed=0

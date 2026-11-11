@@ -20,6 +20,9 @@ choir grown from any recording, partials resynthesis, a bendable tuning) make un
 | `nine_lives.py` | part III, nine variations on the coil's theme, one turn of the ground each: kitten mews answering, trip-hop with frozen-meow harmony, four on the floor with a meow solo, a double-time break with meow chords and a dead stop, the metal riff with meows in thirds and a yowl, a breakdown where a meow takes over the phrase, the ground in 7/8, everything at once, and a purr. 1791 clips, ~2x real time to render on two cores |
 | `meows.py` | the cat recordings as instruments: `meow` (tape-pitched sampler), `mew` (the kitten's four, chopped), `meow_hold` (frozen to a tone), `meow_partials` (resynthesised, gathered onto chords), `meow_choir`; pitches calibrated by rendering |
 | `meow_audition.py` | eight ways to play the meows, each on the coil's phrase, for comparing |
+| `choir_of_claws.py` | symphonic metal, D Phrygian, 140 BPM: the gallop riff up front, cloud strings throughout (stabs, an ostinato, pads, tremolo), the noise kit, a trio of meows in close harmony on the chorus melody over the meow choir, a meow shred solo, the last chorus a half step up. 2536 clips; ~1.2x real time on two cores, the choirs the main cost |
+| `noise_kit.py` | a drum kit of noise clips only: the kick (cutoff 0.7 swept by -1; the piece uses it with resonance 0.6, brown noise, drive 0.4), snare (band-passed crack + a short closing thump), hats, ride, toms (resonant band-pass gliding onto each note), crash, swell |
+| `kit_audition.py` | the kit in one groove with seven kick variants, then toms and cymbals |
 | `sfxsong.py` | the helper the three above use: `Song.clip()` in beats, keys checked per clip type against `Sfx.java`, slider ranges and short envelopes reported |
 | `probe.py` | measure recordings before using them: pitch, envelope, a timeline, section levels of a render |
 | `listen.py` | look at a render: solo stems per track, RMS per track and section, spectrograms with bar lines, pitch classes per bar |
@@ -167,6 +170,12 @@ sampler line lands within 0.16 st. Things learned:
 - the kitten file's four mews have their own pitches (the third is 1.9 st higher); `mew(k=)` knows them
 - `meow_partials` with `speed` near 0.1 and `gather` 0.9 turns one meow into a sustained chord; `meow_choir`
   (granular copies) is a noisier wash
+- from listening (Nine Lives): the meow choir is a good, odd voice, use it; frozen meows grate on held notes
+  (keep them short); the close clusters of meows in thirds are the best of it
+- `garage8` is "mi-ow" (27.5 up to 31.3 in 0.1 s, then 29.6): colour, not a held pitch in a chord. The steady
+  ones are `kitty` and `garage1` (both within 0.15 st through a note)
+- a choir clip (meow or voice) costs about ten times a cloud voice: every voice re-aligns a grain every
+  25 ms by searching ~400 offsets (`Sfx.alignGrain`). Keep choir `voices` to 3-5 in long pieces
 - `sigh` falls about 6 st; `meow(..., "sigh")` is tuned by where it lands, so start it before the beat it sighs onto
 
 ## Checking a piece without ears

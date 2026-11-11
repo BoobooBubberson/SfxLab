@@ -22,7 +22,7 @@ MEOWS = {
     "garage1": ("garage1.ogg", 30.71, 0.08, 0.62, 0.86,
                 "a classic meow, small fall at the end"),
     "garage8": ("garage8.ogg", 31.27, 0.16, 0.52, 0.86,
-                "softer, a small rise in"),
+                "a 'mi-ow': rises 27.5 -> 31.3 in its first 0.1 s, settles at 29.6; colour, not a held pitch"),
     "u6":      ("u6.ogg", 30.96, 0.16, 0.84, 1.08,
                 "the longest steady meow, a vowel that opens"),
     "kitten":  ("kitten.ogg", 34.99, 0.04, 1.56, 2.11,
